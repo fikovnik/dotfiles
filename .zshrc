@@ -37,7 +37,7 @@ alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 # ZSH options
 
 # help
-unalias run-help
+unalias run-help 2> /dev/null
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
