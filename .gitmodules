@@ -4,3 +4,6 @@
 [submodule ".emacs.d"]
 	path = .emacs.d
 	url = https://github.com/syl20bnr/spacemacs.git
+[submodule ".vim"]
+	path = .vim
+	url = https://github.com/fikovnik/dot-vim.git
