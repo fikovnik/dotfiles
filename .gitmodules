@@ -8,5 +8,8 @@
 	path = .vim
 	url = https://github.com/fikovnik/dot-vim.git
 [submodule ".tmux.d"]
-	path = .tmux.d
-	url = https://github.com/gpakosz/.tmux.git
+	path = .tmux
+	url = https://github.com/fikovnik/dot-tmux.git
+[submodule ".tmux"]
+	path = .tmux
+	url = https://github.com/fikovnik/dot-tmux.git
