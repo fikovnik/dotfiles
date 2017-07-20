@@ -17,11 +17,6 @@ function config_linux {
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-# fix powerline
-  if [[ ! -L ~/.zprezto/modules/prompt/functions/prompt_powerlevel9k_setup ]]; then
-    ln -sf ~/.zprezto/modules/prompt/external/powerlevel9k/powerlevel9k.zsh-theme ~/.zprezto/modules/prompt/functions/prompt_powerlevel9k_setup
-  fi
-
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
