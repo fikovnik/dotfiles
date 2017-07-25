@@ -113,3 +113,5 @@ if which fasd > /dev/null; then
   alias j='fasd_cd -d'
   alias jj='fasd_cd -d -i'
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
