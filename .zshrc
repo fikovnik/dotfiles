@@ -26,7 +26,7 @@ export DEFAULT_USER=krikava
 export LC_ALL=en_US.UTF-8
 
 # aliases
-alias g="emacs"
+alias g="emacsclient -t"
 
 # LESS
 export LESS='-F -g -i -M -R -S -w -X -z-4'
@@ -59,10 +59,10 @@ zstyle ':vcs_info:git-svn:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
 zstyle ':vcs_info:hg:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
 
 if [ -z "$SSH_CONNECTION" ]; then
-    alias g="emacsclient -n -c"
-    
+    alias g="emacsclient -t"
+
     export ALTERNATE_EDITOR=""
-    export EDITOR="emacsclient -c"
+    export EDITOR="emacsclient -t"
     export VISUAL=$EDITOR
 else
     alias g="vim"
