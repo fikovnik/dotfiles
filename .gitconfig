@@ -2,7 +2,7 @@
 	name = Filip Krikava
 	email = krikava@gmail.com
 [core]
-	excludesfile = /Users/krikava/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	autocrlf = input
 	ignorecase = false
 [color]
@@ -29,7 +29,5 @@
 [push]
 	default = simple
 [http]
-[commit]
-	template = /Users/krikava/.stCommitMsg
 [credential]
 	helper = osxkeychain
