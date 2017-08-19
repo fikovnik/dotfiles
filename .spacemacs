@@ -458,7 +458,7 @@ you should place your code here."
 
        ;; (SQL)
        ;; FIXME: just for now
-       (setq sql-mysql-options (list "-P 6612"))
+       (setq sql-mysql-optionsq (list "-P 6612"))
        ;; fix mysql prompt: https://unix.stackexchange.com/a/297320/118575
        ;; (sql-set-product-feature 'mysql :prompt-regexp "^\\(MariaDB\\|MySQL\\) \\[[_a-zA-Z]*\\]> ")
 
