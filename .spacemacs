@@ -71,6 +71,7 @@ values."
                shell-default-full-span nil)
         spell-checking
         syntax-checking
+        theming
         version-control
         yaml
         )
@@ -83,6 +84,7 @@ values."
           simpleclip
           rainbow-blocks
           dired-rainbow
+          color-theme-solarized
         )
         ;; A list of packages that cannot be updated.
         dotspacemacs-frozen-packages '()
@@ -209,7 +211,7 @@ values."
         dotspacemacs-display-default-layout nil
         ;; If non nil then the last auto saved layouts are resume automatically upon
         ;; start. (default nil)
-        dotspacemacs-auto-resume-layouts nil
+        dotspacemacs-auto-resume-layouts t
         ;; Size (in MB) above which spacemacs will prompt to open the large file
         ;; literally to avoid performance issues. Opening a file literally means that
         ;; no major mode or minor modes are active. (default is 1)
@@ -272,7 +274,7 @@ values."
         ;; If non nil show the color guide hint for transient state keys. (default t)
         dotspacemacs-show-transient-state-color-guide t
         ;; If non nil unicode symbols are displayed in the mode line. (default t)
-        dotspacemacs-mode-line-unicode-symbols t
+        dotspacemacs-mode-line-unicode-symbols nil
         ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
         ;; scrolling overrides the default behavior of Emacs which recenters point
         ;; when it reaches the top or bottom of the screen. (default t)
@@ -290,7 +292,7 @@ values."
         ;;                       text-mode
         ;;   :size-limit-kb 1000)
         ;; (default nil)
-        dotspacemacs-line-numbers t
+        dotspacemacs-line-numbers nil
         ;; Code folding method. Possible values are `evil' and `origami'.
         ;; (default 'evil)
         dotspacemacs-folding-method 'evil
@@ -456,7 +458,7 @@ you should place your code here."
 
        ;; (SQL)
        ;; FIXME: just for now
-       (setq sql-mysql-options (list "-P 6612"))
+       (setq sql-mysql-optionsq (list "-P 6612"))
        ;; fix mysql prompt: https://unix.stackexchange.com/a/297320/118575
        ;; (sql-set-product-feature 'mysql :prompt-regexp "^\\(MariaDB\\|MySQL\\) \\[[_a-zA-Z]*\\]> ")
 
@@ -471,6 +473,30 @@ you should place your code here."
        (global-set-key [mouse-5] (lambda ()
                                    (interactive)
                                    (scroll-up 3)))
+
+       ;; solarized
+       (setq theming-modifications
+             '((solarized
+                ;; Provide a sort of "on-off" modeline whereby the current buffer has a nice
+                ;; bright blue background, and all the others are in cream.
+                ;; TODO: Change to use variables here. However, got error:
+                ;; (Spacemacs) Error in dotspacemacs/user-config: Wrong type argument: stringp, pd-blue
+                (mode-line :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+                (powerline-active1 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+                (powerline-active2 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+                (mode-line-inactive :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+                (powerline-inactive1 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+                (powerline-inactive2 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+                ;; Make a really prominent helm selection line.
+                (helm-selection :foreground "white" :background "red" :inverse-video nil)
+                ;; dotspacemacs-colorize-cursor-according-to-state. to get this
+                ;; to work you must set the variable
+                ;; dotspacemacs-colorize-cursor-according-to-state to nil
+                (cursor :background "#b58900")
+                )))
+       (set-terminal-parameter nil 'background-mode 'dark)
+       (set-frame-parameter nil 'background-mode 'dark)
+       (spacemacs/load-theme 'solarized)
        )
 
 
@@ -485,7 +511,7 @@ you should place your code here."
  '(org-agenda-files (quote ("~/Notes/Projects-TODO.org")))
  '(package-selected-packages
    (quote
-    (rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (org-category-capture color-theme-solarized color-theme rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

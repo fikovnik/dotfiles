@@ -68,7 +68,7 @@ if [ -z "$SSH_CONNECTION" ] || emacsclient --version >/dev/null 2>&1; then
     alias g="emacsclient -t"
 
     export ALTERNATE_EDITOR="vim"
-    export EDITOR="emacsclient -t"
+    export EDITOR="$(which emacsclient) -t"
     export VISUAL=$EDITOR
 else
     alias g="vim"
