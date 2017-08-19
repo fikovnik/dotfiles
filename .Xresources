@@ -1,6 +1,15 @@
+!! allow copy and paste from tmux sessions
 XTerm*.disallowedWindowOps:	20,21,SetXprop
 
-!! Most settings are from the ArchWiki: https://wiki.archlinux.org/index.php/Xterm
+!! character classes
+XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+
+!! 3rd click
+XTerm*on3Clicks: regex ([[:alpha:]]+://)?([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+
+!! Most settings are from 
+!! - https://wiki.archlinux.org/index.php/Xterm
+!! - https://lukas.zapletalovi.com/2013/07/hidden-gems-of-xterm.html
 
 !! To allow the terminal itself to set the TERM variable correctly; instead of forcing in .bashrc etc.
 XTerm*termName: xterm-256color
@@ -8,14 +17,42 @@ XTerm*termName: xterm-256color
 !! Interpret all incoming data as UTF-8
 XTerm*locale: true
 
+!! Scroll anytime a kit is pressed
+Xterm*ScrollKey: true
+
 !! Allow the use of Alt key for shortcuts
 XTerm*metaSendsEscape: true
 
 XTerm*saveLines: 10000
-XTerm*cursorBlink: true
+XTerm*cursorBlink: false
 
 XTerm*faceName: DejaVuSansMonoForPowerline\ Nerd\ Font:style=Book
-XTerm*faceSize: 7
+XTerm*faceSize: 9
+XTerm*renderFont: true
+
+XTerm.vt100.translations: #override \n\
+    Shift Super <KeyPress> =: larger-vt-font() \n\
+    Super <KeyPress> -: smaller-vt-font() \n\
+    ~Shift Super <KeyPress> =: set-vt-font(d) \n\
+    ~Shift Super <Key>M: fullscreen() \n\
+    Shift Super <Key>M: restore() \n\
+    Super <Key>C: copy-selection(CLIPBOARD) \n\
+    Super <Key>V: insert-selection(CLIPBOARD) \n\
+    Super <Key>S: secure()
+
+! No blink cursor
+XTerm*blink: false
+
+! VT Font Menu: Unreadable
+XTerm*faceSize1: 7
+! VT font menu: Tiny
+XTerm*faceSize2: 8 
+! VT font menu: Medium
+XTerm*faceSize3: 9
+! VT font menu: Large
+XTerm*faceSize4: 10
+! VT font menu: Huge
+XTerm*faceSize5: 11
 
 #define S_base03        #002b36
 #define S_base02        #073642
