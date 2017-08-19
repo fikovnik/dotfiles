@@ -209,7 +209,7 @@ values."
         dotspacemacs-display-default-layout nil
         ;; If non nil then the last auto saved layouts are resume automatically upon
         ;; start. (default nil)
-        dotspacemacs-auto-resume-layouts nil
+        dotspacemacs-auto-resume-layouts t
         ;; Size (in MB) above which spacemacs will prompt to open the large file
         ;; literally to avoid performance issues. Opening a file literally means that
         ;; no major mode or minor modes are active. (default is 1)
@@ -290,7 +290,7 @@ values."
         ;;                       text-mode
         ;;   :size-limit-kb 1000)
         ;; (default nil)
-        dotspacemacs-line-numbers t
+        dotspacemacs-line-numbers nil
         ;; Code folding method. Possible values are `evil' and `origami'.
         ;; (default 'evil)
         dotspacemacs-folding-method 'evil
