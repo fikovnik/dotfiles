@@ -1,58 +1,14 @@
-!! allow copy and paste from tmux sessions
-XTerm*.disallowedWindowOps:	20,21,SetXprop
+!!! --------------------------------------------------------------------------------
+!!! Xft
+!!! --------------------------------------------------------------------------------
 
-!! character classes
-XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+Xft*dpi:                96
+Xft*antialias:          true
+Xft*hinting:            full
 
-!! 3rd click
-XTerm*on3Clicks: regex ([[:alpha:]]+://)?([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
-
-!! Most settings are from 
-!! - https://wiki.archlinux.org/index.php/Xterm
-!! - https://lukas.zapletalovi.com/2013/07/hidden-gems-of-xterm.html
-
-!! To allow the terminal itself to set the TERM variable correctly; instead of forcing in .bashrc etc.
-XTerm*termName: xterm-256color
-
-!! Interpret all incoming data as UTF-8
-XTerm*locale: true
-
-!! Scroll anytime a kit is pressed
-Xterm*ScrollKey: true
-
-!! Allow the use of Alt key for shortcuts
-XTerm*metaSendsEscape: true
-
-XTerm*saveLines: 10000
-XTerm*cursorBlink: false
-
-XTerm*faceName: DejaVuSansMonoForPowerline\ Nerd\ Font:style=Book
-XTerm*faceSize: 9
-XTerm*renderFont: true
-
-XTerm.vt100.translations: #override \n\
-    Shift Super <KeyPress> =: larger-vt-font() \n\
-    Super <KeyPress> -: smaller-vt-font() \n\
-    ~Shift Super <KeyPress> =: set-vt-font(d) \n\
-    ~Shift Super <Key>M: fullscreen() \n\
-    Shift Super <Key>M: restore() \n\
-    Super <Key>C: copy-selection(CLIPBOARD) \n\
-    Super <Key>V: insert-selection(CLIPBOARD) \n\
-    Super <Key>S: secure()
-
-! No blink cursor
-XTerm*blink: false
-
-! VT Font Menu: Unreadable
-XTerm*faceSize1: 7
-! VT font menu: Tiny
-XTerm*faceSize2: 8 
-! VT font menu: Medium
-XTerm*faceSize3: 9
-! VT font menu: Large
-XTerm*faceSize4: 10
-! VT font menu: Huge
-XTerm*faceSize5: 11
+!!! --------------------------------------------------------------------------------
+!!! Solarized colors
+!!! --------------------------------------------------------------------------------
 
 #define S_base03        #002b36
 #define S_base02        #073642
@@ -110,3 +66,127 @@ XTerm*faceSize5: 11
 !! white dark/light
 *color7:                S_base2
 *color15:               S_base3
+
+!!! --------------------------------------------------------------------------------
+!!! XTerm
+!!! --------------------------------------------------------------------------------
+
+
+!! allow copy and paste from tmux sessions
+XTerm*.disallowedWindowOps:	20,21,SetXprop
+
+!! character classes
+XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+
+!! 3rd click
+XTerm*on3Clicks: regex ([[:alpha:]]+://)?([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+
+!! Most settings are from 
+!! - https://wiki.archlinux.org/index.php/Xterm
+!! - https://lukas.zapletalovi.com/2013/07/hidden-gems-of-xterm.html
+
+!! To allow the terminal itself to set the TERM variable correctly; instead of forcing in .bashrc etc.
+XTerm*termName: xterm-256color
+
+!! Interpret all incoming data as UTF-8
+XTerm*locale: true
+
+!! Scroll anytime a kit is pressed
+XTerm*ScrollKey: true
+XTerm*ScrollTTYKeypress: true
+
+!! When scrolled out do not autmatically scroll down
+XTerm*scrollTtyOutput: false
+
+!! Remove the default fullscreen key
+XTerm*omitTranslation: fullscreen
+
+!! Allow the use of Alt key for shortcuts
+XTerm*metaSendsEscape: true
+
+XTerm*saveLines: 10000
+XTerm*cursorBlink: false
+
+XTerm*faceName: DejaVuSansMonoForPowerline\ Nerd\ Font:style=Book
+XTerm*faceSize: 9
+XTerm*renderFont: true
+
+XTerm.vt100.translations: #override \n\
+    Shift Super <KeyPress> =: larger-vt-font() \n\
+    Super <KeyPress> -: smaller-vt-font() \n\
+    ~Shift Super <KeyPress> =: set-vt-font(d) \n\
+    ~Shift Super <Key>M: fullscreen() \n\
+    Shift Super <Key>M: restore() \n\
+    Super <Key>C: copy-selection(CLIPBOARD) \n\
+    Super <Key>V: insert-selection(CLIPBOARD) \n\
+    Super <Key>S: secure()
+
+! No blink cursor
+XTerm*blink: false
+
+! VT Font Menu: Unreadable
+XTerm*faceSize1: 7
+! VT font menu: Tiny
+XTerm*faceSize2: 8 
+! VT font menu: Medium
+XTerm*faceSize3: 9
+! VT font menu: Large
+XTerm*faceSize4: 10
+! VT font menu: Huge
+XTerm*faceSize5: 11
+
+!!! --------------------------------------------------------------------------------
+!!! URxvt
+!!! --------------------------------------------------------------------------------
+
+URxvt.depth: 32
+URxvt.geometry: 120x40
+URxvt.transparent: false
+URxvt.fading: 0
+URxvt.urgentOnBell: false
+URxvt.visualBell: false
+URxvt.saveLines: 10000
+URxvt.internalBorder: 3
+URxvt.lineSpace: 0
+
+!! scrolling
+URxvt.jumpScroll: false
+URxvt*secondaryScreen: 1
+URxvt*secondaryScroll: 0
+URxvt*secondaryWheel: 1
+! do not scroll with output
+URxvt*scrollTtyOutput: false
+! scroll in relation to buffer (with mouse scroll or Shift+Page Up)
+URxvt*scrollWithBuffer: true
+! scroll back to the bottom on keypress
+URxvt*scrollTtyKeypress: true
+
+! Fonts
+URxvt*allow_bold: true
+URxvt*font: xft:DejaVuSansMonoForPowerline\ Nerd\ Font:style=Book:pixelsize=12
+! Fix font space
+URxvt*letterSpace: -1
+
+! enable scrollbar
+URxvt*scrollBar: true     
+! scrollbar width
+URxvt*thickness: 5
+! scrollbar color
+URxvt*scrollColor: S_blue
+! scrollbar to the right
+URxvt*scrollBar_right: true
+! scrollbar style
+URxvt*scrollstyle: plain
+
+! Perl extensions
+URxvt*perl-ext-common: default,matcher
+URxvt*matcher.button: 1
+URxvt*url-launcher: firefox
+
+! Cursor
+URxvt*cursorBlink: false
+URxvt*cursorColor: S_base1
+URxvt*cursorUnderline: false
+
+! Pointer
+URxvt*pointerBlank:         true
