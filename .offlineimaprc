@@ -1,0 +1,35 @@
+[general]
+pythonfile = ~/.offlineimap.py
+accounts = krikava_at_gmail
+
+[Account krikava_at_gmail]
+localrepository = krikava_at_gmail_local
+remoterepository = krikava_at_gmail_remote
+
+[Repository krikava_at_gmail_local]
+type = Maildir
+localfolders = ~/Mail/krikava_at_gmail
+restoreatime = no
+sep = /
+## Do not sync this folder
+# folderfilter = lambda folder: folder not in ['2007-2011-inbox']
+## Remove GMAIL prefix on Google-specific IMAP folders that are pulled down.
+nametrans = lambda f: '[Gmail]/' + f if f in ['Drafts', 'Starred', 'Important', 'Spam', 'Trash', 'All Mail', 'Sent Mail'] else f
+
+[Repository krikava_at_gmail_remote]
+type = IMAP
+remotehost = imap.gmail.com
+remoteuser = krikava@gmail.com
+remotepasseval = get_pass("krikava@gmail.com")
+ssl = yes
+starttls = no
+maxconnections = 1
+realdelete = no
+sslcacertfile = /usr/local/etc/openssl/cert.pem
+auth_mechanisms = XOAUTH2
+oauth2_client_id = 96182623533-1tga1vc0bso56hco710634dcvgbfvofu.apps.googleusercontent.com
+oauth2_client_secret = zAnpmdQla8HgJRpfhvWshaOq
+oauth2_request_url = https://accounts.google.com/o/oauth2/token
+oauth2_refresh_token = 1/yoEuwE6Hn9ghHPg4aNmys0eT4UdIrZ7pstUamDJO3y8
+## remove Gmail prefix on IMAP folders
+nametrans = lambda f: f.replace('[Gmail]/', '') if f.startswith('[Gmail]/') else f
