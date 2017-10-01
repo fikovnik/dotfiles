@@ -92,7 +92,7 @@ command=iwgetid -r
 separator=false
 
 [wlan-dbm]
-command=~/.config/i3blocks/script/wlan-dbm
+command=~/.config/i3blocks/scripts/wlan-dbm
 instance=wlp1s0
 interval=5
 
