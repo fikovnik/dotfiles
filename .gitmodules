@@ -13,3 +13,6 @@
 [submodule ".tmux"]
 	path = .tmux
 	url = https://github.com/fikovnik/dot-tmux.git
+[submodule ".config"]
+	path = .config
+	url = https://github.com/fikovnik/dot-config.git
