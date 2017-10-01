@@ -188,5 +188,9 @@ URxvt*cursorBlink: false
 URxvt*cursorColor: S_base1
 URxvt*cursorUnderline: false
 
-! Pointer
-URxvt*pointerBlank:         true
+!! fonts
+Xft/Hinting: 1
+Xft/RGBA: "rgb"
+Xft/HintStyle: "hintslight"
+Xft/Antialias: 1
+
