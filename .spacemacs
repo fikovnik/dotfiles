@@ -84,6 +84,7 @@ values."
         '(
           simpleclip
           rainbow-blocks
+          rainbow-mode
           dired-rainbow
           color-theme-solarized
         )
