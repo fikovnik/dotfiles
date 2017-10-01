@@ -1,0 +1,13 @@
+! from https://github.com/DaveDavenport/rofi-themes/blob/master/Themes/solarized_alternate.theme
+rofi.color-enabled: true
+! rofi.color-window: #002b37, #002b37, #003642
+rofi.color-window: #002b37, #008ed4, #003642
+rofi.color-normal: #002b37, #819396, #003643, #008ed4, #ffffff
+rofi.color-active: #002b37, #008ed4, #003643, #008ed4, #66c6ff
+rofi.color-urgent: #002b37, #da4281, #003643, #008ed4, #890661
+rofi.lines: 15
+rofi.font: DejaVu Sans Mono 9
+rofi.terminal: urxvt256c-ml
+rofi.separator-style: solid
+rofi.matching: fuzzy
+rofi.location: 2
