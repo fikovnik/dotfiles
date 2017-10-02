@@ -42,7 +42,7 @@ bindsym $mod+Shift+q kill
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-bindsym $mod+d exec --no-startup-id "rofi -combi-modi drun,window,run,ssh -show combi"
+bindsym $mod+d exec --no-startup-id ~/.config/i3/scripts/dmenu.sh
 bindsym $mod+p exec --no-startup-id rofi-pass
 bindsym $mod+c exec --no-startup-id "rofi -modi 'clipboard:greenclip print' -show clipboard"
 bindsym $mod+Tab exec --no-startup-id rofi -show window
@@ -97,6 +97,7 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+set $ws09 "9: "
 set $ws10 "10: "
 
 # switch to workspace
@@ -108,7 +109,7 @@ bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
+bindsym $mod+9 workspace $ws09
 bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
@@ -120,7 +121,7 @@ bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+9 move container to workspace $ws09
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # reload the configuration file
@@ -157,9 +158,9 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # volume control
-bindsym XF86AudioMute        exec amixer -D pulse set Master toggle && pkill -RTMIN+10 i3blocks 
-bindsym XF86AudioRaiseVolume exec amixer -D pulse set Master 3%+ unmute && pkill -RTMIN+10 i3blocks 
-bindsym XF86AudioLowerVolume exec amixer -D pulse set Master 3%- unmute && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioMute        exec amixer -D pulse set Master toggle
+bindsym XF86AudioRaiseVolume exec amixer -D pulse set Master 3%+ unmute
+bindsym XF86AudioLowerVolume exec amixer -D pulse set Master 3%- unmute
 
 # media player controls
 bindsym XF86AudioPlay exec playerctl play
@@ -171,13 +172,15 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86MonBrightnessUp exec brightnessctl -d intel_backlight set "+10%"
 bindsym XF86MonBrightnessDown exec brightnessctl -d intel_backlight set "10%-"
 
-bindsym $mod+shift+x exec --no-startup-id i3lock -i ~/Dropbox/Pictures/Wallpapers/futurama1.png -t
+bindsym $mod+F8 exec --no-startup-id ~/.config/i3/scripts/screen-layout.sh
+bindsym $mod+shift+x exec --no-startup-id ~/.config/i3/scripts/lock.sh
 
 # bind custom launchers
 
 # fix floating -- get the WM_CLASS using xprop
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Spotify"] move to workspace $ws10
+assign [class="URxvt" title="^OpenVPN:"] $ws09
 
 # window assignment
 
@@ -229,15 +232,21 @@ bar {
         }
 }
 
+# background
+exec_always --no-startup-id feh --bg-scale ~/Dropbox/Pictures/Wallpapers/machinarium.jpg
+
+# Xresources
 exec --no-startup-id test -f ~/mgs.Xresources && xrdb -merge ~/.Xresources
+
+# utilities
 exec --no-startup-id dropbox start
 exec --no-startup-id nm-applet
 exec --no-startup-id greenclip daemon
-exec_always --no-startup-id feh --bg-scale ~/Dropbox/Pictures/Wallpapers/machinarium.jpg
 exec --no-startup-id compton
 exec --no-startup-id rescuetime
+
 # make capslock control
 exec --no-startup-id setxkbmap -option ctrl:nocaps
-exec --no-startup-id "xautolock -time 5 -locker 'i3lock -i ~/Dropbox/Pictures/Wallpapers/futurama1.png -t' -notify 30 -notifier 'xset dpms force off'"
-#exec --no-startup-id "xautolock -time 15 -locker 'systemctl suspend'"
-exec --no-startup-id "xss-lock -- i3lock -i ~/Dropbox/Pictures/Wallpapers/futurama1.png -t"
+
+# screen lock
+exec --no-startup-id xautolock -time 5 -locker ~/.config/i3/scripts/lock.sh -notify 6 -notifier '~/.config/i3/scripts/dim-screen.sh 5'
