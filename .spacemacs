@@ -6,100 +6,112 @@
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
 values."
-       (setq-default
-        ;; Base distribution to use. This is a layer contained in the directory
-        ;; `+distribution'. For now available distributions are `spacemacs-base'
-        ;; or `spacemacs'. (default 'spacemacs)
-        dotspacemacs-distribution 'spacemacs
-        ;; Lazy installation of layers (i.e. layers are installed only when a file
-        ;; with a supported type is opened). Possible values are `all', `unused'
-        ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
-        ;; not listed in variable `dotspacemacs-configuration-layers'), `all' will
-        ;; lazy install any layer that support lazy installation even the layers
-        ;; listed in `dotspacemacs-configuration-layers'. `nil' disable the lazy
-        ;; installation feature and you have to explicitly list a layer in the
-        ;; variable `dotspacemacs-configuration-layers' to install it.
-        ;; (default 'unused)
-        dotspacemacs-enable-lazy-installation 'unused
-        ;; If non-nil then Spacemacs will ask for confirmation before installing
-        ;; a layer lazily. (default t)
-        dotspacemacs-ask-for-lazy-installation t
-        ;; If non-nil layers with lazy install support are lazy installed.
-        ;; List of additional paths where to look for configuration layers.
-        ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-        dotspacemacs-configuration-layer-path '("~/.spacemacs.d/")
-        ;; List of configuration layers to load.
-        dotspacemacs-configuration-layers
-        '(
-        ;; ----------------------------------------------------------------
-        ;; Example of useful layers you may want to use right away.
-        ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-        ;; <M-m f e R> (Emacs style) to install them.
-        ;; ----------------------------------------------------------------
-        helm
-        osx
-        (auto-completion :variables
-                         auto-completion-return-key-behavior 'complete
-                         auto-completion-tab-key-behavior nil
-                         auto-completion-enable-snippets-in-popup t
-                         auto-completion-enable-help-tooltip t)
-        better-defaults
-        (ibuffer :variables ibuffer-group-buffers-by 'projects)
-        emacs-lisp
-        git
-        ess
-        html
-        racket
-        markdown
-        docker
-        sql
+  (setq-default
+   ;; Base distribution to use. This is a layer contained in the directory
+   ;; `+distribution'. For now available distributions are `spacemacs-base'
+   ;; or `spacemacs'. (default 'spacemacs)
+   dotspacemacs-distribution 'spacemacs
+   ;; Lazy installation of layers (i.e. layers are installed only when a file
+   ;; with a supported type is opened). Possible values are `all', `unused'
+   ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
+   ;; not listed in variable `dotspacemacs-configuration-layers'), `all' will
+   ;; lazy install any layer that support lazy installation even the layers
+   ;; listed in `dotspacemacs-configuration-layers'. `nil' disable the lazy
+   ;; installation feature and you have to explicitly list a layer in the
+   ;; variable `dotspacemacs-configuration-layers' to install it.
+   ;; (default 'unused)
+   dotspacemacs-enable-lazy-installation 'unused
+   ;; If non-nil then Spacemacs will ask for confirmation before installing
+   ;; a layer lazily. (default t)
+   dotspacemacs-ask-for-lazy-installation t
+   ;; If non-nil layers with lazy install support are lazy installed.
+   ;; List of additional paths where to look for configuration layers.
+   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
+   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/")
+   ;; List of configuration layers to load.
+   dotspacemacs-configuration-layers
+   '(
+     ;; ----------------------------------------------------------------
+     ;; Example of useful layers you may want to use right away.
+     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
+     ;; <M-m f e R> (Emacs style) to install them.
+     ;; ----------------------------------------------------------------
+     helm
+     osx
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior nil
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip t)
+     better-defaults
+     (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     emacs-lisp
+     git
+     ess
+     html
+     racket
+     markdown
+     docker
+     sql
+     (scala :variables
+            scala-indent:use-javadoc-style t
+            scala-enable-eldoc t
+            scala-auto-insert-asterisk-in-comments t
+            scala-use-unicode-arrows t)
 
-        my-layer
-        ;;my-rtags
-        ;;my-realgud
-        my-polymode
-        my-parinfer
+     (mu4e :variables
+           mu4e-installation-path "/usr/local/share/emacs/site-lisp")
+     slack
 
-        (latex :variables latex-build-command "LatexMk")
-        (org :variables
-             org-enable-github-support t
-             org-projectile-file "~/Notes/Projects-TODO.org")
-        (shell :variables
-               shell-default-shell 'ansi-term
-               shell-default-height 30
-               shell-default-position 'full
-               shell-default-term-shell "/usr/local/bin/zsh"
-               shell-default-full-span nil)
-        spell-checking
-        syntax-checking
-        theming
-        version-control
-        yaml
-        )
-        ;; List of additional packages that will be installed without being
-        ;; wrapped in a layer. If you need some configuration for these
-        ;; packages, then consider creating a layer. You can also put the
-        ;; configuration in `dotspacemacs/user-config'.
-        dotspacemacs-additional-packages
-        '(
-          simpleclip
-          rainbow-blocks
-          rainbow-mode
-          dired-rainbow
-          color-theme-solarized
-        )
-        ;; A list of packages that cannot be updated.
-        dotspacemacs-frozen-packages '()
-        ;; A list of packages that will not be installed and loaded.
-        dotspacemacs-excluded-packages '(ess-R-object-popup)
-        ;; Defines the behaviour of Spacemacs when installing packages.
-        ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
-        ;; `used-only' installs only explicitly used packages and uninstall any
-        ;; unused packages as well as their unused dependencies.
-        ;; `used-but-keep-unused' installs only the used packages but won't uninstall
-        ;; them if they become unused. `all' installs *all* packages supported by
-        ;; Spacemacs and never uninstall them. (default is `used-only')
-        dotspacemacs-install-packages 'used-only))
+     (latex :variables latex-build-command "LatexMk")
+
+     spacemacs-org
+     (org :variables
+          org-enable-github-support t
+          org-projectile-file "~/Notes/Projects-TODO.org")
+
+     (shell :variables
+            shell-default-shell 'ansi-term
+            shell-default-height 30
+            shell-default-position 'full
+            shell-default-term-shell "/usr/local/bin/zsh"
+            shell-default-full-span nil)
+     spell-checking
+     syntax-checking
+     theming
+     version-control
+     yaml
+
+     my-layer
+     ;;my-rtags
+     ;;my-realgud
+     my-polymode
+     my-parinfer
+     )
+   ;; List of additional packages that will be installed without being
+   ;; wrapped in a layer. If you need some configuration for these
+   ;; packages, then consider creating a layer. You can also put the
+   ;; configuration in `dotspacemacs/user-config'.
+   dotspacemacs-additional-packages
+   '(
+     simpleclip
+     rainbow-blocks
+     rainbow-mode
+     dired-rainbow
+     color-theme-solarized
+     )
+   ;; A list of packages that cannot be updated.
+   dotspacemacs-frozen-packages '()
+   ;; A list of packages that will not be installed and loaded.
+   dotspacemacs-excluded-packages '(ess-R-object-popup)
+   ;; Defines the behaviour of Spacemacs when installing packages.
+   ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
+   ;; `used-only' installs only explicitly used packages and uninstall any
+   ;; unused packages as well as their unused dependencies.
+   ;; `used-but-keep-unused' installs only the used packages but won't uninstall
+   ;; them if they become unused. `all' installs *all* packages supported by
+   ;; Spacemacs and never uninstall them. (default is `used-only')
+   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -336,14 +348,15 @@ This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
-  (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
-  (push '(helm . "melpa-stable") package-pinned-packages)
+  ;; needed for helm bugs and installing scala layer
+  ;;(push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
+  ;;(push '(helm . "melpa-stable") package-pinned-packages)
 
   (setq
    ;; default window possition and size
    ;; TODO: in the center of a screen
-   initial-frame-alist '((top . 0) (left . 0) (width . 140) (height . 60)))
-)
+   initial-frame-alist '((top . 0) (left . 0) (width . 140) (height . 60))))
+
 
 
 (defun dotspacemacs/user-config ()
@@ -353,6 +366,15 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  ;; slack
+  (slack-register-team
+   :name "just-r.slack.com"
+   :default t
+   :client-id "krikava"
+   :client-secret (string-trim (shell-command-to-string "/usr/bin/pass fit/just-r.slack.com | head -1"))
+   :token (string-trim (shell-command-to-string "pass fit/just-r.slack.com | grep 'token:' | cut -d' ' -f 2"))
+   :subscribed-channels '(general scala-implicit))
 
   ;; fixing keys
   (define-key input-decode-map "\e\e[A" [(meta up)])
@@ -488,28 +510,28 @@ you should place your code here."
                               (scroll-up 3)))
 
   ;; solarized
-  (setq theming-modifications
-        '((solarized
-           ;; Provide a sort of "on-off" modeline whereby the current buffer has a nice
-           ;; bright blue background, and all the others are in cream.
-           ;; TODO: Change to use variables here. However, got error:
-           ;; (Spacemacs) Error in dotspacemacs/user-config: Wrong type argument: stringp, pd-blue
-           (mode-line :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
-           (powerline-active1 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
-           (powerline-active2 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
-           (mode-line-inactive :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
-           (powerline-inactive1 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
-           (powerline-inactive2 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
-           ;; Make a really prominent helm selection line.
-           (helm-selection :foreground "white" :background "red" :inverse-video nil)
-           ;; dotspacemacs-colorize-cursor-according-to-state. to get this
-           ;; to work you must set the variable
-           ;; dotspacemacs-colorize-cursor-according-to-state to nil
-           (cursor :background "#b58900")
-           )))
-  (set-terminal-parameter nil 'background-mode 'dark)
-  (set-frame-parameter nil 'background-mode 'dark)
-  (spacemacs/load-theme 'solarized)
+  ;; (setq theming-modifications
+  ;;       '((solarized
+  ;;          ;; Provide a sort of "on-off" modeline whereby the current buffer has a nice
+  ;;          ;; bright blue background, and all the others are in cream.
+  ;;          ;; TODO: Change to use variables here. However, got error:
+  ;;          ;; (Spacemacs) Error in dotspacemacs/user-config: Wrong type argument: stringp, pd-blue
+  ;;          (mode-line :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+  ;;          (powerline-active1 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+  ;;          (powerline-active2 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+  ;;          (mode-line-inactive :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+  ;;          (powerline-inactive1 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+  ;;          (powerline-inactive2 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+  ;;          ;; Make a really prominent helm selection line.
+  ;;          (helm-selection :foreground "white" :background "red" :inverse-video nil)
+  ;;          ;; dotspacemacs-colorize-cursor-according-to-state. to get this
+  ;;          ;; to work you must set the variable
+  ;;          ;; dotspacemacs-colorize-cursor-according-to-state to nil
+  ;;          (cursor :background "#b58900")
+  ;;          )))
+  ;; (set-terminal-parameter nil 'background-mode 'dark)
+  ;; (set-frame-parameter nil 'background-mode 'dark)
+  ;; (spacemacs/load-theme 'solarized)
 
   ;; mu4e
   (setq mu4e-maildir "~/Mail"
@@ -536,9 +558,9 @@ you should place your code here."
           ("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
   (cond
    ((spacemacs/system-is-mac) (setq TeX-view-program-selection '((output-pdf "Skim"))))
-   ((spacemacs/system-is-linux) (setq TeX-view-program-selection '((output-pdf "Okular")))))
+   ((spacemacs/system-is-linux) (setq TeX-view-program-selection '((output-pdf "Okular"))))))
 
-  )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -550,11 +572,33 @@ you should place your code here."
  '(org-agenda-files (quote ("~/Notes/Projects-TODO.org")))
  '(package-selected-packages
    (quote
-    (rainbow-mode org-category-capture company-auctex auctex-latexmk auctex color-theme-solarized color-theme rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
- '(tramp-syntax (quote default)))
+    (mu4e-maildirs-extension mu4e-alert ht rainbow-mode org-category-capture company-auctex auctex-latexmk auctex color-theme-solarized color-theme rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(tramp-syntax (quote default) nil (tramp)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/Notes/Projects-TODO.org")))
+ '(package-selected-packages
+   (quote
+    (slack circe oauth2 websocket emojify emoji-cheat-sheet-plus company-emoji noflet meghanada gradle-mode ensime sbt-mode scala-mode company-emacs-eclim eclim symon string-inflection password-generator org-brain impatient-mode simple-httpd helm-purpose window-purpose imenu-list evil-org evil-lion editorconfig browse-at-remote mu4e-maildirs-extension mu4e-alert ht rainbow-mode org-category-capture company-auctex auctex-latexmk auctex color-theme-solarized color-theme rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(tramp-syntax (quote default) nil (tramp)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
