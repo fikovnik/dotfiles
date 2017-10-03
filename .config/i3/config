@@ -246,7 +246,7 @@ exec --no-startup-id compton
 exec --no-startup-id rescuetime
 
 # make capslock control
-exec --no-startup-id setxkbmap -option ctrl:nocaps
+exec_always --no-startup-id setxkbmap -option ctrl:nocaps -variant altgr-intl
 
 # screen lock
 exec --no-startup-id xautolock -time 5 -locker ~/.config/i3/scripts/lock.sh -notify 6 -notifier '~/.config/i3/scripts/dim-screen.sh 5'
