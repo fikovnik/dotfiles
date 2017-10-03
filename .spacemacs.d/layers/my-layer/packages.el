@@ -2,6 +2,42 @@
   '()
   )
 
+(defun my-copy-to-xclipboard(arg)
+  (interactive "P")
+  (cond
+   ((not (use-region-p))
+    (message "Nothing to yank to X-clipboard"))
+   ((and (not (display-graphic-p))
+         (/= 0 (shell-command-on-region
+                (region-beginning) (region-end) "xsel -i -b")))
+    (error "Is program `xsel' installed?"))
+   (t
+    (when (display-graphic-p)
+      (call-interactively 'clipboard-kill-ring-save))
+    (message "Yanked region to X-clipboard")
+    (when arg
+      (kill-region  (region-beginning) (region-end)))
+    (deactivate-mark))))
+
+(defun my-cut-to-xclipboard()
+  (interactive)
+  (my-copy-to-xclipboard t))
+
+(defun my-paste-from-xclipboard()
+    "Uses shell command `xsel -o' to paste from x-clipboard. With
+one prefix arg, pastes from X-PRIMARY, and with two prefix args,
+pastes from X-SECONDARY."
+    (interactive)
+    (if (display-graphic-p)
+        (clipboard-yank)
+      (let*
+          ((opt (prefix-numeric-value current-prefix-arg))
+           (opt (cond
+                 ((=  1 opt) "b")
+                 ((=  4 opt) "p")
+                 ((= 16 opt) "s"))))
+        (insert (shell-command-to-string (concat "xsel -o -" opt))))))
+
 (defun kill-syntax (&optional arg)
   (interactive "p")
   (let ((opoint (point)))
@@ -75,15 +111,18 @@ Called via the `after-load-functions' special hook."
     (define-key map (kbd "M-b") (lambda () (interactive) (forward-same-syntax -1)))
     (define-key map (kbd "M-d") 'kill-syntax)
     (define-key map (kbd "M-<backspace>") 'backward-kill-syntax)
-    (define-key map [M-S-down] 'duplicate-current-line-or-region)
-    (define-key map [M-up] 'move-text-up)
-    (define-key map [M-down] 'move-text-down)
+    (define-key map (kbd "M-S-<down>") 'duplicate-current-line-or-region)
+    (define-key map (kbd "M-<up>") 'move-text-up)
+    (define-key map (kbd "M-<down>") 'move-text-down)
+
+    (define-key map (kbd "C-c C-w") 'my-cut-to-xclipboard)
+    (define-key map (kbd "C-c M-w") 'my-copy-to-xclipboard)
+    (define-key map (kbd "C-c C-y") 'my-paste-from-xclipboard)
 
     (define-key map (kbd "C-x C-b") 'helm-mini)
     (define-key map (kbd "M-x") 'helm-M-x)
 
     (define-key map (kbd "C-=") 'er/expand-region)
-
     ;; faster kill buffer
     (define-key map (kbd "C-x C-k") 'kill-this-buffer)
     (define-key map (kbd "s-w") 'spacemacs/frame-killer)

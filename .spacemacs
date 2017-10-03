@@ -350,175 +350,192 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-       (setq
-        ;; fix the modeline separators
-        powerline-default-separator 'utf-8
-        ;; better scrolling
-        mouse-wheel-scroll-amount '(1 ((shift) . 1))
-        scroll-step 1
-        ;; wrap around window edges
-        windmove-wrap-around t
-        ;; allow pgup/pgdn to scroll to top and bottom
-        scroll-error-top-bottom t
-        ;; use system terminfo (tic -o /usr/share/terminfo <path-to-eterm-color.ti>)
-        system-uses-terminfo nil
 
-        ;; c code
-        c-default-style "stroustrup"
-        c-basic-offset 4
+  ;; fixing keys
+  (define-key input-decode-map "\e\e[A" [(meta up)])
+  (define-key input-decode-map "\e\e[a" [(meta shift up)])
+  (define-key input-decode-map "\e\e[b" [(meta shift down)])
+  (define-key input-decode-map "\e\e[B" [(meta down)])
 
-        ;; so it does not ask "Keep current list of tags tables also" which I do not want
-        tags-add-tables nil)
+  (setq
+   ;; fix the modeline separators
+   powerline-default-separator 'utf-8
+   ;; better scrolling
+   mouse-wheel-scroll-amount '(1 ((shift) . 1))
+   scroll-step 1
+   ;; wrap around window edges
+   windmove-wrap-around t
+   ;; allow pgup/pgdn to scroll to top and bottom
+   scroll-error-top-bottom t
+   ;; use system terminfo (tic -o /usr/share/terminfo <path-to-eterm-color.ti>)
+   system-uses-terminfo nil
+
+   ;; c code
+   c-default-style "stroustrup"
+   c-basic-offset 4
+
+   ;; so it does not ask "Keep current list of tags tables also" which I do not want
+   tags-add-tables nil)
 
 
-       (setq-default
-        tab-width 4
-        indent-tabs-mode nil
-        show-paren-delay 0)
+  (setq-default
+   tab-width 4
+   indent-tabs-mode nil
+   show-paren-delay 0)
 
 
-       ;; C++ for headers
-       (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  ;; C++ for headers
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
-       ;; nice cursor
-       (blink-cursor-mode -1)
+  ;; nice cursor
+  (blink-cursor-mode -1)
 
-       ;; replace highlighted text by typing
-       (delete-selection-mode 1)
+  ;; replace highlighted text by typing
+  (delete-selection-mode 1)
 
-       (simpleclip-mode 1)
+  (simpleclip-mode 1)
 
-       (global-prettify-symbols-mode t)
-       (global-undo-tree-mode t)
-       (global-auto-revert-mode t)
+  (global-prettify-symbols-mode t)
+  (global-undo-tree-mode t)
+  (global-auto-revert-mode t)
 
-       (windmove-default-keybindings 'super)
+  (windmove-default-keybindings 'super)
 
-       ;; smarter newline after "{"
-       (sp-local-pair 'prog-mode "{" nil :post-handlers '((my/create-newline-and-enter-sexp "RET")))
-       ;; because ess-mode does not inherit prog-mode yet -
-       (sp-local-pair 'ess-mode "{" nil :post-handlers '((my/create-newline-and-enter-sexp "RET")))
+  ;; smarter newline after "{"
+  (sp-local-pair 'prog-mode "{" nil :post-handlers '((my/create-newline-and-enter-sexp "RET")))
+  ;; because ess-mode does not inherit prog-mode yet -
+  (sp-local-pair 'ess-mode "{" nil :post-handlers '((my/create-newline-and-enter-sexp "RET")))
 
-       ;; R configuration
-       (add-hook 'inferior-ess-mode-hook 'my/iess-mode-hook)
-       (add-hook 'ess-mode-hook 'my/ess-mode-hook)
+  ;; R configuration
+  (add-hook 'inferior-ess-mode-hook 'my/iess-mode-hook)
+  (add-hook 'ess-mode-hook 'my/ess-mode-hook)
 
-       ;; interpreters
-       (eval-after-load "comint"
-         '(progn
-            (define-key comint-mode-map [up] 'comint-previous-matching-input-from-input)
-            (define-key comint-mode-map [down] 'comint-next-matching-input-from-input)
-            (define-key comint-mode-map (kbd "C-k") 'kill-line)
-            ;; enable completion
-            (company-mode t)
-            ;; also recommended for ESS use --
-            (setq comint-scroll-to-bottom-on-output 'others)
-            (setq comint-scroll-show-maximum-output t)
-            ;; somewhat extreme, almost disabling writing in *R*, *shell* buffers above prompt:
-            (setq comint-scroll-to-bottom-on-input 'this)))
+  ;; interpreters
+  (eval-after-load "comint"
+    '(progn
+       (define-key comint-mode-map [up] 'comint-previous-matching-input-from-input)
+       (define-key comint-mode-map [down] 'comint-next-matching-input-from-input)
+       (define-key comint-mode-map (kbd "C-k") 'kill-line)
+       ;; enable completion
+       (company-mode t)
+       ;; also recommended for ESS use --
+       (setq comint-scroll-to-bottom-on-output 'others)
+       (setq comint-scroll-show-maximum-output t)
+       ;; somewhat extreme, almost disabling writing in *R*, *shell* buffers above prompt:
+       (setq comint-scroll-to-bottom-on-input 'this)))
 
-       ;; smartparens bindings:
-       ;;
-       ;; ("C-M-f" . sp-forward-sexp)
-       ;; ("C-M-b" . sp-backward-sexp)
-       ;; ("C-M-d" . sp-down-sexp)
-       ;; ("C-M-a" . sp-backward-down-sexp)
-       ;; ("C-S-d" . sp-beginning-of-sexp)
-       ;; ("C-S-a" . sp-end-of-sexp)
-       ;; ("C-M-e" . sp-up-sexp)
-       ;; ("C-M-u" . sp-backward-up-sexp)
-       ;; ("C-M-n" . sp-next-sexp)
-       ;; ("C-M-p" . sp-previous-sexp)
-       ;; ("C-M-k" . sp-kill-sexp)
-       ;; ("C-M-w" . sp-copy-sexp)
-       ;; ("M-<delete>" . sp-unwrap-sexp)
-       ;; ("M-<backspace>" . sp-backward-unwrap-sexp)
-       ;; ("C-<right>" . sp-forward-slurp-sexp)
-       ;; ("C-<left>" . sp-forward-barf-sexp)
-       ;; ("C-M-<left>" . sp-backward-slurp-sexp)
-       ;; ("C-M-<right>" . sp-backward-barf-sexp)
-       ;; ("M-D" . sp-splice-sexp)
-       ;; ("C-M-<delete>" . sp-splice-sexp-killing-forward)
-       ;; ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
-       ;; ("C-S-<backspace>" . sp-splice-sexp-killing-around)
-       ;; ("C-]" . sp-select-next-thing-exchange)
-       ;; ("C-M-]" . sp-select-next-thing)
-       ;; ("C-M-SPC" . sp-mark-sexp)
-       ;; ("M-F" . sp-forward-symbol)
-       ;; ("M-B" . sp-backward-symbol)
-       ;;
-       (sp-use-smartparens-bindings)
+  ;; smartparens bindings:
+  ;;
+  ;; ("C-M-f" . sp-forward-sexp)
+  ;; ("C-M-b" . sp-backward-sexp)
+  ;; ("C-M-d" . sp-down-sexp)
+  ;; ("C-M-a" . sp-backward-down-sexp)
+  ;; ("C-S-d" . sp-beginning-of-sexp)
+  ;; ("C-S-a" . sp-end-of-sexp)
+  ;; ("C-M-e" . sp-up-sexp)
+  ;; ("C-M-u" . sp-backward-up-sexp)
+  ;; ("C-M-n" . sp-next-sexp)
+  ;; ("C-M-p" . sp-previous-sexp)
+  ;; ("C-M-k" . sp-kill-sexp)
+  ;; ("C-M-w" . sp-copy-sexp)
+  ;; ("M-<delete>" . sp-unwrap-sexp)
+  ;; ("M-<backspace>" . sp-backward-unwrap-sexp)
+  ;; ("C-<right>" . sp-forward-slurp-sexp)
+  ;; ("C-<left>" . sp-forward-barf-sexp)
+  ;; ("C-M-<left>" . sp-backward-slurp-sexp)
+  ;; ("C-M-<right>" . sp-backward-barf-sexp)
+  ;; ("M-D" . sp-splice-sexp)
+  ;; ("C-M-<delete>" . sp-splice-sexp-killing-forward)
+  ;; ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+  ;; ("C-S-<backspace>" . sp-splice-sexp-killing-around)
+  ;; ("C-]" . sp-select-next-thing-exchange)
+  ;; ("C-M-]" . sp-select-next-thing)
+  ;; ("C-M-SPC" . sp-mark-sexp)
+  ;; ("M-F" . sp-forward-symbol)
+  ;; ("M-B" . sp-backward-symbol)
+  ;;
+  (sp-use-smartparens-bindings)
 
-       (sp-local-pair 'prog-mode "("
-                      ")" :wrap "C-(")
-       (sp-local-pair 'prog-mode "[" "]" :wrap "C-[")
-       (sp-local-pair 'prog-mode "{" "}" :wrap "C-{")
-       (setq sp-autoskip-closing-pair t)
-       (setq sp-autodelete-pair t)
+  (sp-local-pair 'prog-mode "("
+                 ")" :wrap "C-(")
+  (sp-local-pair 'prog-mode "[" "]" :wrap "C-[")
+  (sp-local-pair 'prog-mode "{" "}" :wrap "C-{")
+  (setq sp-autoskip-closing-pair t)
+  (setq sp-autodelete-pair t)
 
-       ;; (sp-local-pair 'Org "=" "=" :trigger "=")
-       ;; (sp-local-pair 'Org "~" "~" :trigger "~")
+  ;; (sp-local-pair 'Org "=" "=" :trigger "=")
+  ;; (sp-local-pair 'Org "~" "~" :trigger "~")
 
-       ;; (SQL)
-       ;; FIXME: just for now
-       (setq sql-mysql-optionsq (list "-P 6612"))
-       ;; fix mysql prompt: https://unix.stackexchange.com/a/297320/118575
-       ;; (sql-set-product-feature 'mysql :prompt-regexp "^\\(MariaDB\\|MySQL\\) \\[[_a-zA-Z]*\\]> ")
+  ;; (SQL)
+  ;; FIXME: just for now
+  (setq sql-mysql-optionsq (list "-P 6612"))
+  ;; fix mysql prompt: https://unix.stackexchange.com/a/297320/118575
+  ;; (sql-set-product-feature 'mysql :prompt-regexp "^\\(MariaDB\\|MySQL\\) \\[[_a-zA-Z]*\\]> ")
 
-       (spacemacs/set-leader-keys
-         "bq" 'kill-buffer-and-window)
+  (spacemacs/set-leader-keys
+    "bq" 'kill-buffer-and-window)
 
-       ;; fix scrolling
-       (xterm-mouse-mode 1)
-       (global-set-key [mouse-4] (lambda ()
-                                   (interactive)
-                                   (scroll-down 3)))
-       (global-set-key [mouse-5] (lambda ()
-                                   (interactive)
-                                   (scroll-up 3)))
+  ;; fix scrolling
+  (xterm-mouse-mode 1)
+  (global-set-key [mouse-4] (lambda ()
+                              (interactive)
+                              (scroll-down 3)))
+  (global-set-key [mouse-5] (lambda ()
+                              (interactive)
+                              (scroll-up 3)))
 
-       ;; solarized
-       (setq theming-modifications
-             '((solarized
-                ;; Provide a sort of "on-off" modeline whereby the current buffer has a nice
-                ;; bright blue background, and all the others are in cream.
-                ;; TODO: Change to use variables here. However, got error:
-                ;; (Spacemacs) Error in dotspacemacs/user-config: Wrong type argument: stringp, pd-blue
-                (mode-line :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
-                (powerline-active1 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
-                (powerline-active2 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
-                (mode-line-inactive :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
-                (powerline-inactive1 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
-                (powerline-inactive2 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
-                ;; Make a really prominent helm selection line.
-                (helm-selection :foreground "white" :background "red" :inverse-video nil)
-                ;; dotspacemacs-colorize-cursor-according-to-state. to get this
-                ;; to work you must set the variable
-                ;; dotspacemacs-colorize-cursor-according-to-state to nil
-                (cursor :background "#b58900")
-                )))
-       (set-terminal-parameter nil 'background-mode 'dark)
-       (set-frame-parameter nil 'background-mode 'dark)
-       (spacemacs/load-theme 'solarized)
+  ;; solarized
+  (setq theming-modifications
+        '((solarized
+           ;; Provide a sort of "on-off" modeline whereby the current buffer has a nice
+           ;; bright blue background, and all the others are in cream.
+           ;; TODO: Change to use variables here. However, got error:
+           ;; (Spacemacs) Error in dotspacemacs/user-config: Wrong type argument: stringp, pd-blue
+           (mode-line :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+           (powerline-active1 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+           (powerline-active2 :foreground "#e9e2cb" :background "#2075c7" :inverse-video nil)
+           (mode-line-inactive :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+           (powerline-inactive1 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+           (powerline-inactive2 :foreground "#2075c7" :background "#e9e2cb" :inverse-video nil)
+           ;; Make a really prominent helm selection line.
+           (helm-selection :foreground "white" :background "red" :inverse-video nil)
+           ;; dotspacemacs-colorize-cursor-according-to-state. to get this
+           ;; to work you must set the variable
+           ;; dotspacemacs-colorize-cursor-according-to-state to nil
+           (cursor :background "#b58900")
+           )))
+  (set-terminal-parameter nil 'background-mode 'dark)
+  (set-frame-parameter nil 'background-mode 'dark)
+  (spacemacs/load-theme 'solarized)
 
-       ;; latex preview
-       ;; (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-       ;; Latex
-       ;; Use Skim on macOS to utilize synctex.
-       ;; Confer https://mssun.me/blog/spacemacs-and-latex.html
-       (setq TeX-source-correlate-mode t)
-       (setq TeX-source-correlate-start-server t)
-       (setq TeX-source-correlate-method 'synctex)
-       ;; AucTex recognizes some standard viewers, but the default view command
-       ;; does not appear to sync.
-       (setq TeX-view-program-list
-             '(("Okular" "okular --unique %o#src:%n`pwd`/./%b")
-               ("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-       (cond
-        ((spacemacs/system-is-mac) (setq TeX-view-program-selection '((output-pdf "Skim"))))
-        ((spacemacs/system-is-linux) (setq TeX-view-program-selection '((output-pdf "Okular")))))
-       )
+  ;; mu4e
+  (setq mu4e-maildir "~/Mail"
+        mu4e-trash-folder "/Trash"
+        mu4e-refile-folder "/Archive"
+        mu4e-get-mail-command "mbsync krikava_at_gmail"
+        mu4e-update-interval nil
+        mu4e-compose-signature-auto-include nil
+        mu4e-view-show-images t
+        mu4e-view-show-addresses t)
 
+  ;; latex preview
+  ;; (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+  ;; Latex
+  ;; Use Skim on macOS to utilize synctex.
+  ;; Confer https://mssun.me/blog/spacemacs-and-latex.html
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-start-server t)
+  (setq TeX-source-correlate-method 'synctex)
+  ;; AucTex recognizes some standard viewers, but the default view command
+  ;; does not appear to sync.
+  (setq TeX-view-program-list
+        '(("Okular" "okular --unique %o#src:%n`pwd`/./%b")
+          ("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+  (cond
+   ((spacemacs/system-is-mac) (setq TeX-view-program-selection '((output-pdf "Skim"))))
+   ((spacemacs/system-is-linux) (setq TeX-view-program-selection '((output-pdf "Okular")))))
+
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
