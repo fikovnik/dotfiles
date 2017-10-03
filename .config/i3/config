@@ -163,8 +163,10 @@ bindsym XF86AudioRaiseVolume exec amixer -D pulse set Master 3%+ unmute
 bindsym XF86AudioLowerVolume exec amixer -D pulse set Master 3%- unmute
 
 # media player controls
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
+# these do not work: https://superuser.com/questions/1255790/apple-keyboard-and-xf86audioplay-media-key-in-linux
+#bindsym XF86AudioPlay exec playerctl play
+#bindsym XF86AudioPause exec playerctl pause
+bindsym $mod+F8 exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
@@ -172,7 +174,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86MonBrightnessUp exec brightnessctl -d intel_backlight set "+10%"
 bindsym XF86MonBrightnessDown exec brightnessctl -d intel_backlight set "10%-"
 
-bindsym $mod+F8 exec --no-startup-id ~/.config/i3/scripts/screen-layout.sh
+bindsym $mod+F7 exec --no-startup-id ~/.config/i3/scripts/screen-layout.sh
 bindsym $mod+shift+x exec --no-startup-id ~/.config/i3/scripts/lock.sh
 
 # bind custom launchers
