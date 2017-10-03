@@ -233,7 +233,7 @@ bar {
 }
 
 # background
-exec_always --no-startup-id feh --bg-scale ~/Dropbox/Pictures/Wallpapers/machinarium.jpg
+exec_always --no-startup-id feh --bg-scale ~/.config/i3/wallpaper.jpg
 
 # Xresources
 exec --no-startup-id test -f ~/mgs.Xresources && xrdb -merge ~/.Xresources
