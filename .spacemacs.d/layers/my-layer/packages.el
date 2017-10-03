@@ -119,6 +119,12 @@ Called via the `after-load-functions' special hook."
     (define-key map (kbd "C-c M-w") 'my-copy-to-xclipboard)
     (define-key map (kbd "C-c C-y") 'my-paste-from-xclipboard)
 
+    ;; windmove
+    (define-key map (kbd "C-x <left>")  'windmove-left)
+    (define-key map (kbd "C-x <right>") 'windmove-right)
+    (define-key map (kbd "C-x <up>")    'windmove-up)
+    (define-key map (kbd "C-x <down>")  'windmove-down)
+
     (define-key map (kbd "C-x C-b") 'helm-mini)
     (define-key map (kbd "M-x") 'helm-M-x)
 
