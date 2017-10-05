@@ -1,5 +1,5 @@
 (defconst my-layer-packages
-  '()
+  '(move-dup)
   )
 
 (defun my-copy-to-xclipboard(arg)
@@ -57,34 +57,13 @@ pastes from X-SECONDARY."
       (setq beg (line-beginning-position) end (line-end-position)))
     (comment-or-uncomment-region beg end)))
 
-;; duplicate lines
-(defun duplicate-current-line-or-region (arg)
-  "Duplicates the current line or region ARG times.
-If there's no region, the current line will be duplicated. However, if
-there's a region, all lines that region covers will be duplicated."
-       (interactive "p")
-       (let (beg end (origin (point)))
-         (if (and mark-active (> (point) (mark)))
-             (exchange-point-and-mark))
-         (setq beg (line-beginning-position))
-         (if mark-active
-             (exchange-point-and-mark))
-         (setq end (line-end-position))
-         (let ((region (buffer-substring-no-properties beg end)))
-           (dotimes (i arg)
-             (goto-char end)
-             (newline)
-             (insert region)
-             (setq end (point)))
-           (goto-char (+ origin (* (length region) arg) arg)))))
-
 (defun my-keys-have-priority (_file)
   "Try to ensure that my keybindings retain priority over other minor modes.
 Called via the `after-load-functions' special hook."
-       (unless (eq (caar minor-mode-map-alist) 'my-keys-minor-mode)
-         (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
-           (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
-           (add-to-list 'minor-mode-map-alist mykeys))))
+  (unless (eq (caar minor-mode-map-alist) 'my-keys-minor-mode)
+    (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
+      (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
+      (add-to-list 'minor-mode-map-alist mykeys))))
 
 (defun indent-buffer ()
   "Indent the currently visited buffer."
@@ -103,17 +82,23 @@ Called via the `after-load-functions' special hook."
         (indent-buffer)
         (message "Indented buffer.")))))
 
+(defun my-layer/init-move-dup ()
+  (require 'move-dup))
+
 (defvar my-keys-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map [home] 'mwim-beginning-of-code-or-line)
     (define-key map [end] 'mwim-end-of-code-or-line)
+
     (define-key map (kbd "M-f") 'forward-same-syntax)
     (define-key map (kbd "M-b") (lambda () (interactive) (forward-same-syntax -1)))
     (define-key map (kbd "M-d") 'kill-syntax)
     (define-key map (kbd "M-<backspace>") 'backward-kill-syntax)
-    (define-key map (kbd "M-S-<down>") 'duplicate-current-line-or-region)
-    (define-key map (kbd "M-<up>") 'move-text-up)
-    (define-key map (kbd "M-<down>") 'move-text-down)
+
+    (define-key map (kbd "M-S-<up>") 'md/duplicate-up)
+    (define-key map (kbd "M-S-<down>") 'md/duplicate-down)
+    (define-key map (kbd "M-<up>") 'md/move-lines-up)
+    (define-key map (kbd "M-<down>") 'md/move-lines-down)
 
     (define-key map (kbd "C-c C-w") 'my-cut-to-xclipboard)
     (define-key map (kbd "C-c M-w") 'my-copy-to-xclipboard)
