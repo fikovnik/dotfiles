@@ -124,4 +124,5 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-alias node-200="ssh node-200 -t /home/linuxbrew/.linuxbrew/bin/tmux attach-session"
+bindkey '\e\eOD' backward-word
+bindkey '\e\eOC' forward-word
