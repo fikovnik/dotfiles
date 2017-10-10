@@ -53,15 +53,14 @@ values."
      markdown
      docker
      sql
-     (scala :variables
-            scala-indent:use-javadoc-style t
-            scala-enable-eldoc t
-            scala-auto-insert-asterisk-in-comments t
-            scala-use-unicode-arrows t)
+     ;; (scala :variables
+     ;;        scala-indent:use-javadoc-style t
+     ;;        scala-enable-eldoc t
+     ;;        scala-auto-insert-asterisk-in-comments t
+     ;;        scala-use-unicode-arrows t)
 
      (mu4e :variables
            mu4e-installation-path "/usr/local/share/emacs/site-lisp")
-     slack
 
      (latex :variables latex-build-command "LatexMk")
 
@@ -85,9 +84,9 @@ values."
      my-layer
      ;;my-rtags
      ;;my-realgud
-     my-polymode
-     my-parinfer
-     )
+     ;;my-parinfer
+     my-polymode)
+
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -98,8 +97,8 @@ values."
      rainbow-blocks
      rainbow-mode
      dired-rainbow
-     color-theme-solarized
-     )
+   )
+     
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -349,32 +348,35 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
   ;; needed for helm bugs and installing scala layer
-  ;;(push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
+  (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
+  (push '("ensime" . "melpa-stable") package-pinned-packages)
   ;;(push '(helm . "melpa-stable") package-pinned-packages)
 
   (setq
    ;; default window possition and size
    ;; TODO: in the center of a screen
-   initial-frame-alist '((top . 0) (left . 0) (width . 140) (height . 60))))
-
-
+   initial-frame-alist '((top . 0) (left . 0) (width . 140) (height . 60)))
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration.
 This is the place where most of your configurations should be done. Unless it is
-explicitly specified that a variable should be set before a package is loaded,
+hvexplicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; TODO: will not work on OSX
+  ;; (setq alert-notifier-command "notify-send")
+
   ;; slack
-  (slack-register-team
-   :name "just-r.slack.com"
-   :default t
-   :client-id "krikava"
-   :client-secret (string-trim (shell-command-to-string "/usr/bin/pass fit/just-r.slack.com | head -1"))
-   :token (string-trim (shell-command-to-string "pass fit/just-r.slack.com | grep 'token:' | cut -d' ' -f 2"))
-   :subscribed-channels '(general scala-implicit))
+  ;; (slack-register-team
+  ;;  :name "just-r.slack.com"
+  ;;  :default t
+  ;;  :client-id "krikava"
+  ;;  :client-secret (string-trim (shell-command-to-string "/usr/bin/pass fit/just-r.slack.com | head -1"))
+  ;;  :token (string-trim (shell-command-to-string "pass fit/just-r.slack.com | grep 'token:' | cut -d' ' -f 2"))
+  ;;  :subscribed-channels '(general scala-implicit))
 
   ;; fixing keys
   (define-key input-decode-map "\e\e[A" [(meta up)])
@@ -611,7 +613,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-agenda-files (quote ("~/Notes/Projects-TODO.org")))
  '(package-selected-packages
    (quote
-    (slack circe oauth2 websocket emojify emoji-cheat-sheet-plus company-emoji noflet meghanada gradle-mode ensime sbt-mode scala-mode company-emacs-eclim eclim symon string-inflection password-generator org-brain impatient-mode simple-httpd helm-purpose window-purpose imenu-list evil-org evil-lion editorconfig browse-at-remote mu4e-maildirs-extension mu4e-alert ht rainbow-mode org-category-capture company-auctex auctex-latexmk auctex color-theme-solarized color-theme rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (move-dup slack circe oauth2 websocket emojify emoji-cheat-sheet-plus company-emoji noflet meghanada gradle-mode ensime sbt-mode scala-mode company-emacs-eclim eclim symon string-inflection password-generator org-brain impatient-mode simple-httpd helm-purpose window-purpose imenu-list evil-org evil-lion editorconfig browse-at-remote mu4e-maildirs-extension mu4e-alert ht rainbow-mode org-category-capture company-auctex auctex-latexmk auctex color-theme-solarized color-theme rainbow-blocks dired-rainbow dired-hacks-utils ox-gfm org-pomodoro alert log4e org-projectile org-present gntp org-download htmlize gnuplot ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme sql-indent parinfer dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat polymode racket-mode faceup realgud test-simple loc-changes load-relative helm-rtags flycheck-rtags company-rtags xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help rtags ag yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data simpleclip helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck diff-hl company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete unfill mwim ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode smeargle orgit mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(tramp-syntax (quote default) nil (tramp)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
