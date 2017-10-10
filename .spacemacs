@@ -382,6 +382,24 @@ you should place your code here."
   (define-key input-decode-map "\e\e[b" [(meta shift down)])
   (define-key input-decode-map "\e\e[B" [(meta down)])
 
+  (define-key input-decode-map "\e[1;2A" [(shift up)])
+  (define-key input-decode-map "\e[1;2B" [(shift down)])
+  (define-key input-decode-map "\e[1;2C" [(shift right)])
+  (define-key input-decode-map "\e[1;2D" [(shift left)])
+
+  (define-key input-decode-map "\e[1;5A" [(meta up)])
+  (define-key input-decode-map "\e[1;5B" [(meta down)])
+  (define-key input-decode-map "\e[1;5C" [(meta right)])
+  (define-key input-decode-map "\e[1;5D" [(meta left)])
+
+  (define-key input-decode-map "\e[1;6A" [(meta shift up)])
+  (define-key input-decode-map "\e[1;6B" [(meta shift down)])
+  (define-key input-decode-map "\e[1;6C" [(meta shift right)])
+  (define-key input-decode-map "\e[1;6D" [(meta shift left)])
+
+  ;; disable smartparens strict mode
+  (smartparens-global-strict-mode -1)
+
   (setq
    ;; fix the modeline separators
    powerline-default-separator 'utf-8

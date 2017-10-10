@@ -163,7 +163,7 @@ URxvt*scrollTtyKeypress: true
 
 ! Fonts
 URxvt*allow_bold: true
-URxvt*font: xft:DejaVuSansMonoForPowerline\ Nerd\ Font:style=Book:pixelsize=12
+URxvt*font: xft:DejaVu Sans Mono for Powerline Nerd Font:style=Book:pixelsize=13
 ! Fix font space
 URxvt*letterSpace: -1
 
@@ -179,7 +179,7 @@ URxvt*scrollBar_right: true
 URxvt*scrollstyle: plain
 
 ! Perl extensions
-URxvt*perl-ext-common: default,matcher,selection-to-clipboard
+URxvt*perl-ext-common: default,matcher,selection-to-clipboard,xterm-clipboard,font-size
 URxvt*matcher.button: 1
 URxvt*url-launcher: google-chrome
 
@@ -187,6 +187,19 @@ URxvt*url-launcher: google-chrome
 URxvt*cursorBlink: false
 URxvt*cursorColor: S_base1
 URxvt*cursorUnderline: false
+
+!URxvt.meta8: true
+
+! Keys
+URxvt*keysym.M-Up:          \033[1;5A
+URxvt*keysym.M-Down:        \033[1;5B
+URxvt*keysym.M-Right:       \033[1;5C
+URxvt*keysym.M-Left:        \033[1;5D
+
+URxvt.keysym.M-Shift-Up:    \033[1;6A
+URxvt.keysym.M-Shift-Down:  \033[1;6B
+URxvt.keysym.M-Shift-Right: \033[1;6C
+URxvt.keysym.M-Shift-Left:  \033[1;6D
 
 !! fonts
 Xft/Hinting: 1
