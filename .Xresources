@@ -189,6 +189,7 @@ URxvt*cursorColor: S_base1
 URxvt*cursorUnderline: false
 
 !URxvt.meta8: true
+URxvt*termName: xterm-256color
 
 ! Keys
 URxvt*keysym.M-Up:          \033[1;5A
