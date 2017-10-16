@@ -166,10 +166,7 @@ bindsym XF86AudioRaiseVolume exec amixer -D pulse set Master 3%+ unmute
 bindsym XF86AudioLowerVolume exec amixer -D pulse set Master 3%- unmute
 
 # media player controls
-# these do not work: https://superuser.com/questions/1255790/apple-keyboard-and-xf86audioplay-media-key-in-linux
-#bindsym XF86AudioPlay exec playerctl play
-#bindsym XF86AudioPause exec playerctl pause
-bindsym $mod+F8 exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
+bindsym XF86AudioPlay exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
