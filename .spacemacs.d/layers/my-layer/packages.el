@@ -125,7 +125,8 @@ Called via the `after-load-functions' special hook."
         (spacemacs/new-empty-buffer)
         (spacemacs/toggle-maximize-buffer)))
 
-    (define-key map (kbd "C-/") 'comment-or-uncomment-region-or-line)
+    ;; C-M-/ in terminal to toggle comment
+    (define-key map (kbd "C-M-_") 'comment-or-uncomment-region-or-line)
 
     ;; indent
     (define-key map (kbd "C-M-\\") 'indent-region-or-buffer)

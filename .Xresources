@@ -150,6 +150,9 @@ URxvt.saveLines: 10000
 URxvt.internalBorder: 3
 URxvt.lineSpace: 0
 
+! disable the C-S ISO 14755 mode
+URxvt*iso14755: False
+
 !! scrolling
 URxvt.jumpScroll: false
 URxvt*secondaryScreen: 1
