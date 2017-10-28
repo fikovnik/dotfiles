@@ -139,6 +139,7 @@ XTerm*faceSize5: 11
 !!! URxvt
 !!! --------------------------------------------------------------------------------
 
+!! basics
 URxvt.depth: 32
 URxvt.geometry: 120x40
 URxvt.transparent: false
@@ -161,13 +162,13 @@ URxvt*scrollWithBuffer: true
 ! scroll back to the bottom on keypress
 URxvt*scrollTtyKeypress: true
 
-! Fonts
+! fonts
 URxvt*allow_bold: true
 URxvt*font: xft:DejaVu Sans Mono for Powerline Nerd Font:style=Book:pixelsize=13
 ! Fix font space
 URxvt*letterSpace: -1
 
-! enable scrollbar
+!! scrollbar
 URxvt*scrollBar: true     
 ! scrollbar width
 URxvt*thickness: 5
@@ -178,8 +179,12 @@ URxvt*scrollBar_right: true
 ! scrollbar style
 URxvt*scrollstyle: plain
 
-! Perl extensions
-URxvt*perl-ext-common: default,matcher,selection-to-clipboard,xterm-clipboard,font-size
+!! Perl extensions
+URxvt.perl-ext-common: default,matcher,selection-to-clipboard,font-size,clipboard,keyboard-select
+
+URxvt.clipboard.copycmd:  ~/bin/clipboard.sh copy
+URxvt.clipboard.pastecmd: ~/bin/clipboard.sh paste
+
 URxvt*matcher.button: 1
 URxvt*url-launcher: google-chrome
 
@@ -189,79 +194,22 @@ URxvt*cursorColor: S_base1
 URxvt*cursorUnderline: false
 
 !URxvt.meta8: true
-URxvt*termName: xterm-256color
 
-! xterm key emulation
-URxvt.keysym.Home             : \033[H
-URxvt.keysym.End              : \033[F
-URxvt.keysym.S-Up             : \033[1;2A
-URxvt.keysym.S-Down           : \033[1;2B
-URxvt.keysym.S-Right          : \033[1;2C
-URxvt.keysym.S-Left           : \033[1;2D
-!URxvt.keysym.S-Page_Up       : captured by terminal for scrolling
-!URxvt.keysym.S-Page_Down     : captured by terminal for scrolling
-URxvt.keysym.S-Home           : \033[1;2H
-URxvt.keysym.S-End            : \033[1;2F
+!! keys
 
-! keys with Meta
-URxvt.keysym.M-Up             : \033[1;3A
-URxvt.keysym.M-Down           : \033[1;3B
-URxvt.keysym.M-Right          : \033[1;3C
-URxvt.keysym.M-Left           : \033[1;3D
-URxvt.keysym.M-Page_Up        : \033[5;3~
-URxvt.keysym.M-Page_Down      : \033[6;3~
-URxvt.keysym.M-Home           : \033[1;3H
-URxvt.keysym.M-End            : \033[1;3F
+! copy and paste
+URxvt.keysym.Shift-C-V: clipboard:paste
+URxvt.keysym.Shift-C-C: clipboard:copy
+URxvt.keysym.Shift-M-C-V: clipboard:paste_escaped
 
-! keys with Shift-Meta
-URxvt.keysym.M-S-Up           : \033[1;4A
-URxvt.keysym.M-S-Down         : \033[1;4B
-URxvt.keysym.M-S-Right        : \033[1;4C
-URxvt.keysym.M-S-Left         : \033[1;4D
-!URxvt.keysym.M-S-Page_Up     : seen as Rxvt.keysym.S-Page_Up
-!URxvt.keysym.M-S-Page_Down   : seen as Rxvt.keysym.S-Page_Down
-URxvt.keysym.M-S-Home         : \033[1;4H
-URxvt.keysym.M-S-End          : \033[1;4F
+! keyboard select
+URxvt.keysym.Shift-M-S: keyboard-select:activate
+URxvt.keysym.Shift-M-R: keyboard-select:search
 
-! keys with Control
-URxvt.keysym.C-Up             : \033[1;5A
-URxvt.keysym.C-Down           : \033[1;5B
-URxvt.keysym.C-Right          : \033[1;5C
-URxvt.keysym.C-Left           : \033[1;5D
-URxvt.keysym.C-Page_Up        : \033[5;5~
-URxvt.keysym.C-Page_Down      : \033[6;5~
-URxvt.keysym.C-Home           : \033[1;5H
-URxvt.keysym.C-End            : \033[1;5F
-
-! keys with Shift-Control
-URxvt.keysym.C-S-Up           : \033[1;6A
-URxvt.keysym.C-S-Down         : \033[1;6B
-URxvt.keysym.C-S-Right        : \033[1;6C
-URxvt.keysym.C-S-Left         : \033[1;6D
-!URxvt.keysym.C-S-Page_Up     : seen as Rxvt.keysym.S-Page_Up
-!URxvt.keysym.C-S-Page_Down   : seen as Rxvt.keysym.S-Page_Down
-URxvt.keysym.C-S-Home         : \033[1;6H
-URxvt.keysym.C-S-End          : \033[1;6F
-
-! keys with Meta-Control
-URxvt.keysym.M-C-Up           : \033[1;7A
-URxvt.keysym.M-C-Down         : \033[1;7B
-URxvt.keysym.M-C-Right        : \033[1;7C
-URxvt.keysym.M-C-Left         : \033[1;7D
-URxvt.keysym.M-C-Page_Up      : \033[5;7~
-URxvt.keysym.M-C-Page_Down    : \033[6;7~
-URxvt.keysym.M-C-Home         : \033[1;7H
-URxvt.keysym.M-C-End          : \033[1;7F
-
-! keys with Meta-Control-Shift
-URxvt.keysym.M-C-S-Up         : \033[1;8A
-URxvt.keysym.M-C-S-Down       : \033[1;8B
-URxvt.keysym.M-C-S-Right      : \033[1;8C
-URxvt.keysym.M-C-S-Left       : \033[1;8D
-!URxvt.keysym.M-C-S-Page_Up   : seen as Rxvt.keysym.S-Page_Up
-!URxvt.keysym.M-C-S-Page_Down : seen as Rxvt.keysym.S-Page_Down
-URxvt.keysym.M-C-S-Home       : \033[1;8H
-URxvt.keysym.M-C-S-End        : \033[1;8F
+! font size
+URxvt.keysym.C-plus:   font-size:increase
+URxvt.keysym.C-minus:  font-size:decrease
+URxvt.keysym.C-equal:  font-size:reset
 
 !! fonts
 Xft/Hinting: 1
