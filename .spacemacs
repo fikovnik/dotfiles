@@ -366,6 +366,21 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+
+  ;; treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
+  (add-to-list 'term-file-aliases (quote ("st" . "xterm")))
+
+  ;; fix keys in tmux
+  (defadvice terminal-init-screen
+      ;; The advice is named `tmux', and is run before `terminal-init-screen' runs.
+      (before tmux activate)
+    "Apply xterm keymap, allowing use of keys passed through tmux."
+    ;; This is the elisp code that is run before `terminal-init-screen'.
+    (if (getenv "TMUX")
+        (let ((map (copy-keymap xterm-function-map)))
+          (set-keymap-parent map (keymap-parent input-decode-map))
+          (set-keymap-parent input-decode-map map))))
+
   )
 
 (defun dotspacemacs/user-config ()
@@ -375,7 +390,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (my-setup-input-decode-map)
+  ;; (my-setup-input-decode-map)
 
   ;; slack
   ;; (slack-register-team
