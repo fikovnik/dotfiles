@@ -375,18 +375,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; fix urxvt keys
-  ;; https://stackoverflow.com/questions/044/binding-m-up-m-down-in-emacs-23-1-1
-  (when
-      (and (not (display-graphic-p))
-           (getenv "COLORTERM" (selected-frame)))
-    (let ((term (getenv "COLORTERM" (selected-frame))))
-      (when (string-match "\\`rxvt" term)
-        (message "Adjusting rxvt keys")
-        (define-key input-decode-map "\e\e[a" [(meta shift up)])
-        (define-key input-decode-map "\e\e[b" [(meta shift down)])
-        (define-key input-decode-map "\e\e[A" [(meta up)])
-        (define-key input-decode-map "\e\e[B" [(meta down)]))))
+  (my-setup-input-decode-map)
 
   ;; slack
   ;; (slack-register-team

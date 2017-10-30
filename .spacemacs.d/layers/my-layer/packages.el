@@ -38,6 +38,29 @@ pastes from X-SECONDARY."
                  ((= 16 opt) "s"))))
         (insert (shell-command-to-string (concat "xsel -o -" opt))))))
 
+(defun my-setup-input-decode-map ()
+  (defun add-escape-key-mapping-alist (escape-prefix key-prefix suffix-alist)
+    (while suffix-alist
+      (let ((escape-suffix (car (car suffix-alist)))
+            (key-suffix (cdr (car suffix-alist))))
+        (define-key input-decode-map (concat escape-prefix escape-suffix)
+          (read-kbd-macro (concat key-prefix key-suffix))))
+      (setq suffix-alist (cdr suffix-alist))))
+
+  (setq nav-key-pair-alist
+        '(("A" . "<up>") ("B" . "<down>") ("C" . "<right>") ("D" . "<left>")
+          ("H" . "<home>") ("F" . "<end>")))
+
+  (add-escape-key-mapping-alist "\e[1;2" "S-" nav-key-pair-alist)
+  (add-escape-key-mapping-alist "\e[1;3" "M-" nav-key-pair-alist)
+  (add-escape-key-mapping-alist "\e[1;4" "M-S-" nav-key-pair-alist)
+  (add-escape-key-mapping-alist "\e[1;5" "C-" nav-key-pair-alist)
+  (add-escape-key-mapping-alist "\e[1;6" "C-S-" nav-key-pair-alist)
+  (add-escape-key-mapping-alist "\e[1;7" "M-C-" nav-key-pair-alist)
+  (add-escape-key-mapping-alist "\e[1;8" "M-C-S-" nav-key-pair-alist))
+
+
+
 (defun kill-syntax (&optional arg)
   (interactive "p")
   (let ((opoint (point)))
