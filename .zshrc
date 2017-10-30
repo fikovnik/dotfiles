@@ -117,5 +117,7 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+bindkey '\e[1;3D' backward-word
+bindkey '\e[1;3C' forward-word
 bindkey '\e\eOD' backward-word
 bindkey '\e\eOC' forward-word
