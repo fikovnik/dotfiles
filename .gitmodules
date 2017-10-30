@@ -10,6 +10,3 @@
 [submodule ".tmux.d"]
 	path = .tmux
 	url = https://github.com/fikovnik/dot-tmux.git
-[submodule ".tmux"]
-	path = .tmux
-	url = https://github.com/fikovnik/dot-tmux.git
