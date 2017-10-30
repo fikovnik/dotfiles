@@ -377,7 +377,9 @@ before packages are loaded."
 
   ;; fix urxvt keys
   ;; https://stackoverflow.com/questions/044/binding-m-up-m-down-in-emacs-23-1-1
-  (when (not (display-graphic-p))
+  (when
+      (and (not (display-graphic-p))
+           (getenv "COLORTERM" (selected-frame)))
     (let ((term (getenv "COLORTERM" (selected-frame))))
       (when (string-match "\\`rxvt" term)
         (message "Adjusting rxvt keys")
