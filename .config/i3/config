@@ -31,7 +31,6 @@ floating_modifier $mod
 
 # starts a terminal
 bindsym $mod+Return exec ~/.config/i3/scripts/terminal.sh
-#bindsym $mod+Return exec urxvt256c-ml
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -97,12 +96,14 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-set $ws09 "9: "
+set $ws01 "1: "
+set $ws02 "2: "
+set $ws09 "9: "
 set $ws10 "10: "
 
 # switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
+bindsym $mod+1 workspace $ws01
+bindsym $mod+2 workspace $ws02
 bindsym $mod+3 workspace 3
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
@@ -113,8 +114,8 @@ bindsym $mod+9 workspace $ws09
 bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+1 move container to workspace $ws01
+bindsym $mod+Shift+2 move container to workspace $ws02
 bindsym $mod+Shift+3 move container to workspace 3
 bindsym $mod+Shift+4 move container to workspace 4
 bindsym $mod+Shift+5 move container to workspace 5
@@ -186,6 +187,9 @@ assign [class="URxvt" title="^OpenVPN:"] $ws09
 
 # window assignment
 
+# default terminal on $ws02
+assign [class="st-256color" title="^main"] $ws02
+
 # does not work - https://github.com/i3/i3/issues/2060
 # assign [class="Spotify"] $ws10
 
@@ -252,3 +256,6 @@ exec_always --no-startup-id setxkbmap -option ctrl:nocaps -variant altgr-intl
 
 # screen lock
 exec --no-startup-id xautolock -time 5 -locker ~/.config/i3/scripts/lock.sh -notify 6 -notifier '~/.config/i3/scripts/dim-screen.sh 5'
+
+# apps
+exec --no-startup-id ~/.config/i3/scripts/terminal.sh -e tmux new-session -A -s main
