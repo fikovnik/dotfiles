@@ -4,24 +4,21 @@
 
 (defun my-copy-to-xclipboard(arg)
   (interactive "P")
-  (cond
-   ((not (use-region-p))
-    (message "Nothing to yank to X-clipboard"))
-   ((not (display-graphic-p))
-    (letrec ((s (buffer-substring-no-properties (region-beginning) (region-end)))
-             (s-length (+ (* (length s) 3) 2)))
-      (if (<= s-length 100000)
-          (progn
-            (send-string-to-terminal
-             (concat "\e]52;c;"
-                     (base64-encode-string (encode-coding-string s 'utf-8) t)
-                     "\07"))
-            (message "Yanked region to X-clipboard"))
-        (message \"Selection too long to send to terminal %d\" s-length))))
-   (t
-    (when arg
-      (kill-region  (region-beginning) (region-end)))
-    (deactivate-mark))))
+  (if (use-region-p)
+      (if (not (display-graphic-p))
+          (letrec ((s (buffer-substring-no-properties (region-beginning) (region-end)))
+                   (s-length (+ (* (length s) 3) 2)))
+            (if (<= s-length 16384) ; magic number set to the same as ESC_BUF_SIZ of suckless termial (st.c)
+                (progn
+                  (send-string-to-terminal (concat "\e]52;c;"
+                                                   (base64-encode-string (encode-coding-string s 'utf-8) t)
+                                                   "\07"))
+                  (message "Yanked region to terminal clipboard")
+                  (when arg
+                    (kill-region (region-beginning) (region-end)))
+                  (deactivate-mark))
+              (message "Selection too long (%d) to send to terminal." s-length))))
+      (message "Nothing to yank to terminal clipboard")))
 
 (defun my-cut-to-xclipboard()
   (interactive)
