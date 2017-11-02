@@ -7,14 +7,18 @@
   (cond
    ((not (use-region-p))
     (message "Nothing to yank to X-clipboard"))
-   ((and (not (display-graphic-p))
-         (/= 0 (shell-command-on-region
-                (region-beginning) (region-end) "xsel -i -b")))
-    (error "Is program `xsel' installed?"))
+   ((not (display-graphic-p))
+    (letrec ((s (buffer-substring-no-properties (region-beginning) (region-end)))
+             (s-length (+ (* (length s) 3) 2)))
+      (if (<= s-length 100000)
+          (progn
+            (send-string-to-terminal
+             (concat "\e]52;c;"
+                     (base64-encode-string (encode-coding-string s 'utf-8) t)
+                     "\07"))
+            (message "Yanked region to X-clipboard"))
+        (message \"Selection too long to send to terminal %d\" s-length))))
    (t
-    (when (display-graphic-p)
-      (call-interactively 'clipboard-kill-ring-save))
-    (message "Yanked region to X-clipboard")
     (when arg
       (kill-region  (region-beginning) (region-end)))
     (deactivate-mark))))
