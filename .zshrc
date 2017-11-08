@@ -123,3 +123,5 @@ bindkey '\e\eOD' backward-word
 bindkey '\e\eOC' forward-word
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+
+[ -d ~/.local/bin ] && export PATH="~/.local/bin:$PATH"
