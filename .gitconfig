@@ -30,4 +30,5 @@
 	default = simple
 [http]
 [credential]
-	helper = cache --timeout=36000
+#	helper = cache --timeout=36000
+	helper = /home/krikava/.local/bin/pass-git-helper
