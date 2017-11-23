@@ -33,7 +33,7 @@ alias vi=vim
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
 # dot files
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # ZSH options
 
@@ -115,7 +115,10 @@ if which fasd > /dev/null; then
   alias jj='fasd_cd -d -i'
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# fzf
+if [ -n "${commands[fzf-share]}" ]; then
+  source "$(fzf-share)/key-bindings.zsh"
+fi
 
 # ls solarized
 [ -f $HOME/.dircolors ] && eval $(dircolors ~/.dircolors)
