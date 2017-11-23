@@ -27,10 +27,10 @@ delay=2
 
 ## Programs to be used
 # Editor
-EDITOR='urxvt256c-ml vim'
+EDITOR='st vim'
 
 # Browser
-BROWSER='google-chrome'
+BROWSER='firefox'
 
 ## Misc settings
 
