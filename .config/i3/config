@@ -35,6 +35,9 @@ bindsym $mod+Return exec ~/.config/i3/scripts/terminal.sh
 # kill focused window
 bindsym $mod+Shift+q kill
 
+# allow to go back and forth
+workspace_auto_back_and_forth yes
+
 # start dmenu (a program launcher)
 # bindsym $mod+d exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
@@ -97,14 +100,15 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 set $ws01 "1: "
-set $ws02 "2: "
+set $ws02 "2: "
+set $ws03 "3: "
 set $ws09 "9: "
 set $ws10 "10: "
 
 # switch to workspace
 bindsym $mod+1 workspace $ws01
 bindsym $mod+2 workspace $ws02
-bindsym $mod+3 workspace 3
+bindsym $mod+3 workspace $ws03
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
@@ -116,7 +120,7 @@ bindsym $mod+0 workspace $ws10
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws01
 bindsym $mod+Shift+2 move container to workspace $ws02
-bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+3 move container to workspace $ws03
 bindsym $mod+Shift+4 move container to workspace 4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
@@ -127,6 +131,10 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 
 # move to other monitor
 bindsym $mod+Shift+m move workspace to output right
+
+# undo
+bindsym $mod+z workspace back_and_forth
+bindsym $mod+Shift+z move container to workspace back_and_forth; workspace back_and_forth
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -161,10 +169,41 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# focus
+mode "focused" {
+        # hardcoded focus keybindings
+        bindsym f [class="(?i)firefox"] focus; mode "default"
+        bindsym e [class="(?i)emacs"] focus; mode "default"
+
+        # keybindings for marking and jumping to clients
+        bindsym m exec i3-input -F 'mark %s' -P 'Mark name: '
+        bindsym g exec i3-input -F '[con_mark=%s] focus' -P 'Go to mark: '
+
+        # Assign marks to keys 1-5
+        bindsym Shift+1 mark mark1; mode "default"
+        bindsym Shift+2 mark mark2; mode "default"
+        bindsym Shift+3 mark mark3; mode "default"
+        bindsym Shift+4 mark mark4; mode "default"
+        bindsym Shift+5 mark mark5; mode "default"
+
+        # Jump to clients marked 1-5
+        bindsym 1 [con_mark="mark1"] focus; mode "default"
+        bindsym 2 [con_mark="mark2"] focus; mode "default"
+        bindsym 3 [con_mark="mark3"] focus; mode "default"
+        bindsym 4 [con_mark="mark4"] focus; mode "default"
+        bindsym 5 [con_mark="mark5"] focus; mode "default"
+
+        # Exit to the default mode
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+n mode "focused"
+
 # volume control
-bindsym XF86AudioMute        exec amixer -D pulse set Master toggle
-bindsym XF86AudioRaiseVolume exec amixer -D pulse set Master 3%+ unmute
-bindsym XF86AudioLowerVolume exec amixer -D pulse set Master 3%- unmute
+bindsym XF86AudioMute        exec amixer set Master toggle
+bindsym XF86AudioRaiseVolume exec amixer set Master 3%+ unmute
+bindsym XF86AudioLowerVolume exec amixer set Master 3%- unmute
 
 # media player controls
 bindsym XF86AudioPlay exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
@@ -172,8 +211,8 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 # brightness controls
-bindsym XF86MonBrightnessUp exec brightnessctl -d intel_backlight set "+10%"
-bindsym XF86MonBrightnessDown exec brightnessctl -d intel_backlight set "10%-"
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
 bindsym $mod+F7 exec --no-startup-id ~/.config/i3/scripts/screen-layout.sh
 bindsym $mod+shift+x exec --no-startup-id ~/.config/i3/scripts/lock.sh
@@ -182,13 +221,13 @@ bindsym $mod+shift+x exec --no-startup-id ~/.config/i3/scripts/lock.sh
 
 # fix floating -- get the WM_CLASS using xprop
 for_window [class="Pavucontrol"] floating enable
-for_window [class="Spotify"] move to workspace $ws10
-assign [class="URxvt" title="^OpenVPN:"] $ws09
+for_window [class="Pinentry"] floating enable
 
 # window assignment
-
-# default terminal on $ws02
-assign [class="st-256color" title="^main"] $ws02
+assign [class="Emacs"] $ws02
+assign [class="st-256color" title="main@kathmandu zsh"] $ws03
+assign [class="st-256color" title="^OpenVPN:"] $ws09
+for_window [class="Spotify"] move to workspace $ws10
 
 # does not work - https://github.com/i3/i3/issues/2060
 # assign [class="Spotify"] $ws10
@@ -221,25 +260,28 @@ client.urgent           $base02             $base08            $base00  $base03
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-        tray_output primary
-        status_command i3blocks -c ~/.config/i3blocks/config
-        strip_workspace_numbers yes
+# bar {
+#         tray_output primary
+#         status_command i3blocks -c ~/.config/i3blocks/config
+#         strip_workspace_numbers yes
 
-        colors {
-               separator $base03
-               background $base01
-               statusline $base05
-               #                        border  background text
-               focused_workspace        $base01 $base0E    $base01
-               active_workspace         $base01 $base01    $base07
-               inactive_workspace       $base01 $base01    $base03
-               urgent_workspace         $base01 $base01    $base08
-        }
-}
+#         colors {
+#                separator $base03
+#                background $base01
+#                statusline $base05
+#                #                        border  background text
+#                focused_workspace        $base01 $base0E    $base01
+#                active_workspace         $base01 $base01    $base07
+#                inactive_workspace       $base01 $base01    $base03
+#                urgent_workspace         $base01 $base01    $base08
+#         }
+# }
+
+# bar
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # background
-exec_always --no-startup-id feh --bg-scale ~/.config/i3/wallpaper.jpg
+#exec_always --no-startup-id feh --bg-scale ~/.config/i3/wallpaper.jpg
 
 # Xresources
 exec --no-startup-id test -f ~/mgs.Xresources && xrdb -merge ~/.Xresources
@@ -247,15 +289,16 @@ exec --no-startup-id test -f ~/mgs.Xresources && xrdb -merge ~/.Xresources
 # utilities
 exec --no-startup-id dropbox start
 exec --no-startup-id nm-applet
-exec --no-startup-id greenclip daemon
+exec --no-startup-id ~/bin/greenclip daemon
 exec --no-startup-id compton
 exec --no-startup-id rescuetime
+exec --no-startup-id upower-notify
 
 # make capslock control
 exec_always --no-startup-id setxkbmap -option ctrl:nocaps -variant altgr-intl
 
 # screen lock
-exec --no-startup-id xautolock -time 5 -locker ~/.config/i3/scripts/lock.sh -notify 6 -notifier '~/.config/i3/scripts/dim-screen.sh 5'
+exec --no-startup-id xautolock -time 5 -locker ~/.config/i3/scripts/lock.sh -notify 6 -notifier '~/.config/i3/scripts/dim-screen.sh'
 
 # apps
 exec --no-startup-id ~/.config/i3/scripts/terminal.sh -e tmux new-session -A -s main
