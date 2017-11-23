@@ -16,14 +16,14 @@ bottom = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
-border-top-size = 1
-border-top-color = #383c4a
+;border-top-size = 1
+;border-top-color = #383c4a
 
 module-margin-left = 1
 module-margin-right = 1
 
-font-0 = DejaVuSansMono Nerd Font:size=8;1
-font-1 = FontAwesome:size=10;1
+font-0 = DejaVuSansMono Nerd Font:size=8;2
+font-1 = FontAwesome:size=10;2
 
 modules-left = i3
 modules-right = fs memory net cpu xkeyboard xbacklight volume battery date
@@ -97,8 +97,8 @@ label-disconnected-foreground = #999
 
 [module/date]
 type = internal/date
-label = %{F#eee}%{F-} %date% %time%
-date = %Y-%m-%d
+label = %{F#eee}%{F-} %date% %time%
+date = %A, %b %d
 time = %H:%M
 interval = 5
 
