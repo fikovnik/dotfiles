@@ -117,8 +117,11 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# colorful ls
+# ls solarized
 [ -f $HOME/.dircolors ] && eval $(dircolors ~/.dircolors)
+
+# mc solarized
+[ -f ~/.mc/lib/mc-solarized/solarized.ini ] && export MC_SKIN=/home/krikafil/.mc/lib/mc-solarized/solarized.ini
 
 bindkey '\e[1;3D' backward-word
 bindkey '\e[1;3C' forward-word
