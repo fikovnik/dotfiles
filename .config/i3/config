@@ -214,7 +214,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
-bindsym $mod+F7 exec --no-startup-id ~/.config/i3/scripts/screen-layout.sh
+bindsym $mod+F7 exec --no-startup-id ~/.config/i3/scripts/menu-screen-layouts.sh
 bindsym $mod+shift+x exec --no-startup-id ~/.config/i3/scripts/menu-power.sh
 
 # bind custom launchers
