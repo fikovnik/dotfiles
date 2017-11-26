@@ -298,7 +298,7 @@ exec --no-startup-id upower-notify
 exec_always --no-startup-id setxkbmap -option ctrl:nocaps -variant altgr-intl
 
 # screen lock
-exec --no-startup-id xautolock -time 5 -locker ~/.config/i3/scripts/lock.sh -notify 6 -notifier '~/.config/i3/scripts/dim-screen.sh'
+exec --no-startup-id xautolock -time 10 -locker ~/.config/i3/scripts/lock.sh -notify 10  -notifier '~/.config/i3/scripts/dim-screen.sh'
 
 # apps
 exec --no-startup-id ~/.config/i3/scripts/terminal.sh -e tmux new-session -A -s main

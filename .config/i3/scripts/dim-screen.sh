@@ -8,6 +8,6 @@ function restore {
 
 trap restore SIGINT SIGTERM SIGKILL
 
-xbacklight -time 5000 -set 0
+xbacklight -time 10000 -set 0
 
 restore
