@@ -49,6 +49,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ess
      git
+     haskell
      helm
      html
      (ibuffer :variables
@@ -57,8 +58,11 @@ This function should only modify configuration layer settings."
      nixos
      (org :variables
           org-enable-github-support t
-          org-projectile-file "~/Notes/Projectile.org")
+          org-enable-reveal-js-support t
+          org-projectile-file "Projectile.org")
      racket
+     (ranger :variables
+             ranger-show-preview t)
      (scala :variables
             scala-indent:use-javadoc-style t
             scala-enable-eldoc t
@@ -69,7 +73,7 @@ This function should only modify configuration layer settings."
             shell-default-shell 'ansi-term
             shell-default-height 50
             shell-default-position 'bottom
-            shell-default-term-shell "/bin/zsh")
+            shell-default-term-shell "zsh")
      spell-checking
      sql
      syntax-checking
@@ -83,7 +87,7 @@ This function should only modify configuration layer settings."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(auth-password-store)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -368,7 +372,7 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  ;; treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
+  ;; TREAT st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
   (add-to-list 'term-file-aliases (quote ("st" . "xterm")))
 
   ;; fix keys in tmux
@@ -390,6 +394,32 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  ;; passwords from password store
+  ; (setq auth-source-debug t)
+  (auth-pass-enable)
+
+  ;; ranger
+  (setq
+   ranger-cleanup-on-disable t
+   ranger-show-hidden t)
+  (ranger-override-dired-mode t)
+
+  (eval-after-load "org-present"
+    '(progn
+       (add-hook 'org-present-mode-hook
+                 (lambda ()
+                   (org-present-big)
+                   (org-display-inline-images)
+                   (org-present-hide-cursor)
+                   (org-present-read-write)
+                   ))
+       (add-hook 'org-present-mode-quit-hook
+                 (lambda ()
+                   (org-present-small)
+                   (org-remove-inline-images)
+                   (org-present-show-cursor)
+                   (org-present-read-write)))))
 
   ;; (my-setup-input-decode-map)
 
@@ -423,6 +453,10 @@ before packages are loaded."
    indent-tabs-mode nil
    show-paren-delay 0
    )
+
+  (with-eval-after-load 'org-agenda
+    (require 'org-projectile)
+    (push (org-projectile:todo-files) org-agenda-files))
 
   ;; C++ for headers
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -544,7 +578,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (powerline spinner hydra parent-mode window-purpose imenu-list projectile pkg-info epl flx smartparens iedit anzu evil goto-chg undo-tree highlight diminish f dash s bind-map bind-key packed helm avy helm-core async popup move-dup yaml-mode sql-indent rainbow-mode rainbow-identifiers racket-mode faceup ox-gfm ibuffer-projectile ess-R-data-view ctable ess julia-mode dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat company-quickhelp color-identifiers-mode xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download org-brain noflet mwim mmm-mode meghanada markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gradle-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip evil-org evil-magit magit magit-popup git-commit with-editor ensime sbt-mode scala-mode diff-hl company-statistics company-emacs-eclim eclim browse-at-remote auto-yasnippet auto-dictionary ac-ispell auto-complete yasnippet web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode impatient-mode htmlize simple-httpd helm-css-scss haml-mode flycheck emmet-mode company-web web-completion-data company add-node-modules-path ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org symon string-inflection spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el password-generator paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
+    (intero hlint-refactor hindent helm-hoogle haskell-snippets flycheck-haskell dante company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode ranger epresent ox-reveal auth-password-store password-store erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks powerline spinner hydra parent-mode window-purpose imenu-list projectile pkg-info epl flx smartparens iedit anzu evil goto-chg undo-tree highlight diminish f dash s bind-map bind-key packed helm avy helm-core async popup move-dup yaml-mode sql-indent rainbow-mode rainbow-identifiers racket-mode faceup ox-gfm ibuffer-projectile ess-R-data-view ctable ess julia-mode dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat company-quickhelp color-identifiers-mode xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download org-brain noflet mwim mmm-mode meghanada markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gradle-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip evil-org evil-magit magit magit-popup git-commit with-editor ensime sbt-mode scala-mode diff-hl company-statistics company-emacs-eclim eclim browse-at-remote auto-yasnippet auto-dictionary ac-ispell auto-complete yasnippet web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode impatient-mode htmlize simple-httpd helm-css-scss haml-mode flycheck emmet-mode company-web web-completion-data company add-node-modules-path ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org symon string-inflection spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el password-generator paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
