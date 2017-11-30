@@ -130,7 +130,7 @@ format-discharging = <ramp-capacity> <label-discharging>
 label-discharging = %percentage%% (%time%)
 
 format-full = <label-full>
-label-full = %{F#eee}CPU%{F-} 100%
+label-full = %{F#eee}%{F-} FULL
 
 ramp-capacity-0 = %{F#eee}%{F-}
 ramp-capacity-0-foreground = ${colors.accent}

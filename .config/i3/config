@@ -210,14 +210,20 @@ bindsym XF86AudioPlay exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+# screenshots
+#bindsym Shift+Print exec scrot -s "~/Downloads/Screenshot-%Y-%m-%d%H:%M:%S.png"
+#bindsym $mod+F11 exec scrot -s
+#bindsym Print exec scrot -e "~/Downloads/Screenshot-%Y-%m-%d%H:%M:%S.png"
+
 # brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5
-bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+
+# disabled - using xfce
+#bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+#bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
 bindsym $mod+F7 exec --no-startup-id ~/.config/i3/scripts/menu-screen-layouts.sh
 bindsym $mod+shift+x exec --no-startup-id ~/.config/i3/scripts/menu-power.sh
-
-# bind custom launchers
+bindsym $mod+t exec --no-startup-id ~/.config/i3/scripts/terminal.sh -e tmux new-session -A -s main
 
 # fix floating -- get the WM_CLASS using xprop
 for_window [class="Pavucontrol"] floating enable
@@ -227,10 +233,9 @@ for_window [class="Pinentry"] floating enable
 assign [class="Emacs"] $ws02
 assign [class="st-256color" title="main@kathmandu zsh"] $ws03
 assign [class="st-256color" title="^OpenVPN:"] $ws09
-for_window [class="Spotify"] move to workspace $ws10
-
 # does not work - https://github.com/i3/i3/issues/2060
-# assign [class="Spotify"] $ws10
+#assign [class="Spotify"] $ws10
+for_window [class="Spotify"] move to workspace $ws10
 
 # colors
 set $base00 #101218
@@ -281,24 +286,22 @@ client.urgent           $base02             $base08            $base00  $base03
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # background
-#exec_always --no-startup-id feh --bg-scale ~/.config/i3/wallpaper.jpg
+exec_always --no-startup-id feh --bg-scale ~/.config/i3/wallpaper.jpg
 
 # Xresources
-exec --no-startup-id test -f ~/mgs.Xresources && xrdb -merge ~/.Xresources
+exec --no-startup-id test -f ~/.Xresources && xrdb -merge ~/.Xresources
 
 # utilities
-exec --no-startup-id dropbox start
-exec --no-startup-id nm-applet
+exec --no-startup-id ~/bin/dropbox.sh start
+#exec --no-startup-id nm-applet
+#exec --no-startup-id blueman-applet
 exec --no-startup-id ~/bin/greenclip daemon
 exec --no-startup-id compton
 exec --no-startup-id rescuetime
-exec --no-startup-id upower-notify
+#exec --no-startup-id upower-notify
 
 # make capslock control
-exec_always --no-startup-id setxkbmap -option ctrl:nocaps -variant altgr-intl
+#exec_always --no-startup-id setxkbmap -option ctrl:nocaps -variant altgr-intl
 
 # screen lock
-exec --no-startup-id xautolock -time 10 -locker ~/.config/i3/scripts/lock.sh -notify 10  -notifier '~/.config/i3/scripts/dim-screen.sh'
-
-# apps
-exec --no-startup-id ~/.config/i3/scripts/terminal.sh -e tmux new-session -A -s main
+#exec --no-startup-id xautolock -time 10 -locker ~/.config/i3/scripts/lock.sh -notify 10  -notifier '~/.config/i3/scripts/dim-screen.sh'
