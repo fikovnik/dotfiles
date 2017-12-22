@@ -119,6 +119,7 @@ fi
 if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/key-bindings.zsh"
 fi
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # ls solarized
 [ -f $HOME/.dircolors ] && eval $(dircolors ~/.dircolors)

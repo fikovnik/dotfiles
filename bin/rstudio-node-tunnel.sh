@@ -22,7 +22,3 @@ esac
 
 tmux list-session | grep "rstudio-$node" || \
   tmux new-session -d -s "rstudio-$node" ssh -nNT -L $port:localhost:$port $node 
-
-sleep 1
-
-firefox --new-window "http://localhost:$port" &
