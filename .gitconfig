@@ -13,7 +13,7 @@
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
   lg = !"git lg1"
 [mergetool "p4merge"]
-  cmd = /opt/homebrew-cask/Caskroom/p4merge/2014.3-1007540/p4merge.app/Contents/MacOS/p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+  cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
   keepTemporaries = false
   trustExitCode = false
   keepBackup = false
@@ -21,14 +21,14 @@
 [merge]
   tool = p4merge
 [difftool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
+	cmd = p4merge \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+	cmd = p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 	trustExitCode = true
 [push]
 	default = simple
 [http]
 [credential]
 #	helper = cache --timeout=36000
-	helper = /home/krikava/.local/bin/pass-git-helper
+	helper = /usr/bin/pass-git-helper

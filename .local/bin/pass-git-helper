@@ -1,4 +1,0 @@
-#!/usr/bin/python3
-# EASY-INSTALL-SCRIPT: 'pass-git-helper==0.5.dev0','pass-git-helper'
-__requires__ = 'pass-git-helper==0.5.dev0'
-__import__('pkg_resources').run_script('pass-git-helper==0.5.dev0', 'pass-git-helper')
