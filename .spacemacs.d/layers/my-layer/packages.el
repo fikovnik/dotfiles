@@ -17,27 +17,31 @@
                   (when arg
                     (kill-region (region-beginning) (region-end)))
                   (deactivate-mark))
-              (message "Selection too long (%d) to send to terminal." s-length))))
-      (message "Nothing to yank to terminal clipboard")))
+              (message "Selection too long (%d) to send to terminal." s-length)))
+        (if (= 0 (shell-command-on-region
+                   (region-beginning) (region-end) "xsel -i -b"))
+            (message "Yanked region to X-clipboard")
+          (error "Is program `xsel' installed?")))
+    (message "Nothing to yank to terminal clipboard")))
 
 (defun my-cut-to-xclipboard()
   (interactive)
   (my-copy-to-xclipboard t))
 
 (defun my-paste-from-xclipboard()
-    "Uses shell command `xsel -o' to paste from x-clipboard. With
+  "Uses shell command `xsel -o' to paste from x-clipboard. With
 one prefix arg, pastes from X-PRIMARY, and with two prefix args,
 pastes from X-SECONDARY."
-    (interactive)
-    (if (display-graphic-p)
-        (clipboard-yank)
-      (let*
-          ((opt (prefix-numeric-value current-prefix-arg))
-           (opt (cond
-                 ((=  1 opt) "b")
-                 ((=  4 opt) "p")
-                 ((= 16 opt) "s"))))
-        (insert (shell-command-to-string (concat "xsel -o -" opt))))))
+  (interactive)
+  (if (display-graphic-p)
+      (clipboard-yank)
+    (let*
+        ((opt (prefix-numeric-value current-prefix-arg))
+         (opt (cond
+               ((=  1 opt) "b")
+               ((=  4 opt) "p")
+               ((= 16 opt) "s"))))
+      (insert (shell-command-to-string (concat "xsel -o -" opt))))))
 
 (defun my-setup-input-decode-map ()
   (defun add-escape-key-mapping-alist (escape-prefix key-prefix suffix-alist)
@@ -127,6 +131,8 @@ Called via the `after-load-functions' special hook."
     (define-key map (kbd "C-c C-w") 'my-cut-to-xclipboard)
     (define-key map (kbd "C-c M-w") 'my-copy-to-xclipboard)
     (define-key map (kbd "C-c C-y") 'my-paste-from-xclipboard)
+    ;; this is just to make it compatible with terminal
+    (define-key map (kbd "C-S-v") 'my-paste-from-xclipboard)
 
     ;; windmove
     (define-key map (kbd "C-x <left>")  'windmove-left)
