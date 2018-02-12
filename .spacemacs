@@ -57,7 +57,7 @@ This function should only modify configuration layer settings."
      markdown
      (org :variables
           org-enable-github-support t
-          org-projectile-file "~/Notes/Projectile.org")
+          org-projectile-file "~/Notes/TODO-projects.org")
      racket
      (scala :variables
             scala-indent:use-javadoc-style t
@@ -127,7 +127,7 @@ It should only modify the values of Spacemacs settings."
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
-   ;; with `:variables' keyword (similar to layers). Check the editing styles
+   ;; with `:variables' keywordoubts are probably answerable by chat. I am debating between two ways of keeping the versions: One is to tag the _reports folder with the version number and order number (i.e. the first version will be _results.1.<tag>, then the next _results.2.<tag>...), or trying to merge the results somehow in the same json file (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
    dotspacemacs-editing-style 'emacs
@@ -522,6 +522,23 @@ before packages are loaded."
                               (interactive)
                               (scroll-up 3)))
 
+  (setq org-projectile-capture-template "* TODO %?\ncaptured on:%U\n%a")
+
+  (with-eval-after-load 'org
+    (setq org-capture-templates
+          '(("t" "Todo" entry (file+headline "~/Notes/TODO.org" "Tasks") "* TODO %?\ncaptured on:%U\n%a")
+            ("n" "Note" entry (file+headline "~/Notes/TODO.org" "Notes") "* %?\n%i\ncaptured on:%U\n%a")))
+    (setq org-startup-indented 1)
+
+    ;;(push (org-projectile-project-todo-entry) org-capture-templates)
+    )
+
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-files (quote ("~/Notes/TODO.org")))
+
+    (require 'org-projectile)
+    (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
+
   ;; mu4e
   ;; (setq mu4e-maildir "~/Mail"
   ;;       mu4e-trash-folder "/Trash"
@@ -564,7 +581,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company-auctex auctex-latexmk auctex yasnippet-snippets yaml-mode xterm-color ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode pug-mode popwin persp-mode pcre2el password-generator paradox ox-gfm overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint less-css-mode indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy font-lock+ flyspell-correct-helm flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker diminish diff-hl define-word counsel-projectile company-web company-statistics company-quickhelp company-emacs-eclim column-enforce-mode color-identifiers-mode clean-aindent-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (orgit org-projectile org-category-capture org-present org-pomodoro org-mime org-download org-bullets org-brain projectile org-plus-contrib yasnippet-snippets yaml-mode xterm-color ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode pug-mode popwin persp-mode pcre2el password-generator paradox ox-gfm overseer open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint less-css-mode indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy font-lock+ flyspell-correct-helm flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker diminish diff-hl define-word counsel-projectile company-web company-statistics company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-identifiers-mode clean-aindent-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk alert aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
