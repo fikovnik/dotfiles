@@ -1,0 +1,29 @@
+#!/bin/sh
+
+STATUS_INBOX="/home/krikava/Mail/.status_inbox"
+
+# immediately archive all messages from "me"
+notmuch tag -inbox -unread -new -- tag:new and from:krikava@gmail.com
+notmuch tag -inbox -unread -new -- tag:new and from:filip.krikava@fit.cvut.cz
+
+# notify about new messages
+count=$(notmuch count tag:new and tag:unread)
+if [ $? -eq 0 ]; then
+    if [ $count -eq 1 ]; then
+        notify-send "There is a new email"
+    elif [ $count -gt 1 ]; then
+        notify-send "There are $count new emails"
+    fi
+else
+    notify-send "There was a problem with email sync" "'notmuch count tag:new' terminated !=0"
+fi
+
+# finally, remove the new tag
+notmuch tag -new -- tag:new
+
+count=$(notmuch count tag:inbox and tag:unread)
+if [ $? -eq 0 ]; then
+    echo "$count" > "$STATUS_INBOX"
+else
+    echo "err" > "$STATUS_INBOX"
+fi
