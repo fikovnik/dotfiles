@@ -189,25 +189,5 @@ Called via the `after-load-functions' special hook."
 (defun my/ess-mode-hook ()
   (ess-disable-smart-underscore nil)
   (ess-set-style 'RStudio)
-  (setq ess-tab-complete-in-script t
-        ess-offset-arguments 'prev-line
-        ess-nuke-trailing-whitespace-p t
-        ess-build-tags-command "system(\"~/bin/rtags.R '%s' '%s'\")"
-        ess-indent-with-fancy-comments nil
-        ess-indent-offset 4
-        ess-R-argument-suffix "=")
-  (modify-syntax-entry ?_ "w")
-  (setq ess-R-font-lock-keywords
-        '((ess-R-fl-keyword:modifiers . t)
-          (ess-R-fl-keyword:fun-defs . t)
-          (ess-R-fl-keyword:keywords . t)
-          (ess-R-fl-keyword:assign-ops . t)
-          (ess-R-fl-keyword:constants . t)
-          (ess-fl-keyword:fun-calls . t)
-          (ess-fl-keyword:numbers . t)
-          (ess-fl-keyword:operators)
-          (ess-fl-keyword:delimiters)
-          (ess-fl-keyword:=)
-          (ess-R-fl-keyword:F&T . t)
-          (ess-R-fl-keyword:%op% . t))))
+  (modify-syntax-entry ?_ "w"))
 
