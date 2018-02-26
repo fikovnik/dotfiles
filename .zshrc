@@ -11,6 +11,7 @@ function config_osx {
 
 function config_linux {
   [[ -d /usr/lib/jvm/java ]] && export JAVA_HOME=/usr/lib/jvm/java
+  alias o=~/bin/open.sh
 }
 
 ################################################################################
@@ -28,14 +29,13 @@ export LC_ALL=en_US.UTF-8
 # aliases
 alias g="emacsclient -t"
 alias vi=vim
+alias emacs='emacs -nw'
 
 # LESS
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
 # dot files
 alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
-# ZSH options
 
 # help
 unalias run-help 2> /dev/null
@@ -60,19 +60,13 @@ zstyle ':vcs_info:git-svn:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
 zstyle ':vcs_info:hg:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
 
 if [ -z "$SSH_CONNECTION" ] || emacsclient --version >/dev/null 2>&1; then
-    alias g="emacsclient -t"
-
     export ALTERNATE_EDITOR="vim"
-    export EDITOR="$(which emacsclient) -t"
+    export EDITOR="emacsclient -t"
     export VISUAL=$EDITOR
 else
-    alias g="vim"
-
     export EDITOR="vim"
     export VISUAL=$EDITOR
 fi
-
-alias emacs='emacs -nw'
 
 # completion
 [[ -d /usr/local/share/zsh-completions ]] && fpath=(/usr/local/share/zsh-completions $fpath)
