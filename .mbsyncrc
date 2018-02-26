@@ -1,14 +1,10 @@
 IMAPAccount gmail
-# Address to connect to
 Host imap.gmail.com
 User krikava@gmail.com
 PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.password-store/mail/krikava@gmail.com-mbsync.gpg"
-# Use SSL
 SSLType IMAPS
-# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
-CertificateFile /etc/ssl/certs/ca-bundle.crt
-#CertificateFile ~/.cert/imap.gmail.com.pem
-#CertificateFile ~/.cert/Equifax_Secure_CA.pem
+#SSLVersion SSLv3
+CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore gmail-remote
 Account gmail
@@ -17,15 +13,54 @@ MaildirStore gmail-local
 # The trailing "/" is important
 Path ~/Mail/krikava@gmail.com/
 Inbox ~/Mail/krikava@gmail.com/Inbox
+SubFolders Verbatim
 
-Channel gmail
-Master :gmail-remote:
-Slave :gmail-local:
-# Exclude everything under the internal [Gmail] folder, except the interesting folders
-Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
-# Or include everything
-#Patterns *
-# Automatically create missing mailboxes, both locally and on the server
+Channel gmail-all
+Master :gmail-remote:"[Gmail]/All Mail"
+Slave :gmail-local:all
 Create Both
-# Save the synchronization state files in the relevant directory
+Expunge Both
 SyncState *
+
+Channel gmail-inbox
+Master :gmail-remote:"[Gmail]/Inbox"
+Slave :gmail-local:inbox
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-trash
+Master :gmail-remote:"[Gmail]/Trash"
+Slave :gmail-local:trash
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-sent
+Master :gmail-remote:"[Gmail]/Sent Mail"
+Slave :gmail-local:sent
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-drafts
+Master :gmail-remote:"[Gmail]/Drafts"
+Slave :gmail-local:drafts
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-spam
+Master :gmail-remote:"[Gmail]/Spam"
+Slave :gmail-local:spam
+Create Both
+Expunge Both
+SyncState *
+
+Group gmail
+Channel gmail-all
+Channel gmail-inbox
+Channel gmail-trash
+Channel gmail-sent
+Channel gmail-drafts
+Channel gmail-spam

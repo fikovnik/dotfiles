@@ -1,0 +1,27 @@
+[general]
+accounts = gmail
+fsync = true
+pythonfile = ~/.offlineimap/offlineimap.py
+socktimeout = 60
+
+[Account gmail]
+localrepository = gmail-local
+remoterepository = gmail-remote
+synclabels = yes
+labelsheader = X-Keywords
+#postsynchook = ~/.offlineimap/hooks/postsync-gmail.sh
+
+[Repository gmail-local]
+type = GmailMaildir
+localfolders = ~/Mail/krikava@gmail.com
+
+[Repository gmail-remote]
+type = Gmail
+auth_mechanisms = LOGIN
+remoteuser = krikava@gmail.com
+remotepasseval = passwd("krikava@gmail.com-mbsync")
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+realdelete = no
+folderfilter = lambda folder: folder in ('[Gmail]/All Mail', '[Gmail]/Spam')
+#folderfilter = lambda folder: folder.startswith('[Gmail]/') and folder[8:] in ['All Mail', 'Trash', 'Drafts', 'Spam'] 
+#trashfolder = [Gmail]/Trash
