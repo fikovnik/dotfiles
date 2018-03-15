@@ -1,0 +1,15 @@
+[Unit]
+Description=Emacs
+
+[Service]
+Type=forking
+# For now only use terminal
+ExecStart=/usr/bin/emacs --daemon -nw
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Restart=always
+Environment="DISPLAY=:0" "SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh"
+# Set a more realistic startup timeout
+TimeoutStartSec=120
+
+[Install]
+WantedBy=default.target
