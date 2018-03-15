@@ -129,3 +129,4 @@ bindkey '\e\eOC' forward-word
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
 [ -d ~/.local/bin ] && export PATH="~/.local/bin:$PATH"
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
