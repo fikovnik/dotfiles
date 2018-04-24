@@ -11,20 +11,22 @@ Account gmail
 
 MaildirStore gmail-local
 # The trailing "/" is important
-Path ~/Mail/krikava@gmail.com/
-Inbox ~/Mail/krikava@gmail.com/Inbox
+Path ~/mbsync/krikava@gmail.com/
+Inbox ~/mbsync/krikava@gmail.com/INBOX
 SubFolders Verbatim
 
-Channel gmail-all
-Master :gmail-remote:"[Gmail]/All Mail"
-Slave :gmail-local:all
+Channel gmail-inbox
+Master :gmail-remote:
+Slave :gmail-local:
+Patterns "INBOX"
 Create Both
 Expunge Both
 SyncState *
 
-Channel gmail-inbox
-Master :gmail-remote:"[Gmail]/Inbox"
-Slave :gmail-local:inbox
+Channel gmail-all
+Master :gmail-remote:
+Slave :gmail-local:
+Patterns  * !INBOX ![Gmail]*
 Create Both
 Expunge Both
 SyncState *
@@ -58,9 +60,38 @@ Expunge Both
 SyncState *
 
 Group gmail
-Channel gmail-all
 Channel gmail-inbox
-Channel gmail-trash
+Channel gmail-all
 Channel gmail-sent
+Channel gmail-trash
 Channel gmail-drafts
 Channel gmail-spam
+
+#Channel gmail-inbox
+#Master :gmail-remote:"[Gmail]/Inbox"
+#Slave :gmail-local:inbox
+#Create Both
+#Expunge Both
+#SyncState *
+
+#Channel gmail-trash
+#Master :gmail-remote:"[Gmail]/Trash"
+#Slave :gmail-local:trash
+#Create Both
+#Expunge Both
+#SyncState *
+
+#Channel gmail-sent
+#Master :gmail-remote:"[Gmail]/Sent Mail"
+#Slave :gmail-local:sent
+#Create Both
+#Expunge Both
+#SyncState *
+
+#Group gmail
+#Channel gmail-all
+#Channel gmail-inbox
+#Channel gmail-trash
+#Channel gmail-sent
+#Channel gmail-drafts
+#Channel gmail-spam

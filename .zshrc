@@ -112,6 +112,7 @@ fi
 # fzf
 if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/key-bindings.zsh"
+  [ -f "~/.config/fzf.colors" ] && source "~/config/fzf.colors"
 fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

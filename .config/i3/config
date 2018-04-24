@@ -28,66 +28,45 @@ font xft:Noto Sans 10
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec $terminal
+bindsym $mod+shift+Return exec $terminal
+bindsym $mod+Return exec $terminal tmux new-session
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # menus
-bindsym $mod+t exec --no-startup-id $terminal -e tmux new-session -A -s main
 bindsym $mod+F8 exec --no-startup-id ~/.config/i3/scripts/menu-screen-layouts.sh
 bindsym $mod+d exec --no-startup-id ~/.config/i3/scripts/dmenu.sh
 bindsym $mod+p exec --no-startup-id rofi-pass
 bindsym $mod+c exec --no-startup-id "rofi -modi 'clipboard:greenclip print' -show clipboard"
 bindsym $mod+Tab exec --no-startup-id rofi -show window
+# print screen
+bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
+bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
+# xkill
+bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
-# configuration for alsa
-#exec --no-startup-id volumeicon
-#bindsym $mod+Ctrl+m exec $terminal -e 'alsamixer'
-
-# configuration for pulseaudio
-exec --no-startup-id pulseaudio
-exec --no-startup-id pa-applet
-bindsym $mod+Ctrl+m exec pavucontrol
-
-################################################################################################
-
-# Screen brightness controls
+# screen brightness controls
+# handled by XFCE
 # bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
 # bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness down'"
 
-# Start Applications
-bindsym $mod+Ctrl+b exec $terminal -e 'bmenu'
-#bindsym $mod+t exec --no-startup-id pkill compton
-#bindsym $mod+Ctrl+t exec --no-startup-id compton -b
-#bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
-bindsym Print exec --no-startup-id i3-scrot
-bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
-bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
-bindsym $mod+Shift+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
-bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
+# media player controls
+bindsym XF86AudioPlay exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+
+################################################################################################
 
 # focus_follows_mouse no
-
-# change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
-
-# alternatively, you can use the cursor keys:
+# focus
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
-
-# alternatively, you can use the cursor keys:
+# move focus
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
@@ -95,8 +74,8 @@ bindsym $mod+Shift+Right move right
 
 # workspace back and forth (with/without active container)
 workspace_auto_back_and_forth yes
-bindsym $mod+b workspace back_and_forth
-bindsym $mod+Shift+b move container to workspace back_and_forth; workspace back_and_forth
+bindsym $mod+z workspace back_and_forth
+bindsym $mod+Shift+z move container to workspace back_and_forth; workspace back_and_forth
 
 # split orientation
 bindsym $mod+h split h;exec notify-send 'tile horizontally'
@@ -187,12 +166,8 @@ bindsym $mod+Shift+0 move container to workspace $ws0; workspace $ws0
 bindsym $mod+Shift+m move workspace to output right
 
 # Open applications on specific workspaces
-assign [class="Emacs"] $ws2
-assign [class="st-256color" title="main@kathmandu zsh"] $ws3
-assign [class="st-256color" title="^OpenVPN:"] $ws9
 # does not work - https://github.com/i3/i3/issues/2060
-# assign [class="Spotify"] $ws10
-for_window [class="Spotify"] move to workspace $ws10
+for_window [class="Spotify"] move to workspace $ws0
 
 # Open specific applications in floating mode
 for_window [title="alsamixer"] floating enable border pixel 1
@@ -220,14 +195,21 @@ for_window [class="(?i)System-config-printer.py"] floating enable border normal
 for_window [class="Skype"] floating enable border normal
 for_window [class="Thus"] floating enable border normal
 for_window [class="Timeset-gui"] floating enable border normal
-for_window [class="(?i)virtualbox"] floating enable border normal
+for_window [class="(?i)virtualbox Manager"] floating enable border normal
+for_window [class="(?i)virtualbox Machine"] floating disable border normal
 for_window [class="Xfburn"] floating enable
+for_window [class="Nm-connection-editor"] floating enable
+for_window [class="Scp-dbus-service.py"] floating enable
+
+# dropdown terminal
+for_window [class="st-256color" title="^dropdown@.*"] move scratchpad, resize set 1280 480, move absolute position center
+exec --no-startup-id $terminal -e tmux new-session -A -s dropdown
+exec_always --no-startup-id "i3-msg scratchpad show"
+#bindsym $mod+grave exec --no-startup-id ~/.config/i3/scripts/show-dropdown-terminal.sh
+bindsym $mod+grave scratchpad show
 
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
-
-# reload the configuration file
-bindsym $mod+Shift+c reload
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
@@ -255,16 +237,6 @@ mode "$mode_system" {
 # Resize window (you can also use the mouse for that)
 bindsym $mod+r mode "resize"
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 5 px or 5 ppt
-        bindsym k resize grow height 5 px or 5 ppt
-        bindsym l resize shrink height 5 px or 5 ppt
-        bindsym semicolon resize grow width 5 px or 5 ppt
-
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
@@ -307,87 +279,24 @@ mode "focused" {
 
 bindsym $mod+g mode "focused"
 
-# media player controls
-bindsym XF86AudioPlay exec --no-startup-id ~/.config/i3/scripts/play-pause.sh
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-
 # Autostart applications
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nitrogen --restore; sleep 1; compton -b
-exec --no-startup-id nm-applet
-exec --no-startup-id xfce4-power-manager
-exec --no-startup-id pamac-tray
-exec --no-startup-id blueman-applet
-exec --no-startup-id ~/bin/greenclip daemon
-# exec_always --no-startup-id sbxkb
-# exec --no-startup-id start_conky_maia
-# exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 10 -locker blurlock
-exec_always --no-startup-id ff-theme-util
-exec_always --no-startup-id fix_xcursor
-exec_always --no-startup-id setxkbmap -option "ctrl:nocaps"
-exec --no-startup-id ~/.screenlayout/single-1080.sh
+#exec --no-startup-id xfsettingsd
+#exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+#exec --no-startup-id nitrogen --restore; sleep 1; compton -b
+#exec --no-startup-id nm-applet
+#exec --no-startup-id xfce4-power-manager
+#exec --no-startup-id pamac-tray
+#exec --no-startup-id blueman-applet
+#exec --no-startup-id ~/bin/greenclip daemon
+#exec_always --no-startup-id sbxkb
+#exec --no-startup-id xautolock -time 10 -locker blurlock
+#exec_always --no-startup-id ff-theme-util
+#exec_always --no-startup-id fix_xcursor
+exec_always --no-startup-id setxkbmap -model pc105 -layout us,cz -option ctrl:nocaps,grp:menu_toggle -variant altgr-intl,qwerty
+#exec --no-startup-id ~/.screenlayout/single-1080.sh
 
 # hide/unhide i3status bar
 bindsym $mod+m bar mode toggle
-
-#############################
-### settings for i3-gaps: ###
-#############################
-
-# Set inner/outer gaps
-gaps inner 0
-gaps outer 0
-
-# Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
-# gaps inner|outer current|all set|plus|minus <px>
-# gaps inner all set 10
-# gaps outer all plus 5
-
-# Smart gaps (gaps used if only more than one container on the workspace)
-smart_gaps on
-
-# Smart borders (draw borders around container only if it is not the only container on this workspace) 
-# on|no_gaps (on=always activate and no_gaps=only activate if the gap size to the edge of the screen is 0)
-smart_borders on
-
-# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
-set $mode_gaps Gaps: (o) outer, (i) inner
-set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
-set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
-bindsym $mod+Shift+g mode "$mode_gaps"
-
-mode "$mode_gaps" {
-        bindsym o      mode "$mode_gaps_outer"
-        bindsym i      mode "$mode_gaps_inner"
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_inner" {
-        bindsym plus  gaps inner current plus 5
-        bindsym minus gaps inner current minus 5
-        bindsym 0     gaps inner current set 0
-
-        bindsym Shift+plus  gaps inner all plus 5
-        bindsym Shift+minus gaps inner all minus 5
-        bindsym Shift+0     gaps inner all set 0
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_outer" {
-        bindsym plus  gaps outer current plus 5
-        bindsym minus gaps outer current minus 5
-        bindsym 0     gaps outer current set 0
-
-        bindsym Shift+plus  gaps outer all plus 5
-        bindsym Shift+minus gaps outer all minus 5
-        bindsym Shift+0     gaps outer all set 0
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
 
 #############
 ### Theme ###
@@ -514,8 +423,9 @@ set $base0F #fcc09e
 # Basic bar configuration using the Base16 variables.
 bar {
     tray_output primary
-    status_command i3status
+    status_command slstatus -j
  	strip_workspace_numbers yes
+    font xft:DejaVu Sans Mono, Awesome 9
 
     colors {
         background $base01
