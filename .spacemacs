@@ -80,7 +80,6 @@ This function should only modify configuration layer settings."
             shell-default-term-shell "/bin/zsh")
      spell-checking
      sql
-     themes-megapack
      syntax-checking
      version-control
      yaml
@@ -97,7 +96,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(epresent)
+   dotspacemacs-additional-packages '(epresent base16-theme)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -202,9 +201,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(base16-oceanicnext
+                         spacemacs-dark
                          spacemacs-light)
-   ;; dotspacemacs-themes '(dracula)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `vim-powerline' and `vanilla'. The first three
