@@ -116,9 +116,6 @@ if [ -n "${commands[fzf-share]}" ]; then
 fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# ls solarized
-#[ -f $HOME/.dircolors ] && eval $(dircolors ~/.dircolors)
-
 bindkey '\e[1;3D' backward-word
 bindkey '\e[1;3C' forward-word
 bindkey '\e\eOD' backward-word
@@ -127,4 +124,8 @@ bindkey '\e\eOC' forward-word
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
 [ -d ~/.local/bin ] && export PATH="~/.local/bin:$PATH"
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+if [ -z "$SSH_CONNECTION" ]; then
+  export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+fi
+export GPG_TTY=$(tty)
