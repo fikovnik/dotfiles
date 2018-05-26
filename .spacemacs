@@ -67,6 +67,7 @@ This function should only modify configuration layer settings."
           org-projectile-file "~/Notes/TODO-projects.org")
      pdf-tools
      racket
+     ranger
      (scala :variables
             scala-indent:use-javadoc-style t
             scala-enable-eldoc t
@@ -485,6 +486,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
           (set-keymap-parent map (keymap-parent input-decode-map))
           (set-keymap-parent input-decode-map map))))
 
+  ;; make the cursor to stand out
+  (setq evil-emacs-state-cursor '("magenta" (bar . 2)))
+
   )
 
 (defun dotspacemacs/user-config ()
@@ -610,17 +614,36 @@ before packages are loaded."
 
   ;; (setq org-projectile-capture-template "* TODO %?\ncaptured on:%U\n%a")
 
+  ;; --------------------------------------------------------------------------------
+  ;; org-mode
+  ;; --------------------------------------------------------------------------------
+
   (with-eval-after-load 'org
-    (setq org-agenda-files '("~/Notes/TODO.org"))
+    (setq org-id-link-to-org-use-id 'create-if-interactive)
+    (setq org-agenda-files '("~/Notes"))
+    (setq org-directory "~/Notes")
+    (setq org-default-notes-file "~/Notes/Notes.org")
     (setq org-capture-templates
-          '(("t" "Todo" entry (file+headline "~/Notes/TODO.org" "Tasks") "* TODO %?\ncaptured on:%U\n%a")
-            ("n" "Note" entry (file+headline "~/Notes/TODO.org" "Notes") "* %?\n%i\ncaptured on:%U\n%a")))
+          '(("t" "Todo"         entry (file+headline "~/Notes/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i\n")
+            ("n" "Note"         entry (file+headline "~/Notes/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i\n")
+            ("j" "Journal"      entry (file+datetree "~/Notes/Journal.org")    "* %?\nEntered on %U\n%i\n")
+            ("J" "Work Journal" entry (file+datetree "~/Notes/Work.org")  "* %?\nEntered on %U\n%i\n")
+            ))
     (setq org-startup-indented 1)
+    (setq org-ellipsis "⤵")
     )
 
-  (with-eval-after-load 'org-agenda
-     (require 'org-projectile)
-     (setq org-agenda-files (append (org-projectile-todo-files) org-agenda-files)))
+  ;; (with-eval-after-load 'org-agenda
+  ;;    (require 'org-projectile)
+  ;;    (setq org-agenda-files (append (org-projectile-todo-files) org-agenda-files)))
+
+  (setq ranger-show-preview t
+        ranger-show-literal nil
+        ranger-cleanup-on-disable nil
+        ranger-ignored-extensions '("mkv" "iso" "mp4")
+        ranger-max-preview-size 20
+        ranger-return-to-ranger t
+        ranger-override-dired-mode t)
 
   ;; --------------------------------------------------------------------------------
   ;; e-mail
@@ -722,14 +745,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-latex-pdf-process
-   (quote
-    ("%latex -interaction nonstopmode -shell-escape -output-directory %o %f" "%latex -interaction nonstopmode -shell-escape -output-directory %o %f" "%latex -interaction nonstopmode -shell-escape -output-directory %o %f")))
  '(package-selected-packages
    (quote
-    (epresent ess-R-data-view ctable ess julia-mode zenburn-theme zen-and-art-theme zeal-at-point yasnippet-snippets yaml-mode xterm-color ws-butler winum white-sand-theme which-key web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection sql-indent spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme restart-emacs rebecca-theme rainbow-mode rainbow-identifiers rainbow-delimiters railscasts-theme racket-mode purple-haze-theme pug-mode professional-theme popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el password-generator paradox ox-gfm overseer orgit organic-green-theme org-ref org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noflet noctilux-theme neotree naquadah-theme nameless mwim mvn mustang-theme multi-term move-text move-dup monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme meghanada maven-test-mode material-theme markdown-toc majapahit-theme magit-gitflow madhat2r-theme macrostep lush-theme lorem-ipsum linum-relative link-hint light-soap-theme less-css-mode jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-notmuch helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme groovy-mode groovy-imports grandshell-theme gradle-mode gotham-theme google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme fuzzy font-lock+ flyspell-correct-helm flycheck-pos-tip flx-ido flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exotica-theme exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme dockerfile-mode docker django-theme diminish diff-hl define-word darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme counsel-projectile company-web company-statistics company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme clean-aindent-mode cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme browse-at-remote birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
- '(paradox-github-token t)
- '(pdf-misc-print-programm "/usr/bin/evince"))
+    (ranger zeal-at-point yasnippet-snippets yaml-mode xterm-color ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode pug-mode popwin persp-mode pcre2el password-generator paradox ox-gfm overseer orgit org-ref org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint less-css-mode indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-notmuch helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy font-lock+ flyspell-correct-helm flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help epresent ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker diminish diff-hl define-word counsel-projectile company-web company-statistics company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-identifiers-mode clean-aindent-mode centered-cursor-mode browse-at-remote base16-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

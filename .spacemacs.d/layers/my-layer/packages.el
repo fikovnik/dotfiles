@@ -141,6 +141,7 @@ Called via the `after-load-functions' special hook."
     (define-key map (kbd "C-x <down>")  'windmove-down)
 
     (define-key map (kbd "C-x C-b") 'helm-mini)
+    (define-key map (kbd "C-x C-r") 'ranger)
     (define-key map (kbd "M-x") 'helm-M-x)
 
     (define-key map (kbd "C-=") 'er/expand-region)
