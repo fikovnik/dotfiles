@@ -1,0 +1,3 @@
+#!/bin/sh
+
+playerctl previous
