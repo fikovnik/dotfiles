@@ -166,7 +166,10 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style '(hybrid :variables
+                                       hybrid-mode-enable-evilified-state t
+                                       hybrid-mode-enable-hjkl-bindings nil
+                                       hybrid-mode-default-state 'emacs)
 
    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
@@ -612,25 +615,31 @@ before packages are loaded."
   ;;                             (interactive)
   ;;                             (scroll-up 3)))
 
-  ;; (setq org-projectile-capture-template "* TODO %?\ncaptured on:%U\n%a")
+  (setq
+   pdf-misc-print-programm "/usr/bin/lpr"
+   pdf-misc-print-programm-args (quote ("-o media=a4" "-o fitplot")))
 
   ;; --------------------------------------------------------------------------------
   ;; org-mode
   ;; --------------------------------------------------------------------------------
 
   (with-eval-after-load 'org
-    (setq org-id-link-to-org-use-id 'create-if-interactive)
-    (setq org-agenda-files '("~/Notes"))
-    (setq org-directory "~/Notes")
-    (setq org-default-notes-file "~/Notes/Notes.org")
+    (setq org-id-link-to-org-use-id 'create-if-interactive
+          org-agenda-files '("~/Notes")
+          org-directory "~/Notes"
+          org-default-notes-file "~/Notes/Notes.org"
+          org-startup-indented 1
+          org-blank-before-new-entry '(((heading .  t) (plain-list-item . t)))
+          org-log-reschedule 'time
+          org-ellipsis "⤵"
+          org-log-into-drawer t
+          org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
     (setq org-capture-templates
-          '(("t" "Todo"         entry (file+headline "~/Notes/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i\n")
-            ("n" "Note"         entry (file+headline "~/Notes/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i\n")
-            ("j" "Journal"      entry (file+datetree "~/Notes/Journal.org")    "* %?\nEntered on %U\n%i\n")
-            ("J" "Work Journal" entry (file+datetree "~/Notes/Work.org")  "* %?\nEntered on %U\n%i\n")
+          '(("t" "Todo"         entry (file+headline "~/Notes/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
+            ("n" "Note"         entry (file+headline "~/Notes/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i")
+            ("j" "Journal"      entry (file+datetree "~/Notes/Journal.org")    "* %?\n%i")
+            ("J" "Work Journal" entry (file+datetree "~/Notes/Work.org")  "* %?\n%i")
             ))
-    (setq org-startup-indented 1)
-    (setq org-ellipsis "⤵")
     )
 
   ;; (with-eval-after-load 'org-agenda
@@ -747,8 +756,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ranger zeal-at-point yasnippet-snippets yaml-mode xterm-color ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode pug-mode popwin persp-mode pcre2el password-generator paradox ox-gfm overseer orgit org-ref org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint less-css-mode indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-notmuch helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy font-lock+ flyspell-correct-helm flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help epresent ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker diminish diff-hl define-word counsel-projectile company-web company-statistics company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-identifiers-mode clean-aindent-mode centered-cursor-mode browse-at-remote base16-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
- '(paradox-github-token t))
+    (auctex-latexmk zeal-at-point yasnippet-snippets yaml-mode xterm-color ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs ranger rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode pug-mode popwin persp-mode pcre2el password-generator paradox ox-gfm overseer orgit org-ref org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint less-css-mode indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-notmuch helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy font-lock+ flyspell-correct-helm flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help epresent ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker diminish diff-hl define-word counsel-projectile company-web company-statistics company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-identifiers-mode clean-aindent-mode centered-cursor-mode browse-at-remote base16-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
