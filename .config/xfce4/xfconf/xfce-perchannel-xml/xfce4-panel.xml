@@ -9,7 +9,6 @@
       <property name="plugin-ids" type="array">
         <value type="int" value="4"/>
         <value type="int" value="1"/>
-        <value type="int" value="10"/>
         <value type="int" value="8"/>
         <value type="int" value="9"/>
         <value type="int" value="5"/>
