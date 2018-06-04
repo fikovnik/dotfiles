@@ -2,6 +2,22 @@
   '(move-dup)
   )
 
+(defun org-insert-clipboard-image ()
+  (interactive)
+  (setq dir (concat (file-name-directory (buffer-file-name)) "resources"))
+  (unless (file-directory-p dir) (make-directory dir))
+  (setq filename
+        (concat dir
+                "/"
+                (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))
+                "-"
+                (format-time-string "%Y%m%d-%H%M%S")
+                ".png"))
+  (shell-command (concat " xclip -selection clipboard -t image/png -o > " filename))
+  (insert (concat "[[" filename "]]"))
+  (org-display-inline-images))
+
+
 (defun my-copy-to-xclipboard(arg)
   (interactive "P")
   (if (use-region-p)
