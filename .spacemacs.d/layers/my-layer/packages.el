@@ -17,9 +17,14 @@
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))
 
+(defun my/toggle-emacs-mode ()
+  (interactive)
+  (if (bound-and-true-p holy-mode)
+      (spacemacs/toggle-hybrid-mode)
+    (spacemacs/toggle-holy-mode)))
 
-(defun my-copy-to-xclipboard(arg)
-  (interactive "P")
+(defun my-copy-to-xclipboard ()
+  (interactive)
   (if (use-region-p)
       (if (not (display-graphic-p))
           (letrec ((s (buffer-substring-no-properties (region-beginning) (region-end)))
@@ -30,21 +35,20 @@
                                                    (base64-encode-string (encode-coding-string s 'utf-8) t)
                                                    "\07"))
                   (message "Yanked region to terminal clipboard")
-                  (when arg
-                    (kill-region (region-beginning) (region-end)))
                   (deactivate-mark))
               (message "Selection too long (%d) to send to terminal." s-length)))
         (if (= 0 (shell-command-on-region
-                   (region-beginning) (region-end) "xsel -i -b"))
+                  (region-beginning) (region-end) "xsel -i -b"))
             (message "Yanked region to X-clipboard")
           (error "Is program `xsel' installed?")))
     (message "Nothing to yank to terminal clipboard")))
 
-(defun my-cut-to-xclipboard()
+(defun my-cut-to-xclipboard ()
   (interactive)
-  (my-copy-to-xclipboard t))
+  (my-copy-to-xclipboard)
+  (kill-region (region-beginning) (region-end)))
 
-(defun my-paste-from-xclipboard()
+(defun my-paste-from-xclipboard ()
   "Uses shell command `xsel -o' to paste from x-clipboard. With
 one prefix arg, pastes from X-PRIMARY, and with two prefix args,
 pastes from X-SECONDARY."
@@ -131,6 +135,7 @@ Called via the `after-load-functions' special hook."
 
 (defvar my-keys-minor-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-x C-h") 'my/toggle-emacs-mode)
     (define-key map [home] 'mwim-beginning-of-code-or-line)
     (define-key map [end] 'mwim-end-of-code-or-line)
 
@@ -144,12 +149,14 @@ Called via the `after-load-functions' special hook."
     (define-key map (kbd "M-<up>") 'md/move-lines-up)
     (define-key map (kbd "M-<down>") 'md/move-lines-down)
 
-    (define-key map (kbd "C-c C-w") 'my-cut-to-xclipboard)
-    (define-key map (kbd "C-c M-w") 'my-copy-to-xclipboard)
-    (define-key map (kbd "C-c C-y") 'my-paste-from-xclipboard)
+    ;;(define-key map (kbd "C-c C-w") 'my-cut-to-xclipboard)
+    ;;(define-key map (kbd "C-c M-w") 'my-copy-to-xclipboard)
+    ;;(define-key map (kbd "C-c C-y") 'my-paste-from-xclipboard)
     ;; this is just to make it compatible with terminal
+    (define-key map (kbd "C-S-x") 'my-cut-to-xclipboard)
+    (define-key map (kbd "C-S-c") 'my-copy-to-xclipboard)
     (define-key map (kbd "C-S-v") 'my-paste-from-xclipboard)
-
+    
     ;; windmove
     (define-key map (kbd "C-x <left>")  'windmove-left)
     (define-key map (kbd "C-x <right>") 'windmove-right)
@@ -163,17 +170,9 @@ Called via the `after-load-functions' special hook."
     (define-key map (kbd "C-=") 'er/expand-region)
     ;; faster kill buffer
     (define-key map (kbd "C-x C-k") 'kill-this-buffer)
-    (define-key map (kbd "s-w") 'spacemacs/frame-killer)
-
-    (define-key map (kbd "s-n")
-      (lambda ()
-        (interactive)
-        (select-frame (make-frame))
-        (spacemacs/new-empty-buffer)
-        (spacemacs/toggle-maximize-buffer)))
 
     ;; C-M-/ in terminal to toggle comment
-    (define-key map (kbd "C-M-_") 'comment-or-uncomment-region-or-line)
+    (define-key map (kbd "M-S-/") 'comment-or-uncomment-region-or-line)
 
     ;; indent
     (define-key map (kbd "C-M-\\") 'indent-region-or-buffer)
@@ -187,7 +186,7 @@ Called via the `after-load-functions' special hook."
 
 (define-minor-mode my-keys-minor-mode
   :init-value t
-  :lighter " my-keys")
+  :lighter "my-keys")
 
 (my-keys-minor-mode 1)
 (add-hook 'after-load-functions 'my-keys-have-priority)

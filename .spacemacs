@@ -61,7 +61,7 @@ This function should only modify configuration layer settings."
               ibuffer-group-buffers-by 'projects)
      latex
      markdown
-     notmuch
+     ;;notmuch
      (org :variables
           org-enable-github-support t
           org-projectile-file "~/Notes/TODO-projects.org")
@@ -87,7 +87,7 @@ This function should only modify configuration layer settings."
 
      ;; my layers
      my-layer
-     ace-link-notmuch
+     ;;ace-link-notmuch
      )
 
    ;; List of additional packages that will be installed without being
@@ -166,10 +166,7 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style '(hybrid :variables
-                                       hybrid-mode-enable-evilified-state t
-                                       hybrid-mode-enable-hjkl-bindings nil
-                                       hybrid-mode-default-state 'emacs)
+   dotspacemacs-editing-style 'emacs
 
    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
@@ -488,10 +485,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         (let ((map (copy-keymap xterm-function-map)))
           (set-keymap-parent map (keymap-parent input-decode-map))
           (set-keymap-parent input-decode-map map))))
-
-  ;; make the cursor to stand out
-  (setq evil-emacs-state-cursor '("magenta" (bar . 2)))
-
   )
 
 (defun dotspacemacs/user-config ()
@@ -501,8 +494,8 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; (spacemacs|do-after-display-system-init
-  ;;  (spacemacs-modeline/init-spaceline))
+    ;; make the cursor to stand out
+  (setq evil-emacs-state-cursor '("magenta" (bar . 2)))
 
   ;; TODO: fix this
   ;; this is because it corrupts the modeline
@@ -545,6 +538,9 @@ before packages are loaded."
    indent-tabs-mode nil
    show-paren-delay 0
    )
+
+  ;; magit
+  (setq magit-repository-directories '(("~/Projects" . 1) ("~/Research/Projects" . 1)))
 
   ;; C++ for headers
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
