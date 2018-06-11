@@ -32,3 +32,5 @@
 [credential]
 #	helper = cache --timeout=36000
 	helper = /usr/bin/pass-git-helper
+[pull]
+	rebase = true
