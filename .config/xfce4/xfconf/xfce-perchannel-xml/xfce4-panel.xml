@@ -39,9 +39,12 @@
         <value type="string" value="orage"/>
         <value type="string" value="pamac-tray"/>
         <value type="string" value="blueman-applet"/>
+        <value type="string" value="chromium"/>
         <value type="string" value="clipman"/>
         <value type="string" value="xfce4-power-manager"/>
+        <value type="string" value="teamviewer"/>
         <value type="string" value="xnoise"/>
+        <value type="string" value="scp-dbus-service.py"/>
         <value type="string" value="slack"/>
       </property>
       <property name="names-hidden" type="array">
