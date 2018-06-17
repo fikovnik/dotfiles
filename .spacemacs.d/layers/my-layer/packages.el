@@ -203,7 +203,7 @@ Called via the `after-load-functions' special hook."
   (define-key inferior-ess-mode-map (kbd "C-k") 'kill-line))
 
 (defun my/ess-mode-hook ()
-  (ess-disable-smart-underscore nil)
+  (ess-disable-smart-S-assign nil)
   (ess-set-style 'RStudio)
   (modify-syntax-entry ?_ "w"))
 
