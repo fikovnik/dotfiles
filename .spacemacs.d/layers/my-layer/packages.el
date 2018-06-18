@@ -171,8 +171,8 @@ Called via the `after-load-functions' special hook."
     ;; faster kill buffer
     (define-key map (kbd "C-x C-k") 'kill-this-buffer)
 
-    ;; C-M-/ in terminal to toggle comment
-    (define-key map (kbd "M-S-/") 'comment-or-uncomment-region-or-line)
+    (define-key map (kbd "C-c C-_") 'comment-or-uncomment-region-or-line)
+    (define-key map (kbd "C-c C-/") 'comment-or-uncomment-region-or-line)
 
     ;; indent
     (define-key map (kbd "C-M-\\") 'indent-region-or-buffer)
@@ -203,7 +203,7 @@ Called via the `after-load-functions' special hook."
   (define-key inferior-ess-mode-map (kbd "C-k") 'kill-line))
 
 (defun my/ess-mode-hook ()
-  (ess-disable-smart-S-assign nil)
+  (setq ess-smart-S-assign-key nil)
   (ess-set-style 'RStudio)
   (modify-syntax-entry ?_ "w"))
 
