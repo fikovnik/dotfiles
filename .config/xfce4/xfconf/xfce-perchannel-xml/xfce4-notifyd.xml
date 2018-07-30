@@ -13,6 +13,7 @@
       <value type="string" value="Dropbox"/>
       <value type="string" value="Electron"/>
       <value type="string" value="Firefox"/>
+      <value type="string" value="IDEA"/>
       <value type="string" value="nm-applet"/>
       <value type="string" value="notify-send"/>
       <value type="string" value="Package Manager"/>
