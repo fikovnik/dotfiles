@@ -42,6 +42,7 @@ This function should only modify configuration layer settings."
      helm
      ;;osx
      (auto-completion :variables
+                      spacemacs-default-company-backends '(company-files company-capf)
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior nil
                       auto-completion-enable-snippets-in-popup t
@@ -762,6 +763,12 @@ before packages are loaded."
   ;;(cond
   ;; ((spacemacs/system-is-mac) (setq TeX-view-program-selection '((output-pdf "Skim"))))
   ;; ((spacemacs/system-is-linux) (setq TeX-view-program-selection '((output-pdf "Okular"))))))
+
+  (custom-set-faces
+   '(company-tooltip-common
+     ((t (:inherit company-tooltip :weight bold :underline nil))))
+   '(company-tooltip-common-selection
+     ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
