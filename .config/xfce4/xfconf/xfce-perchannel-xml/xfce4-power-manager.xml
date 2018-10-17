@@ -7,5 +7,7 @@
     <property name="brightness-switch-restore-on-exit" type="int" value="0"/>
     <property name="brightness-switch" type="int" value="0"/>
     <property name="presentation-mode" type="bool" value="false"/>
+    <property name="inactivity-sleep-mode-on-battery" type="uint" value="1"/>
+    <property name="inactivity-on-battery" type="uint" value="96"/>
   </property>
 </channel>
