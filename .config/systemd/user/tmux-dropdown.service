@@ -3,7 +3,7 @@ Description=Start tmux dropdown session
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/tmux new-session -s dropdown -d
+ExecStart=/usr/bin/tmux new-session -A -s dropdown -d
 ExecStop=/usr/bin/tmux kill-session -t dropdown
 KillMode=none
 RemainAfterExit=yes
