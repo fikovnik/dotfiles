@@ -33,6 +33,7 @@
     <property name="plugin-6" type="string" value="systray">
       <property name="names-visible" type="array">
         <value type="string" value="thunar"/>
+        <value type="string" value="vlc"/>
         <value type="string" value="pnmixer"/>
         <value type="string" value="manjaro-settings-manager-daemon"/>
         <value type="string" value="networkmanager applet"/>
@@ -56,7 +57,7 @@
     </property>
     <property name="plugin-9" type="string" value="pulseaudio">
       <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
-      <property name="mpris-players" type="string" value="spotify"/>
+      <property name="mpris-players" type="string" value="spotify;vlc"/>
     </property>
     <property name="plugin-1" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>

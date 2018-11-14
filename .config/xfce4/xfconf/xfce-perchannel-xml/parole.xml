@@ -10,4 +10,7 @@
   <property name="audio" type="empty">
     <property name="volume" type="int" value="50"/>
   </property>
+  <property name="folders" type="empty">
+    <property name="last-used-media" type="string" value="/home/krikava/NoBackup"/>
+  </property>
 </channel>
