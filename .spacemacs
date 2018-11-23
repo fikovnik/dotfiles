@@ -51,6 +51,9 @@ This function should only modify configuration layer settings."
      bibtex
      better-defaults
      colors
+     (c-c++ :variables
+            c-c++-backend 'lsp-cquery
+            c-c++-lsp-sem-highlight-rainbow nil)
      docker
      dash
      emacs-lisp
@@ -62,6 +65,7 @@ This function should only modify configuration layer settings."
               ibuffer-group-buffers-by 'projects)
      latex
      markdown
+     (multiple-cursors :variables multiple-cursors-backend 'evil-mc)
      ;;notmuch
      (org :variables
           org-enable-github-support t
@@ -89,7 +93,6 @@ This function should only modify configuration layer settings."
      ;; my layers
      my-layer
      lsp
-     (cquery :variables cquery-executable "/usr/bin/cquery")
      ;;ace-link-notmuch
      )
 
@@ -785,7 +788,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (zeal-at-point yasnippet-snippets yaml-mode ws-butler winum web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons spaceline powerline smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs ranger rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode faceup pug-mode prettier-js popwin persp-mode password-generator paradox spinner ox-gfm overseer orgit org-ref pdf-tools key-chord org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-bullets org-brain open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-svn magit-gitflow macrostep lsp-ui dash-functional lsp-java markdown-mode lorem-ipsum link-hint indent-guide impatient-mode simple-httpd ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-purpose window-purpose imenu-list helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gitignore request helm-git-grep helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-bibtex parsebib helm-ag haml-mode groovy-mode groovy-imports pcache gradle-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-rtags flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit git-commit ghub treepy graphql with-editor evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu highlight eterm-256color xterm-color ess-R-data-view ctable ess julia-mode eshell-z eshell-prompt-extras esh-help epresent ensime sbt-mode scala-mode emmet-mode elisp-slime-nav editorconfig dumb-jump doom-modeline eldoc-eval shrink-path all-the-icons memoize dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat disaster diff-hl define-word cquery counsel-projectile projectile counsel swiper ivy pkg-info epl company-web web-completion-data company-statistics company-rtags rtags company-quickhelp pos-tip company-lsp lsp-mode company-emacs-eclim eclim company-c-headers company-auctex company column-enforce-mode color-identifiers-mode clean-aindent-mode clang-format centered-cursor-mode browse-at-remote f s biblio biblio-core dash base16-theme auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed auctex-latexmk auctex aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core ac-ispell auto-complete popup which-key use-package pcre2el org-plus-contrib hydra font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async))))
+    (evil-mc zeal-at-point yasnippet-snippets yaml-mode ws-butler winum which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit symon string-inflection sql-indent spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs ranger rainbow-mode rainbow-identifiers rainbow-delimiters racket-mode pug-mode prettier-js popwin persp-mode pcre2el password-generator paradox ox-gfm overseer orgit org-ref org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file noflet neotree nameless mwim mvn multi-term move-text move-dup mmm-mode meghanada maven-test-mode markdown-toc magit-svn magit-gitflow macrostep lsp-ui lsp-java lorem-ipsum link-hint indent-guide impatient-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-purpose helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gitignore helm-git-grep helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag groovy-mode groovy-imports gradle-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy font-lock+ flyspell-correct-helm flycheck-rtags flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eterm-256color ess-R-data-view eshell-z eshell-prompt-extras esh-help epresent ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline dockerfile-mode docker disaster diminish diff-hl define-word cquery counsel-projectile company-web company-statistics company-rtags company-quickhelp company-lsp company-emacs-eclim company-c-headers company-auctex column-enforce-mode color-identifiers-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote base16-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
