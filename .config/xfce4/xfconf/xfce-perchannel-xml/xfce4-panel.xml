@@ -35,12 +35,13 @@
         <value type="string" value="thunar"/>
         <value type="string" value="vlc"/>
         <value type="string" value="pnmixer"/>
+        <value type="string" value="redshift-gtk"/>
         <value type="string" value="manjaro-settings-manager-daemon"/>
         <value type="string" value="networkmanager applet"/>
-        <value type="string" value="megasync"/>
         <value type="string" value="msm notifier"/>
-        <value type="string" value="hubic-gtk"/>
+        <value type="string" value="megasync"/>
         <value type="string" value="orage"/>
+        <value type="string" value="hubic-gtk"/>
         <value type="string" value="pamac-tray"/>
         <value type="string" value="blueman-applet"/>
         <value type="string" value="chromium"/>
