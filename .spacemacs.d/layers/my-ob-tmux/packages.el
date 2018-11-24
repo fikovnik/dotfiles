@@ -1,8 +1,8 @@
-;;; packages.el --- my-realgud layer packages file for Spacemacs.
+;;; packages.el --- my-ob-tmux layer packages file for Spacemacs.
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
-;; Author: Filip Krikava <krikava@pc-233-195.fit.cvut.cz>
+;; Author: Filip Krikava <krikava@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
@@ -18,20 +18,20 @@
 ;;
 ;;
 ;; Briefly, each package to be installed or configured by this layer should be
-;; added to `my-realgud-packages'. Then, for each package PACKAGE:
+;; added to `my-ob-tmux-packages'. Then, for each package PACKAGE:
 ;;
 ;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
-;;   function `my-realgud/init-PACKAGE' to load and initialize the package.
+;;   function `my-ob-tmux/init-PACKAGE' to load and initialize the package.
 
 ;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
-;;   define the functions `my-realgud/pre-init-PACKAGE' and/or
-;;   `my-realgud/post-init-PACKAGE' to customize the package as it is loaded.
+;;   define the functions `my-ob-tmux/pre-init-PACKAGE' and/or
+;;   `my-ob-tmux/post-init-PACKAGE' to customize the package as it is loaded.
 
 ;;; Code:
 
-(defconst my-realgud-packages
-  '(realgud)
-  "The list of Lisp packages required by the my-realgud layer.
+(defconst my-ob-tmux-packages
+  '(ob-tmux)
+  "The list of Lisp packages required by the my-ob-tmux layer.
 
 Each entry is either:
 
@@ -58,8 +58,21 @@ Each entry is either:
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
-(defun my-realgud/init-realgud ()
-  (use-package realgud
-    :defer t))
 
+(defun my-ob-tmux/init-ob-tmux ()
+  (use-package ob-tmux
+    ;; Install package automatically (optional)
+    :ensure t
+    :custom
+    (org-babel-default-header-args:tmux
+     '((:results . "silent")	 ;
+       (:session . "default")	 ; The default tmux session to send code to
+       (:socket  . nil)          ; The default tmux socket to communicate with
+       (:terminal . "/usr/local/bin/st")))
+    ;; The tmux sessions are prefixed with the following string.
+    ;; You can customize this if you like.
+    (org-babel-tmux-session-prefix "emacs-")
+    ;; Finally, if your tmux is not in your $PATH for whatever reason, you
+    ;; may set the path to the tmux binary as follows:
+    ))
 ;;; packages.el ends here
