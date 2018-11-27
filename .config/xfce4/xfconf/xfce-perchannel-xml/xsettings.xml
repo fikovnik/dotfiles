@@ -34,7 +34,7 @@
     <property name="MenuBarAccel" type="string" value="F10"/>
     <property name="CursorThemeName" type="string" value="Adwaita"/>
     <property name="CursorThemeSize" type="int" value="0"/>
-    <property name="DecorationLayout" type="string" value=":close"/>
+    <property name="DecorationLayout" type="string" value="menu:close"/>
     <property name="IMPreeditStyle" type="string" value=""/>
     <property name="IMStatusStyle" type="string" value=""/>
     <property name="IMModule" type="string" value=""/>
