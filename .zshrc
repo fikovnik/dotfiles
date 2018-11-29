@@ -3,10 +3,12 @@
 ################################################################################
 
 function config_osx {
-  # iTerm2
-  [[ -e ${HOME}/.iterm2_shell_integration.zsh ]] && source ${HOME}/.iterm2_shell_integration.zsh
+    # iTerm2
+    [[ -e ${HOME}/.iterm2_shell_integration.zsh ]] && source ${HOME}/.iterm2_shell_integration.zsh
 
-  alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
+    [[ -d /usr/local/share/zsh-completions ]] && fpath=(/usr/local/share/zsh-completions $fpath)
+
+    alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
 }
 
 function config_linux {
@@ -15,6 +17,8 @@ function config_linux {
 }
 
 ################################################################################
+
+# Note: never put PATH adjustments, that goes to zshenv
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -27,7 +31,7 @@ export DEFAULT_USER=krikava
 export LC_ALL=en_US.UTF-8
 
 # aliases
-alias g="emacsclient -t"
+alias e="emacsclient -t"
 alias vi=vim
 alias emacs='emacs -nw'
 
@@ -49,15 +53,12 @@ setopt AUTO_PUSHD
 # This will use named dirs when possible
 setopt AUTO_NAME_DIRS
 
-# autoload
-autoload -U zmv
-
 # vcs_info
-VCS_BRANCH_ICON=""
-VCS_REMOTE_BRANCH_ICON=""
-zstyle ':vcs_info:git:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
-zstyle ':vcs_info:git-svn:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
-zstyle ':vcs_info:hg:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
+#VCS_BRANCH_ICON=""
+#VCS_REMOTE_BRANCH_ICON=""
+#zstyle ':vcs_info:git:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
+#zstyle ':vcs_info:git-svn:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
+#zstyle ':vcs_info:hg:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
 
 if [ -z "$SSH_CONNECTION" ] || emacsclient --version >/dev/null 2>&1; then
     export ALTERNATE_EDITOR="vim"
@@ -68,40 +69,14 @@ else
     export VISUAL=$EDITOR
 fi
 
-# completion
-[[ -d /usr/local/share/zsh-completions ]] && fpath=(/usr/local/share/zsh-completions $fpath)
-[[ -d $HOME/.zsh/completions ]] && fpath=($HOME/.zsh/completions $fpath)
-#fpath=("/usr/local/bin/" $fpath)
-#autoload -Uz compinit 
-compinit -u
-
 # pyenv
 [[ -f /usr/local/bin/pyenv ]] && eval "$(pyenv init -)"
-
-case $(uname) in
-  Darwin*) config_osx ;;
-  Linux*) config_linux ;;
-esac
 
 # custom keys
 bindkey '^[z' undo
 
 # azure
 type azure >/dev/null 2>&1 && . <(azure --completion)
-
-# fasd
-if which fasd > /dev/null; then
-  # fasd
-  fasd_cache="$HOME/.fasd-init-zsh"
-  if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-    fasd --init auto >| "$fasd_cache"
-  fi
-  source "$fasd_cache"
-  unset fasd_cache
-  alias v='f -e vim'
-  alias j='fasd_cd -d'
-  alias jj='fasd_cd -d -i'
-fi
 
 # fzf
 if [ -n "${commands[fzf-share]}" ]; then
@@ -110,12 +85,20 @@ if [ -n "${commands[fzf-share]}" ]; then
 fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# fix keyboard in st
 bindkey '\e[1;3D' backward-word
 bindkey '\e[1;3C' forward-word
 bindkey '\e\eOD' backward-word
 bindkey '\e\eOC' forward-word
 
+# this is here because I don't want to use the gpg
+# module from zprezto
 if [ -z "$SSH_CONNECTION" ]; then
   export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 fi
 export GPG_TTY=$(tty)
+
+case $(uname) in
+    Darwin*) config_osx ;;
+    Linux*) config_linux ;;
+esac
