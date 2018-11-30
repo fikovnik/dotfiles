@@ -4,4 +4,4 @@ rofi.terminal: st
 rofi.matching: fuzzy
 rofi.location: 2
 
-rofi.theme: /usr/share/rofi/themes/Adapta-Nokto.rasi
+rofi.theme: /usr/share/rofi/themes/Arc-Dark.rasi
