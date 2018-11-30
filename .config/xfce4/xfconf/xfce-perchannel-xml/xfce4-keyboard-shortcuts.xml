@@ -25,7 +25,6 @@
       <property name="&lt;Super&gt;d" type="string" value="/home/krikava/bin/x-apps-menu.sh"/>
       <property name="&lt;Super&gt;p" type="string" value="/home/krikava/bin/x-pass-manager.sh"/>
       <property name="&lt;Super&gt;c" type="string" value="/home/krikava/bin/x-clipboard-manager.sh"/>
-      <property name="&lt;Super&gt;slash" type="string" value="/home/krikava/bin/x-window-menu.sh"/>
       <property name="&lt;Super&gt;s" type="string" value="/home/krikava/bin/x-ssh-menu.sh"/>
       <property name="XF86AudioPlay" type="string" value="/home/krikava/bin/x-play-pause.sh"/>
       <property name="XF86AudioNext" type="string" value="/home/krikava/bin/x-next-song.sh"/>
@@ -34,6 +33,7 @@
       <property name="Print" type="string" value="xfce4-screenshooter"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;l" type="string" value="xflock4"/>
       <property name="&lt;Super&gt;grave" type="string" value="/home/krikava/bin/x-terminal-dropdown.sh"/>
+      <property name="&lt;Super&gt;Tab" type="string" value="/home/krikava/bin/x-window-menu.sh"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
@@ -105,7 +105,6 @@
       <property name="&lt;Shift&gt;&lt;Super&gt;Down" type="string" value="tile_down_key"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;Left" type="string" value="tile_left_key"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;Right" type="string" value="tile_right_key"/>
-      <property name="&lt;Super&gt;Tab" type="string" value="cycle_windows_key"/>
       <property name="&lt;Super&gt;q" type="string" value="close_window_key"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;m" type="string" value="maximize_window_key"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;exclam" type="string" value="move_window_workspace_1_key"/>
