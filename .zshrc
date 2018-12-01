@@ -35,6 +35,11 @@ alias e="emacsclient -t"
 alias vi=vim
 alias emacs='emacs -nw'
 
+if which bat > /dev/null 2>&1; then
+    alias cat=bat
+fi
+
+
 # LESS
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
