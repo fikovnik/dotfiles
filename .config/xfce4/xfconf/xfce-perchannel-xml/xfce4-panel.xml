@@ -11,8 +11,8 @@
         <value type="int" value="1"/>
         <value type="int" value="2"/>
         <value type="int" value="7"/>
-        <value type="int" value="9"/>
         <value type="int" value="5"/>
+        <value type="int" value="9"/>
         <value type="int" value="6"/>
         <value type="int" value="3"/>
       </property>
@@ -46,7 +46,6 @@
         <value type="string" value="blueman-applet"/>
         <value type="string" value="chromium"/>
         <value type="string" value="clipman"/>
-        <value type="string" value="déjà dup backup tool"/>
         <value type="string" value="xfce4-power-manager"/>
         <value type="string" value="teamviewer"/>
         <value type="string" value="xnoise"/>
