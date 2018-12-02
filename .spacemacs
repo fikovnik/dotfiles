@@ -72,7 +72,6 @@ This function should only modify configuration layer settings."
           org-projectile-file "~/Notes/TODO-projects.org")
      pdf
      racket
-     ranger
      (scala :variables
             scala-indent:use-javadoc-style t
             scala-enable-eldoc t
@@ -670,14 +669,6 @@ before packages are loaded."
   ;; (with-eval-after-load 'org-agenda
   ;;    (require 'org-projectile)
   ;;    (setq org-agenda-files (append (org-projectile-todo-files) org-agenda-files)))
-
-  (setq ranger-show-preview t
-        ranger-show-literal nil
-        ranger-cleanup-on-disable nil
-        ranger-ignored-extensions '("mkv" "iso" "mp4")
-        ranger-max-preview-size 20
-        ranger-return-to-ranger t
-        ranger-override-dired-mode t)
 
   ;; --------------------------------------------------------------------------------
   ;; e-mail
