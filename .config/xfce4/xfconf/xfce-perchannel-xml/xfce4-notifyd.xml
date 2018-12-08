@@ -5,7 +5,7 @@
   <property name="notify-location" type="uint" value="2"/>
   <property name="log-level" type="uint" value="0"/>
   <property name="log-level-apps" type="uint" value="0"/>
-  <property name="theme" type="string" value="Adapta-Nokto-Eta-Maia"/>
+  <property name="theme" type="string" value="Default"/>
   <property name="do-fadeout" type="bool" value="true"/>
   <property name="applications" type="empty">
     <property name="known_applications" type="array">
