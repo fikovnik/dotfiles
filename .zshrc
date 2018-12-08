@@ -84,9 +84,10 @@ bindkey '^[z' undo
 type azure >/dev/null 2>&1 && . <(azure --completion)
 
 # fzf
-if [ -n "${commands[fzf-share]}" ]; then
-  source "$(fzf-share)/key-bindings.zsh"
-  [ -f "~/.config/fzf.colors" ] && source "~/config/fzf.colors"
+if [ -f /usr/bin/fzf ]; then
+  source /usr/share/fzf/key-bindings.zsh
+  source /usr/share/fzf/completion.zsh
+  source $HOME/.config/base16/base16-oceanicnext.config
 fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
