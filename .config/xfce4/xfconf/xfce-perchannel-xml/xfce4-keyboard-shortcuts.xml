@@ -33,7 +33,7 @@
       <property name="Print" type="string" value="xfce4-screenshooter"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;l" type="string" value="xflock4"/>
       <property name="&lt;Super&gt;grave" type="string" value="/home/krikava/bin/x-terminal-dropdown.sh"/>
-      <property name="&lt;Super&gt;Tab" type="string" value="/home/krikava/bin/x-window-menu.sh"/>
+      <property name="&lt;Super&gt;slash" type="string" value="/home/krikava/bin/x-window-menu.sh"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
@@ -142,6 +142,7 @@
       <property name="&lt;Shift&gt;&lt;Super&gt;s" type="string" value="stick_window_key"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;f" type="string" value="fullscreen_key"/>
       <property name="&lt;Alt&gt;&lt;Super&gt;h" type="string" value="show_desktop_key"/>
+      <property name="&lt;Super&gt;Tab" type="string" value="cycle_windows_key"/>
     </property>
   </property>
   <property name="providers" type="array">
