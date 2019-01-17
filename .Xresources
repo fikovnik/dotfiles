@@ -1,5 +1,5 @@
-#if __has_include(".extend.Xresources")
-#include ".extend.Xresources"
+#if __has_include(".Xresources.base16-theme")
+#include ".Xresources.base16-theme"
 #endif
 
 ! ^ The above lines are no comments!
@@ -20,3 +20,5 @@ XTerm*foreground: #e7e7e7
 XTerm*pointerColor: #16A085
 XTerm*faceName: Fixed
 XTerm*faceSize: 11
+
+Xcursor.theme: Adwaita
