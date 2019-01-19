@@ -643,6 +643,9 @@ before packages are loaded."
   ;; org-mode
   ;; --------------------------------------------------------------------------------
   (with-eval-after-load 'org
+    ;; temporary fix for: https://github.com/syl20bnr/spacemacs/issues/11798
+    (when (version<= "9.2" (org-version))
+      (require 'org-tempo))
     (setq org-id-link-to-org-use-id 'create-if-interactive
           org-agenda-files '("~/Notes")
           org-directory "~/Notes"
