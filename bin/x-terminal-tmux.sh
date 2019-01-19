@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/home/krikava/bin/x-terminal.sh -e tmux new-session -A -s main
+/home/krikava/bin/x-terminal.sh -e tmux new-session
