@@ -10,11 +10,11 @@ set $tmux ~/bin/x-terminal-tmux.sh
 # workspace_layout tabbed <stacking|tabbed>
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
-new_window pixel 1
-new_float normal
+default_border pixel 1
+default_floating_border normal
 
 # Hide borders
-hide_edge_borders none
+hide_edge_borders smart
 
 # change borders
 bindsym $mod+u border none
@@ -43,17 +43,19 @@ bindsym $mod+s exec --no-startup-id ~/bin/x-ssh-menu.sh
 bindsym $mod+r exec --no-startup-id ~/bin/x-run-menu.sh                 
 bindsym $mod+Tab exec --no-startup-id ~/bin/x-window-menu.sh
 # print screen
-bindsym $mod+Print --release exec --no-startup-id xfce4-screenshooter
+bindsym Print --release exec --no-startup-id xfce4-screenshooter
 # xkill
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
 # screen brightness controls
-bindsym XF86MonBrightnessUp exec --no-startup-id "xbacklight -inc 10; notify-send 'brightness up'"
-bindsym XF86MonBrightnessDown exec --no-startup-id "xbacklight -dec 10; notify-send 'brightness down'"
+# handled by xfce-power-manager
+#bindsym XF86MonBrightnessUp exec --no-startup-id "xbacklight -inc 10; notify-send 'brightness up'"
+#bindsym XF86MonBrightnessDown exec --no-startup-id "xbacklight -dec 10; notify-send 'brightness down'"
+
 # audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +5
+bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -5
+bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
 
 # media player controls
 bindsym XF86AudioPlay exec --no-startup-id ~/bin/x-play-pause.sh
@@ -202,6 +204,7 @@ for_window [class="Xfburn"] floating enable
 for_window [class="Nm-connection-editor"] floating enable
 for_window [class="Scp-dbus-service.py"] floating enable
 for_window [class="MEGAsync"] floating enable
+for_window [class="Lightdm-settings"] floating enable
 
 ## dropdown terminal
 for_window [class="st-256color" title="^dropdown@.*"] move scratchpad, resize set 1600 800, move absolute position center
@@ -216,20 +219,23 @@ for_window [urgent=latest] focus
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Ctrl+r restart
 
+# hide/unhide i3status bar
+bindsym $mod+m bar mode toggle
+
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Set shut down, restart and locking features
 bindsym $mod+shift+x mode "$mode_system"
-set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
+set $mode_system (l)ock, switch (u)ser, (e)xit, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym s exec --no-startup-id i3exit suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
-    bindsym r exec --no-startup-id i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+    bindsym l exec --no-startup-id dm-tool lock, mode "default"
+    bindsym u exec --no-startup-id dm-tool switch-to-greeter, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id systemctl hibernate, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id systemctl poweroff, mode "default"
 
     # exit system mode: "Enter" or "Escape"
     bindsym Return mode "default"
@@ -237,21 +243,39 @@ mode "$mode_system" {
 }
 
 # Resize window (you can also use the mouse for that)
-bindsym $mod+Shift+r mode "resize"
+bindsym $mod+shift+r mode "resize"
 mode "resize" {
-        # same bindings, but for the arrow keys
+        bindsym j resize shrink width 5 px or 5 ppt
+        bindsym k resize grow height 5 px or 5 ppt
+        bindsym l resize shrink height 5 px or 5 ppt
+        bindsym semicolon resize grow width 5 px or 5 ppt
+
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
 
-        # exit resize mode: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+# display
+set $display_mode "display (l)aptop (h)ome (w)ork-fit (a)randr"
+bindsym $mod+shift+d mode $display_mode
+mode $display_mode {
+        bindsym l exec --no-startup-id ~/.screenlayout/laptop-1256x1440.sh; mode "default"
+        bindsym h exec --no-startup-id ~/.screenlayout/home.sh; mode "default"
+        bindsym w exec --no-startup-id ~/.screenlayout/work-fit.sh; mode "default"
+        bindsym a exec --no-startup-id arandr; mode "default"
+
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
 
 # focus
-mode "focused" {
+set $go_mode "go (f)irefox, (e)macs, (m)ark, (g)o, (1-5)marks 1-5, (s+1-5)go to mark 1-5"
+bindsym $mod+g mode $go_mode
+mode $go_mode {
         # hardcoded focus keybindings
         bindsym f [class="(?i)firefox"] focus; mode "default"
         bindsym e [class="(?i)emacs"] focus; mode "default"
@@ -279,31 +303,30 @@ mode "focused" {
         bindsym Escape mode "default"
 }
 
-bindsym $mod+g mode "focused"
 
-# TODO: add printscreen
 # TODO: add support for dropdown terminal and qalc
 
 # Autostart applications
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nm-applet
 exec --no-startup-id xfce4-power-manager
-# TODO: change to dunst
-# TODO: add bluetooth
-exec --no-startup-id xfce4-notifyd
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id dunst
+exec --no-startup-id nm-applet
 exec --no-startup-id pamac-tray
 exec --no-startup-id blueman-applet
 exec --no-startup-id megasync
 exec --no-startup-id light-locker
 exec --no-startup-id pasystray
+#exec --no-startup-id pa-applet
+#exec --no-startup-id pulseaudio
+#exec --no-startup-id volumeicon
 exec --no-startup-id redshift-gtk
 exec --no-startup-id udiskie --no-automount --tray --use-udisks2
 
 exec_always --no-startup-id feh --bg-scale ~/Sync/Pictures/Wallpapers/dolomites.jpg
 exec_always --no-startup-id ~/bin/x-set-keyboard.sh
+exec_always --no-startup-id ff-theme-util
+exec_always --no-startup-id fix_xcursor
 
-# hide/unhide i3status bar
-bindsym $mod+m bar mode toggle
 
 # colors based on: Base16 Default Dark by Chris Kempson (http://chriskempson.com)
 
@@ -325,12 +348,12 @@ set $base0E #c0b7f9
 set $base0F #fcc09e
 
 # Basic color configuration using the Base16 variables for windows and borders.
-# Property Name         Border  BG      Text    Indicator Child Border
-client.focused          $base0E $base02 $base0E $base06 $base0E
-client.focused_inactive $base02 $base02 $base03 $base06 $base02
-client.unfocused        $base02 $base02 $base03 $base06 $base02
-client.urgent           $base08 $base02 $base08 $base06 $base08
-#client.placeholder      $base00 $base00 $base05 $base00 $base00
+# class                 border  backgr. text    indicator child_border
+client.focused          $base0E $base02 $base0E $base06   $base0E
+client.focused_inactive $base02 $base02 $base03 $base06   $base02
+client.unfocused        $base02 $base02 $base03 $base06   $base02
+client.urgent           $base08 $base02 $base08 $base06   $base08
+#client.placeholder      $base00 $base00 $base05 $base00  $base00
 #client.background $base07
 
 # Basic bar configuration using the Base16 variables.
