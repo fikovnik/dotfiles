@@ -40,7 +40,6 @@ bindsym $mod+d exec --no-startup-id ~/bin/x-apps-menu.sh
 bindsym $mod+p exec --no-startup-id ~/bin/x-pass-manager.sh
 bindsym $mod+c exec --no-startup-id ~/bin/x-clipboard-manager.sh                 
 bindsym $mod+s exec --no-startup-id ~/bin/x-ssh-menu.sh                 
-bindsym $mod+r exec --no-startup-id ~/bin/x-run-menu.sh                 
 bindsym $mod+Tab exec --no-startup-id ~/bin/x-window-menu.sh
 # print screen
 bindsym Print --release exec --no-startup-id xfce4-screenshooter
@@ -166,7 +165,7 @@ bindsym $mod+Shift+9 move container to workspace $ws9; workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws0; workspace $ws0
 
 # move to other monitor
-bindsym $mod+Shift+m move workspace to output right
+#bindsym $mod+Shift+m move workspace to output right
 
 # Open applications on specific workspaces
 # does not work - https://github.com/i3/i3/issues/2060
@@ -220,7 +219,7 @@ for_window [urgent=latest] focus
 bindsym $mod+Ctrl+r restart
 
 # hide/unhide i3status bar
-bindsym $mod+m bar mode toggle
+bindsym $mod+shift+m bar mode toggle
 
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
@@ -272,6 +271,19 @@ mode $display_mode {
         bindsym Escape mode "default"
 }
 
+# exec
+set $menu_mode "menu (d)isplay (m)mout (n)etwork (r)un"
+bindsym $mod+m mode $menu_mode
+mode $menu_mode {
+        bindsym d exec --no-startup-id ~/bin/x-display-menu.sh; mode "default"
+        bindsym m exec --no-startup-id ~/bin/x-mount-menu.sh; mode "default"
+        bindsym n exec --no-startup-id networkmanager_dmenu; mode "default"
+        bindsym r exec --no-startup-id ~/bin/x-run-menu.sh; mode "default"
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
 # focus
 set $go_mode "go (f)irefox, (e)macs, (m)ark, (g)o, (1-5)marks 1-5, (s+1-5)go to mark 1-5"
 bindsym $mod+g mode $go_mode
@@ -316,9 +328,6 @@ exec --no-startup-id blueman-applet
 exec --no-startup-id megasync
 exec --no-startup-id light-locker
 exec --no-startup-id pasystray
-#exec --no-startup-id pa-applet
-#exec --no-startup-id pulseaudio
-#exec --no-startup-id volumeicon
 exec --no-startup-id redshift-gtk
 exec --no-startup-id udiskie --no-automount --tray --use-udisks2
 
