@@ -59,7 +59,8 @@ This function should only modify configuration layer settings."
      dash
      emacs-lisp
      ess
-     git
+     (git :variables
+          git-magit-status-fullscreen t)
      helm
      html
      (ibuffer :variables
