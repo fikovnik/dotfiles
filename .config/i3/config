@@ -326,7 +326,6 @@ exec --no-startup-id nm-applet
 exec --no-startup-id pamac-tray
 exec --no-startup-id blueman-applet
 exec --no-startup-id megasync
-exec --no-startup-id light-locker
 exec --no-startup-id pasystray
 exec --no-startup-id redshift-gtk
 exec --no-startup-id udiskie --no-automount --tray --use-udisks2
