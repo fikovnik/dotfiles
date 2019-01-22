@@ -272,13 +272,14 @@ mode $display_mode {
 }
 
 # exec
-set $menu_mode "menu (d)isplay (m)mout (n)etwork (r)un"
+set $menu_mode "menu (d)isplay (m)mout (n)etwork (r)un (t)mux-dropdown"
 bindsym $mod+m mode $menu_mode
 mode $menu_mode {
         bindsym d exec --no-startup-id ~/bin/x-display-menu.sh; mode "default"
         bindsym m exec --no-startup-id ~/bin/x-mount-menu.sh; mode "default"
         bindsym n exec --no-startup-id networkmanager_dmenu; mode "default"
         bindsym r exec --no-startup-id ~/bin/x-run-menu.sh; mode "default"
+        bindsym t exec --no-startup-id ~/bin/x-terminal-dropdown.sh; mode "default"
 
         bindsym Return mode "default"
         bindsym Escape mode "default"

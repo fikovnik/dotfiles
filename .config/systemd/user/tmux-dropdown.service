@@ -2,12 +2,11 @@
 Description=Start tmux dropdown session
 
 [Service]
-Type=forking
+Type=oneshot
 ExecStart=/usr/bin/tmux new-session -A -s dropdown -d
 ExecStop=/usr/bin/tmux kill-session -t dropdown
 KillMode=none
 RemainAfterExit=yes
-Restart=always
 Environment=DISPLAY=:0
 
 [Install]
