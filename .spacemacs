@@ -71,7 +71,7 @@ This function should only modify configuration layer settings."
      ;;notmuch
      (org :variables
           org-enable-github-support t
-          org-projectile-file "~/Notes/TODO-projects.org")
+          org-projectile-file "~/Notes/Journal/TODO-projects.org")
      pdf
      racket
      (scala :variables
@@ -653,9 +653,9 @@ before packages are loaded."
     (when (version<= "9.2" (org-version))
       (require 'org-tempo))
     (setq org-id-link-to-org-use-id 'create-if-interactive
-          org-agenda-files '("~/Notes")
+          org-agenda-files '("~/Notes/Journal")
           org-directory "~/Notes"
-          org-default-notes-file "~/Notes/Notes.org"
+          org-default-notes-file "~/Notes/Journal/Notes.org"
           org-startup-indented 1
           org-blank-before-new-entry '(((heading .  t) (plain-list-item . t)))
           org-log-reschedule 'time
@@ -663,10 +663,10 @@ before packages are loaded."
           org-log-into-drawer t
           org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
     (setq org-capture-templates
-          '(("t" "Todo"         entry (file+headline "~/Notes/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
-            ("n" "Note"         entry (file+headline "~/Notes/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i")
-            ("j" "Journal"      entry (file+datetree "~/Notes/Journal.org")    "* %?\n%i")
-            ("J" "Work Journal" entry (file+datetree "~/Notes/Work.org")  "* %?\n%i")
+          '(("t" "Todo"         entry (file+headline "~/Notes/Journal/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
+            ("n" "Note"         entry (file+headline "~/Notes/Journal/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i")
+            ("j" "Journal"      entry (file+datetree "~/Notes/Journal/Journal.org")    "* %?\n%i")
+            ("J" "Work Journal" entry (file+datetree "~/Notes/Journal/Work.org")  "* %?\n%i")
             ))
     )
 
