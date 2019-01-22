@@ -192,7 +192,12 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style '(hybrid :variables
+                                       hybrid-style-visual-feedback t
+                                       hybrid-style-enable-evilified-state nil
+                                       hybrid-style-enable-hjkl-bindings nil
+                                       hybrid-style-use-evil-search-module t
+                                       hybrid-style-default-state 'insert)
 
    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
