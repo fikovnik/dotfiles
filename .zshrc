@@ -36,11 +36,6 @@ alias vi=vim
 alias emacs='emacs -nw'
 alias magit='emacsclient -nw -e "(magit-status)"'
 
-if which bat > /dev/null 2>&1; then
-    alias cat=bat
-fi
-
-
 # LESS
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
