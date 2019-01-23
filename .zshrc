@@ -34,6 +34,7 @@ export LC_ALL=en_US.UTF-8
 alias e="emacsclient -t"
 alias vi=vim
 alias emacs='emacs -nw'
+alias magit='emacsclient -nw -e "(magit-status)"'
 
 if which bat > /dev/null 2>&1; then
     alias cat=bat
