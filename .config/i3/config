@@ -373,8 +373,8 @@ bar {
     modifier $mod
     position bottom
     tray_output primary
-    status_command slstatus -j
- 	strip_workspace_numbers no
+    status_command i3status
+    strip_workspace_numbers no
     font pango:DejaVu Sans Mono 9
     workspace_buttons yes
     binding_mode_indicator yes
