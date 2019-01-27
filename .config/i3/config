@@ -52,14 +52,14 @@ bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 #bindsym XF86MonBrightnessDown exec --no-startup-id "xbacklight -dec 10; notify-send 'brightness down'"
 
 # audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +5
-bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -5
-bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
+#bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +5
+#bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -5
+#bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
 
 # media player controls
-bindsym XF86AudioPlay exec --no-startup-id ~/bin/x-play-pause.sh
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
+#bindsym XF86AudioPlay exec --no-startup-id ~/bin/x-play-pause.sh
+#bindsym XF86AudioNext exec playerctl next
+#bindsym XF86AudioPrev exec playerctl previous
 
 ################################################################################################
 
@@ -320,14 +320,16 @@ mode $go_mode {
 # TODO: add support for dropdown terminal and qalc
 
 # Autostart applications
-exec --no-startup-id xfce4-power-manager
+exec --no-startup-id xfsettingsd --replace --sm-client-disable
+exec --no-startup-id xfce4-power-manager --sm-client-disable
+exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
+exec --no-startup-id xfce4-volumed-pulse
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id dunst
 exec --no-startup-id nm-applet
 exec --no-startup-id pamac-tray
 exec --no-startup-id blueman-applet
-exec --no-startup-id megasync
-exec --no-startup-id pasystray
+#exec --no-startup-id megasync
+#exec --no-startup-id pasystray
 exec --no-startup-id redshift-gtk
 exec --no-startup-id udiskie --no-automount --tray --use-udisks2
 
