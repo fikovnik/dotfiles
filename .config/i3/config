@@ -324,6 +324,7 @@ exec --no-startup-id xfsettingsd --replace --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
 exec --no-startup-id xfce4-volumed-pulse
+exec --no-startup-id light-locker
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nm-applet
 exec --no-startup-id pamac-tray
