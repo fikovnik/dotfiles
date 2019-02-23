@@ -53,7 +53,7 @@ This function should only modify configuration layer settings."
      better-defaults
      colors
      (c-c++ :variables
-            c-c++-backend 'lsp-cquery
+            c-c++-backend 'lsp-ccls
             c-c++-lsp-sem-highlight-rainbow nil)
      docker
      dash
