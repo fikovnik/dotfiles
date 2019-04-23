@@ -1,0 +1,501 @@
+#+TITLE: Emacs configuration file
+#+AUTHOR: Filip Krikava
+#+BABEL: :cache yes
+#+PROPERTY: header-args :tangle yes
+#+STARTUP: overview
+
+* st terminal fixes
+- fix font
+- add font2 https://st.suckless.org/patches/font2/st-font2-20190326-f64c2f8.diff
+- add themed cursor https://st.suckless.org/patches/themed_cursor/st-themed_cursor-0.8.1.diff
+
+
+* Sources
+
+- https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
+- http://www.emacs-bootstrap.com/
+- https://github.com/a13/emacs.d/blob/master/README.org
+- https://github.com/freetonik/emacs-dotfiles/blob/master/init.org
+- http://pages.sachachua.com/.emacs.d/Sacha.html#org332b2fd
+- https://github.com/danielmai/.emacs.d/blob/master/config.org
+- https://thb.lt/emacs-cheatsheet/
+
+[[https://github.com/jwiegley/use-package][use-package]]
+
+* Basics
+
+#+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold 100000000)
+#+END_SRC
+
+Set up the customize file to its own separate file, instead of saving
+customize settings in [[file:init.el][init.el]].
+
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+#+END_SRC
+
+** use-package keywords
+
+#+BEGIN_SRC emacs-lisp
+;; :diminish keyword
+(use-package diminish :ensure t)
+
+;; :bind keyword
+(use-package bind-key :ensure t)
+#+END_SRC
+
+
+* Defaults
+#+BEGIN_SRC emacs-lisp
+;; These functions are useful. Activate them.
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+#+END_SRC
+
+Answering just 'y' or 'n' will do
+
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** Backup
+
+#+BEGIN_SRC emacs-lisp
+(setq       
+      auto-save-list-file-name           (concat user-emacs-directory "/autosave")
+      backup-directory-alist            `((".*" . ,(concat user-emacs-directory "/backups/")))
+      auto-save-file-name-transforms    `((".*" ,(concat user-emacs-directory "/auto-save-list/") t))
+      version-control                    t
+      backup-by-copying                  t
+      delete-old-versions                t
+      kept-new-versions                  6
+      kept-old-versions                  2
+      history-length                     1000
+      backup-inhibited                   nil
+      make-backup-files                  t
+      auto-save-default                  t
+      create-lockfiles                   nil
+)
+#+END_SRC
+
+** Use UTF-8
+
+#+BEGIN_SRC emacs-lisp
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-language-environment 'utf-8)
+(prefer-coding-system 'utf-8)
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+#+END_SRC
+
+** Sensible defaults
+
+TODO: bar cursor pink
+
+#+BEGIN_SRC emacs-lisp
+(setq confirm-nonexistent-file-or-buffer  t
+      ;; apropos searches more extensively
+      apropos-do-all                      t
+      ;; save existing clipboard into kill ring before replacing it
+      save-interprogram-paste-before-kill t
+      mouse-yank-at-point                 t
+      require-final-newline               t
+      visible-bell                        t
+      ;; http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
+      minibuffer-prompt-properties        '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)
+      ;; Disable non selected window highlight
+      cursor-in-non-selected-windows      nil
+      highlight-nonselected-windows       nil
+      ;; PATH
+      exec-path                           (append exec-path '("/usr/local/bin/"))
+      ;; single space to indicate end of a sentance
+      sentence-end-double-space           nil
+      x-select-enable-clipboard           t
+      ;; use forward slashes in the unique buffer name
+      uniquify-buffer-name-style          'forward
+      ;; -i gets alias definitions from shell
+      shell-command-switch                "-ic"
+      ;; setup ediff all in one frame
+      ediff-window-setup-function         'ediff-setup-windows-plain
+      echo-keystrokes                     0.1 
+      recentf-max-saved-items             100 
+      scroll-step                         1
+      use-dialog-box                      nil
+      kill-ring-max                       300
+      initial-major-mode                  'text-mode
+      cursor-in-non-selected-windows      t 
+)
+
+(setq-default 
+      tab-width                           2
+      indent-tabs-mode                    nil              
+      ;; maximum line width
+      fill-column                         79
+      ;; don't fold lines
+      truncate-lines                      t                  
+      frame-title-format                  '("%b")
+      indicate-empty-lines                t
+      cursor-type                         'bar
+      display-line-numbers-grow-only      t
+      display-line-numbers-width-start    t
+)
+
+(blink-cursor-mode -1)
+(delete-selection-mode t)
+(show-paren-mode t)
+(column-number-mode t)
+(global-visual-line-mode t)
+(global-hl-line-mode t)
+(transient-mark-mode t)
+(toggle-truncate-lines t)
+
+(diminish 'visual-line-mode " ↩")
+
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'display-line-numbers-mode)
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package hydra :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartrep 
+  :ensure t
+  :custom
+  (smartrep-mode-line-string-activated "[SR]")
+  ;; no modeline higlighting
+  (smartrep-mode-line-active-bg (face-background 'mode-line))
+)
+#+END_SRC
+
+** editing
+
+#+BEGIN_SRC emacs-lisp
+(autoload 'zap-up-to-char "misc"
+"Kill up to, but not including ARGth occurrence of CHAR." t)
+#+END_SRC
+
+*** fill/unfill paragraph
+
+#+BEGIN_SRC emacs-lisp
+(use-package unfill
+  :defer t
+  :commands (unfill-region unfill-paragraph unfill-toggle)
+  :bind
+  ([remap fill-paragraph] . unfill-toggle))
+#+END_SRC
+
+*** Multiple cursors
+
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :ensure t
+  :config
+  (smartrep-define-key global-map "C-c m"
+    '(("n" . 'mc/mark-next-like-this)
+      ("u" . 'mc/unmark-next-like-this)
+      ("s" . 'mc/skip-to-next-like-this)
+      ("N" . 'mc/mark-previous-like-this)
+      ("U" . 'mc/unmark-previous-like-this)
+      ("S" . 'mc/skip-to-previous-like-this)
+      ("m" . 'mc/mark-more-like-this-extended)
+      ("a" . 'mc/mark-all-like-this)
+      ("d" . 'mc/mark-all-like-this-dwim)
+      ("r" . 'mc/reverse-regions))))
+#+END_SRC
+
+*** Move lines up / down
+
+#+BEGIN_SRC emacs-lisp
+(use-package move-text
+  :ensure t
+  :defer t
+  :bind
+  ("M-<down>" . move-text-down)
+  ("M-<up>" . move-text-up))
+#+END_SRC
+
+*** Visual regexp
+
+#+BEGIN_SRC emacs-lisp
+(use-package visual-regexp
+  :ensure t
+  :defer t
+  :bind
+  ("C-c r" . vr/replace)
+  ("C-c q" . vr/query-replace)
+  :config
+  (define-key global-map (kbd "C-c m") 'vr/mc-mark))
+#+END_SRC
+
+*** TODO join lines
+*** TODO open line above / bellow
+*** TODO comment lines
+*** TODO gentle movement
+
+*** Expand region
+
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
+  :ensure t
+  :bind
+  (("C-c =" . er/expand-region)
+   :map mode-specific-map
+   :prefix-map region-prefix-map
+   :prefix "r"
+   ("(" . er/mark-inside-pairs)
+   (")" . er/mark-outside-pairs)
+   ("'" . er/mark-inside-quotes)
+   ([34] . er/mark-outside-quotes) ; it's just a quotation mark
+   ("o" . er/mark-org-parent)
+   ("u" . er/mark-url)
+   ("b" . er/mark-org-code-block)
+   ("." . er/mark-method-call)
+   (">" . er/mark-next-accessor)
+   ("w" . er/mark-word)
+   ("d" . er/mark-defun)
+   ("e" . er/mark-email)
+   ("," . er/mark-symbol)
+   ("<" . er/mark-symbol-with-prefix)
+   (";" . er/mark-comment)
+   ("s" . er/mark-sentence)
+   ("S" . er/mark-text-sentence)
+   ("p" . er/mark-paragraph)
+   ("P" . er/mark-text-paragraph)))
+#+END_SRC
+
+* Packages
+** iqa - quick access to config file
+
+#+BEGIN_SRC emacs-lisp
+(use-package iqa
+  :ensure t
+  :custom
+  (iqa-user-init-file (concat user-emacs-directory "config.org"))
+  :config
+  (iqa-setup-default))
+#+END_SRC
+
+** paradox - modernized package menu
+
+#+BEGIN_SRC emacs-lisp
+(use-package paradox
+  :ensure t
+  :defer 1
+  :config
+  (paradox-enable))
+#+END_SRC
+
+** ibuffers
+
+#+BEGIN_SRC emacs-lisp
+(use-package ibuffer
+  :bind
+  ([remap list-buffers] . ibuffer))
+#+END_SRC
+
+**** TODO hydra
+
+** which-key
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :diminish which-key-mode
+  :custom
+  (which-key-idle-delay 0.7)
+  :config
+  (which-key-mode))
+#+END_SRC
+
+** dired
+
+Auto refresh dired
+#+BEGIN_SRC emacs-lisp
+(add-hook 'dired-mode-hook 'auto-revert-mode)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+#+END_SRC
+
+**** TODO hydra
+
+** version control
+
+Sort buffers in ibuffer based on git
+#+BEGIN_SRC emacs-lisp
+(use-package ibuffer-vc
+  :ensure t)
+#+END_SRC
+
+Magit stuff
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :defer t
+  :ensure t
+  :custom
+  (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1 "Enable fullscreen")
+  :bind
+  ("C-x g s" . magit-status)
+  ("C-x g x" . magit-checkout)
+  ("C-x g c" . magit-commit)
+  ("C-x g p" . magit-push)
+  ("C-x g u" . magit-pull)
+  ("C-x g e" . magit-ediff-resolve)
+  ("C-x g r" . magit-rebase-interactive))
+
+(use-package magit-popup
+  :ensure t)
+#+END_SRC
+
+Highlight chnages in files
+
+#+BEGIN_SRC emacs-lisp
+(use-package diff-hl
+  :ensure t
+  :hook
+  ((magit-post-refresh . diff-hl-magit-post-refresh)
+   (prog-mode . diff-hl-mode)
+   (prog-mode . diff-hl-margin-mode)
+   (org-mode . diff-hl-mode)
+   (org-mode . diff-hl-margin-mode)
+   (dired-mode . diff-hl-dired-mode)))
+#+END_SRC
+
+** org-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :defer t
+  ;; to be sure we have the latest Org version
+  :ensure org-plus-contrib
+  :hook
+  (org-mode . flyspell-mode)
+  :custom
+  (org-src-tab-acts-natively t)
+  (org-src-preserve-indentation t)
+  (org-log-done t)
+  (org-startup-with-inline-images t)
+  (org-latex-prefer-user-labels t)
+  (org-image-actual-width nil)
+  (org-id-link-to-org-use-id 'create-if-interactive)
+  (org-agenda-files '("~/Notes/Journal"))
+  (org-directory "~/Notes")
+  (org-default-notes-file "~/Notes/Journal/Notes.org")
+  (org-startup-indented 1)
+  (org-blank-before-new-entry '(((heading .  t) (plain-list-item . t))))
+  (org-log-reschedule 'time)
+  (org-log-into-drawer t)
+  (org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
+  (org-src-fontify-natively t)
+  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+  (org-capture-templates
+     '(("t" "Todo"         entry (file+headline "~/Notes/Journal/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
+       ("n" "Note"         entry (file+headline "~/Notes/Journal/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i")
+       ("j" "Journal"      entry (file+datetree "~/Notes/Journal/Journal.org")    "* %?\n%i")
+       ("J" "Work Journal" entry (file+datetree "~/Notes/Journal/Work.org")  "* %?\n%i")))
+  :bind
+  ("C-c c" . org-capture)
+  :config
+  (require 'org-tempo) ; to allow structure template expansion
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :custom
+  (org-bullets-bullet-list '("•"))
+  (org-ellipsis "↴")
+  :hook
+  (org-mode . org-bullets-mode))
+#+END_SRC
+
+** movement
+
+#+BEGIN_SRC emacs-lisp
+(use-package company 
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package mwim
+  :ensure t
+  :defer t
+  :bind
+  ("C-a" . mwim-beginning)
+  ("C-e" . mwim-end))
+#+END_SRC
+
+** windows
+
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l) "Use home row for selecting.")
+  (aw-scope 'frame "Highlight only current frame.")
+  :bind
+  ("M-o" . ace-window))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :config
+  (winner-mode 1))
+#+END_SRC
+
+* Appearence
+** Theme
+
+TODO: better contrast between hl-line and region
+TODO: rainbow parens
+
+#+BEGIN_SRC emacs-lisp
+(use-package base16-theme
+  :ensure t
+  :config
+  (load-theme 'base16-oceanicnext))
+
+#+END_SRC
+
+** Font
+
+TODO: font size
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist
+  (cond
+    ((string-equal system-type "darwin")    '(font . "dejavu sans mono"))
+    ((string-equal system-type "gnu/linux") '(font . "dejavu sans mono"))))
+#+END_SRC
+
+** Modeline
+
+TODO: do I actually need any modeline?
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package doom-modeline
+  :ensure t
+  :hook
+  (after-init . doom-modeline-init)
+  :custom
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-buffer-file-name-style 'buffer-name)
+  (doom-modeline-icon t))
+#+END_SRC
+
+
