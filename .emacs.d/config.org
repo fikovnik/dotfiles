@@ -4,8 +4,33 @@
 #+PROPERTY: header-args :tangle yes
 #+STARTUP: overview
 
-* Sources
+* Overview 
+TODO: descrive the idea behind this configuration
 
+** Micro states
+
+| Key     | Micro state      |
+|---------+------------------|
+| =C-x w= | Windows          |
+| =M-g=   | Go to            |
+| =C-x b= | Buffers          |
+| =C-x t= | Toggles          |
+| =C-x p= | Projects         |
+| =C-v=   | Expand region    |
+| =M-m=   | Multiple cursors |
+| =C-c &= | Snippets         |
+
+** Other keys
+
+| Key         | Description                          | Function      |
+|-------------+--------------------------------------+---------------|
+| =C-c left=  | Undo changes in window configuration | =winner-undo= |
+| =C-c right= | Redo changes in window configuration | =winner-redo= |
+| =C-x o=     | Jump to a window                     | =ace-window=  |
+
+* Sources
+TODO: clean and describe
+- http://wikemacs.org/wiki/Starter_Kits
 - https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
 - http://www.emacs-bootstrap.com/
 - https://github.com/a13/emacs.d/blob/master/README.org
@@ -13,14 +38,31 @@
 - http://pages.sachachua.com/.emacs.d/Sacha.html#org332b2fd
 - https://github.com/danielmai/.emacs.d/blob/master/config.org
 - https://thb.lt/emacs-cheatsheet/
+- https://github.com/abo-abo/awesome-emacs
+- https://github.com/redguardtoo/emacs.d
+- https://github.com/abo-abo/oremacs
+- https://github.com/purcell/emacs.d
+- https://github.com/trending/emacs-lisp?since=monthly
+- https://melpa.org/#/?sort=downloads&asc=false
+- https://github.com/sam217pa/emacs-config/blob/develop/init.el
+- https://sam217pa.github.io/2016/10/18/context-dependent-keybindings/
 
-[[https://github.com/jwiegley/use-package][use-package]]
+[[https://github.com/jwiegley/use-package][use-package
+]]
+** To check
+https://melpa.org/#/rainbow-delimiters
+https://github.com/milkypostman/powerline
+https://github.com/Fuco1/smartparens
 
-* st terminal fixes
-- fix font
-- add font2 https://st.suckless.org/patches/font2/st-font2-20190326-f64c2f8.diff
-- add themed cursor https://st.suckless.org/patches/themed_cursor/st-themed_cursor-0.8.1.diff
 
+
+* Terminal fixes
+** TODO: fix fonts
+- fix the main font
+- use the [[https://st.suckless.org/patches/font2/st-font2-20190326-f64c2f8.diff][second font]] or use nerdfont
+** TODO: use theme cursor
+- add [[https://st.suckless.org/patches/themed_cursor/st-themed_cursor-0.8.1.diff][themed cursor]]
+** TODO: drop-down support
 * Basics
 ** Lexical scoping                                            :experimental:
 
@@ -64,6 +106,7 @@ keywords in =(use-package)=.
 ;; :bind keyword
 (use-package bind-key :ensure t)
 #+END_SRC
+
 ** Install hydra
 
 #+BEGIN_SRC emacs-lisp
@@ -106,7 +149,7 @@ here.
 (setq       
       auto-save-list-file-name           (concat user-emacs-directory "/autosave")
       backup-directory-alist            `((".*" . ,(concat user-emacs-directory "/backups/")))
-      auto-save-file-name-transforms    `((".*" ,(concat user-emacs-directory "/auto-save-list/") t))
+      ;;auto-save-file-name-transforms    `((".*" ,(concat user-emacs-directory "/auto-save-list/") t))
       version-control                    t
       backup-by-copying                  t
       delete-old-versions                t
@@ -220,6 +263,7 @@ Answering just 'y' or 'n' will do
 (global-auto-revert-mode t)
 (transient-mark-mode t)
 (toggle-truncate-lines t)
+(whitespace-mode nil)
 
 (diminish 'visual-line-mode " ↩")
 
@@ -256,14 +300,8 @@ there's no active region."
 (global-set-key (kbd "M-;")
 'sensible-defaults/comment-or-uncomment-region-or-line)
 #+end_src
-
+*** TODO: popwin
 * Editing
-
-#+BEGIN_SRC emacs-lisp
-(autoload 'zap-up-to-char "misc"
-"Kill up to, but not including ARGth occurrence of CHAR." t)
-#+END_SRC
-
 ** Fill/unfill paragraph
 
 #+BEGIN_SRC emacs-lisp
@@ -295,26 +333,17 @@ there's no active region."
 
 ** Move lines up / down
 
+TODO: fix this in org-mode which takes over this binding
+
 #+BEGIN_SRC emacs-lisp
-(use-package move-text
+(use-package move-dup
   :ensure t
   :defer t
   :bind
-  ("M-<down>" . move-text-down)
-  ("M-<up>" . move-text-up))
-#+END_SRC
-
-** Visual regexp
-
-#+BEGIN_SRC emacs-lisp
-(use-package visual-regexp
-  :ensure t
-  :defer t
-  :bind
-  ("C-c r" . vr/replace)
-  ("C-c q" . vr/query-replace)
-  :config
-  (define-key global-map (kbd "C-c m") 'vr/mc-mark))
+  ("M-<up>" . md-move-lines-up)
+  ("M-<down>" . md-move-lines-down)
+  ("M-S-<up>" . md-duplicate-up)
+  ("M-S-<down>" . md-duplicate-down))
 #+END_SRC
 
 ** TODO join lines
@@ -367,9 +396,22 @@ there's no active region."
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 #+END_SRC
-
+** TODO: terminal copy & paste
+** TODO: surround
+- https://github.com/ganmacs/emacs-surround
 * Movement and navigation
-** Windows
+** Windows (=C-x w=)
+*** Selecting windows
+Windmove defines functions to easily select windows. We do not use the default
+keybinding, instead it is bound by the =hydra-window=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package windmove 
+  :ensure t
+  :custom
+  (windmove-wrap-around t))
+#+END_SRC
+
 *** Save window layout stack using the =winner-mode=
 
 This will allow to go back/fort between window layouts.
@@ -383,25 +425,59 @@ This will allow to go back/fort between window layouts.
 
 *** Jump between windows
 
+Use [[https://github.com/abo-abo/ace-window][ace-window]] to quickly switch between windows using =C-x o= instead of the
+default =other-window= command.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
   :ensure t
   :defer t
+  :custom
+  (aw-dispatch-always t)
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (aw-dispatch-alist
+   '((?x aw-delete-window     "Delete Window")
+	   (?S aw-swap-window       "Swap Windows")
+	   (?m aw-maximize-window   "Maximize Window")
+     (?M aw-move-window       "Move Window")
+	   (?c aw-copy-window       "Copy Window")
+	   (?= aw-split-window-fair "Split Fair Window")
+	   (?- aw-split-window-vert "Split Vert Window")
+	   (?| aw-split-window-horz "Split Horz Window")
+	   (?? aw-show-dispatch-help)))
+  :config
+  (set-face-attribute 'aw-leading-char-face nil :weight 'bold)
   :bind
-  ("C-'" . ace-window)
-  ("C-\"" . hydra-window/body))
+  ([remap other-window] . ace-window))
 #+END_SRC
+
+*** Setup =C-x w= micro state                                       :hydra:
+**** Functions
+Define a function to [[https://gist.github.com/3402786][maximize window]].
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/maximize-window ()
+  (interactive)
+  (if (and (= 1 (length (window-list)))
+           (assoc ?_ register-alist))
+      (jump-to-register ?_)
+    (progn
+      (window-configuration-to-register ?_)
+      (delete-other-windows))))
+#+END_SRC
+
+**** Hydra
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-window (:hint nil)
    "
-   Move^^   Split^^           Switch^^      Resize^^            Misc^^
+   ^Select^    ^Split^           ^Switch^           ^Resize^      ^Misc^
   -----------------------------------------------------------------------
-   [_←_]    [_-_] vertical    _b_uffer      [_S-<left>_]        _u_ndo/_r_edo
-   [_↓_]    [_|_] horizontal  _f_ind files  [_S-<down>_]        _a_ce-window
-   [_↑_]                    _s_wap        [_S-<up>_]          _d_elete
-   [_→_]                                [_S-<right>_]       ace-_D_elete
-                                      _M_aximize/_B_alance"
+      _↑_      _-_: vertical     _b_uffer             ⇧         _u_ndo/_r_edo
+    _←_   _→_    _|_: horizontal   _f_ind files       ⇦   ⇨       _a_ce-window 
+      _↓_      ^ ^               _s_wap               ⇩         _d_elete/ace-_D_elete
+   ^ ^         ^ ^               _m_aximize/_B_alance
+"
    ("<left>" windmove-left)
    ("<down>" windmove-down)
    ("<up>" windmove-up)
@@ -410,13 +486,9 @@ This will allow to go back/fort between window layouts.
    ("S-<down>" enlarge-window)
    ("S-<up>" shrink-window)
    ("S-<right>" enlarge-window-horizontally)
-   ("b" helm-mini)
-   ("f" helm-find-files)
-   ("a" (lambda ()
-          (interactive)
-          (ace-window)
-          (add-hook 'ace-window-end-once-hook
-                    'hydra-window/body)))
+   ("b" helm-mini :color blue)
+   ("f" helm-find-files :color blue)
+   ("a" ace-window :color blue)
    ("|" (lambda ()
           (interactive)
           (split-window-right)
@@ -430,20 +502,22 @@ This will allow to go back/fort between window layouts.
           (ace-window 4)
           (add-hook 'ace-window-end-once-hook
                     'hydra-window/body)))
-   ("d" kill-buffer-and-window)
+   ("d" kill-buffer-and-window :color blue)
    ("D" ace-delete-window)
-   ("M" ace-maximize-window)
+   ("m" fikovnik/maximize-window :color blue)
    ("B" balance-windows-area)
    ("u" (progn
           (winner-undo)
           (setq this-command 'winner-undo)))
    ("r" winner-redo)
-   ("q" nil))
-
-(global-set-key (kbd "M-S-o") 'hydra-window/body)
+   ("q" nil :color blue))
 #+END_SRC
 
-** Go to chars, words, lines
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x w") 'hydra-window/body)
+#+END_SRC
+** Go to (=M-q=)
+*** Setup Avy
 
 This allows to quickly jump around in the buffer. The way it is setup is by
 remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/avy][avy]] functions.
@@ -455,38 +529,77 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("M-g" . hydra-avy/body)
   :config
   (avy-setup-default)
-  (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
-  (defhydra hydra-avy (:exit t :hint nil)
-   "
-   Line^^   Region^^   Goto
+  (set-face-attribute 'avy-lead-face-0 nil :foreground "black"))
+#+END_SRC
+
+*** Setup =M-g= micro state                                         :hydra:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-goto (:exit t :hint nil :color blue)
+  "
+   ^Line^   ^Region^   ^Goto^
   ----------------------------------------------------------
    _y_ank   _Y_ank     timed _c_har  _C_har
    _m_ove   _M_ove     _w_ord        any _W_ord
-   _k_ill   _K_ill     _l_ine        end of _L_ine  [_g_] line number"
-    ("g" goto-line)
-    ("c" avy-goto-char-timer)
-    ("C" avy-goto-char)
-    ("w" avy-goto-word-1)
-    ("W" avy-goto-word-0)
-    ("l" avy-goto-line)
-    ("L" avy-goto-end-of-line)
-    ("m" avy-move-line)
-    ("M" avy-move-region)
-    ("k" avy-kill-whole-line)
-    ("K" avy-kill-region)
-    ("y" avy-copy-line)
-    ("Y" avy-copy-region)
-    ("q" )))
+   _k_ill   _K_ill     _l_ine        end of _L_ine  _g_: line number"
+  ("g" goto-line)
+  ("c" avy-goto-char-timer)
+  ("C" avy-goto-char)
+  ("w" avy-goto-word-1)
+  ("W" avy-goto-word-0)
+  ("l" avy-goto-line)
+  ("L" avy-goto-end-of-line)
+  ("m" avy-move-line)
+  ("M" avy-move-region)
+  ("k" avy-kill-whole-line)
+  ("K" avy-kill-region)
+  ("y" avy-copy-line)
+  ("Y" avy-copy-region)
+  ("q" nil))
 #+END_SRC
 
-** TODO: bookmarks
-
-#+BEGIN_SRC 
-(setq
- ;; persistent bookmarks
- bookmark-save-flag                      t
- bookmark-default-file              (concat temp-dir "/bookmarks"))
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-g") 'hydra-goto/body)
 #+END_SRC
+
+** Buffers (=C-x b=)
+*** Functions
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/new-empty-buffer ()
+  "Create a new buffer called untitled(<n>)."
+  (interactive)
+  (let ((newbuf (generate-new-buffer "untitled")))
+    (with-current-buffer newbuf
+      (setq-local buffer-offer-save t))
+    (switch-to-buffer newbuf nil 'force-same-window)))
+#+END_SRC
+
+*** Setup =C-x b= micro state                                       :hydra:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-buffers (:exit t :hint nil)
+("b" helm-mini "list")
+("n" next-buffer "next")
+("p" previous-buffer "previous")
+("k" kill-buffer "kill")
+("x" kill-buffer-and-window "close")
+("R" revert-buffer "revert")
+("N" fikovnik/new-empty-buffer "new")
+("i" ibuffer "ibuffer"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x b") 'hydra-buffers/body)
+#+END_SRC
+** TODO: pgup/pgdown go to the same location
+** TODO: Go to matching paren
+** TODO: Gentle navigation
+** TODO: highlight symbols (=*=, =#=)
+- https://github.com/nschum/highlight-symbol.el
+** TODO: move to previous/next edit location
+** TODO: ace-link
+- https://github.com/abo-abo/ace-link
 ** =C-a= / =home= and =C-e= / =end= keys move to the beginning/end of the line smartly
 
 #+BEGIN_SRC emacs-lisp
@@ -499,7 +612,21 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("<home>" . mwim-beginning)
   ("<end>" . mwim-end))
 #+END_SRC
+
 ** Helm
+*** Functions
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/helm-hide-minibuffer-maybe ()
+  "Hide minibuffer in Helm session if we use the header line as input field."
+  (when (with-helm-buffer helm-echo-input-in-header-line)
+    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+      (overlay-put ov 'window (selected-window))
+      (overlay-put ov 'face
+                   (let ((bg-color (face-background 'default nil)))
+                     `(:background ,bg-color :foreground ,bg-color)))
+      (setq-local cursor-type nil))))
+#+END_SRC
 
 *** Basics
 
@@ -507,28 +634,40 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (use-package helm
   :ensure t
   :custom
-  (helm-M-x-fuzzy-match t)
-  (helm-buffers-fuzzy-matching t)
-  (helm-recentf-fuzzy-match t)
-  (helm-split-window-in-side-p t)
-  (helm-split-window-default-side 'below)
-  (helm-idle-delay 0.0)
-  (helm-input-idle-delay 0.01)
-  (helm-quick-update t)
-  (helm-ff-skip-boring-files t)
+  (helm-echo-input-in-header-line        t)
+  (helm-ff-file-name-history-use-recentf t)
+  (helm-ff-skip-boring-files             t)
+  (helm-M-x-fuzzy-match                  t)
+  (helm-buffers-fuzzy-matching           t)
+  (helm-recentf-fuzzy-match              t)
+  (helm-split-window-in-side-p           t)
+  (helm-split-window-default-side        'below)
+  (helm-move-to-line-cycle-in-source     t)
+  (helm-idle-delay                       0.0)
+  (helm-input-idle-delay                 0.01)
+  (helm-quick-update                     t)
+  (helm-autoresize-max-height            0)
+  (helm-autoresize-min-height            20)
   :config
+  (helm-autoresize-mode 1)
   (helm-mode 1)
+  :hook
+  (helm-minibuffer-set-up-hook . fikovnik/helm-hide-minibuffer-maybe) 
   :bind 
-  ("M-x" . helm-M-x)
+  (("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
-  ("C-x b" . helm-mini)
   ("C-x p l" . helm-projectile)
   ("C-x c o" . helm-occur)
   ("C-x c /" . helm-projectile-ag)
-  ("C-x c k" . helm-show-kill-ring))
+  ("C-x c k" . helm-show-kill-ring)
+  :map helm-map 
+  ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
+  ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
+  ("C-z" . helm-select-action) ; list actions using C-z
+  ))
 #+END_SRC 
 
-*** =helm-ag=
+*** Searching with =helm-ag=
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-ag
@@ -537,7 +676,9 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   (helm-ag-base-command "rg --no-heading"))
 #+END_SRC
 
-*** =helm-ls-git=
+*** Project files with =helm-ls-git=
+
+TODO: how is this connected to helm-projectile?
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-ls-git
@@ -546,12 +687,20 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   :bind
   ("C-x p f" . helm-browse-project))
 #+END_SRC
+*** Describe bindings
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-descbinds 
+  :ensure t
+  :defer t
+  :bind
+  ([remap describe-bindings] . helm-descbinds))
+#+END_SRC
 
 *** Other
 
 TODO: helm-dictionary
 TODO: helm-addressbook / helm-mu
-TODO: helm-descbinds
 TODO: helm-c-yasnippet
 TODO: imenu-anywhere
 TODO: helm-bibtex
@@ -561,6 +710,8 @@ TODO: helm-flycheck
 TODO: swiper-helm
 TODO: helm-swoop
 TODO: helm-projectile
+TODO: helm-lsp
+TODO: https://github.com/ganmacs/emacs-surround
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell-correct-helm
@@ -568,7 +719,61 @@ TODO: helm-projectile
   :init
   (setq flyspell-correct-interface #'flyspell-correct-helm))
 #+END_SRC
+** TODO: text objects 
+- https://github.com/clemera/objed
+* Search and replace
+** TODO: search using swoop
+- https://github.com/ShingoFukuyama/helm-swoop
+** TODO: replace
+- is the visual regexp good enough?
+** Visual regexp                                              :experimental:
 
+#+BEGIN_SRC emacs-lisp
+(use-package visual-regexp
+  :ensure t
+  :defer t
+  :bind
+  ("C-c r" . vr/replace)
+  ("C-c q" . vr/query-replace)
+  :config
+  (define-key global-map (kbd "C-c m") 'vr/mc-mark))
+#+END_SRC
+
+* Toggles (=C-x t=)
+** Setup =C-x t= micro state                                         :hydra:
+
+#+BEGIN_SRC emacs-lisp 
+(defhydra hydra-toggle (:color blue :hint nil)
+  "
+[_a_] abbrev-mode:       %`abbrev-mode
+[_d_] debug-on-error:    %`debug-on-error
+[_f_] auto-fill-mode:    %`auto-fill-function
+[_t_] truncate-lines:    %`truncate-lines
+[_w_] whitespace-mode:   %`whitespace-mode
+[_l_] org link display:  %`org-descriptive-links
+"
+  ("a" abbrev-mode)
+  ("d" toggle-debug-on-error)
+  ("f" auto-fill-mode)
+  ("t" toggle-truncate-lines)
+  ("w" whitespace-mode)
+  ("l" org-toggle-link-display)
+  ("q" nil "quit"))  
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x t") 'hydra-toggle/body)
+#+END_SRC
+* TODO: Mouse
+* TODO: Bookmarks
+
+#+BEGIN_SRC 
+(setq
+ ;; persistent bookmarks
+ bookmark-save-flag                      t
+ bookmark-default-file              (concat temp-dir "/bookmarks"))
+#+END_SRC
+* TODo: Projects
 * Packages
 ** iqa - quick access to config file
 
@@ -589,15 +794,15 @@ TODO: helm-projectile
   ([remap list-buffers] . ibuffer))
 #+END_SRC
 
-**** TODO hydra
-
+**** TODO: hydra
+- https://github.com/abo-abo/hydra#the-impressive-looking-one
 ** which-key
 
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :diminish which-key-mode
   :custom
-  (which-key-idle-delay 0.7)
+  (which-key-idle-delay 0.3)
   :config
   (which-key-mode))
 #+END_SRC
@@ -668,7 +873,7 @@ Highlight chnages in files
   (setq ediff-diff-options "-w"))  
 #+END_SRC
 
-* Org 
+* Org
 ** Default setup
 
 #+BEGIN_SRC emacs-lisp
@@ -717,7 +922,7 @@ Highlight chnages in files
   (org-mode . org-bullets-mode))
 #+END_SRC
 
-** Yasnippet support 
+** Yasnippet support
 
 From [[https://orgmode.org/worg/org-faq.html#YASnippet][org-manual]]:
 #+begin_quote
@@ -737,7 +942,20 @@ The following is the _official_ way to fix it:
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
             (define-key yas/keymap [tab] 'yas/next-field)))
 #+END_SRC
-
+** TODO: org-ref
+** TODO: images
+- https://github.com/abo-abo/org-download
+* Programming
+** TODO: scala
+- just code highlighting
+** TODO: C/C++
+- using lsp and [[https://github.com/emacs-lsp/dap-mode][dap]]
+** TODO: R
+* Applications
+** TODO: agenda / calendar 
+** TODO: email
+** TODO: elfeed
+- https://github.com/abo-abo/elfeed
 * Appearance
 ** Theme
 
@@ -779,6 +997,8 @@ TODO: do I actually need any modeline?
 #+END_SRC
 ** Cursor
 TODO: bar cursor pink
+** Colors
+- TODO: better TODO colors
 * Troubleshooting
 ** Invalid function: =org-preserve-local-variables=
 
@@ -799,3 +1019,15 @@ And then running the following function
   (byte-recompile-directory package-user-dir nil t))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle no
+(fikovnik/recompile-elpa)
+#+END_SRC
+
+** Unable to install a package
+
+In the case a package installation from =(use-package)= fails due to a missing
+file on MELPA, it might be due to an outdated local index. Use:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(package-refresh-contents)  
+#+END_SRC
