@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: block emacs lisp
+# key: <el
+# expand-env: ((yas/indent-line 'fixed) (yas/wrap-around-region 'nil))
+# --
+#+BEGIN_SRC emacs-lisp
+  $0
+#+END_SRC
