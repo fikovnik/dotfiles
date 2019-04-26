@@ -4,12 +4,6 @@
 #+PROPERTY: header-args :tangle yes
 #+STARTUP: overview
 
-* st terminal fixes
-- fix font
-- add font2 https://st.suckless.org/patches/font2/st-font2-20190326-f64c2f8.diff
-- add themed cursor https://st.suckless.org/patches/themed_cursor/st-themed_cursor-0.8.1.diff
-
-
 * Sources
 
 - https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
@@ -22,25 +16,46 @@
 
 [[https://github.com/jwiegley/use-package][use-package]]
 
+* st terminal fixes
+- fix font
+- add font2 https://st.suckless.org/patches/font2/st-font2-20190326-f64c2f8.diff
+- add themed cursor https://st.suckless.org/patches/themed_cursor/st-themed_cursor-0.8.1.diff
+
 * Basics
+** Lexical scoping                                            :experimental:
+
+I like lexical scoping, but not sure if this actually really does anything.
 
 #+BEGIN_SRC emacs-lisp
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
 
+** GC threshold
+
+Allow 128MB between GC cycle (defailt is 780kB). Apparently this should make
+some operations faster, although I never tested it.
+
 #+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 128 1024 1024))
 #+END_SRC
+
+** Customize file =custom.el=                                          :wip:
 
 Set up the customize file to its own separate file, instead of saving
 customize settings in [[file:init.el][init.el]].
+
+TODO: what to do with the custom file? Keep it, keep it, but not version it or send to /tmp
 
 #+BEGIN_SRC emacs-lisp
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 #+END_SRC
 
-** use-package keywords
+** Set up =use-package=
+
+These additional packages add the ability to diminish minor modes from
+modeline, and to conveniently bind keys using =:diminish= and =:bind-key=
+keywords in =(use-package)=.
 
 #+BEGIN_SRC emacs-lisp
 ;; :diminish keyword
@@ -49,24 +64,43 @@ customize settings in [[file:init.el][init.el]].
 ;; :bind keyword
 (use-package bind-key :ensure t)
 #+END_SRC
+** Install hydra
 
+#+BEGIN_SRC emacs-lisp
+(use-package hydra :ensure t)
+#+END_SRC
+
+** Install smartrep                                           :experimental:
+
+I would prefer to use hydra for all, but it somehow does not work with multiple
+cursors.
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartrep 
+  :ensure t
+  :custom
+  (smartrep-mode-line-string-activated "[SR]")
+  ;; no modeline higlighting
+  (smartrep-mode-line-active-bg (face-background 'mode-line))
+)
+#+END_SRC
 
 * Defaults
+** Enable some useful functions
+
+These functions are useful so activate them.
+
 #+BEGIN_SRC emacs-lisp
-;; These functions are useful. Activate them.
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 #+END_SRC
 
-Answering just 'y' or 'n' will do
+** File backup                                                         :wip:
 
-#+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-
-** Backup
+TODO: still need to figure out a good way how to handle backups and describe it
+here.
 
 #+BEGIN_SRC emacs-lisp
 (setq       
@@ -85,29 +119,52 @@ Answering just 'y' or 'n' will do
       create-lockfiles                   nil
 )
 #+END_SRC
+** TODO: Auto save like in Intellij
+
+Once the file backup is finished, auto save current buffer on:
+- window change
+- frame change
+- focus lost (how to do that in terminal)
+- after a timeout
 
 ** Use UTF-8
 
+I guess all this is trying to say to use UTF-8 by default.
+
 #+BEGIN_SRC emacs-lisp
-(setq locale-coding-system 'utf-8)
+(setq 
+      locale-coding-system          'utf-8
+      default-process-coding-system '(utf-8-unix . utf-8-unix)
+)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (set-language-environment 'utf-8)
 (prefer-coding-system 'utf-8)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 #+END_SRC
 
 ** Sensible defaults
 
-TODO: bar cursor pink
+Taken mostly from the [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el]] and [[http://www.emacs-bootstrap.com/][emacs-bootstrap]]. 
+
+*** Yes/No confirmation
+
+Answering just 'y' or 'n' will do
 
 #+BEGIN_SRC emacs-lisp
-(setq confirm-nonexistent-file-or-buffer  t
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+*** Defaults
+
+#+BEGIN_SRC emacs-lisp
+(setq 
+      confirm-nonexistent-file-or-buffer  t
       ;; apropos searches more extensively
       apropos-do-all                      t
       ;; save existing clipboard into kill ring before replacing it
       save-interprogram-paste-before-kill t
+      ;; when middle-clicking the mouse to yank from the clipboard, insert the text where point is, not where the mouse cursor is
       mouse-yank-at-point                 t
       require-final-newline               t
       visible-bell                        t
@@ -125,15 +182,16 @@ TODO: bar cursor pink
       uniquify-buffer-name-style          'forward
       ;; -i gets alias definitions from shell
       shell-command-switch                "-ic"
-      ;; setup ediff all in one frame
-      ediff-window-setup-function         'ediff-setup-windows-plain
       echo-keystrokes                     0.1 
       recentf-max-saved-items             100 
       scroll-step                         1
       use-dialog-box                      nil
       kill-ring-max                       300
       initial-major-mode                  'text-mode
-      cursor-in-non-selected-windows      t 
+      cursor-in-non-selected-windows      t
+      ;; when opening a file, follow symlinks
+      vc-follow-symlinks                  t
+      scroll-error-top-bottom             t
 )
 
 (setq-default 
@@ -148,6 +206,7 @@ TODO: bar cursor pink
       cursor-type                         'bar
       display-line-numbers-grow-only      t
       display-line-numbers-width-start    t
+      show-paren-delay                    0.0
 )
 
 (blink-cursor-mode -1)
@@ -156,6 +215,9 @@ TODO: bar cursor pink
 (column-number-mode t)
 (global-visual-line-mode t)
 (global-hl-line-mode t)
+;; when something changes a file, automatically refresh the buffer containing
+;; that file so they can't get out of sync.
+(global-auto-revert-mode t)
 (transient-mark-mode t)
 (toggle-truncate-lines t)
 
@@ -165,29 +227,44 @@ TODO: bar cursor pink
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 #+END_SRC
 
+*** Turn on syntax highlighting whenever possible
+
+#+begin_src emacs-lisp
+(global-font-lock-mode t)
+#+end_src
+
+*** When saving a file that starts with =#!=, make it executable
 
 #+BEGIN_SRC emacs-lisp
-(use-package hydra :ensure t)
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package smartrep 
-  :ensure t
-  :custom
-  (smartrep-mode-line-string-activated "[SR]")
-  ;; no modeline higlighting
-  (smartrep-mode-line-active-bg (face-background 'mode-line))
-)
-#+END_SRC
+*** TODO: Commenting / un-commenting
 
-** editing
+#+begin_src 
+(defun sensible-defaults/comment-or-uncomment-region-or-line ()
+  "Comments or uncomments the region or the current line if
+there's no active region."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+(comment-or-uncomment-region beg end)))
+
+(global-set-key (kbd "M-;")
+'sensible-defaults/comment-or-uncomment-region-or-line)
+#+end_src
+
+* Editing
 
 #+BEGIN_SRC emacs-lisp
 (autoload 'zap-up-to-char "misc"
 "Kill up to, but not including ARGth occurrence of CHAR." t)
 #+END_SRC
 
-*** fill/unfill paragraph
+** Fill/unfill paragraph
 
 #+BEGIN_SRC emacs-lisp
 (use-package unfill
@@ -197,7 +274,7 @@ TODO: bar cursor pink
   ([remap fill-paragraph] . unfill-toggle))
 #+END_SRC
 
-*** Multiple cursors
+** Multiple cursors
 
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
@@ -216,7 +293,7 @@ TODO: bar cursor pink
       ("r" . 'mc/reverse-regions))))
 #+END_SRC
 
-*** Move lines up / down
+** Move lines up / down
 
 #+BEGIN_SRC emacs-lisp
 (use-package move-text
@@ -227,7 +304,7 @@ TODO: bar cursor pink
   ("M-<up>" . move-text-up))
 #+END_SRC
 
-*** Visual regexp
+** Visual regexp
 
 #+BEGIN_SRC emacs-lisp
 (use-package visual-regexp
@@ -240,12 +317,12 @@ TODO: bar cursor pink
   (define-key global-map (kbd "C-c m") 'vr/mc-mark))
 #+END_SRC
 
-*** TODO join lines
-*** TODO open line above / bellow
-*** TODO comment lines
-*** TODO gentle movement
-
-*** Expand region
+** TODO join lines
+** TODO open line above / bellow
+** TODO comment lines
+** TODO gentle movement
+** TODO Spell checking
+** Expand region
 
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
@@ -275,6 +352,222 @@ TODO: bar cursor pink
    ("p" . er/mark-paragraph)
    ("P" . er/mark-text-paragraph)))
 #+END_SRC
+** Snippets
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
+#+end_src
+** Auto completion
+
+#+BEGIN_SRC emacs-lisp
+(use-package company 
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+#+END_SRC
+
+* Movement and navigation
+** Windows
+*** Save window layout stack using the =winner-mode=
+
+This will allow to go back/fort between window layouts.
+
+#+BEGIN_SRC emacs-lisp
+(use-package winner 
+  :ensure t
+  :config
+  (winner-mode 1))
+#+END_SRC
+
+*** Jump between windows
+
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :defer t
+  :bind
+  ("C-'" . ace-window)
+  ("C-\"" . hydra-window/body))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-window (:hint nil)
+   "
+   Move^^   Split^^           Switch^^      Resize^^            Misc^^
+  -----------------------------------------------------------------------
+   [_←_]    [_-_] vertical    _b_uffer      [_S-<left>_]        _u_ndo/_r_edo
+   [_↓_]    [_|_] horizontal  _f_ind files  [_S-<down>_]        _a_ce-window
+   [_↑_]                    _s_wap        [_S-<up>_]          _d_elete
+   [_→_]                                [_S-<right>_]       ace-_D_elete
+                                      _M_aximize/_B_alance"
+   ("<left>" windmove-left)
+   ("<down>" windmove-down)
+   ("<up>" windmove-up)
+   ("<right>" windmove-right)
+   ("S-<left>" shrink-window-horizontally)
+   ("S-<down>" enlarge-window)
+   ("S-<up>" shrink-window)
+   ("S-<right>" enlarge-window-horizontally)
+   ("b" helm-mini)
+   ("f" helm-find-files)
+   ("a" (lambda ()
+          (interactive)
+          (ace-window)
+          (add-hook 'ace-window-end-once-hook
+                    'hydra-window/body)))
+   ("|" (lambda ()
+          (interactive)
+          (split-window-right)
+          (windmove-right)))
+   ("-" (lambda ()
+          (interactive)
+          (split-window-below)
+          (windmove-down)))
+   ("s" (lambda ()
+          (interactive)
+          (ace-window 4)
+          (add-hook 'ace-window-end-once-hook
+                    'hydra-window/body)))
+   ("d" kill-buffer-and-window)
+   ("D" ace-delete-window)
+   ("M" ace-maximize-window)
+   ("B" balance-windows-area)
+   ("u" (progn
+          (winner-undo)
+          (setq this-command 'winner-undo)))
+   ("r" winner-redo)
+   ("q" nil))
+
+(global-set-key (kbd "M-S-o") 'hydra-window/body)
+#+END_SRC
+
+** Go to chars, words, lines
+
+This allows to quickly jump around in the buffer. The way it is setup is by
+remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/avy][avy]] functions.
+
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :ensure t
+  :bind
+  ("M-g" . hydra-avy/body)
+  :config
+  (avy-setup-default)
+  (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
+  (defhydra hydra-avy (:exit t :hint nil)
+   "
+   Line^^   Region^^   Goto
+  ----------------------------------------------------------
+   _y_ank   _Y_ank     timed _c_har  _C_har
+   _m_ove   _M_ove     _w_ord        any _W_ord
+   _k_ill   _K_ill     _l_ine        end of _L_ine  [_g_] line number"
+    ("g" goto-line)
+    ("c" avy-goto-char-timer)
+    ("C" avy-goto-char)
+    ("w" avy-goto-word-1)
+    ("W" avy-goto-word-0)
+    ("l" avy-goto-line)
+    ("L" avy-goto-end-of-line)
+    ("m" avy-move-line)
+    ("M" avy-move-region)
+    ("k" avy-kill-whole-line)
+    ("K" avy-kill-region)
+    ("y" avy-copy-line)
+    ("Y" avy-copy-region)
+    ("q" )))
+#+END_SRC
+
+** TODO: bookmarks
+
+#+BEGIN_SRC 
+(setq
+ ;; persistent bookmarks
+ bookmark-save-flag                      t
+ bookmark-default-file              (concat temp-dir "/bookmarks"))
+#+END_SRC
+** =C-a= / =home= and =C-e= / =end= keys move to the beginning/end of the line smartly
+
+#+BEGIN_SRC emacs-lisp
+(use-package mwim
+  :ensure t
+  :defer t
+  :bind
+  ("C-a" . mwim-beginning)
+  ("C-e" . mwim-end)
+  ("<home>" . mwim-beginning)
+  ("<end>" . mwim-end))
+#+END_SRC
+** Helm
+
+*** Basics
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :ensure t
+  :custom
+  (helm-M-x-fuzzy-match t)
+  (helm-buffers-fuzzy-matching t)
+  (helm-recentf-fuzzy-match t)
+  (helm-split-window-in-side-p t)
+  (helm-split-window-default-side 'below)
+  (helm-idle-delay 0.0)
+  (helm-input-idle-delay 0.01)
+  (helm-quick-update t)
+  (helm-ff-skip-boring-files t)
+  :config
+  (helm-mode 1)
+  :bind 
+  ("M-x" . helm-M-x)
+  ("C-x C-f" . helm-find-files)
+  ("C-x b" . helm-mini)
+  ("C-x p l" . helm-projectile)
+  ("C-x c o" . helm-occur)
+  ("C-x c /" . helm-projectile-ag)
+  ("C-x c k" . helm-show-kill-ring))
+#+END_SRC 
+
+*** =helm-ag=
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-ag
+  :ensure t
+  :custom
+  (helm-ag-base-command "rg --no-heading"))
+#+END_SRC
+
+*** =helm-ls-git=
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-ls-git
+  :ensure t
+  :defer t
+  :bind
+  ("C-x p f" . helm-browse-project))
+#+END_SRC
+
+*** Other
+
+TODO: helm-dictionary
+TODO: helm-addressbook / helm-mu
+TODO: helm-descbinds
+TODO: helm-c-yasnippet
+TODO: imenu-anywhere
+TODO: helm-bibtex
+TODO: helm-dash
+TODO: helm-xref
+TODO: helm-flycheck
+TODO: swiper-helm
+TODO: helm-swoop
+TODO: helm-projectile
+
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell-correct-helm
+  :bind ("C-M-;" . flyspell-correct-wrapper)
+  :init
+  (setq flyspell-correct-interface #'flyspell-correct-helm))
+#+END_SRC
 
 * Packages
 ** iqa - quick access to config file
@@ -286,16 +579,6 @@ TODO: bar cursor pink
   (iqa-user-init-file (concat user-emacs-directory "config.org"))
   :config
   (iqa-setup-default))
-#+END_SRC
-
-** paradox - modernized package menu
-
-#+BEGIN_SRC emacs-lisp
-(use-package paradox
-  :ensure t
-  :defer 1
-  :config
-  (paradox-enable))
 #+END_SRC
 
 ** ibuffers
@@ -324,8 +607,12 @@ TODO: bar cursor pink
 Auto refresh dired
 #+BEGIN_SRC emacs-lisp
 (add-hook 'dired-mode-hook 'auto-revert-mode)
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+(setq 
+      global-auto-revert-non-file-buffers t
+      auto-revert-verbose                 nil
+      ;; file sizes in human-readable units (KB, MB, etc)
+      dired-listing-switches              "-alh"
+)
 #+END_SRC
 
 **** TODO hydra
@@ -371,8 +658,18 @@ Highlight chnages in files
    (org-mode . diff-hl-margin-mode)
    (dired-mode . diff-hl-dired-mode)))
 #+END_SRC
+** diff
 
-** org-mode
+#+BEGIN_SRC emacs-lisp
+(use-package ediff
+  :config
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq-default ediff-highlight-all-diffs 'nil)
+  (setq ediff-diff-options "-w"))  
+#+END_SRC
+
+* Org 
+** Default setup
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -396,8 +693,7 @@ Highlight chnages in files
   (org-blank-before-new-entry '(((heading .  t) (plain-list-item . t))))
   (org-log-reschedule 'time)
   (org-log-into-drawer t)
-  (org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
+  (org-refile-targets (quote ((nil :maxlevel . 9) (org-agenda-files :maxlevel . 9))))
   (org-src-fontify-natively t)
   (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
   (org-capture-templates
@@ -406,11 +702,10 @@ Highlight chnages in files
        ("j" "Journal"      entry (file+datetree "~/Notes/Journal/Journal.org")    "* %?\n%i")
        ("J" "Work Journal" entry (file+datetree "~/Notes/Journal/Work.org")  "* %?\n%i")))
   :bind
-  ("C-c c" . org-capture)
-  :config
-  (require 'org-tempo) ; to allow structure template expansion
-)
+  ("C-c c" . org-capture))
 #+END_SRC
+
+** Better appearance
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
@@ -422,43 +717,28 @@ Highlight chnages in files
   (org-mode . org-bullets-mode))
 #+END_SRC
 
-** movement
+** Yasnippet support 
+
+From [[https://orgmode.org/worg/org-faq.html#YASnippet][org-manual]]:
+#+begin_quote
+The way Org-mode binds the TAB key (binding to [tab] instead of \t) overrules yasnippets' access to this key.
+#+end_quote
+
+The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp
-(use-package company 
-  :ensure t
-  :config
-  (add-hook 'after-init-hook 'global-company-mode))
+(defun yas/org-very-safe-expand ()
+  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (make-variable-buffer-local 'yas/trigger-key)
+            (setq yas/trigger-key [tab])
+            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+            (define-key yas/keymap [tab] 'yas/next-field)))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package mwim
-  :ensure t
-  :defer t
-  :bind
-  ("C-a" . mwim-beginning)
-  ("C-e" . mwim-end))
-#+END_SRC
-
-** windows
-
-#+BEGIN_SRC emacs-lisp
-(use-package ace-window
-  :ensure t
-  :custom
-  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l) "Use home row for selecting.")
-  (aw-scope 'frame "Highlight only current frame.")
-  :bind
-  ("M-o" . ace-window))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package winner
-  :config
-  (winner-mode 1))
-#+END_SRC
-
-* Appearence
+* Appearance
 ** Theme
 
 TODO: better contrast between hl-line and region
@@ -468,13 +748,13 @@ TODO: rainbow parens
 (use-package base16-theme
   :ensure t
   :config
-  (load-theme 'base16-oceanicnext))
+  (load-theme 'base16-oceanicnext t))
 
 #+END_SRC
 
 ** Font
 
-TODO: font size
+TODO: font size hydra
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'default-frame-alist
@@ -497,5 +777,25 @@ TODO: do I actually need any modeline?
   (doom-modeline-buffer-file-name-style 'buffer-name)
   (doom-modeline-icon t))
 #+END_SRC
+** Cursor
+TODO: bar cursor pink
+* Troubleshooting
+** Invalid function: =org-preserve-local-variables=
 
+As indicated in [[https://github.com/syl20bnr/spacemacs/issues/11801#issuecomment-451755821][spacemacs/11801]], the problem is in version misalignment which
+can be fixed by removing all =org-*/*.elc= files and compiling it again:
+
+#+BEGIN_SRC sh
+find org*/*.elc -print0 | xargs -0 rm
+#+END_SRC
+
+And then running the following function
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/recompile-elpa ()
+  "Recompile packages in elpa directory. Useful if you switch
+   Emacs versions."
+  (interactive)
+  (byte-recompile-directory package-user-dir nil t))
+#+END_SRC
 
