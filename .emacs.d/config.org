@@ -35,7 +35,9 @@ TODO: clean and describe
 - http://www.emacs-bootstrap.com/
 - https://github.com/a13/emacs.d/blob/master/README.org
 - https://github.com/freetonik/emacs-dotfiles/blob/master/init.org
-- http://pages.sachachua.com/.emacs.d/Sacha.html#org332b2fd
+  - emacs podcast guy configuration
+- http://pages.sachachua.com/.emacs.d/Sacha.html
+  - the emacs girl configuration
 - https://github.com/danielmai/.emacs.d/blob/master/config.org
 - https://thb.lt/emacs-cheatsheet/
 - https://github.com/abo-abo/awesome-emacs
@@ -46,15 +48,19 @@ TODO: clean and describe
 - https://melpa.org/#/?sort=downloads&asc=false
 - https://github.com/sam217pa/emacs-config/blob/develop/init.el
 - https://sam217pa.github.io/2016/10/18/context-dependent-keybindings/
-
+- https://bitbucket.org/holgerschurig/emacsconf/src/74d428aa2f9be88b14a503f6c3a816ae7cd13644/helm.org?at=master&fileviewer=file-view-default
+  - just a helm configuration
+- http://www.matskjesrud.com/emacs.html
+- https://old.reddit.com/r/emacs/comments/bk9k7l/tips_and_tricks_for_r_programming_in_academia/
+  - about R
+- http://juanjose.garciaripoll.com/blog/emacs-wanderlust-email
+  - about wunderlust
 [[https://github.com/jwiegley/use-package][use-package
 ]]
 ** To check
 https://melpa.org/#/rainbow-delimiters
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
-
-
 
 * Terminal fixes
 ** TODO: fix fonts
@@ -263,7 +269,7 @@ Answering just 'y' or 'n' will do
 (global-auto-revert-mode t)
 (transient-mark-mode t)
 (toggle-truncate-lines t)
-(whitespace-mode nil)
+(whitespace-mode -1)
 
 (diminish 'visual-line-mode " ↩")
 
@@ -301,6 +307,8 @@ there's no active region."
 'sensible-defaults/comment-or-uncomment-region-or-line)
 #+end_src
 *** TODO: popwin
+** Info
+TODO: add hydra
 * Editing
 ** Fill/unfill paragraph
 
@@ -351,7 +359,43 @@ TODO: fix this in org-mode which takes over this binding
 ** TODO comment lines
 ** TODO gentle movement
 ** TODO Spell checking
+** Whole line
+
+The following [[https://emacs.stackexchange.com/questions/2347/kill-or-copy-current-line-with-minimal-keystrokes][snippet]] changes the behavior of:
+- =C-w=: with no active region, kill a single line instead
+- =M-w=: with no active region, copy a single line instead 
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/slick-cut (beg end)
+  (interactive
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-beginning-position 2)))))
+
+(advice-add 'kill-region :before #'fikovnik/slick-cut)
+
+(defun fikovnik/slick-copy (beg end)
+  (interactive
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position) (line-beginning-position 2)))))
+
+(advice-add 'kill-ring-save :before #'fikovnik/slick-copy)
+#+END_SRC
 ** Expand region
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/select-line ()
+  "Select current line. If region is active, extend selection downward by line."
+  (interactive)
+  (if (region-active-p)
+      (progn 
+        (forward-line 1) 
+        (end-of-line))
+    (progn
+      (end-of-line)
+      (set-mark (line-beginning-position)))))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
@@ -379,7 +423,8 @@ TODO: fix this in org-mode which takes over this binding
    ("s" . er/mark-sentence)
    ("S" . er/mark-text-sentence)
    ("p" . er/mark-paragraph)
-   ("P" . er/mark-text-paragraph)))
+   ("P" . er/mark-text-paragraph)
+   ("l" . fikovnik/select-line)))
 #+END_SRC
 ** Snippets
 #+BEGIN_SRC emacs-lisp
@@ -433,7 +478,6 @@ default =other-window= command.
   :ensure t
   :defer t
   :custom
-  (aw-dispatch-always t)
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (aw-dispatch-alist
    '((?x aw-delete-window     "Delete Window")
@@ -678,7 +722,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 *** Project files with =helm-ls-git=
 
-TODO: how is this connected to helm-projectile?
+TODO: how is this connected to [[https://github.com/bbatsov/helm-projectile][helm-projectile]]?
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-ls-git
@@ -708,7 +752,7 @@ TODO: helm-dash
 TODO: helm-xref
 TODO: helm-flycheck
 TODO: swiper-helm
-TODO: helm-swoop
+TODO: [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
 TODO: helm-projectile
 TODO: helm-lsp
 TODO: https://github.com/ganmacs/emacs-surround
@@ -728,7 +772,7 @@ TODO: https://github.com/ganmacs/emacs-surround
 - is the visual regexp good enough?
 ** Visual regexp                                              :experimental:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package visual-regexp
   :ensure t
   :defer t
@@ -773,7 +817,7 @@ TODO: https://github.com/ganmacs/emacs-surround
  bookmark-save-flag                      t
  bookmark-default-file              (concat temp-dir "/bookmarks"))
 #+END_SRC
-* TODo: Projects
+* TODO: Projects
 * Packages
 ** iqa - quick access to config file
 
@@ -951,6 +995,7 @@ The following is the _official_ way to fix it:
 ** TODO: C/C++
 - using lsp and [[https://github.com/emacs-lsp/dap-mode][dap]]
 ** TODO: R
+- ESS or lsp
 * Applications
 ** TODO: agenda / calendar 
 ** TODO: email
@@ -982,9 +1027,8 @@ TODO: font size hydra
 #+END_SRC
 
 ** Modeline
-
 TODO: do I actually need any modeline?
-
+TODO: if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package doom-modeline
   :ensure t
