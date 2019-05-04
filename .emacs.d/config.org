@@ -490,6 +490,7 @@ default =other-window= command.
   :defer t
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (aw-dispatch-always nil)
   (aw-dispatch-alist
    '((?x aw-delete-window     "Delete Window")
 	   (?S aw-swap-window       "Swap Windows")
