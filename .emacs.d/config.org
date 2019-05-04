@@ -915,6 +915,13 @@ Auto refresh dired
 
 ** Support for my local dot-file config
 
+I use git to version my dot files. While there are many options for managing
+them such as [[https://github.com/RichiH/vcsh][vcsh]], I prefer the simplest possible, just using git and nothing
+else. The trick is to separate work tree and git directory. While this work
+well, magit does not understand this and has to have the relevant =--work-tree=
+and =--git-dir= options explicitly set. For this I define a new function
+=fikovnik/dotfiles-magit= which tries to do that.
+
 #+BEGIN_SRC emacs-lisp
 (defconst fikovnik/dotfiles-git-dir (expand-file-name "~/.dotfiles"))
 
