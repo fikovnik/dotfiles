@@ -12,13 +12,19 @@ TODO: descrive the idea behind this configuration
 | Key     | Micro state      |
 |---------+------------------|
 | =C-x w= | Windows          |
-| =M-g=   | Go to            |
 | =C-x b= | Buffers          |
 | =C-x t= | Toggles          |
 | =C-x p= | Projects         |
-| =C-v=   | Expand region    |
-| =M-m=   | Multiple cursors |
 | =C-c &= | Snippets         |
+| =M-g=   | Go to            |
+| =M-r=   | Expand region    |
+| =M-m=   | Multiple cursors |
+
+#+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "M-g"))
+(global-unset-key (kbd "M-r"))
+(global-unset-key (kbd "M-m"))
+#+END_SRC
 
 ** Other keys
 
@@ -326,13 +332,14 @@ TODO: add hydra
 (use-package multiple-cursors
   :ensure t
   :config
-  (smartrep-define-key global-map "C-c m"
+  (smartrep-define-key global-map "M-m"
     '(("n" . 'mc/mark-next-like-this)
       ("u" . 'mc/unmark-next-like-this)
       ("s" . 'mc/skip-to-next-like-this)
       ("N" . 'mc/mark-previous-like-this)
       ("U" . 'mc/unmark-previous-like-this)
       ("S" . 'mc/skip-to-previous-like-this)
+      ;; TODO: this should be (er/mark-word) followed by (mc/hydra)
       ("m" . 'mc/mark-more-like-this-extended)
       ("a" . 'mc/mark-all-like-this)
       ("d" . 'mc/mark-all-like-this-dwim)
@@ -383,7 +390,10 @@ The following [[https://emacs.stackexchange.com/questions/2347/kill-or-copy-curr
 
 (advice-add 'kill-ring-save :before #'fikovnik/slick-copy)
 #+END_SRC
-** Expand region
+** Expand region (=M-r=)
+
+Define a function that simply selects the current line.
+
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/select-line ()
   "Select current line. If region is active, extend selection downward by line."
@@ -397,35 +407,36 @@ The following [[https://emacs.stackexchange.com/questions/2347/kill-or-copy-curr
       (set-mark (line-beginning-position)))))
 #+END_SRC
 
+Define the =M-r= prefix and use it for expand region, including the line
+selection defined above.
+
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
   :ensure t
   :bind
-  (("C-c =" . er/expand-region)
-   :map mode-specific-map
-   :prefix-map region-prefix-map
-   :prefix "r"
-   ("(" . er/mark-inside-pairs)
-   (")" . er/mark-outside-pairs)
-   ("'" . er/mark-inside-quotes)
-   ([34] . er/mark-outside-quotes) ; it's just a quotation mark
-   ("o" . er/mark-org-parent)
-   ("u" . er/mark-url)
-   ("b" . er/mark-org-code-block)
-   ("." . er/mark-method-call)
-   (">" . er/mark-next-accessor)
-   ("w" . er/mark-word)
-   ("d" . er/mark-defun)
-   ("e" . er/mark-email)
-   ("," . er/mark-symbol)
-   ("<" . er/mark-symbol-with-prefix)
-   (";" . er/mark-comment)
-   ("s" . er/mark-sentence)
-   ("S" . er/mark-text-sentence)
-   ("p" . er/mark-paragraph)
-   ("P" . er/mark-text-paragraph)
-   ("l" . fikovnik/select-line)))
+  (("M-r m"  . er/expand-region)
+   ("M-r ("  . er/mark-inside-pairs)
+   ("M-r )"  . er/mark-outside-pairs)
+   ("M-r '"  . er/mark-inside-quotes)
+   ("M-r \"" . er/mark-outside-quotes) ; it's just a quotation mark
+   ("M-r o" . er/mark-org-parent)
+   ("M-r u" . er/mark-url)
+   ("M-r b" . er/mark-org-code-block)
+   ("M-r ." . er/mark-method-call)
+   ("M-r >" . er/mark-next-accessor)
+   ("M-r w" . er/mark-word)
+   ("M-r d" . er/mark-defun)
+   ("M-r e" . er/mark-email)
+   ("M-r ," . er/mark-symbol)
+   ("M-r <" . er/mark-symbol-with-prefix)
+   ("M-r ;" . er/mark-comment)
+   ("M-r s" . er/mark-sentence)
+   ("M-r S" . er/mark-text-sentence)
+   ("M-r p" . er/mark-paragraph)
+   ("M-r P" . er/mark-text-paragraph)
+   ("M-r l" . fikovnik/select-line)))
 #+END_SRC
+
 ** Snippets
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
@@ -770,19 +781,6 @@ TODO: https://github.com/ganmacs/emacs-surround
 - https://github.com/ShingoFukuyama/helm-swoop
 ** TODO: replace
 - is the visual regexp good enough?
-** Visual regexp                                              :experimental:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package visual-regexp
-  :ensure t
-  :defer t
-  :bind
-  ("C-c r" . vr/replace)
-  ("C-c q" . vr/query-replace)
-  :config
-  (define-key global-map (kbd "C-c m") 'vr/mc-mark))
-#+END_SRC
-
 * Toggles (=C-x t=)
 ** Setup =C-x t= micro state                                         :hydra:
 
