@@ -892,13 +892,8 @@ Auto refresh dired
   :custom
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1 "Enable fullscreen")
   :bind
-  ("C-x g s" . magit-status)
-  ("C-x g x" . magit-checkout)
-  ("C-x g c" . magit-commit)
-  ("C-x g p" . magit-push)
-  ("C-x g u" . magit-pull)
-  ("C-x g e" . magit-ediff-resolve)
-  ("C-x g r" . magit-rebase-interactive))
+  ("C-x g" . magit-status)
+  ("C-x M-g" . fikovnik/dotfiles-magit))
 
 (use-package magit-popup
   :ensure t)
@@ -921,22 +916,26 @@ Auto refresh dired
 ** Support for my local dot-file config
 
 #+BEGIN_SRC emacs-lisp
-(unless (boundp 'fikovnik/config-magit-hook?)
-  ;; only run this hook once, even if Emacs reloads configuration.
-  (eval-after-load 'magit
-    '(let ((config-path (expand-file-name ".dotfiles")) (home (getenv "HOME")))
-       (when (and (string-prefix-p (concat home "/.") (expand-file-name (buffer-file-name)))
-                  (file-exists-p config-path)
-                  (not (= (call-process "git" nil nil nil "rev-parse" "--show-toplevel") 0)))
-         ;; Insert git directory and working tree into magit's git
-         ;; global arguments, while preserving magit's existing
-         ;; command-line settings; `add-to-list' adds to the
-         ;; beginning of the list.
-         (add-to-list 'magit-git-global-arguments
-                      (format "--work-tree=%s" "/home/krikava"))
-         (add-to-list 'magit-git-global-arguments
-                      (format "--git-dir=%s" "/home/krikava/.dotfiles")))))
-  (setq fikovnik/config-magit-hook? t))
+(defconst fikovnik/dotfiles-git-dir (expand-file-name "~/.dotfiles"))
+
+(defun fikovnik/-dotfiles-remove-magit-config (&optional kill)
+  (setq magit-git-global-arguments
+        (remove (format "--work-tree=%s" (getenv "HOME")) magit-git-global-arguments))
+  (setq magit-git-global-arguments
+        (remove (format "--git-dir=%s" fikovnik/dotfiles-git-dir) magit-git-global-arguments))
+  (advice-remove 'magit-mode-bury-buffer #'fikovnik/-dotfiles-remove-magit-config))
+
+(defun fikovnik/dotfiles-magit ()
+  (interactive)
+  (when (and (boundp 'magit-git-global-arguments)
+             (file-exists-p fikovnik/dotfiles-git-dir))
+    (let ((home (getenv "HOME")))
+      (add-to-list 'magit-git-global-arguments
+                   (format "--work-tree=%s" home))
+      (add-to-list 'magit-git-global-arguments
+                   (format "--git-dir=%s" fikovnik/dotfiles-git-dir))
+      (advice-add 'magit-mode-bury-buffer :after #'fikovnik/-dotfiles-remove-magit-config)
+      (magit-status-setup-buffer home))))
 #+END_SRC
 
 * Org
