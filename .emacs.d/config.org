@@ -4,7 +4,7 @@
 #+PROPERTY: header-args :tangle yes
 #+STARTUP: overview
 
-* Overview 
+* Overview
 TODO: descrive the idea behind this configuration
 
 ** Micro states
@@ -131,7 +131,7 @@ I would prefer to use hydra for all, but it somehow does not work with multiple
 cursors.
 
 #+BEGIN_SRC emacs-lisp
-(use-package smartrep 
+(use-package smartrep
   :ensure t
   :custom
   (smartrep-mode-line-string-activated "[SR]")
@@ -158,7 +158,7 @@ TODO: still need to figure out a good way how to handle backups and describe it
 here.
 
 #+BEGIN_SRC emacs-lisp
-(setq       
+(setq
       auto-save-list-file-name           (concat user-emacs-directory "/autosave")
       backup-directory-alist            `((".*" . ,(concat user-emacs-directory "/backups/")))
       ;;auto-save-file-name-transforms    `((".*" ,(concat user-emacs-directory "/auto-save-list/") t))
@@ -187,7 +187,7 @@ Once the file backup is finished, auto save current buffer on:
 I guess all this is trying to say to use UTF-8 by default.
 
 #+BEGIN_SRC emacs-lisp
-(setq 
+(setq
       locale-coding-system          'utf-8
       default-process-coding-system '(utf-8-unix . utf-8-unix)
 )
@@ -200,7 +200,7 @@ I guess all this is trying to say to use UTF-8 by default.
 
 ** Sensible defaults
 
-Taken mostly from the [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el]] and [[http://www.emacs-bootstrap.com/][emacs-bootstrap]]. 
+Taken mostly from the [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el]] and [[http://www.emacs-bootstrap.com/][emacs-bootstrap]].
 
 *** Yes/No confirmation
 
@@ -213,7 +213,7 @@ Answering just 'y' or 'n' will do
 *** Defaults
 
 #+BEGIN_SRC emacs-lisp
-(setq 
+(setq
       confirm-nonexistent-file-or-buffer  t
       ;; apropos searches more extensively
       apropos-do-all                      t
@@ -237,8 +237,8 @@ Answering just 'y' or 'n' will do
       uniquify-buffer-name-style          'forward
       ;; -i gets alias definitions from shell
       shell-command-switch                "-ic"
-      echo-keystrokes                     0.1 
-      recentf-max-saved-items             100 
+      echo-keystrokes                     0.1
+      recentf-max-saved-items             100
       scroll-step                         1
       use-dialog-box                      nil
       kill-ring-max                       300
@@ -249,13 +249,13 @@ Answering just 'y' or 'n' will do
       scroll-error-top-bottom             t
 )
 
-(setq-default 
+(setq-default
       tab-width                           2
-      indent-tabs-mode                    nil              
+      indent-tabs-mode                    nil
       ;; maximum line width
       fill-column                         79
       ;; don't fold lines
-      truncate-lines                      t                  
+      truncate-lines                      t
       frame-title-format                  '("%b")
       indicate-empty-lines                t
       cursor-type                         'bar
@@ -298,7 +298,7 @@ Answering just 'y' or 'n' will do
 
 *** TODO: Commenting / un-commenting
 
-#+begin_src 
+#+begin_src
 (defun sensible-defaults/comment-or-uncomment-region-or-line ()
   "Comments or uncomments the region or the current line if
 there's no active region."
@@ -370,7 +370,7 @@ TODO: fix this in org-mode which takes over this binding
 
 The following [[https://emacs.stackexchange.com/questions/2347/kill-or-copy-current-line-with-minimal-keystrokes][snippet]] changes the behavior of:
 - =C-w=: with no active region, kill a single line instead
-- =M-w=: with no active region, copy a single line instead 
+- =M-w=: with no active region, copy a single line instead
 
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/slick-cut (beg end)
@@ -399,8 +399,8 @@ Define a function that simply selects the current line.
   "Select current line. If region is active, extend selection downward by line."
   (interactive)
   (if (region-active-p)
-      (progn 
-        (forward-line 1) 
+      (progn
+        (forward-line 1)
         (end-of-line))
     (progn
       (end-of-line)
@@ -447,7 +447,7 @@ selection defined above.
 ** Auto completion
 
 #+BEGIN_SRC emacs-lisp
-(use-package company 
+(use-package company
   :ensure t
   :config
   (add-hook 'after-init-hook 'global-company-mode))
@@ -462,7 +462,7 @@ Windmove defines functions to easily select windows. We do not use the default
 keybinding, instead it is bound by the =hydra-window=.
 
 #+BEGIN_SRC emacs-lisp
-(use-package windmove 
+(use-package windmove
   :ensure t
   :custom
   (windmove-wrap-around t))
@@ -473,7 +473,7 @@ keybinding, instead it is bound by the =hydra-window=.
 This will allow to go back/fort between window layouts.
 
 #+BEGIN_SRC emacs-lisp
-(use-package winner 
+(use-package winner
   :ensure t
   :config
   (winner-mode 1))
@@ -530,7 +530,7 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
    ^Select^    ^Split^           ^Switch^           ^Resize^      ^Misc^
   -----------------------------------------------------------------------
       _↑_      _-_: vertical     _b_uffer             ⇧         _u_ndo/_r_edo
-    _←_   _→_    _|_: horizontal   _f_ind files       ⇦   ⇨       _a_ce-window 
+    _←_   _→_    _|_: horizontal   _f_ind files       ⇦   ⇨       _a_ce-window
       _↓_      ^ ^               _s_wap               ⇩         _d_elete/ace-_D_elete
    ^ ^         ^ ^               _m_aximize/_B_alance
 "
@@ -708,20 +708,20 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   (helm-autoresize-mode 1)
   (helm-mode 1)
   :hook
-  (helm-minibuffer-set-up-hook . fikovnik/helm-hide-minibuffer-maybe) 
-  :bind 
+  (helm-minibuffer-set-up-hook . fikovnik/helm-hide-minibuffer-maybe)
+  :bind
   (("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
   ("C-x p l" . helm-projectile)
   ("C-x c o" . helm-occur)
   ("C-x c /" . helm-projectile-ag)
   ("C-x c k" . helm-show-kill-ring)
-  :map helm-map 
+  :map helm-map
   ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
   ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
   ("C-z" . helm-select-action) ; list actions using C-z
   ))
-#+END_SRC 
+#+END_SRC
 
 *** Searching with =helm-ag=
 
@@ -746,7 +746,7 @@ TODO: how is this connected to [[https://github.com/bbatsov/helm-projectile][hel
 *** Describe bindings
 
 #+BEGIN_SRC emacs-lisp
-(use-package helm-descbinds 
+(use-package helm-descbinds
   :ensure t
   :defer t
   :bind
@@ -775,7 +775,7 @@ TODO: https://github.com/ganmacs/emacs-surround
   :init
   (setq flyspell-correct-interface #'flyspell-correct-helm))
 #+END_SRC
-** TODO: text objects 
+** TODO: text objects
 - https://github.com/clemera/objed
 * Search and replace
 ** TODO: search using swoop
@@ -785,7 +785,7 @@ TODO: https://github.com/ganmacs/emacs-surround
 * Toggles (=C-x t=)
 ** Setup =C-x t= micro state                                         :hydra:
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 (defhydra hydra-toggle (:color blue :hint nil)
   "
 [_a_] abbrev-mode:       %`abbrev-mode
@@ -801,7 +801,7 @@ TODO: https://github.com/ganmacs/emacs-surround
   ("t" toggle-truncate-lines)
   ("w" whitespace-mode)
   ("l" org-toggle-link-display)
-  ("q" nil "quit"))  
+  ("q" nil "quit"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -810,7 +810,7 @@ TODO: https://github.com/ganmacs/emacs-surround
 * TODO: Mouse
 * TODO: Bookmarks
 
-#+BEGIN_SRC 
+#+BEGIN_SRC
 (setq
  ;; persistent bookmarks
  bookmark-save-flag                      t
@@ -855,7 +855,7 @@ TODO: https://github.com/ganmacs/emacs-surround
 Auto refresh dired
 #+BEGIN_SRC emacs-lisp
 (add-hook 'dired-mode-hook 'auto-revert-mode)
-(setq 
+(setq
       global-auto-revert-non-file-buffers t
       auto-revert-verbose                 nil
       ;; file sizes in human-readable units (KB, MB, etc)
@@ -872,7 +872,7 @@ Auto refresh dired
   :config
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq-default ediff-highlight-all-diffs 'nil)
-  (setq ediff-diff-options "-w"))  
+  (setq ediff-diff-options "-w"))
 #+END_SRC
 
 * Version control
@@ -1018,7 +1018,7 @@ The following is the _official_ way to fix it:
 ** TODO: R
 - ESS or lsp
 * Applications
-** TODO: agenda / calendar 
+** TODO: agenda / calendar
 ** TODO: email
 ** TODO: elfeed
 - https://github.com/abo-abo/elfeed
@@ -1094,5 +1094,5 @@ In the case a package installation from =(use-package)= fails due to a missing
 file on MELPA, it might be due to an outdated local index. Use:
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(package-refresh-contents)  
+(package-refresh-contents)
 #+END_SRC
