@@ -864,15 +864,26 @@ Auto refresh dired
 
 **** TODO hydra
 
-** version control
+** diff
 
-Sort buffers in ibuffer based on git
+#+BEGIN_SRC emacs-lisp
+(use-package ediff
+  :config
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq-default ediff-highlight-all-diffs 'nil)
+  (setq ediff-diff-options "-w"))  
+#+END_SRC
+
+* Version control
+** Sort buffers in ibuffer based on git
+
 #+BEGIN_SRC emacs-lisp
 (use-package ibuffer-vc
   :ensure t)
 #+END_SRC
 
-Magit stuff
+** Magit
+
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :defer t
@@ -892,7 +903,7 @@ Magit stuff
   :ensure t)
 #+END_SRC
 
-Highlight chnages in files
+** Highlight chnages in files
 
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
@@ -905,14 +916,26 @@ Highlight chnages in files
    (org-mode . diff-hl-margin-mode)
    (dired-mode . diff-hl-dired-mode)))
 #+END_SRC
-** diff
+
+** Support for my local dot-file config
 
 #+BEGIN_SRC emacs-lisp
-(use-package ediff
-  :config
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (setq-default ediff-highlight-all-diffs 'nil)
-  (setq ediff-diff-options "-w"))  
+(unless (boundp 'fikovnik/config-magit-hook?)
+  ;; only run this hook once, even if Emacs reloads configuration.
+  (eval-after-load 'magit
+    '(let ((config-path (expand-file-name ".dotfiles")) (home (getenv "HOME")))
+       (when (and (string-prefix-p (concat home "/.") (expand-file-name (buffer-file-name)))
+                  (file-exists-p config-path)
+                  (not (= (call-process "git" nil nil nil "rev-parse" "--show-toplevel") 0)))
+         ;; Insert git directory and working tree into magit's git
+         ;; global arguments, while preserving magit's existing
+         ;; command-line settings; `add-to-list' adds to the
+         ;; beginning of the list.
+         (add-to-list 'magit-git-global-arguments
+                      (format "--work-tree=%s" "/home/krikava"))
+         (add-to-list 'magit-git-global-arguments
+                      (format "--git-dir=%s" "/home/krikava/.dotfiles")))))
+  (setq fikovnik/config-magit-hook? t))
 #+END_SRC
 
 * Org
