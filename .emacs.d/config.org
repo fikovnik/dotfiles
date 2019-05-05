@@ -312,6 +312,20 @@ This remembers your location in a file when saving files.
       uniquify-ignore-buffers-re "^\\*")
 #+END_SRC
 
+*** Track history
+
+#+BEGIN_SRC emacs-lisp
+;; savehist keeps track of some history
+(use-package savehist
+  :custom 
+  ;; search entries
+  (savehist-additional-variables '(search-ring regexp-search-ring))
+  ;; save every minute
+  (savehist-autosave-interval 60)
+  ;; keep the home clean
+  (savehist-file (expand-file-name "savehist" fikovnik/savefile-dir)))
+
+(savehist-mode +1)
 #+END_SRC
 
 * Editing
