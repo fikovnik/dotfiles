@@ -258,6 +258,7 @@ Answering just 'y' or 'n' will do
       display-line-numbers-grow-only      t
       display-line-numbers-width-start    t
       show-paren-delay                    0.0
+      imenu-auto-rescan                   t
 )
 
 (blink-cursor-mode -1)
