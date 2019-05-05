@@ -949,9 +949,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   :bind
   (("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
-  ("C-x p l" . helm-projectile)
   ("C-x c o" . helm-occur)
-  ("C-x c /" . helm-projectile-ag)
   ("C-x c k" . helm-show-kill-ring)
   ("M-y" . helm-show-kill-ring)
   :map helm-map
@@ -1011,8 +1009,41 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 **** TODO helm-flycheck
 **** TODO swiper-helm
 **** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
-**** TODO helm-projectile
-**** TODO helm-lsp
+**** helm-rg
+#+BEGIN_SRC emacs-lisp
+(use-package helm-rg
+  :ensure t
+  :defer t
+  :bind
+  ("C-x p /" . helm-projectile-rg)
+  ("C-S-s" . helm-rg))
+#+END_SRC
+**** helm-projectile
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-projectile
+  :ensure t
+  :defer t
+  :bind
+("C-x p h" . helm-projectile)
+("C-x p p" . helm-projectile-switch-project)
+("C-x p f" . helm-projectile-find-file)
+("C-x p F" . helm-projectile-find-file-in-known-projects)
+("C-x p r" . helm-projectile-recentf)
+("C-x p a" . helm-projectile-find-other-file))
+#+END_SRC
+
+**** helm-lsp
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-lsp
+  :ensure t
+  :defer t
+  :bind
+  ("C-x p s" . helm-lsp-workspace-symbol)
+  ("C-x p S" . helm-lsp-global-workspace-symbol))
+#+END_SRC
+
 **** TODO https://github.com/ganmacs/emacs-surround
 ** TODO text objects
 - https://github.com/clemera/objed
@@ -1064,7 +1095,21 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (global-set-key (kbd "C-x t") 'hydra-toggle/body)
 #+END_SRC
 * TODO Mouse
-* TODO Projects
+* Projects
+** Configuration
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+  :custom
+  (projectile-indexing-method 'alien)
+  (projectile-completion-system 'helm)
+  (projectile-switch-project-action 'helm-projectile)
+  :config
+  (projectile-global-mode)
+  (helm-projectile-on))
+#+END_SRC
+
 * Packages
 ** iqa - quick access to config file
 
