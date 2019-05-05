@@ -1017,6 +1017,21 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 - https://github.com/clemera/objed
 ** TODO isearch
 - a keymap with all the options
+** Bookmarks
+
+| Key       | Description        | Function         |
+|-----------+--------------------+------------------|
+| =C-x r l= | List bookmarks     | =helm-bookmarks= |
+| =C-x r b= | Jump to a bookmark | =bookmark-jump=  |
+| =C-x r m= | Set bookmark       | =bookmark-set=   |
+
+#+BEGIN_SRC emacs-lisp
+(use-package bookmark
+  :custom
+  (bookmark-default-file (expand-file-name "bookmarks" fikovnik/savefile-dir))
+  (bookmark-save-flag 1))
+#+END_SRC
+
 * Search and replace
 ** TODO search using swoop
 - https://github.com/ShingoFukuyama/helm-swoop
@@ -1048,14 +1063,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (global-set-key (kbd "C-x t") 'hydra-toggle/body)
 #+END_SRC
 * TODO Mouse
-* TODO Bookmarks
-
-#+BEGIN_SRC
-(setq
- ;; persistent bookmarks
- bookmark-save-flag                      t
- bookmark-default-file              (concat temp-dir "/bookmarks"))
-#+END_SRC
 * TODO Projects
 * Packages
 ** iqa - quick access to config file
