@@ -619,6 +619,7 @@ selection defined above.
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 #+END_SRC
+*** TODO configure backends
 *** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
 
 ** TODO delete syntax
@@ -659,6 +660,7 @@ Spell check using aspell.
 ** TODO zap to char
 - M-z
 - M-Z
+** TODO indentation
 * Movement and navigation
 ** Windows (=C-x w=)
 *** Overview
