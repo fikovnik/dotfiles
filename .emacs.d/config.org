@@ -361,9 +361,36 @@ TODO: fix this in org-mode which takes over this binding
   ("M-S-<down>" . md-duplicate-down))
 #+END_SRC
 
-** TODO join lines
-** TODO open line above / bellow
 ** TODO comment lines
+** Join lines
+
+The =join-line= command (aliased to =delete-indentation=) works from the last
+line to be joined upwards. I prefer the other way around (cf. [[https://emacsredux.com/blog/2013/05/30/joining-lines/][here]]). 
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/join-line ()
+  "Join the current line with the line beneath it."
+  (interactive)
+  (delete-indentation 1))
+#+END_SRC
+
+| Key   | Description                                       |
+|-------+---------------------------------------------------|
+| =M-j= | Join the current line with the line *beneath* it. |
+| =M-J= | Join the current line with the line *over* it.    |
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-j") 'fikovnik/join-line)
+(global-set-key (kbd "M-J") 'join-line)
+#+END_SRC
+
+** Open line above / bellow
+
+| Key     | Description                                        |
+|---------+----------------------------------------------------|
+| =C-PEM= | To insert a blank line *above* the line you're on. |
+| =C-EM=  | To insert a blank line *below* the line you're on. |
+
 ** TODO gentle movement
 ** TODO Spell checking
 ** Whole line
