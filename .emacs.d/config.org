@@ -824,7 +824,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 ("b" helm-mini "list")
 ("n" next-buffer "next")
 ("p" previous-buffer "previous")
-("k" kill-buffer "kill")
+("k" kill-this-buffer "kill")
 ("x" kill-buffer-and-window "close")
 ("R" revert-buffer "revert")
 ("N" fikovnik/new-empty-buffer "new")
@@ -835,6 +835,12 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x b") 'hydra-buffers/body)
 #+END_SRC
+*** Binding
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+#+END_SRC
+
 ** TODO pgup/pgdown go to the same location
 ** TODO Go to matching paren
 ** TODO Gentle navigation
