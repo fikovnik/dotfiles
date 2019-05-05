@@ -970,6 +970,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 ** TODO text objects
 - https://github.com/clemera/objed
+** TODO isearch
+- a keymap with all the options
 * Search and replace
 ** TODO search using swoop
 - https://github.com/ShingoFukuyama/helm-swoop
@@ -1069,7 +1071,7 @@ Auto refresh dired
   (setq-default ediff-highlight-all-diffs 'nil)
   (setq ediff-diff-options "-w"))
 #+END_SRC
-
+** TODO kbd macros
 * Version control
 ** Sort buffers in ibuffer based on git
 
