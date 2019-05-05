@@ -19,9 +19,6 @@
 | =M-r=   | Expand region    |
 | =M-m=   | Multiple cursors |
 
-** Other keys
-
-
 * Sources
 ** TODO clean and describe
 - http://wikemacs.org/wiki/Starter_Kits
