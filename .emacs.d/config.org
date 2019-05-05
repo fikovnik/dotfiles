@@ -879,6 +879,15 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("<home>" . mwim-beginning)
   ("<end>" . mwim-end))
 #+END_SRC
+** Imenu
+
+#+BEGIN_SRC emacs-lisp
+(use-package imenu-anywhere
+  :ensure t
+  :defer t
+  :bind
+  ("M-i" . 'imenu-anywhere))
+#+END_SRC
 
 ** Helm
 *** Functions
@@ -928,7 +937,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("C-x c /" . helm-projectile-ag)
   ("C-x c k" . helm-show-kill-ring)
   ("M-y" . helm-show-kill-ring)
-  ("M-i" . helm-imenu)
   :map helm-map
   ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
   ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
@@ -989,7 +997,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 **** TODO helm-projectile
 **** TODO helm-lsp
 **** TODO https://github.com/ganmacs/emacs-surround
-
 ** TODO text objects
 - https://github.com/clemera/objed
 ** TODO isearch
