@@ -323,10 +323,11 @@ This remembers your location in a file when saving files.
   ;; save every minute
   (savehist-autosave-interval 60)
   ;; keep the home clean
-  (savehist-file (expand-file-name "savehist" fikovnik/savefile-dir)))
-
-(savehist-mode +1)
+  (savehist-file (expand-file-name "savehist" fikovnik/savefile-dir))
+  :config
+  (savehist-mode +1))
 #+END_SRC
+
 *** Recent files tracking
 **** Functions
 
