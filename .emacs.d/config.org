@@ -169,13 +169,19 @@ These functions are useful so activate them.
 )
 #+END_SRC
 
-** TODO Auto save like in Intellij
+** Auto save file buffers
 
-Once the file backup is finished, auto save current buffer on:
-- window change
-- frame change
-- focus lost (how to do that in terminal)
-- after a timeout
+Automatically save buffers associated with files on buffer switch
+and on windows switch.
+
+#+BEGIN_SRC emacs-lisp
+(use-package super-save
+  :ensure t
+  :config
+  ;; add integration with ace-window
+  (add-to-list 'super-save-triggers 'ace-window)
+  (super-save-mode +1))
+#+END_SRC
 
 ** Use UTF-8
 
