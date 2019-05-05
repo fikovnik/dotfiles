@@ -5,8 +5,7 @@
 #+STARTUP: overview
 
 * Overview
-TODO: descrive the idea behind this configuration
-
+** TODO descrive the idea behind this configuration
 ** Micro states
 
 | Key     | Micro state      |
@@ -20,27 +19,11 @@ TODO: descrive the idea behind this configuration
 | =M-r=   | Expand region    |
 | =M-m=   | Multiple cursors |
 
-#+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "M-g"))
-(global-unset-key (kbd "M-r"))
-(global-unset-key (kbd "M-m"))
-#+END_SRC
-
 ** Other keys
 
-| Key         | Description                          | Function                                       |
-|-------------+--------------------------------------+------------------------------------------------|
-| =C-c left=  | Undo changes in window configuration | =winner-undo=                                  |
-| =C-c right= | Redo changes in window configuration | =winner-redo=                                  |
-| =C-x o=     | Jump to a window                     | =ace-window=                                   |
-| =C-;=       | Comment or un-comment code           | =fikovnik/comment-or-uncomment-line-or-region= |
-
-#+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "C-;"))
-#+END_SRC
 
 * Sources
-TODO: clean and describe
+** TODO clean and describe
 - http://wikemacs.org/wiki/Starter_Kits
 - https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
 - http://www.emacs-bootstrap.com/
@@ -73,13 +56,6 @@ https://melpa.org/#/rainbow-delimiters
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
 
-* Terminal fixes
-** TODO: fix fonts
-- fix the main font
-- use the [[https://st.suckless.org/patches/font2/st-font2-20190326-f64c2f8.diff][second font]] or use nerdfont
-** TODO: use theme cursor
-- add [[https://st.suckless.org/patches/themed_cursor/st-themed_cursor-0.8.1.diff][themed cursor]]
-** TODO: drop-down support
 * Basics
 ** Lexical scoping                                            :experimental:
 
@@ -103,7 +79,7 @@ some operations faster, although I never tested it.
 Set up the customize file to its own separate file, instead of saving
 customize settings in [[file:init.el][init.el]].
 
-TODO: what to do with the custom file? Keep it, keep it, but not version it or send to /tmp
+*** TODO what to do with the custom file? Keep it, keep it, but not version it or send to /tmp
 
 #+BEGIN_SRC emacs-lisp
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -158,9 +134,8 @@ These functions are useful so activate them.
 #+END_SRC
 
 ** File backup                                                         :wip:
-
-TODO: still need to figure out a good way how to handle backups and describe it
-here.
+*** TODO better way to handle backups
+*** TODO document how does it exactly work
 
 #+BEGIN_SRC emacs-lisp
 (setq
@@ -179,7 +154,7 @@ here.
       create-lockfiles                   nil
 )
 #+END_SRC
-** TODO: Auto save like in Intellij
+** TODO Auto save like in Intellij
 
 Once the file backup is finished, auto save current buffer on:
 - window change
@@ -301,10 +276,15 @@ Answering just 'y' or 'n' will do
           'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
 
-*** TODO: popwin
-** Info
-TODO: add hydra
+*** TODO popwin
 * Editing
+** Deleting spaces
+
+| Key     | Description                                                | Function                 |
+|---------+------------------------------------------------------------+--------------------------|
+| =M-\=   | Delete all spaces and tabs around point                    | =delete-horizonal-space= |
+| =M-SPC= | Delete all spaces and tabs around point, leaving one space | =just-one-space=         |
+
 ** Copy and paste
 *** Functions
 
@@ -373,6 +353,10 @@ pastes from X-SECONDARY."
 ** Multiple cursors
 
 #+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "M-m"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :ensure t
   :config
@@ -391,8 +375,7 @@ pastes from X-SECONDARY."
 #+END_SRC
 
 ** Move lines up / down
-
-TODO: fix this in org-mode which takes over this binding
+*** TODO fix this in org-mode which takes over this binding
 
 #+BEGIN_SRC emacs-lisp
 (use-package move-dup
@@ -408,7 +391,7 @@ TODO: fix this in org-mode which takes over this binding
 ** Join lines
 
 The =join-line= command (aliased to =delete-indentation=) works from the last
-line to be joined upwards. I prefer the other way around (cf. [[https://emacsredux.com/blog/2013/05/30/joining-lines/][here]]). 
+line to be joined upwards. I prefer the other way around (cf. [[https://emacsredux.com/blog/2013/05/30/joining-lines/][here]]).
 
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/join-line ()
@@ -435,7 +418,7 @@ line to be joined upwards. I prefer the other way around (cf. [[https://emacsred
 | =C-EM=  | To insert a blank line *below* the line you're on. |
 
 ** Comment / un-comment lines
-
+*** Functions
 First, define a function taken from [[https://stackoverflow.com/a/11517584/219584][here]]:
 
 #+BEGIN_SRC emacs-lisp
@@ -447,16 +430,14 @@ First, define a function taken from [[https://stackoverflow.com/a/11517584/21958
     (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 #+END_SRC
 
-Bind it to =C-;=. 
-
-TODO: this does not work so far, because in the terminal =C-;= is seen as =;= only.
+*** Binding
+**** TODO this does not work so far, because in the terminal =C-;= is seen as =;= only.
 
 #+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "C-;"))
 (global-set-key (kbd "C-;") 'fikovnik/comment-or-uncomment-line-or-region)
 #+END_SRC
 
-** TODO gentle movement
-** TODO Spell checking
 ** Whole line
 
 The following [[https://emacs.stackexchange.com/questions/2347/kill-or-copy-current-line-with-minimal-keystrokes][snippet]] changes the behavior of:
@@ -502,6 +483,10 @@ Define the =M-r= prefix and use it for expand region, including the line
 selection defined above.
 
 #+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "M-r"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package expand-region
   :ensure t
   :bind
@@ -543,11 +528,27 @@ selection defined above.
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 #+END_SRC
-** TODO: terminal copy & paste
-** TODO: surround
+*** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
+
+** TODO delete syntax
+** TODO spell checking
+** TODO surround
 - https://github.com/ganmacs/emacs-surround
+** TODO rainbow parameters
+** TODO smartparens
+** TODO zap to char
+- M-z
+- M-Z
 * Movement and navigation
 ** Windows (=C-x w=)
+*** Overview
+
+| Key         | Description                          | Function      |
+|-------------+--------------------------------------+---------------|
+| =C-c left=  | Undo changes in window configuration | =winner-undo= |
+| =C-c right= | Redo changes in window configuration | =winner-redo= |
+| =C-x o=     | Select window using Avy              | =ace-window=  |
+
 *** Selecting windows
 Windmove defines functions to easily select windows. We do not use the default
 keybinding, instead it is bound by the =hydra-window=.
@@ -670,6 +671,10 @@ This allows to quickly jump around in the buffer. The way it is setup is by
 remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/avy][avy]] functions.
 
 #+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "M-g"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package avy
   :ensure t
   :bind
@@ -709,6 +714,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (global-set-key (kbd "M-g") 'hydra-goto/body)
 #+END_SRC
 
+*** TODO next error / previous error
+
 ** Buffers (=C-x b=)
 *** Functions
 
@@ -723,6 +730,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 *** Setup =C-x b= micro state                                       :hydra:
+**** TODO switch to messages buffer
+**** TODO switch to scratch buffer
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-buffers (:exit t :hint nil)
@@ -733,19 +742,20 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 ("x" kill-buffer-and-window "close")
 ("R" revert-buffer "revert")
 ("N" fikovnik/new-empty-buffer "new")
-("i" ibuffer "ibuffer"))
+("i" ibuffer "ibuffer")
+)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x b") 'hydra-buffers/body)
 #+END_SRC
-** TODO: pgup/pgdown go to the same location
-** TODO: Go to matching paren
-** TODO: Gentle navigation
-** TODO: highlight symbols (=*=, =#=)
+** TODO pgup/pgdown go to the same location
+** TODO Go to matching paren
+** TODO Gentle navigation
+** TODO highlight symbols (=*=, =#=)
 - https://github.com/nschum/highlight-symbol.el
-** TODO: move to previous/next edit location
-** TODO: ace-link
+** TODO move to previous/next edit location
+** TODO ace-link
 - https://github.com/abo-abo/ace-link
 ** =C-a= / =home= and =C-e= / =end= keys move to the beginning/end of the line smartly
 
@@ -807,6 +817,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("C-x c o" . helm-occur)
   ("C-x c /" . helm-projectile-ag)
   ("C-x c k" . helm-show-kill-ring)
+  ("M-i" . helm-imenu)
   :map helm-map
   ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
   ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
@@ -824,8 +835,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 *** Project files with =helm-ls-git=
-
-TODO: how is this connected to [[https://github.com/bbatsov/helm-projectile][helm-projectile]]?
+**** TODO how is this connected to [[https://github.com/bbatsov/helm-projectile][helm-projectile]]?
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-ls-git
@@ -845,20 +855,30 @@ TODO: how is this connected to [[https://github.com/bbatsov/helm-projectile][hel
 #+END_SRC
 
 *** Other
+**** TODO helm-dictionary
+**** TODO helm-addressbook / helm-mu
+**** TODO helm-c-yasnippet
+**** TODO imenu-anywhere
+**** TODO helm-bibtex
+**** TODO helm-dash
+**** helm-xref
 
-TODO: helm-dictionary
-TODO: helm-addressbook / helm-mu
-TODO: helm-c-yasnippet
-TODO: imenu-anywhere
-TODO: helm-bibtex
-TODO: helm-dash
-TODO: helm-xref
-TODO: helm-flycheck
-TODO: swiper-helm
-TODO: [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
-TODO: helm-projectile
-TODO: helm-lsp
-TODO: https://github.com/ganmacs/emacs-surround
+#+BEGIN_SRC emacs-lisp
+(use-package helm-xref
+  :ensure t
+  :defer t
+  :commands helm-xref-show-xrefs
+  :custom
+  (xref-show-xrefs-function 'helm-xref-show-xrefs))
+#+END_SRC
+
+**** TODO helm-flycheck
+**** TODO swiper-helm
+**** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
+**** TODO helm-projectile
+**** TODO helm-lsp
+**** TODO https://github.com/ganmacs/emacs-surround
+**** flyspell
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell-correct-helm
@@ -866,12 +886,13 @@ TODO: https://github.com/ganmacs/emacs-surround
   :init
   (setq flyspell-correct-interface #'flyspell-correct-helm))
 #+END_SRC
-** TODO: text objects
+
+** TODO text objects
 - https://github.com/clemera/objed
 * Search and replace
-** TODO: search using swoop
+** TODO search using swoop
 - https://github.com/ShingoFukuyama/helm-swoop
-** TODO: replace
+** TODO replace
 - is the visual regexp good enough?
 * Toggles (=C-x t=)
 ** Setup =C-x t= micro state                                         :hydra:
@@ -898,8 +919,8 @@ TODO: https://github.com/ganmacs/emacs-surround
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x t") 'hydra-toggle/body)
 #+END_SRC
-* TODO: Mouse
-* TODO: Bookmarks
+* TODO Mouse
+* TODO Bookmarks
 
 #+BEGIN_SRC
 (setq
@@ -907,7 +928,7 @@ TODO: https://github.com/ganmacs/emacs-surround
  bookmark-save-flag                      t
  bookmark-default-file              (concat temp-dir "/bookmarks"))
 #+END_SRC
-* TODO: Projects
+* TODO Projects
 * Packages
 ** iqa - quick access to config file
 
@@ -928,7 +949,7 @@ TODO: https://github.com/ganmacs/emacs-surround
   ([remap list-buffers] . ibuffer))
 #+END_SRC
 
-**** TODO: hydra
+**** TODO hydra
 - https://github.com/abo-abo/hydra#the-impressive-looking-one
 ** which-key
 
@@ -942,6 +963,7 @@ TODO: https://github.com/ganmacs/emacs-surround
 #+END_SRC
 
 ** dired
+*** Settings
 
 Auto refresh dired
 #+BEGIN_SRC emacs-lisp
@@ -954,8 +976,9 @@ Auto refresh dired
 )
 #+END_SRC
 
-**** TODO hydra
-
+*** TODO hydra
+** info
+*** TODO hydra
 ** diff
 
 #+BEGIN_SRC emacs-lisp
@@ -1105,8 +1128,8 @@ The following is the _official_ way to fix it:
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
             (define-key yas/keymap [tab] 'yas/next-field)))
 #+END_SRC
-** TODO: org-ref
-** TODO: images
+** TODO org-ref
+** TODO images
 - https://github.com/abo-abo/org-download
 * Languages
 ** General
@@ -1202,30 +1225,26 @@ $ccls/call
 (ccls-inheritance-hierarchy nil) ; base hierarchy
 (ccls-inheritance-hierarchy t) ; derived hierarchy
 
+** TODO scala
 - just code highlighting
-** TODO: C/C++
-- using lsp and [[https://github.com/emacs-lsp/dap-mode][dap]]
-** TODO: R
+** TODO R
 - ESS or lsp
 * Applications
-** TODO: agenda / calendar
-** TODO: email
-** TODO: elfeed
+** TODO agenda / calendar
+** TODO email
+** TODO elfeed
 - https://github.com/abo-abo/elfeed
 * Appearance
 ** Theme
-
-TODO: better contrast between hl-line and region
-TODO: rainbow parens
 
 #+BEGIN_SRC emacs-lisp
 (use-package base16-theme
   :ensure t
   :config
   (load-theme 'base16-oceanicnext t))
-
 #+END_SRC
 
+*** TODO better contrast between hl-line and region
 ** Font
 
 TODO: font size hydra
@@ -1238,8 +1257,8 @@ TODO: font size hydra
 #+END_SRC
 
 ** Modeline
-TODO: do I actually need any modeline?
-TODO: if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
+*** TODO better modeline?
+- if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package doom-modeline
   :ensure t
@@ -1251,9 +1270,10 @@ TODO: if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline
   (doom-modeline-icon t))
 #+END_SRC
 ** Cursor
-TODO: bar cursor pink
+*** TODO bar cursor
+*** TODO pink cursor
 ** Colors
-- TODO: better TODO colors
+*** TODO better TODO colors
 * Troubleshooting
 ** Invalid function: =org-preserve-local-variables=
 
