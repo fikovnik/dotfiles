@@ -305,6 +305,61 @@ Answering just 'y' or 'n' will do
 ** Info
 TODO: add hydra
 * Editing
+** Copy and paste
+*** Functions
+
+These functions allow to C&P to the system clipboard using either terminal
+escape code or xsel command if running in GUI.
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/copy-to-xclipboard ()
+  (interactive)
+  (if (use-region-p)
+      (if (not (display-graphic-p))
+          (letrec ((s (buffer-substring-no-properties (region-beginning) (region-end)))
+                   (s-length (+ (* (length s) 3) 2)))
+            (if (<= s-length 16384) ; magic number set to the same as ESC_BUF_SIZ of suckless termial (st.c)
+                (progn
+                  (send-string-to-terminal (concat "\e]52;c;"
+                                                   (base64-encode-string (encode-coding-string s 'utf-8) t)
+                                                   "\07"))
+                  (message "Yanked region to terminal clipboard")
+                  (deactivate-mark))
+              (message "Selection too long (%d) to send to terminal." s-length)))
+        (if (= 0 (shell-command-on-region (region-beginning) (region-end) "xsel -i -b"))
+            (message "Yanked region to X-clipboard")
+          (error "Is program `xsel' installed?")))
+    (message "Nothing to yank to terminal clipboard")))
+
+(defun fikovnik/cut-to-xclipboard ()
+  (interactive)
+  (my-copy-to-xclipboard)
+  (kill-region (region-beginning) (region-end)))
+
+(defun fikovnik/paste-from-xclipboard ()
+  "Uses shell command `xsel -o' to paste from x-clipboard. With
+one prefix arg, pastes from X-PRIMARY, and with two prefix args,
+pastes from X-SECONDARY."
+  (interactive)
+  (if (display-graphic-p)
+      (clipboard-yank)
+    (letrec
+        ((opt (prefix-numeric-value current-prefix-arg))
+         (opt (cond
+               ((=  1 opt) "b")
+               ((=  4 opt) "p")
+               ((= 16 opt) "s"))))
+(insert (shell-command-to-string (concat "xsel -o -" opt))))))
+#+END_SRC
+
+*** Bind keys
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-S-x") 'fikovnik/cut-to-xclipboard)
+(global-set-key (kbd "C-S-c") 'fikovnik/copy-to-xclipboard)
+(global-set-key (kbd "C-S-v") 'fikovnik/paste-from-xclipboard)
+#+END_SRC
+
 ** Fill/unfill paragraph
 
 #+BEGIN_SRC emacs-lisp
