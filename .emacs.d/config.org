@@ -28,11 +28,16 @@ TODO: descrive the idea behind this configuration
 
 ** Other keys
 
-| Key         | Description                          | Function      |
-|-------------+--------------------------------------+---------------|
-| =C-c left=  | Undo changes in window configuration | =winner-undo= |
-| =C-c right= | Redo changes in window configuration | =winner-redo= |
-| =C-x o=     | Jump to a window                     | =ace-window=  |
+| Key         | Description                          | Function                                       |
+|-------------+--------------------------------------+------------------------------------------------|
+| =C-c left=  | Undo changes in window configuration | =winner-undo=                                  |
+| =C-c right= | Redo changes in window configuration | =winner-redo=                                  |
+| =C-x o=     | Jump to a window                     | =ace-window=                                   |
+| =C-;=       | Comment or un-comment code           | =fikovnik/comment-or-uncomment-line-or-region= |
+
+#+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "C-;"))
+#+END_SRC
 
 * Sources
 TODO: clean and describe
@@ -296,22 +301,6 @@ Answering just 'y' or 'n' will do
           'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
 
-*** TODO: Commenting / un-commenting
-
-#+begin_src
-(defun sensible-defaults/comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if
-there's no active region."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-        (setq beg (region-beginning) end (region-end))
-      (setq beg (line-beginning-position) end (line-end-position)))
-(comment-or-uncomment-region beg end)))
-
-(global-set-key (kbd "M-;")
-'sensible-defaults/comment-or-uncomment-region-or-line)
-#+end_src
 *** TODO: popwin
 ** Info
 TODO: add hydra
@@ -361,7 +350,6 @@ TODO: fix this in org-mode which takes over this binding
   ("M-S-<down>" . md-duplicate-down))
 #+END_SRC
 
-** TODO comment lines
 ** Join lines
 
 The =join-line= command (aliased to =delete-indentation=) works from the last
@@ -390,6 +378,27 @@ line to be joined upwards. I prefer the other way around (cf. [[https://emacsred
 |---------+----------------------------------------------------|
 | =C-PEM= | To insert a blank line *above* the line you're on. |
 | =C-EM=  | To insert a blank line *below* the line you're on. |
+
+** Comment / un-comment lines
+
+First, define a function taken from [[https://stackoverflow.com/a/11517584/219584][here]]:
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/comment-or-uncomment-line-or-region ()
+  "Comments or uncomments the current line or region."
+  (interactive)
+  (if (region-active-p)
+      (comment-or-uncomment-region (region-beginning) (region-end))
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+#+END_SRC
+
+Bind it to =C-;=. 
+
+TODO: this does not work so far, because in the terminal =C-;= is seen as =;= only.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-;") 'fikovnik/comment-or-uncomment-line-or-region)
+#+END_SRC
 
 ** TODO gentle movement
 ** TODO Spell checking
