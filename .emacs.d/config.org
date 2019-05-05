@@ -897,6 +897,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("C-x c o" . helm-occur)
   ("C-x c /" . helm-projectile-ag)
   ("C-x c k" . helm-show-kill-ring)
+  ("M-y" . helm-show-kill-ring)
   ("M-i" . helm-imenu)
   :map helm-map
   ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
