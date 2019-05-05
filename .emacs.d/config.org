@@ -943,8 +943,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   :config
   (helm-autoresize-mode 1)
   (helm-mode 1)
-  :hook
-  (helm-minibuffer-set-up-hook . fikovnik/helm-hide-minibuffer-maybe)
+  (add-hook 'helm-minibuffer-set-up-hook #'fikovnik/helm-hide-minibuffer-maybe)
   :bind
   (("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
@@ -1154,12 +1153,13 @@ Auto refresh dired
 (use-package diff-hl
   :ensure t
   :hook
-  ((magit-post-refresh . diff-hl-magit-post-refresh)
-   (prog-mode . diff-hl-mode)
+  ((prog-mode . diff-hl-mode)
    (prog-mode . diff-hl-margin-mode)
    (org-mode . diff-hl-mode)
    (org-mode . diff-hl-margin-mode)
-   (dired-mode . diff-hl-dired-mode)))
+   (dired-mode . diff-hl-dired-mode))
+  :config
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 #+END_SRC
 
 ** Support for my local dot-file config
@@ -1397,8 +1397,8 @@ TODO: font size hydra
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package doom-modeline
   :ensure t
-  :hook
-  (after-init . doom-modeline-init)
+  :config
+  (add-hook 'after-init-hook #'doom-modeline-init)
   :custom
   (doom-modeline-major-mode-icon t)
   (doom-modeline-buffer-file-name-style 'buffer-name)
