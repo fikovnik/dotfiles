@@ -1053,8 +1053,100 @@ The following is the _official_ way to fix it:
 ** TODO: org-ref
 ** TODO: images
 - https://github.com/abo-abo/org-download
-* Programming
-** TODO: scala
+* Languages
+** General
+*** Enable [[https://github.com/flycheck/flycheck][flycheck]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+#+END_SRC
+
+*** Enable LSP
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :defer t
+  :custom
+  (lsp-prefer-flymake nil)
+  :commands lsp)
+
+(use-package lsp-ui
+  :ensure t
+  :defer t
+  :commands lsp-ui-mode)
+
+(use-package company-lsp
+  :ensure t
+  :defer t
+  :custom
+  (company-transformers nil)
+  (company-lsp-async t)
+  (company-lsp-cache-candidates nil)
+  :commands company-lsp)
+#+END_SRC
+
+| Key     | Description      | Function                |
+|---------+------------------+-------------------------|
+| =M-.=   | Find definitions | =xref-find-definitions= |
+| =M-?=   | Find references  | =xref-find-references=  |
+| =C-M-.= |                  | =xref-find-apropos=     |
+
+*** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]]
+** C/C++
+*** Backend
+
+Use [[https://github.com/MaskRay/ccls/wiki/lsp-mode][ccls]] as the backend for C/C++.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ccls
+  :ensure t
+  :defer t
+  :custom
+  (ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
+  ;; no semantic highlighting
+  (ccls-sem-highlight-method nil)
+  :config
+  (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc))
+  :hook
+  ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
+#+END_SRC
+
+Not sure why it is needed, but without I get =lsp--location-to-td-position:
+Wrong type argument: hash-table-p, nil=, cf. [[https://github.com/MaskRay/emacs-ccls/issues/17][emacs-ccls:#17]]
+
+#+BEGIN_SRC emacs-lisp
+(setq xref-prompt-for-identifier
+      '(not xref-find-definitions
+            xref-find-definitions-other-window
+            xref-find-definitions-other-frame
+            xref-find-references))
+#+END_SRC
+
+*** TODO Semantic movement
+
+Bind these to some keys?
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(ccls-navigate "D") ;; roughly sp-down-sexp
+(ccls-navigate "L")
+(ccls-navigate "R")
+(ccls-navigate "U")
+#+END_SRC
+
+*** TODO C++ hierarchy
+ccls-member-hierarchy $ccls/member hierarchy:true
+
+(ccls-call-hierarchy nil) ; caller hierarchy
+(ccls-call-hierarchy t) ; callee hierarchy
+
+$ccls/call
+
+(ccls-inheritance-hierarchy nil) ; base hierarchy
+(ccls-inheritance-hierarchy t) ; derived hierarchy
+
 - just code highlighting
 ** TODO: C/C++
 - using lsp and [[https://github.com/emacs-lsp/dap-mode][dap]]
