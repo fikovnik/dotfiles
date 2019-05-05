@@ -74,6 +74,20 @@ some operations faster, although I never tested it.
 (setq gc-cons-threshold (* 128 1024 1024))
 #+END_SRC
 
+** Variables
+
+#+BEGIN_SRC emacs-lisp
+(defvar fikovnik/backup-dir (expand-file-name "backups" user-emacs-directory)
+  "backup directory")
+(defvar fikovnik/savefile-dir (expand-file-name "savefile" user-emacs-directory)
+  "backup directory")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(unless (file-exists-p fikovnik/savefile-dir)
+  (make-directory fikovnik/savefile-dir))
+#+END_SRC
+
 ** Customize file =custom.el=                                          :wip:
 
 Set up the customize file to its own separate file, instead of saving
@@ -140,7 +154,7 @@ These functions are useful so activate them.
 #+BEGIN_SRC emacs-lisp
 (setq
       auto-save-list-file-name           (concat user-emacs-directory "/autosave")
-      backup-directory-alist            `((".*" . ,(concat user-emacs-directory "/backups/")))
+      backup-directory-alist            `((".*" . ,fikovnik/backup-dir))
       ;;auto-save-file-name-transforms    `((".*" ,(concat user-emacs-directory "/auto-save-list/") t))
       version-control                    t
       backup-by-copying                  t
@@ -154,6 +168,7 @@ These functions are useful so activate them.
       create-lockfiles                   nil
 )
 #+END_SRC
+
 ** TODO Auto save like in Intellij
 
 Once the file backup is finished, auto save current buffer on:
@@ -213,8 +228,6 @@ Answering just 'y' or 'n' will do
       ;; single space to indicate end of a sentance
       sentence-end-double-space           nil
       x-select-enable-clipboard           t
-      ;; use forward slashes in the unique buffer name
-      uniquify-buffer-name-style          'forward
       ;; -i gets alias definitions from shell
       shell-command-switch                "-ic"
       echo-keystrokes                     0.1
@@ -277,6 +290,30 @@ Answering just 'y' or 'n' will do
 #+END_SRC
 
 *** TODO popwin
+*** Saveplace
+
+This remembers your location in a file when saving files.
+
+#+BEGIN_SRC emacs-lisp
+(use-package saveplace
+  :custom
+  (save-place-file (expand-file-name "saveplace" fikovnik/savefile-dir)))
+
+(save-place-mode 1)
+#+END_SRC
+*** Meaningful names for buffers with the same name
+
+#+BEGIN_SRC emacs-lisp
+(setq uniquify-buffer-name-style 'forward
+      uniquify-separator "/"
+      ;; rename after killing uniquified
+      uniquify-after-kill-buffer-p t
+      ;; don't muck with special buffers
+      uniquify-ignore-buffers-re "^\\*")
+#+END_SRC
+
+#+END_SRC
+
 * Editing
 ** Deleting spaces
 
