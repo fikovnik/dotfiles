@@ -292,8 +292,16 @@ Answering just 'y' or 'n' will do
           'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
 
-*** TODO popwin
-*** Saveplace
+*** Popup window management
+
+#+BEGIN_SRC emacs-lisp
+(use-package popwin
+  :ensure t
+  :config
+  (popwin-mode 1))
+#+END_SRC
+
+*** Save placesss
 
 This remembers your location in a file when saving files.
 
