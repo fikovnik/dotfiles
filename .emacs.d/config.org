@@ -615,7 +615,27 @@ selection defined above.
 *** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
 
 ** TODO delete syntax
-** TODO spell checking
+** Spell checking
+*** Configuration
+
+Spell check using aspell.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell
+  :custom
+  (ispell-program-name "aspell")
+  (ispell-extra-args '("--sug-mode=ultra")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell-correct-helm
+  :ensure t
+  :defer t
+  :bind ("C-M-;" . flyspell-correct-wrapper)
+  :custom
+  (flyspell-correct-interface #'flyspell-correct-helm))
+#+END_SRC
+
 ** TODO surround
 - https://github.com/ganmacs/emacs-surround
 ** TODO rainbow parameters
@@ -969,14 +989,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 **** TODO helm-projectile
 **** TODO helm-lsp
 **** TODO https://github.com/ganmacs/emacs-surround
-**** flyspell
-
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell-correct-helm
-  :bind ("C-M-;" . flyspell-correct-wrapper)
-  :init
-  (setq flyspell-correct-interface #'flyspell-correct-helm))
-#+END_SRC
 
 ** TODO text objects
 - https://github.com/clemera/objed
