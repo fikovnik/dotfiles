@@ -1291,17 +1291,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 ("C-x p a" . helm-projectile-find-other-file))
 #+END_SRC
 
-**** helm-lsp
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-lsp
-  :ensure t
-  :defer t
-  :bind
-  ("C-x p s" . helm-lsp-workspace-symbol)
-  ("C-x p S" . helm-lsp-global-workspace-symbol))
-#+END_SRC
-
 **** TODO https://github.com/ganmacs/emacs-surround
 ** TODO text objects
 - https://github.com/clemera/objed
