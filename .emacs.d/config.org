@@ -910,6 +910,9 @@ Spell check using aspell.
 | =C-x o=     | Select window using Avy              | =ace-window=  |
 
 *** Selecting windows
+
+**** Windmove
+
 Windmove defines functions to easily select windows. We do not use the default
 keybinding, instead it is bound by the =hydra-window=.
 
@@ -917,7 +920,24 @@ keybinding, instead it is bound by the =hydra-window=.
 (use-package windmove
   :ensure t
   :custom
-  (windmove-wrap-around t))
+  (windmove-wrap-around t)
+  :config
+  (windmove-default-keybindings)
+  (add-hook 'org-shiftup-final-hook 'windmove-up)
+  (add-hook 'org-shiftleft-final-hook 'windmove-left)
+  (add-hook 'org-shiftdown-final-hook 'windmove-down)
+  (add-hook 'org-shiftright-final-hook 'windmove-right))
+#+END_SRC
+
+**** Other window, previous on =C-,= and =C-.=
+
+#+BEGIN_SRC emacs-lisp
+(defun prev-window ()
+  (interactive)
+  (other-window -1))
+
+(global-set-key (kbd "C-,") #'prev-window)
+(global-set-key (kbd "C-.") #'other-window)
 #+END_SRC
 
 *** Save window layout stack using the =winner-mode=
@@ -956,7 +976,7 @@ default =other-window= command.
   :config
   (set-face-attribute 'aw-leading-char-face nil :weight 'bold)
   :bind
-  ([remap other-window] . ace-window))
+  ("C-x o" . ace-window))
 #+END_SRC
 
 *** Setup =C-x w= micro state                                       :hydra:
