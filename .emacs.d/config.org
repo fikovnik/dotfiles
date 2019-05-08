@@ -60,6 +60,40 @@ I like lexical scoping, but not sure if this actually really does anything.
 #+BEGIN_SRC emacs-lisp
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
+** Global variables
+
+#+BEGIN_SRC emacs-lisp
+(defvar fikovnik/my-keys nil
+  "The list of keys to be mapped as pairs of keySym and ascii code")
+
+(defvar fikovnik/st-dir nil
+  "The location of st terminal sources")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq fikovnik/st-dir "~/Projects/st"
+      fikovnik/my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
+                         (?:  "XK_colon"        ("C-S" "C-M-S"))
+                         (?'  "XK_apostrophe"   ("C" "C-M"))
+                         (?\" "XK_quotedbl"     ("C-S" "C-M-S"))
+                         (?.  "XK_period"       ("C" "C-M"))
+                         (?,  "XK_comma"        ("C" "C-M"))
+                         (?=  "XK_equal"        ("C" "C-M"))
+                         (?<  "XK_less"         ("C-S" "C-M-S"))
+                         (?>  "XK_greater"      ("C-S" "C-M-S"))
+                         (??  "XK_question"     ("C-S" "C-M-S"))
+                         (?/  "XK_slash"        ("C" "C-M"))
+                         (?\\ "XK_backslash"    ("C" "C-M"))
+                         (?|  "XK_bar"          ("C-S" "C-M-S"))
+                         (?~  "XK_asciitilde"   ("C-S" "C-M-S"))
+                         (?`  "XK_grave"        ("C" "C-S"))
+                         (?{  "XK_braceleft"    ("C-S" "C-M-S"))
+                         (?}  "XK_braceright"   ("C-S" "C-M-S"))
+                         (?\] "XK_bracketright" ("C" "C-M"))
+                         (?I  "XK_I"            ("C-S" "C-M-S"))
+                         (?M  "XK_M"            ("C-S" "C-M-S"))
+                         (?J  "XK_J"            ("C-S" "C-M-S"))))
+#+END_SRC
 
 ** GC threshold
 
@@ -69,6 +103,204 @@ some operations faster, although I never tested it.
 #+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold (* 128 1024 1024))
 #+END_SRC
+** Input map
+
+This is only for Terminal User Interface.
+
+*** Overview
+
+There are several problems in handling key events in the current terminal
+emulators. For example:
+- it is not possible to use modifiers other than =C-= and =M-=,
+- the =C-= modifier encodes lower or upper-case letters identically,
+- special names for some ASCII characters collide with =C-= modified letters (e.g., a tab is =C-i=),
+- there is no reliable way to use multiple modifier keys, other than, =M-S-=,
+- some keys cannot be used with =C-= modifier, eg., =;=, =.=, =/=.
+
+The reason for all of this is that there is no standard for these _corner_
+cases. There has been a several proposals:
+- [[http://www.leonerd.org.uk/hacks/fixterms/][Paul Evan's fixterms]]
+- [[https://sw.kovidgoyal.net/kitty/protocol-extensions.html#extensions-to-the-xterm-protocol][Kitty extension to xterm protocol]]
+- [[https://github.com/CyberShadow/term-keys][term-keys package]]
+- xterm using [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:formatOtherKeys][formatOtherKeys]] and [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:modifyOtherKeys][modifyOtherKeys]] class set
+
+I decided to use Paul's fixterm proposition. It works as follows: for each key
+combination that is not expressible in the current schema it will use the
+following sequence:
+
+#+BEGIN_SRC text
+ESC[<key>;<mod>u
+#+END_SRC
+
+where
+- =key= is the ACSII decimal value of the key
+- =mod= is 1 + bitmask encoding of the modifiers
+  - =S-= = 1
+  - =M-= = 2
+  - =C-= = 4
+
+For example, =C-;= sends =\e[59;5u=.
+
+Xterm can do that as well with =formatOtherKeys:1=, which can be verified using:
+
+#+BEGIN_SRC sh :tangle no
+xterm -xrm '*modifyOtherKeys:1' -xrm '*formatOtherKeys:1' -e cat -v
+#+END_SRC
+
+- With =modifyOtherKeys:2= it can do even =C-m=, =C-j= and =C-i=:
+  - =C-m= -- =109;5u=
+  - =C-S-m= -- =77;6u=
+  - =C-i= -- =105;5u=
+  - =C-S-i= -- =73;6u=
+  - =C-j= -- =106;5u=
+  - =C-S-j= -- =74;5u=
+  - =C-`= -- =96;5u=
+  - =C-\= -- =92;5u=
+
+For my solution to work, two components need to be updated:
+1. the terminal emulator
+2. the emacs's =input-decode-map=
+
+*** Terminal - st
+
+In [[https://st.suckless.org/][st]] (my terminal of choice), one has to modify two places:
+1. =mappedkeys= variable in =config.h= which contains a list of
+   custom-mapped keys:
+
+   #+BEGIN_SRC c :tangle no
+   XK_semicolon
+   #+END_SRC
+
+2. =keys= variable in =config.h= containing the actual mapping:
+
+   #+BEGIN_SRC c :tangle no
+   {XK_semicolon, ControlMask, "\033[59;5u", 0, 0}
+   #+END_SRC
+
+*** Emacs
+
+In emacs we only need to add the corresponding binding into the
+=input-decode-map=:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(define-key input-decode-map "\e[59;5u" (kbd "C-;"))
+#+END_SRC
+
+*** Actual configuration
+**** Auxiliary functions
+
+#+BEGIN_SRC emacs-lisp
+(defun flatten (list-of-lists)
+  (apply #'append list-of-lists))
+
+(defun join (sep lst)
+   (mapconcat 'identity lst sep))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defconst fikovnik/-my-keys-prefix "\033["
+  "Escape code sequence prefix")
+
+(defconst fikovnik/-my-keys-suffix "u"
+  "Escape code sequence suffix")
+
+(defconst fikovnik/-my-keys-modifiers
+  '(("C"     . ("ControlMask"                        5))
+    ("C-S"   . ("ControlMask | ShiftMask"            6))
+    ("C-M"   . ("ControlMask | Mod1Mask"             7))
+    ("C-M-S" . ("ControlMask | Mod1Mask | ShiftMask" 8)))
+  "The key modifiers as triplets of st emacs name, st name and code")
+
+(defun fikovnik/-encode-key-mod (key-code mod-code)
+  (format "%s%d;%d%s" fikovnik/-my-keys-prefix key-code mod-code fikovnik/-my-keys-suffix)) 
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/-iterate-keys (fun)
+  (flatten
+   (mapcar 
+    (lambda (key)
+      (let ((key-code (car key))
+            (key-sym (cadr key))
+            (mods (caddr key)))
+        (mapcar 
+         (lambda (mod) 
+           (let ((mod-info (cdr (assoc mod fikovnik/-my-keys-modifiers))))
+             (funcall fun key-code key-sym mod mod-info)))
+         mods)))
+    fikovnik/my-keys)))
+#+END_SRC
+
+**** Functions for st
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/-escape-string (s)
+  (mapconcat 
+   (lambda (x) 
+     (if (and (>= x 32) (<= x 255))
+         (format "%c" x) 
+       (format "\\x%02X" x)))
+   (append s nil)
+   ""))
+
+(defun fikovnik/-st-encode-keys ()
+  (delete-dups
+   (fikovnik/-iterate-keys
+    (lambda (key-code key-sym mod mod-info)
+      (let ((mod-sym (car mod-info))
+            (mod-code (cadr mod-info)))
+        (format "{%s, %s, \"%s\", 0, 0}"
+                key-sym
+                mod-sym
+                (fikovnik/-escape-string (fikovnik/-encode-key-mod key-code mod-code))))))))
+
+(defun fikovnik/-st-encode-mapped-keys ()
+  (delete-dups
+   (fikovnik/-iterate-keys
+    (lambda (key-code key-sym mod mod-info) 
+      (format "%s" key-sym)))))
+
+(defun fikovnik/st-sync-mapped-keys ()
+  (interactive)
+  (with-temp-buffer
+    (insert (concat (join ",\n" (fikovnik/-st-encode-keys)) ",\n"))
+    (write-region (point-min) (point-max) (expand-file-name "my-keys.h" fikovnik/st-dir)))
+  
+  (with-temp-buffer
+    (insert (concat (join ",\n" (fikovnik/-st-encode-mapped-keys)) ",\n"))
+    (write-region (point-min) (point-max) (expand-file-name "my-mapped-keys.h" fikovnik/st-dir))))
+#+END_SRC
+
+**** Updating Emacs
+
+Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html][input-decode-map]].
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/emacs-encode-keys ()
+  (fikovnik/-iterate-keys
+   (lambda (key-code key-sym mod mod-info)
+     (let* ((mod-code (cadr mod-info))
+            (input (fikovnik/-encode-key-mod key-code mod-code))
+            (key (kbd (format "%s-%c" mod key-code))))
+       (message "binding: %s-%c to %s" mod key-code input)
+       ;(define-key input-decode-map input key)
+       (define-key xterm-function-map input key)
+       (global-unset-key key)))))
+
+(eval-after-load "xterm" '(fikovnik/emacs-encode-keys))
+;;(unless (display-graphic-p)
+;;  (fikovnik/emacs-encode-keys))
+#+END_SRC
+
+**** TODO should this go the the xterm-function-map instead?
+- try it in GUI to see what works better
+- try it in Xterm
+- try term keys
+**** TODO is it possible to bind =C-S-M= =C-S-I=
+- I'm not sure why it is not possible to bind these keys.
+- solution in [[https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957][SO-13957]] did not work for me
+- the point must be in binding the =\e[77;5u= to something else than =C-m= or
+  actually somehow make emacs treat =C-m= differently
 
 ** Variables
 
@@ -198,6 +430,12 @@ I guess all this is trying to say to use UTF-8 by default.
 ** Sensible defaults
 
 Taken mostly from the [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el]] and [[http://www.emacs-bootstrap.com/][emacs-bootstrap]].
+
+*** Eval expression
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-:") 'eval-expression)
+#+END_SRC
 
 *** Yes/No confirmation
 
