@@ -539,6 +539,8 @@ Answering just 'y' or 'n' will do
   (popwin-mode 1))
 #+END_SRC
 
+The package seems not to be maintained, an alternative might be [[https://github.com/wasamasa/shackle][shackle]].
+
 *** Save placesss
 
 This remembers your location in a file when saving files.
@@ -1264,7 +1266,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   (xref-show-xrefs-function 'helm-xref-show-xrefs))
 #+END_SRC
 
-**** TODO helm-flycheck
 **** TODO swiper-helm
 **** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
 **** helm-rg
@@ -1598,6 +1599,7 @@ The following is the _official_ way to fix it:
 ** TODO [[https://github.com/bastibe/org-journal][org-journal]]
 ** TODO org-projectile
 ** TODO org-present ?
+** TODO better refiling
 * Languages
 ** General
 *** Enable [[https://github.com/flycheck/flycheck][flycheck]]
