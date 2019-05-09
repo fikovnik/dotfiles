@@ -1558,9 +1558,41 @@ The following is the _official_ way to fix it:
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
             (define-key yas/keymap [tab] 'yas/next-field)))
 #+END_SRC
+** Babel
+
+#+BEGIN_SRC emacs-lisp
+(use-package ob
+  ;; it is a part of org-plus-contrib
+  :ensure nil
+  :defer t
+  :commands org-babel-load-languages
+  :custom
+  (org-babel-load-languages
+   '((shell . t)
+     (emacs-lisp . t)))
+  :init
+  (progn
+    (defun fikovnik/-org-babel-do-load-languages ()
+      "Load all the languages declared in `org-babel-load-languages'."
+      (message "BABEL")
+      (org-babel-do-load-languages 'org-babel-load-languages
+                                   org-babel-load-languages))
+    (add-hook 'org-mode-hook 'fikovnik/-org-babel-do-load-languages)))
+#+END_SRC
+
+*** TODO Fix redisplay of inline images after a code block evaluation.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)
+#+END_SRC
 ** TODO org-ref
 ** TODO images
 - https://github.com/abo-abo/org-download
+** TODO [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle]]
+** TODO [[https://github.com/alphapapa/org-sticky-header][org-sticky-header]]
+** TODO [[https://github.com/bastibe/org-journal][org-journal]]
+** TODO org-projectile
+** TODO org-present ?
 * Languages
 ** General
 *** Enable [[https://github.com/flycheck/flycheck][flycheck]]
