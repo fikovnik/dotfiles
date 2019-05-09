@@ -1747,18 +1747,17 @@ TODO: font size hydra
 As indicated in [[https://github.com/syl20bnr/spacemacs/issues/11801#issuecomment-451755821][spacemacs/11801]], the problem is in version misalignment which
 can be fixed by removing all =org-*/*.elc= files and compiling it again:
 
-#+BEGIN_SRC sh
-find org*/*.elc -print0 | xargs -0 rm
+#+BEGIN_SRC sh :tangle no
+find ~/.emacs.d/elpa/org*/*.elc -print0 | xargs -0 rm
 #+END_SRC
 
 And then running the following function
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results no
 (defun fikovnik/recompile-elpa ()
-  "Recompile packages in elpa directory. Useful if you switch
-   Emacs versions."
+  "Recompile packages in elpa directory"
   (interactive)
-  (byte-recompile-directory package-user-dir nil t))
+  (byte-recompile-directory package-user-dir 0 nil))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
