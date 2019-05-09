@@ -161,7 +161,7 @@ For my solution to work, two components need to be updated:
 1. the terminal emulator
 2. the emacs's =input-decode-map=
 
-*** Terminal - st
+**** Terminal - st
 
 In [[https://st.suckless.org/][st]] (my terminal of choice), one has to modify two places:
 1. =mappedkeys= variable in =config.h= which contains a list of
@@ -177,7 +177,7 @@ In [[https://st.suckless.org/][st]] (my terminal of choice), one has to modify t
    {XK_semicolon, ControlMask, "\033[59;5u", 0, 0}
    #+END_SRC
 
-*** Emacs
+**** Emacs
 
 In emacs we only need to add the corresponding binding into the
 =input-decode-map=:
@@ -186,7 +186,7 @@ In emacs we only need to add the corresponding binding into the
 (define-key input-decode-map "\e[59;5u" (kbd "C-;"))
 #+END_SRC
 
-*** Actual configuration
+*** Configuration
 **** Auxiliary functions
 
 #+BEGIN_SRC emacs-lisp
