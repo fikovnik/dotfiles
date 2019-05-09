@@ -1496,6 +1496,8 @@ and =--git-dir= options explicitly set. For this I define a new function
   :defer t
   ;; to be sure we have the latest Org version
   :ensure org-plus-contrib
+  :mode
+  ("\\.org$" . org-mode)
   :hook
   (org-mode . flyspell-mode)
   :custom
@@ -1515,7 +1517,10 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-log-reschedule 'time)
   (org-log-into-drawer t)
   (org-refile-targets (quote ((nil :maxlevel . 9) (org-agenda-files :maxlevel . 9))))
+  (org-refile-allow-creating-parent-nodes t)
+  (org-refile-use-outline-path t)
   (org-src-fontify-natively t)
+  (org-imenu-depth 8)
   (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
   (org-capture-templates
      '(("t" "Todo"         entry (file+headline "~/Notes/Journal/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
