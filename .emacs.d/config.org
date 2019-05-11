@@ -1596,7 +1596,6 @@ The following is the _official_ way to fix it:
   (progn
     (defun fikovnik/-org-babel-do-load-languages ()
       "Load all the languages declared in `org-babel-load-languages'."
-      (message "BABEL")
       (org-babel-do-load-languages 'org-babel-load-languages
                                    org-babel-load-languages))
     (add-hook 'org-mode-hook 'fikovnik/-org-babel-do-load-languages)))
