@@ -66,12 +66,16 @@ I like lexical scoping, but not sure if this actually really does anything.
 (defvar fikovnik/my-keys nil
   "The list of keys to be mapped as pairs of keySym and ascii code")
 
+(defvar fikovnik/my-keys-debug nil
+  "Toggle my-keys debugging")
+
 (defvar fikovnik/st-dir nil
   "The location of st terminal sources")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (setq fikovnik/st-dir "~/Projects/st"
+      fikovnik/my-keys-debug t
       fikovnik/my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
                          (?:  "XK_colon"        ("C-S" "C-M-S"))
                          (?'  "XK_apostrophe"   ("C" "C-M"))
@@ -94,6 +98,8 @@ I like lexical scoping, but not sure if this actually really does anything.
                          (?M  "XK_M"            ("C-S" "C-M-S"))
                          (?J  "XK_J"            ("C-S" "C-M-S"))))
 #+END_SRC
+
+*** TODO add C-<number>
 
 ** GC threshold
 
@@ -161,6 +167,14 @@ For my solution to work, two components need to be updated:
 1. the terminal emulator
 2. the emacs's =input-decode-map=
 
+Note that (from Emacs _Key Sequence Input_):
+#+BEGIN_QUOTE
+If an input character is upper-case (or has the shift modifier) and has no key
+binding, but its lower-case equivalent has one, then read-key-sequence'
+converts the character to lower case. Note that lookup-key' does not perform
+case conversion in this way.
+#+END_QUOTE
+
 **** Terminal - st
 
 In [[https://st.suckless.org/][st]] (my terminal of choice), one has to modify two places:
@@ -212,33 +226,33 @@ In emacs we only need to add the corresponding binding into the
   "The key modifiers as triplets of st emacs name, st name and code")
 
 (defun fikovnik/-encode-key-mod (key-code mod-code)
-  (format "%s%d;%d%s" fikovnik/-my-keys-prefix key-code mod-code fikovnik/-my-keys-suffix)) 
+  (format "%s%d;%d%s" fikovnik/-my-keys-prefix key-code mod-code fikovnik/-my-keys-suffix))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/-iterate-keys (fun)
   (flatten
-   (mapcar 
+   (mapcar
     (lambda (key)
       (let ((key-code (car key))
             (key-sym (cadr key))
             (mods (caddr key)))
-        (mapcar 
-         (lambda (mod) 
+        (mapcar
+         (lambda (mod)
            (let ((mod-info (cdr (assoc mod fikovnik/-my-keys-modifiers))))
              (funcall fun key-code key-sym mod mod-info)))
          mods)))
     fikovnik/my-keys)))
 #+END_SRC
 
-**** Functions for st
+**** Enabling my-keys in st
 
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/-escape-string (s)
-  (mapconcat 
-   (lambda (x) 
+  (mapconcat
+   (lambda (x)
      (if (and (>= x 32) (<= x 255))
-         (format "%c" x) 
+         (format "%c" x)
        (format "\\x%02X" x)))
    (append s nil)
    ""))
@@ -257,7 +271,7 @@ In emacs we only need to add the corresponding binding into the
 (defun fikovnik/-st-encode-mapped-keys ()
   (delete-dups
    (fikovnik/-iterate-keys
-    (lambda (key-code key-sym mod mod-info) 
+    (lambda (key-code key-sym mod mod-info)
       (format "%s" key-sym)))))
 
 (defun fikovnik/st-sync-mapped-keys ()
@@ -265,13 +279,13 @@ In emacs we only need to add the corresponding binding into the
   (with-temp-buffer
     (insert (concat (join ",\n" (fikovnik/-st-encode-keys)) ",\n"))
     (write-region (point-min) (point-max) (expand-file-name "my-keys.h" fikovnik/st-dir)))
-  
+
   (with-temp-buffer
     (insert (concat (join ",\n" (fikovnik/-st-encode-mapped-keys)) ",\n"))
     (write-region (point-min) (point-max) (expand-file-name "my-mapped-keys.h" fikovnik/st-dir))))
 #+END_SRC
 
-**** Updating Emacs
+**** Enabling my-keys in Emacs
 
 Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html][input-decode-map]].
 
@@ -281,13 +295,20 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
    (lambda (key-code key-sym mod mod-info)
      (let* ((mod-code (cadr mod-info))
             (input (fikovnik/-encode-key-mod key-code mod-code))
-            (key (kbd (format "%s-%c" mod key-code))))
-       (message "binding: %s-%c to %s" mod key-code input)
+            ;; we have to use [C-S-??], i.e. a vector of symbols instead of kbd
+            ;; to be able to map *all* keys including C-M, C-I, C-J
+            (key (vector (make-symbol (format "%s-%c" mod key-code)))))
+
+       (when fikovnik/my-keys-debug
+         (message "binding: %s (%s-%c) to %s" key mod key-code input))
+
        ;(define-key input-decode-map input key)
        (define-key xterm-function-map input key)
        (global-unset-key key)))))
 
-(eval-after-load "xterm" '(fikovnik/emacs-encode-keys))
+(when fikovnik/my-keys
+  (message "Enabling my-keys")
+  (eval-after-load "xterm" '(fikovnik/emacs-encode-keys)))
 ;;(unless (display-graphic-p)
 ;;  (fikovnik/emacs-encode-keys))
 #+END_SRC
@@ -296,11 +317,6 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
 - try it in GUI to see what works better
 - try it in Xterm
 - try term keys
-**** TODO is it possible to bind =C-S-M= =C-S-I=
-- I'm not sure why it is not possible to bind these keys.
-- solution in [[https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957][SO-13957]] did not work for me
-- the point must be in binding the =\e[77;5u= to something else than =C-m= or
-  actually somehow make emacs treat =C-m= differently
 
 ** Variables
 
@@ -568,7 +584,7 @@ This remembers your location in a file when saving files.
 #+BEGIN_SRC emacs-lisp
 ;; savehist keeps track of some history
 (use-package savehist
-  :custom 
+  :custom
   ;; search entries
   (savehist-additional-variables '(search-ring regexp-search-ring))
   ;; save every minute
