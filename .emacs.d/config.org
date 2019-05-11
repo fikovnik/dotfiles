@@ -1504,6 +1504,7 @@ and =--git-dir= options explicitly set. For this I define a new function
       (advice-add 'magit-mode-bury-buffer :after #'fikovnik/-dotfiles-remove-magit-config)
       (magit-status-setup-buffer home))))
 #+END_SRC
+*** TODO allow the =dotfiles-magit= work even if magit have not been initialized yet
 
 * Org
 ** Default setup
