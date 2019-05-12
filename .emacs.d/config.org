@@ -106,7 +106,17 @@ I like lexical scoping, but not sure if this actually really does anything.
 - It would be possible to map as well =C-j= but that is handy for inserting the
   new line literal (using =C-q=) for example for replace.
 
-*** TODO add C-<number>
+*** Add =C-<number>= and =C-M-<number>=
+
+#+BEGIN_SRC emacs-lisp
+(let ((nums '(1 2 3 4 5 6 7 8 9)))
+  (mapc (lambda (x)
+          ;; DEC 48 is '0' in ASCII table
+          (let* ((code (+ 48 x))
+                 (e (list code (format "XK_%d" x) (list "C" "C-M"))))
+            (setq fikovnik/my-keys (append fikovnik/my-keys (list e)))))
+        nums))
+#+END_SRC
 
 ** GC threshold
 
@@ -329,8 +339,7 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
          (message "binding: %s to %s (%s-%c)" input key mod key-code))
 
        ;(define-key input-decode-map input key)
-       (define-key xterm-function-map input key)
-       (global-unset-key key)))))
+       (define-key xterm-function-map input key)))))
 
 (when fikovnik/my-keys
   (message "Enabling my-keys")
