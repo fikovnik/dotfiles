@@ -332,6 +332,10 @@ case conversion in this way.
     (write-region (point-min) (point-max) (expand-file-name "my-mapped-keys.h" fikovnik/st-dir))))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle no
+(fikovnik/st-sync-mapped-keys)
+#+END_SRC
+
 **** Enabling my-keys in Emacs
 
 Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html][input-decode-map]].
