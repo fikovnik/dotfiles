@@ -96,8 +96,15 @@ I like lexical scoping, but not sure if this actually really does anything.
                          (?\] "XK_bracketright" ("C" "C-M"))
                          (?I  "XK_I"            ("C-S" "C-M-S"))
                          (?M  "XK_M"            ("C-S" "C-M-S"))
-                         (?J  "XK_J"            ("C-S" "C-M-S"))))
+                         (?J  "XK_J"            ("C-S" "C-M-S"))
+                         (?m  "XK_m"            ("C" "C-M")     (([C-m]) ([C-M-m])))
+                         (?i  "XK_i"            ("C" "C-M")     (([C-i]) ([C-M-i])))))
 #+END_SRC
+
+- The =C-m=, =C-M-m, =C-i= and =C-M-i= can be bind using symbol =[C-m]=, etc.
+  They are not =C-m=, but =<C-m>= from Emacs perspective.
+- It would be possible to map as well =C-j= but that is handy for inserting the
+  new line literal (using =C-q=) for example for replace.
 
 *** TODO add C-<number>
 
@@ -109,14 +116,14 @@ some operations faster, although I never tested it.
 #+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold (* 128 1024 1024))
 #+END_SRC
-** Input map
+** Input map in terminal
 
-This is only for Terminal User Interface.
+This section fixes key bindings in Emacs running in a terminal.
 
 *** Overview
 
-There are several problems in handling key events in the current terminal
-emulators. For example:
+There are several problems in handling key events in the current terminals. For
+example:
 - it is not possible to use modifiers other than =C-= and =M-=,
 - the =C-= modifier encodes lower or upper-case letters identically,
 - special names for some ASCII characters collide with =C-= modified letters (e.g., a tab is =C-i=),
@@ -128,18 +135,19 @@ cases. There has been a several proposals:
 - [[http://www.leonerd.org.uk/hacks/fixterms/][Paul Evan's fixterms]]
 - [[https://sw.kovidgoyal.net/kitty/protocol-extensions.html#extensions-to-the-xterm-protocol][Kitty extension to xterm protocol]]
 - [[https://github.com/CyberShadow/term-keys][term-keys package]]
-- xterm using [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:formatOtherKeys][formatOtherKeys]] and [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:modifyOtherKeys][modifyOtherKeys]] class set
+- XTerm's [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:formatOtherKeys][formatOtherKeys]] and [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:modifyOtherKeys][modifyOtherKeys]] classes
 
-I decided to use Paul's fixterm proposition. It works as follows: for each key
-combination that is not expressible in the current schema it will use the
-following sequence:
+I decided to use Paul's fixterm proposition (which is compatible with XTerm's
+solution given =formatOtherKeys= is set to 1). It works as follows: for each
+key combination that is not expressible in the current schema it will use the
+following escape sequence:
 
 #+BEGIN_SRC text
 ESC[<key>;<mod>u
 #+END_SRC
 
 where
-- =key= is the ACSII decimal value of the key
+- =key= is the ASCII decimal value of the key
 - =mod= is 1 + bitmask encoding of the modifiers
   - =S-= = 1
   - =M-= = 2
@@ -163,17 +171,9 @@ xterm -xrm '*modifyOtherKeys:1' -xrm '*formatOtherKeys:1' -e cat -v
   - =C-`= -- =96;5u=
   - =C-\= -- =92;5u=
 
-For my solution to work, two components need to be updated:
-1. the terminal emulator
+For this to work, two things need to be updated:
+1. the terminal emulator (st in my case)
 2. the emacs's =input-decode-map=
-
-Note that (from Emacs _Key Sequence Input_):
-#+BEGIN_QUOTE
-If an input character is upper-case (or has the shift modifier) and has no key
-binding, but its lower-case equivalent has one, then read-key-sequence'
-converts the character to lower case. Note that lookup-key' does not perform
-case conversion in this way.
-#+END_QUOTE
 
 **** Terminal - st
 
@@ -200,6 +200,22 @@ In emacs we only need to add the corresponding binding into the
 (define-key input-decode-map "\e[59;5u" (kbd "C-;"))
 #+END_SRC
 
+**** Notes about upper/lower keys binding
+
+From Emacs _Key Sequence Input_:
+
+#+BEGIN_QUOTE
+If an input character is upper-case (or has the shift modifier) and has no
+key binding, but its lower-case equivalent has one, then read-key-sequence'
+converts the character to lower case. Note that lookup-key' does not perform
+case conversion in this way.
+#+END_QUOTE
+**** Notes about [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Sequences.html#Key-Sequences][Key Sequences]] in Emacs
+- The Emacs Lisp representation for a key sequence is a string or vector.
+- The =kbd= macro returns a representation of a key sequence using some sort of
+  translation.
+- It is also possible to bind keys using a vector like =[C-S-M]= which will
+  create a =<C-M>= binding, a different from =C-S-M=.
 *** Configuration
 **** Auxiliary functions
 
@@ -209,6 +225,15 @@ In emacs we only need to add the corresponding binding into the
 
 (defun join (sep lst)
    (mapconcat 'identity lst sep))
+
+ (defun zip (xs ys)
+   (if (and (null xs) (null ys)) 
+       ()
+     (cons (cond
+            ((null xs) (cons '(nil) (car ys)))
+            ((null ys) (cons (car xs) '(nil)))
+            (t (cons (car xs) (car ys))))
+           (zip (cdr xs) (cdr ys)))))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -231,18 +256,20 @@ In emacs we only need to add the corresponding binding into the
 
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/-iterate-keys (fun)
-  (flatten
-   (mapcar
-    (lambda (key)
-      (let ((key-code (car key))
-            (key-sym (cadr key))
-            (mods (caddr key)))
-        (mapcar
-         (lambda (mod)
-           (let ((mod-info (cdr (assoc mod fikovnik/-my-keys-modifiers))))
-             (funcall fun key-code key-sym mod mod-info)))
-         mods)))
-    fikovnik/my-keys)))
+  (mapcan
+   (lambda (key)
+     (let ((key-code (car key))
+           (key-sym (cadr key))
+           (mods (caddr key))
+           (keys-emacs (cadddr key)))
+       (mapcar
+        (lambda (x)
+          (let* ((mod (car x))
+                 (key-emacs (cadr x))
+                 (mod-info (cdr (assoc mod fikovnik/-my-keys-modifiers))))
+            (funcall fun key-code key-sym mod mod-info key-emacs)))
+        (zip mods keys-emacs))))
+   fikovnik/my-keys))
 #+END_SRC
 
 **** Enabling my-keys in st
@@ -260,7 +287,7 @@ In emacs we only need to add the corresponding binding into the
 (defun fikovnik/-st-encode-keys ()
   (delete-dups
    (fikovnik/-iterate-keys
-    (lambda (key-code key-sym mod mod-info)
+    (lambda (key-code key-sym mod mod-info key-emacs)
       (let ((mod-sym (car mod-info))
             (mod-code (cadr mod-info)))
         (format "{%s, %s, \"%s\", 0, 0}"
@@ -271,7 +298,7 @@ In emacs we only need to add the corresponding binding into the
 (defun fikovnik/-st-encode-mapped-keys ()
   (delete-dups
    (fikovnik/-iterate-keys
-    (lambda (key-code key-sym mod mod-info)
+    (lambda (key-code key-sym mod mod-info key-emacs)
       (format "%s" key-sym)))))
 
 (defun fikovnik/st-sync-mapped-keys ()
@@ -292,15 +319,14 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
 #+BEGIN_SRC emacs-lisp
 (defun fikovnik/emacs-encode-keys ()
   (fikovnik/-iterate-keys
-   (lambda (key-code key-sym mod mod-info)
+   (lambda (key-code key-sym mod mod-info key-emacs)
      (let* ((mod-code (cadr mod-info))
             (input (fikovnik/-encode-key-mod key-code mod-code))
-            ;; we have to use [C-S-??], i.e. a vector of symbols instead of kbd
-            ;; to be able to map *all* keys including C-M, C-I, C-J
-            (key (vector (make-symbol (format "%s-%c" mod key-code)))))
-
+            (key (if (null key-emacs) 
+                     (kbd (format "%s-%c" mod key-code))
+                   key-emacs)))
        (when fikovnik/my-keys-debug
-         (message "binding: %s (%s-%c) to %s" key mod key-code input))
+         (message "binding: %s to %s (%s-%c)" input key mod key-code))
 
        ;(define-key input-decode-map input key)
        (define-key xterm-function-map input key)
@@ -317,7 +343,8 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
 - try it in GUI to see what works better
 - try it in Xterm
 - try term keys
-
+** TODO input map in GUI
+- sync it with terminal
 ** Variables
 
 #+BEGIN_SRC emacs-lisp
