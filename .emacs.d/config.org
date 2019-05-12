@@ -94,6 +94,8 @@ I like lexical scoping, but not sure if this actually really does anything.
                          (?{  "XK_braceleft"    ("C-S" "C-M-S"))
                          (?}  "XK_braceright"   ("C-S" "C-M-S"))
                          (?\] "XK_bracketright" ("C" "C-M"))
+                         (?\( "XK_parenleft"    ("C-S" "C-M-S"))
+                         (?\) "XK_parenright"   ("C-S" "C-M-S"))
                          (?I  "XK_I"            ("C-S" "C-M-S"))
                          (?M  "XK_M"            ("C-S" "C-M-S"))
                          (?J  "XK_J"            ("C-S" "C-M-S"))
