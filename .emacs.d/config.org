@@ -131,6 +131,11 @@ some operations faster, although I never tested it.
 #+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold (* 128 1024 1024))
 #+END_SRC
+** ST terminal
+Treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'term-file-aliases (quote ("st" . "xterm")))
+#+END_SRC
 ** Input map in terminal
 
 This section fixes key bindings in Emacs running in a terminal.
