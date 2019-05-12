@@ -96,6 +96,9 @@ I like lexical scoping, but not sure if this actually really does anything.
                          (?\] "XK_bracketright" ("C" "C-M"))
                          (?\( "XK_parenleft"    ("C-S" "C-M-S"))
                          (?\) "XK_parenright"   ("C-S" "C-M-S"))
+                         (?C  "XK_C"            ("C-S" "C-M-S"))
+                         (?X  "XK_X"            ("C-S" "C-M-S"))
+                         (?V  "XK_V"            ("C-S" "C-M-S"))
                          (?I  "XK_I"            ("C-S" "C-M-S"))
                          (?M  "XK_M"            ("C-S" "C-M-S"))
                          (?J  "XK_J"            ("C-S" "C-M-S"))
@@ -698,7 +701,7 @@ escape code or xsel command if running in GUI.
 
 (defun fikovnik/cut-to-xclipboard ()
   (interactive)
-  (my-copy-to-xclipboard)
+  (fikovnik/copy-to-xclipboard)
   (kill-region (region-beginning) (region-end)))
 
 (defun fikovnik/paste-from-xclipboard ()
@@ -719,10 +722,19 @@ pastes from X-SECONDARY."
 
 *** Bind keys
 
+Bind =C-S-X= to cut and =C-X-C= to copy.
+
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-S-x") 'fikovnik/cut-to-xclipboard)
-(global-set-key (kbd "C-S-c") 'fikovnik/copy-to-xclipboard)
-(global-set-key (kbd "C-S-v") 'fikovnik/paste-from-xclipboard)
+(global-set-key (kbd "C-S-X") 'fikovnik/cut-to-xclipboard)
+(global-set-key (kbd "C-S-C") 'fikovnik/copy-to-xclipboard)
+#+END_SRC
+
+The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
+is better to use the terminal paste since it will be a [[https://cirw.in/blog/bracketed-paste][bracketed paste]].
+
+#+BEGIN_SRC emacs-lisp
+(when (display-graphic-p)
+  (global-set-key (kbd "C-S-V") 'fikovnik/paste-from-xclipboard))
 #+END_SRC
 
 ** Fill/unfill paragraph
