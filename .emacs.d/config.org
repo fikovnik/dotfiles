@@ -954,9 +954,10 @@ selection defined above.
 **** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
 
 *** Hippie expand
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
 #+END_SRC
-*** TODO configure backends
-*** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
 
 ** TODO delete syntax
 ** Spell checking
