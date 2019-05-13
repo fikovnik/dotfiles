@@ -920,12 +920,18 @@ selection defined above.
 #+END_SRC
 
 ** Snippets
+
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :ensure t
+  :diminish yas-minor-mode
+  :commands yas-minor-mode
+  :config
+  (yas-reload-all)
   :init
   (yas-global-mode 1))
 #+end_src
+
 ** Auto completion
 
 #+BEGIN_SRC emacs-lisp
