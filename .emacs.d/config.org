@@ -1237,8 +1237,16 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 ** TODO pgup/pgdown go to the same location
 ** TODO Go to matching paren
 ** TODO Gentle navigation
-** TODO highlight symbols (=*=, =#=)
-- https://github.com/nschum/highlight-symbol.el
+** Highlight symbols (=M-*=)
+
+#+BEGIN_SRC emacs-lisp
+(use-package highlight-symbol
+  :diminish highlight-symbol-mode
+  :commands highlight-symbol
+  :bind
+  ("M-*" . highlight-symbol))
+#+END_SRC
+
 ** TODO move to previous/next edit location
 ** TODO ace-link
 - https://github.com/abo-abo/ace-link
