@@ -933,12 +933,27 @@ selection defined above.
 #+end_src
 
 ** Auto completion
+*** Company mode
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
+  :diminish company-mode
+  :custom
+  (company-dabbrev-ignore-case t)
+  (company-dabbrev-code-ignore-case t)
+  (company-dabbrev-downcase nil)
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
+  :bind (:map company-active-map
+              ([tab] . nil)
+              ("TAB" . nil)))
+#+END_SRC
+
+**** TODO configure backends
+**** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
+
+*** Hippie expand
 #+END_SRC
 *** TODO configure backends
 *** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
