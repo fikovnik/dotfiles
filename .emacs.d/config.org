@@ -1707,14 +1707,7 @@ The following is the _official_ way to fix it:
 ** TODO better refiling
 * Languages
 ** General
-*** Enable [[https://github.com/flycheck/flycheck][flycheck]]
-
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-#+END_SRC
-
+*** TODO Enable flymake
 *** Enable LSP
 
 #+BEGIN_SRC emacs-lisp
@@ -1722,7 +1715,7 @@ The following is the _official_ way to fix it:
   :ensure t
   :defer t
   :custom
-  (lsp-prefer-flymake nil)
+  (lsp-prefer-flymake t)
   :commands lsp)
 
 (use-package lsp-ui
