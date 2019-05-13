@@ -1708,6 +1708,16 @@ The following is the _official_ way to fix it:
 * Languages
 ** General
 *** TODO Enable flymake
+*** Documentation with eldoc
+
+#+BEGIN_SRC emacs-lisp
+(use-package eldoc
+  :ensure nil
+  :defer t
+  :diminish eldoc-mode
+  :commands eldoc-mode)
+#+END_SRC
+
 *** Enable LSP
 
 #+BEGIN_SRC emacs-lisp
