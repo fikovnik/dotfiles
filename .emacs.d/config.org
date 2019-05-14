@@ -980,15 +980,6 @@ Spell check using aspell.
   (ispell-extra-args '("--sug-mode=ultra")))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell-correct-helm
-  :ensure t
-  :defer t
-  :bind ("C-M-;" . flyspell-correct-wrapper)
-  :custom
-  (flyspell-correct-interface #'flyspell-correct-helm))
-#+END_SRC
-
 ** TODO surround
 - https://github.com/ganmacs/emacs-surround
 ** Rainbow delimiters
@@ -1327,17 +1318,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("<home>" . mwim-beginning)
   ("<end>" . mwim-end))
 #+END_SRC
-** Imenu
-
-#+BEGIN_SRC emacs-lisp
-(use-package imenu-anywhere
-  :ensure t
-  :defer t
-  :bind
-  ("M-i" . 'imenu-anywhere))
-#+END_SRC
-
 ** Helm
+*** TODO move higher and move helm-packages into proper categories
 *** Functions
 
 #+BEGIN_SRC emacs-lisp
@@ -1355,33 +1337,56 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 *** Basics
 
 #+BEGIN_SRC emacs-lisp
+(setq fikovnik/helm-key-map (make-sparse-keymap))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package helm
   :ensure t
   :custom
   (helm-echo-input-in-header-line        t)
-  (helm-ff-file-name-history-use-recentf t)
-  (helm-ff-skip-boring-files             t)
-  (helm-M-x-fuzzy-match                  t)
-  (helm-buffers-fuzzy-matching           t)
-  (helm-recentf-fuzzy-match              t)
-  (helm-split-window-in-side-p           t)
-  (helm-split-window-default-side        'below)
   (helm-move-to-line-cycle-in-source     t)
   (helm-idle-delay                       0.0)
   (helm-input-idle-delay                 0.01)
   (helm-quick-update                     t)
+  (helm-ff-file-name-history-use-recentf t)
+  (helm-ff-skip-boring-files             t)
+  ;; fuzzy matching
+  (helm-mode-fuzzy-match                 t)
+  (helm-completion-in-region-fuzzy-match t)
+  (helm-candidate-number-limit           100) 
+  ;; position
+  (helm-split-window-in-side-p           t)
+  (helm-split-window-default-side        'below)
   (helm-autoresize-max-height            0)
   (helm-autoresize-min-height            20)
   :config
-  (helm-autoresize-mode 1)
   (helm-mode 1)
   (add-hook 'helm-minibuffer-set-up-hook #'fikovnik/helm-hide-minibuffer-maybe)
+  :bind-keymap
+  ("C-x c" . fikovnik/helm-key-map)
   :bind
-  (("M-x" . helm-M-x)
+  (("M-x"    . helm-M-x)
+  ("M-y"     . helm-show-kill-ring)
   ("C-x C-f" . helm-find-files)
-  ("C-x c o" . helm-occur)
-  ("C-x c k" . helm-show-kill-ring)
-  ("M-y" . helm-show-kill-ring)
+  ("C-x C-r" . helm-recentf)
+  ("C-x C-b" . helm-mini)
+  ;; imenu
+  ("M-i" . helm-imenu)
+  ("M-I" . helm-imenu-anywhere)
+  :map fikovnik/helm-key-map
+  ("c" . helm-resume)
+  ("f" . helm-find-file)
+  ("r" . helm-recentf)
+  ("R" . helm-register)
+  ("o" . helm-occur)
+  ("k" . helm-show-kill-ring)
+  ("m" . helm-all-mark-rings)
+  ("a" . helm-apropos)
+  ("l" . helm-locate)
+  ("b" . helm-filtered-bookmarks)
+  ("i" . helm-imenu)
+  ("I" . helm-imenu-anywhere)
   :map helm-map
   ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
   ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
@@ -1419,10 +1424,20 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 *** Other
+**** helm-flyspell
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-flyspell
+  :ensure t
+  :defer t
+  :commands helm-flyspell-correct
+  :bind (:map flyspell-mode-map
+              ("C-?" . 'helm-flyspell-correct)))
+#+END_SRC
+
 **** TODO helm-dictionary
 **** TODO helm-addressbook / helm-mu
 **** TODO helm-c-yasnippet
-**** TODO imenu-anywhere
 **** TODO helm-bibtex
 **** TODO helm-dash
 **** helm-xref
@@ -1433,20 +1448,34 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   :defer t
   :commands helm-xref-show-xrefs
   :custom
+  ;; From spacemacs:
+  ;; This is required to make `xref-find-references' not give a prompt.
+  ;; `xref-find-references' asks the identifier (which has no text property)
+  ;; and then passes it to `lsp-mode', which requires the text property at
+  ;; point to locate the references.
+  ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=29619
+  (xref-prompt-for-identifier '(not xref-find-definitions
+                                    xref-find-definitions-other-window
+                                    xref-find-definitions-other-frame
+                                    xref-find-references))
+  ;; use helm-xref to display xref results.
   (xref-show-xrefs-function 'helm-xref-show-xrefs))
 #+END_SRC
 
 **** TODO swiper-helm
 **** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
 **** helm-rg
+***** TODO helm-ag or helm-rg?
+
 #+BEGIN_SRC emacs-lisp
 (use-package helm-rg
   :ensure t
   :defer t
   :bind
-  ("C-x p /" . helm-projectile-rg)
+  ("C-x p s" . helm-projectile-rg)
   ("C-S-s" . helm-rg))
 #+END_SRC
+
 **** helm-projectile
 
 #+BEGIN_SRC emacs-lisp
@@ -1456,13 +1485,13 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   :bind
 ("C-x p h" . helm-projectile)
 ("C-x p p" . helm-projectile-switch-project)
+("C-x p b" . helm-projectile-switch-to-buffer)
 ("C-x p f" . helm-projectile-find-file)
 ("C-x p F" . helm-projectile-find-file-in-known-projects)
 ("C-x p r" . helm-projectile-recentf)
 ("C-x p a" . helm-projectile-find-other-file))
 #+END_SRC
 
-**** TODO https://github.com/ganmacs/emacs-surround
 ** TODO text objects
 - https://github.com/clemera/objed
 ** TODO isearch
