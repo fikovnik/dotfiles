@@ -22,6 +22,8 @@
 ** TODO use varibales for directories
 * Sources
 ** TODO clean and describe
+- [[https://github.com/seagle0128/.emacs.d][Centaur emacs]]
+  - look into https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-basic.el
 - https://ensime.github.io/editors/emacs/hacks/
 - http://wikemacs.org/wiki/Starter_Kits
 - https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
@@ -781,7 +783,7 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
       ("d" . 'mc/mark-all-like-this-dwim)
       ("r" . 'mc/reverse-regions))))
 #+END_SRC
-
+** TODO replace multiple cursors with iedit?
 ** Move lines up / down
 *** TODO fix this in org-mode which takes over this binding
 
@@ -994,7 +996,7 @@ Spell check using aspell.
   :hook
   (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
-
+** TODO highlight-parenthesis-mode?
 ** TODO smartparens
 
 from: https://ensime.github.io/editors/emacs/hacks/#general
@@ -1292,6 +1294,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 *** TODO set navigation (=M-*= - next and =M-#= previous)
+*** TODO search symbol in project
+- look at spacemacs configuration
 
 ** TODO move to previous/next edit location
 
@@ -1653,6 +1657,7 @@ and =--git-dir= options explicitly set. For this I define a new function
       (magit-status-setup-buffer home))))
 #+END_SRC
 *** TODO allow the =dotfiles-magit= work even if magit have not been initialized yet
+** TODO magit-todo
 
 * Org
 ** Default setup
@@ -1808,7 +1813,7 @@ The following is the _official_ way to fix it:
 | =M-?=   | Find references  | =xref-find-references=  |
 | =C-M-.= |                  | =xref-find-apropos=     |
 
-*** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]]
+*** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]] or realgud
 ** C/C++
 *** Backend
 
