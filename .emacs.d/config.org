@@ -75,6 +75,9 @@ I like lexical scoping, but not sure if this actually really does anything.
 
 (defvar fikovnik/st-dir nil
   "The location of st terminal sources")
+
+(defvar fikovnik/projects-search-path nil
+  "Paths where projects are stored. Used in projectile")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -107,7 +110,8 @@ I like lexical scoping, but not sure if this actually really does anything.
                          (?M  "XK_M"            ("C-S" "C-M-S"))
                          (?J  "XK_J"            ("C-S" "C-M-S"))
                          (?m  "XK_m"            ("C" "C-M")     (([C-m]) ([C-M-m])))
-                         (?i  "XK_i"            ("C" "C-M")     (([C-i]) ([C-M-i])))))
+                         (?i  "XK_i"            ("C" "C-M")     (([C-i]) ([C-M-i]))))
+      fikovnik/projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications"))
 #+END_SRC
 
 - The =C-m=, =C-M-m, =C-i= and =C-M-i= can be bind using symbol =[C-m]=, etc.
@@ -1521,10 +1525,19 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
+  (projectile-project-search-path fikovnik/projects-search-path)
   :config
   (projectile-global-mode)
   (helm-projectile-on))
 #+END_SRC
+
+It is good to run the 
+
+#+BEGIN_SRC emacs-lisp
+(projectile-discover-projects-in-search-path)
+#+END_SRC
+
+to index the projects in the search path.
 
 * Packages
 ** iqa - quick access to config file
