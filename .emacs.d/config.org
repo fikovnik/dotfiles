@@ -50,8 +50,7 @@
   - about R
 - http://juanjose.garciaripoll.com/blog/emacs-wanderlust-email
   - about wunderlust
-[[https://github.com/jwiegley/use-package][use-package
-]]
+[[https://github.com/jwiegley/use-package][use-package]]
 ** To check
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
@@ -1497,11 +1496,12 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 - a keymap with all the options
 ** Bookmarks
 
-| Key       | Description        | Function         |
-|-----------+--------------------+------------------|
-| =C-x r l= | List bookmarks     | =helm-bookmarks= |
-| =C-x r b= | Jump to a bookmark | =bookmark-jump=  |
-| =C-x r m= | Set bookmark       | =bookmark-set=   |
+| Key       | Description            | Function                  |
+|-----------+------------------------+---------------------------|
+| =C-x r l= | List bookmarks         | =bookmark-list=           |
+| =C-x r b= | Jump to a bookmark     | =bookmark-jump=           |
+| =C-x r m= | Set bookmark           | =bookmark-set=            |
+| =C-x c b= | List bookmarks in helm | =helm-filtered-bookmarks= |
 
 #+BEGIN_SRC emacs-lisp
 (use-package bookmark
@@ -1566,6 +1566,7 @@ It is good to run the
 #+END_SRC
 
 to index the projects in the search path.
+*** TODO create a keymap for =C-x p=
 
 * Packages
 ** iqa - quick access to config file
