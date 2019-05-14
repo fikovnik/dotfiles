@@ -845,11 +845,10 @@ First, define a function taken from [[https://stackoverflow.com/a/11517584/21958
 #+END_SRC
 
 *** Binding
-**** TODO this does not work so far, because in the terminal =C-;= is seen as =;= only.
 
 #+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "C-;"))
-(global-set-key (kbd "C-;") 'fikovnik/comment-or-uncomment-line-or-region)
+(global-unset-key (kbd "C-/"))
+(global-set-key (kbd "C-/") 'fikovnik/comment-or-uncomment-line-or-region)
 #+END_SRC
 
 ** Whole line
