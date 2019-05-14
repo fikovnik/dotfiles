@@ -1991,9 +1991,76 @@ TODO: font size hydra
 #+END_SRC
 ** Cursor
 *** TODO bar cursor
-*** TODO pink cursor
 ** Colors
-*** TODO better TODO colors
+*** Cursor color
+**** Functions
+
+- TODO: defvar for shape and color at the beginning
+
+#+BEGIN_SRC emacs-lisp
+(defconst fikovnik/cursor-types '((box-blink  . 1)
+                                  (box        . 2)
+                                  (hbar-blink . 3)
+                                  (hbar       . 4)
+                                  (bar-blink  . 5)
+                                  (bar        . 6))
+  "Available cursor types as tuple of name and terminal code")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/-tmux-p ()
+  "Running in tmux."
+  (getenv "TMUX"))
+
+(defun fikovnik/-make-tmux-seq (seq)
+  (format "\ePtmux;\e%s\e\\" seq))
+
+(defun fikovnik/-cursor-shape-seq (shape)
+  "Make escape sequence for XTerm compatible terminals."
+  (let* ((cursor-code (cdr (assoc shape fikovnik/cursor-types)))
+         (seq (format "\e[%d q" cursor-code)))
+    (if (fikovnik/-tmux-p)
+        (fikovnik/-make-tmux-seq seq)
+      seq)))
+
+(defun fikovnik/set-cursor-shape (shape)
+  (let ((seq (fikovnik/-cursor-shape-seq shape)))
+    (message "%s" seq)
+    (send-string-to-terminal seq)))
+
+(defun fikovnik/-cursor-color-seq (color)
+  "Make escape sequence for cursor color (in HEX)."
+  (let ((seq (format "\e]12;%s\a" color)))
+    (if (fikovnik/-tmux-p)
+        (fikovnik/-make-tmux-seq seq)
+      seq)))
+
+(defun fikovnik/set-cursor-color (color)
+  (let ((seq (fikovnik/-cursor-color-seq color)))
+    (message "%s" seq)
+    (send-string-to-terminal seq)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(set-cursor-color "#ee30a7")
+(setq-default cursor-type 'bar)
+#+END_SRC
+**** TODO cursor color in GUI
+
+*** Region color
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'region nil :foreground "#000000" :background "#cd6090")
+#+END_SRC
+
+**** TODO sync with tmux region color 30;45 ideally
+
+*** Fix org colors
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'org-todo nil :weight 'bold)
+#+END_SRC
+
 * Troubleshooting
 ** Invalid function: =org-preserve-local-variables=
 
