@@ -1,8 +1,8 @@
 #+TITLE: Emacs configuration file
 #+AUTHOR: Filip Krikava
-#+BABEL: :cache yes
-#+PROPERTY: header-args :tangle yes :results none :eval yes
-#+STARTUP: overview
+#+PROPERTY: header-args :comments link
+#+PROPERTY: header-args :results none
+#+PROPERTY: header-args :eval yes
 
 * Overview
 ** TODO descrive the idea behind this configuration
@@ -20,8 +20,15 @@
 | =M-m=   | Multiple cursors |
 ** TODO rename variables and functions
 ** TODO use varibales for directories
+** Remove the =init.el= from index tracking
+
+#+BEGIN_SRC sh :tangle no
+config update-index --assume-unchanged ~/.emacs.d/init.el
+#+END_SRC
+
 * Sources
 ** TODO clean and describe
+- [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][John Wiegley’s config -- use-package author]]
 - [[https://github.com/seagle0128/.emacs.d][Centaur emacs]]
   - look into https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-basic.el
 - https://ensime.github.io/editors/emacs/hacks/
@@ -56,16 +63,153 @@ https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
 
 * Basics
-** Lexical scoping                                            :experimental:
+** Lexical scoping
 
-I like lexical scoping, but not sure if this actually really does anything.
+I like lexical scoping.
 
 #+BEGIN_SRC emacs-lisp
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
+
+** Time the init
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-init-el-start-time (current-time) "Time when init.el was started")
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (message "Initialized in %.2fs" (float-time (time-subtract (current-time) my-init-el-start-time))))
+          t)
+#+END_SRC
+
+* Startup
+** Speed up startup
+
+Allow more memory between GC cycle (default is 780kB) at startup and other
+hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][John Wiegley’s config]].
+
+#+BEGIN_SRC emacs-lisp
+(defvar file-name-handler-alist-old file-name-handler-alist)
+
+(setq file-name-handler-alist nil
+      message-log-max 16384
+      auto-window-vscroll nil
+      gc-cons-threshold (* 384 1024 1024)
+      gc-cons-percentage 0.6)
+
+(add-hook 'after-init-hook
+          `(lambda ()
+             (setq file-name-handler-alist file-name-handler-alist-old
+                   gc-cons-threshold (* 64 1024 1024)
+                   gc-cons-percentage 0.1)
+             (garbage-collect))
+          t)
+#+END_SRC
+** Common functions
+
+#+BEGIN_SRC emacs-lisp
+(eval-and-compile
+  (defun fikovnik/sync-configuration ()
+    (let ((config-file (emacs-path "config.org"))
+          (init-file (emacs-path "init.el")))
+      (org-babel-tangle-file config-file init-file "emacs-lisp")
+      (byte-compile-file init-file nil)))
+
+  (defun emacs-path (path)
+    (expand-file-name path user-emacs-directory)))
+#+END_SRC
+** init.el file debugging
+
+#+BEGIN_SRC emacs-lisp
+(if init-file-debug
+    (setq use-package-verbose t
+          use-package-expand-minimally nil
+          use-package-compute-statistics t
+          debug-on-error t)
+  (setq use-package-verbose nil
+        use-package-expand-minimally t))
+#+END_SRC
+
+** Turn off messages
+
+#+BEGIN_SRC emacs-lisp
+;; turn off messages
+(setq inhibit-startup-message t)
+(setq inhibit-startup-echo-area-message "krikava")
+(setq initial-scratch-message "")
+#+END_SRC
+
+** Turn off the some UI elements to avoid momentary display
+
+#+BEGIN_SRC emacs-lisp
+(if (fboundp 'menu-bar-mode)
+    (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode)
+    (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode)
+    (scroll-bar-mode -1))
+(if (fboundp 'horizontal-scroll-bar-mode)
+    (horizontal-scroll-bar-mode -1))
+#+END_SRC
+
+** Initialize package.el
+
+#+BEGIN_SRC emacs-lisp
+(package-initialize)
+#+END_SRC
+
+** Setup package sources
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/") t)
+#+END_SRC
+
+** Initialize use-package
+*** Basics
+#+BEGIN_SRC emacs-lisp
+(setq-default use-package-always-ensure t ; Auto-download package if not exists
+              use-package-always-defer t ; Always defer load package to speed up startup
+              use-package-verbose nil ; Don't report loading details
+              use-package-expand-minimally t  ; make the expanded code as minimal as possible
+              use-package-enable-imenu-support t) ; Let imenu finds use-package definitions
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+#+END_SRC
+
+*** Add diminish and bind-keys
+
+These additional packages add the ability to diminish minor modes from
+modeline, and to conveniently bind keys using =:diminish= and =:bind-key=
+keywords in =(use-package)=.
+
+#+BEGIN_SRC emacs-lisp
+;; :diminish keyword
+(use-package diminish
+  :demand t)
+
+;; :bind keyword
+(use-package bind-key
+  :demand t)
+#+END_SRC
+
+* Defaults
 ** Global variables
 
 #+BEGIN_SRC emacs-lisp
+(defvar fikovnik/backup-dir (emacs-path "backups")
+  "backup directory")
+
+(defvar fikovnik/savefile-dir (emacs-path "savefile")
+  "backup directory")
+
 (defvar fikovnik/my-keys nil
   "The list of keys to be mapped as pairs of keySym and ascii code")
 
@@ -77,6 +221,11 @@ I like lexical scoping, but not sure if this actually really does anything.
 
 (defvar fikovnik/projects-search-path nil
   "Paths where projects are stored. Used in projectile")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(unless (file-exists-p fikovnik/savefile-dir)
+  (make-directory fikovnik/savefile-dir))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -130,14 +279,6 @@ I like lexical scoping, but not sure if this actually really does anything.
         nums))
 #+END_SRC
 
-** GC threshold
-
-Allow 128MB between GC cycle (defailt is 780kB). Apparently this should make
-some operations faster, although I never tested it.
-
-#+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold (* 128 1024 1024))
-#+END_SRC
 ** ST terminal
 Treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
 #+BEGIN_SRC emacs-lisp
@@ -169,7 +310,7 @@ solution given =formatOtherKeys= is set to 1). It works as follows: for each
 key combination that is not expressible in the current schema it will use the
 following escape sequence:
 
-#+BEGIN_SRC text
+#+BEGIN_SRC text :tangle no
 ESC[<key>;<mod>u
 #+END_SRC
 
@@ -375,20 +516,6 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
 - try term keys
 ** TODO input map in GUI
 - sync it with terminal
-** Variables
-
-#+BEGIN_SRC emacs-lisp
-(defvar fikovnik/backup-dir (expand-file-name "backups" user-emacs-directory)
-  "backup directory")
-(defvar fikovnik/savefile-dir (expand-file-name "savefile" user-emacs-directory)
-  "backup directory")
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(unless (file-exists-p fikovnik/savefile-dir)
-  (make-directory fikovnik/savefile-dir))
-#+END_SRC
-
 ** Customize file =custom.el=                                          :wip:
 
 Set up the customize file to its own separate file, instead of saving
@@ -397,28 +524,16 @@ customize settings in [[file:init.el][init.el]].
 *** TODO what to do with the custom file? Keep it, keep it, but not version it or send to /tmp
 
 #+BEGIN_SRC emacs-lisp
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (emacs-path "custom.el"))
+(unless (file-exists-p custom-file)
+    (write-region "" nil custom-file))
 (load custom-file)
-#+END_SRC
-
-** Set up =use-package=
-
-These additional packages add the ability to diminish minor modes from
-modeline, and to conveniently bind keys using =:diminish= and =:bind-key=
-keywords in =(use-package)=.
-
-#+BEGIN_SRC emacs-lisp
-;; :diminish keyword
-(use-package diminish :ensure t)
-
-;; :bind keyword
-(use-package bind-key :ensure t)
 #+END_SRC
 
 ** Install hydra
 
 #+BEGIN_SRC emacs-lisp
-(use-package hydra :ensure t)
+(use-package hydra)
 #+END_SRC
 
 ** Install smartrep                                           :experimental:
@@ -428,7 +543,6 @@ cursors.
 
 #+BEGIN_SRC emacs-lisp
 (use-package smartrep
-  :ensure t
   :custom
   (smartrep-mode-line-string-activated "[SR]")
   ;; no modeline higlighting
@@ -436,7 +550,6 @@ cursors.
 )
 #+END_SRC
 
-* Defaults
 ** Enable some useful functions
 
 These functions are useful so activate them.
@@ -477,7 +590,7 @@ and on windows switch.
 
 #+BEGIN_SRC emacs-lisp
 (use-package super-save
-  :ensure t
+  :defer 2
   :config
   ;; add integration with ace-window
   (add-to-list 'super-save-triggers 'ace-window)
@@ -540,11 +653,10 @@ Answering just 'y' or 'n' will do
       exec-path                           (append exec-path '("/usr/local/bin/"))
       ;; single space to indicate end of a sentance
       sentence-end-double-space           nil
-      x-select-enable-clipboard           t
+      select-enable-clipboard           t
       ;; -i gets alias definitions from shell
       shell-command-switch                "-ic"
       echo-keystrokes                     0.1
-      recentf-max-saved-items             100
       scroll-step                         1
       use-dialog-box                      nil
       kill-ring-max                       300
@@ -607,7 +719,7 @@ Answering just 'y' or 'n' will do
 
 #+BEGIN_SRC emacs-lisp
 (use-package popwin
-  :ensure t
+  :demand t
   :config
   (popwin-mode 1))
 #+END_SRC
@@ -620,6 +732,7 @@ This remembers your location in a file when saving files.
 
 #+BEGIN_SRC emacs-lisp
 (use-package saveplace
+  :demand t
   :custom
   (save-place-file (expand-file-name "saveplace" fikovnik/savefile-dir)))
 
@@ -641,6 +754,7 @@ This remembers your location in a file when saving files.
 #+BEGIN_SRC emacs-lisp
 ;; savehist keeps track of some history
 (use-package savehist
+  :demand t
   :custom
   ;; search entries
   (savehist-additional-variables '(search-ring regexp-search-ring))
@@ -653,21 +767,10 @@ This remembers your location in a file when saving files.
 #+END_SRC
 
 *** Recent files tracking
-**** Functions
-
-#+BEGIN_SRC emacs-lisp
-(defun fikovnik/recentf-exclude-p (file)
-  "A predicate to decide whether to exclude FILE from recentf."
-  (let ((file-dir (file-truename (file-name-directory file))))
-    (cl-some (lambda (dir)
-               (string-prefix-p dir file-dir))
-             (mapcar 'file-truename (list prelude-savefile-dir package-user-dir)))))
-#+END_SRC
-
-**** Configuration
 
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
+  :demand t
   :custom
   (recentf-save-file (expand-file-name "recentf" fikovnik/savefile-dir))
   (recentf-max-saved-items 500)
@@ -676,8 +779,6 @@ This remembers your location in a file when saving files.
   ;; problems with remote files
   (recentf-auto-cleanup 'never)
   :config
-  ;; only trace real files
-  (add-to-list 'recentf-exclude 'prelude-recentf-exclude-p)
   (recentf-mode +1))
 #+END_SRC
 
@@ -757,7 +858,6 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 
 #+BEGIN_SRC emacs-lisp
 (use-package unfill
-  :defer t
   :commands (unfill-region unfill-paragraph unfill-toggle)
   :bind
   ([remap fill-paragraph] . unfill-toggle))
@@ -771,7 +871,6 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
-  :ensure t
   :config
   (smartrep-define-key global-map "M-m"
     '(("n" . 'mc/mark-next-like-this)
@@ -792,8 +891,6 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 
 #+BEGIN_SRC emacs-lisp
 (use-package move-dup
-  :ensure t
-  :defer t
   :bind
   ("M-<up>" . md-move-lines-up)
   ("M-<down>" . md-move-lines-down)
@@ -900,7 +997,6 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
-  :ensure t
   :bind
   (("M-r m"  . er/expand-region)
    ("M-r ("  . er/mark-inside-pairs)
@@ -929,13 +1025,12 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
-  :ensure t
+  :defer 2
   :diminish yas-minor-mode
   :commands yas-minor-mode
   :config
-  (yas-reload-all)
-  :init
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  (yas-reload-all))
 #+end_src
 
 ** Auto completion
@@ -943,14 +1038,13 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :ensure t
   :diminish company-mode
   :custom
   (company-dabbrev-ignore-case t)
   (company-dabbrev-code-ignore-case t)
   (company-dabbrev-downcase nil)
-  :config
-  (add-hook 'after-init-hook 'global-company-mode)
+  :hook
+  (after-init . global-company-mode)
   :bind (:map company-active-map
               ([tab] . nil)
               ("TAB" . nil)))
@@ -984,8 +1078,6 @@ Spell check using aspell.
 
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
-  :ensure t
-  :defer t
   :hook
   (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
@@ -1055,7 +1147,7 @@ keybinding, instead it is bound by the =hydra-window=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package windmove
-  :ensure t
+  :demand t
   :custom
   (windmove-wrap-around t)
   :config
@@ -1083,7 +1175,7 @@ This will allow to go back/fort between window layouts.
 
 #+BEGIN_SRC emacs-lisp
 (use-package winner
-  :ensure t
+  :demand t
   :config
   (winner-mode 1))
 #+END_SRC
@@ -1095,8 +1187,6 @@ default =other-window= command.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
-  :ensure t
-  :defer t
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (aw-dispatch-always nil)
@@ -1194,7 +1284,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package avy
-  :ensure t
   :bind
   ("M-g" . hydra-avy/body)
   :config
@@ -1308,8 +1397,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package mwim
-  :ensure t
-  :defer t
   :bind
   ("C-a" . mwim-beginning)
   ("C-e" . mwim-end)
@@ -1340,7 +1427,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
-  :ensure t
   :custom
   (helm-echo-input-in-header-line        t)
   (helm-move-to-line-cycle-in-source     t)
@@ -1352,12 +1438,13 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ;; fuzzy matching
   (helm-mode-fuzzy-match                 t)
   (helm-completion-in-region-fuzzy-match t)
-  (helm-candidate-number-limit           100) 
+  (helm-candidate-number-limit           100)
   ;; position
   (helm-split-window-in-side-p           t)
   (helm-split-window-default-side        'below)
   (helm-autoresize-max-height            0)
   (helm-autoresize-min-height            20)
+  (helm-follow-mode-persistent t)
   :config
   (helm-mode 1)
   (add-hook 'helm-minibuffer-set-up-hook #'fikovnik/helm-hide-minibuffer-maybe)
@@ -1395,10 +1482,14 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 *** Searching with =helm-ag=
 
 #+BEGIN_SRC emacs-lisp
+
 (use-package helm-ag
-  :ensure t
   :custom
-  (helm-ag-base-command "rg --no-heading"))
+  (helm-ag-insert-at-point 'symbol)
+  (helm-ag-base-command "rg --no-heading")
+  :bind
+  ("C-x p s" . helm-ag-project-root)
+  ("C-S-s" . helm-ag))
 #+END_SRC
 
 *** Project files with =helm-ls-git=
@@ -1406,8 +1497,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-ls-git
-  :ensure t
-  :defer t
   :bind
   ("C-x p f" . helm-browse-project))
 #+END_SRC
@@ -1415,8 +1504,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-descbinds
-  :ensure t
-  :defer t
   :bind
   ([remap describe-bindings] . helm-descbinds))
 #+END_SRC
@@ -1426,8 +1513,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-flyspell
-  :ensure t
-  :defer t
   :commands helm-flyspell-correct
   :bind (:map flyspell-mode-map
               ("C-?" . 'helm-flyspell-correct)))
@@ -1442,8 +1527,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-xref
-  :ensure t
-  :defer t
   :commands helm-xref-show-xrefs
   :custom
   ;; From spacemacs:
@@ -1462,32 +1545,18 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 **** TODO swiper-helm
 **** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
-**** helm-rg
-***** TODO helm-ag or helm-rg?
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-rg
-  :ensure t
-  :defer t
-  :bind
-  ("C-x p s" . helm-projectile-rg)
-  ("C-S-s" . helm-rg))
-#+END_SRC
-
 **** helm-projectile
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-projectile
-  :ensure t
-  :defer t
   :bind
-("C-x p h" . helm-projectile)
-("C-x p p" . helm-projectile-switch-project)
-("C-x p b" . helm-projectile-switch-to-buffer)
-("C-x p f" . helm-projectile-find-file)
-("C-x p F" . helm-projectile-find-file-in-known-projects)
-("C-x p r" . helm-projectile-recentf)
-("C-x p a" . helm-projectile-find-other-file))
+  ("C-x p h" . helm-projectile)
+  ("C-x p p" . helm-projectile-switch-project)
+  ("C-x p b" . helm-projectile-switch-to-buffer)
+  ("C-x p f" . helm-projectile-find-file)
+  ("C-x p F" . helm-projectile-find-file-in-known-projects)
+  ("C-x p r" . helm-projectile-recentf)
+  ("C-x p a" . helm-projectile-find-other-file))
 #+END_SRC
 
 ** TODO text objects
@@ -1548,18 +1617,18 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
-  :ensure t
+  :defer 1
   :custom
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
   (projectile-project-search-path fikovnik/projects-search-path)
   :config
-  (projectile-global-mode)
+  (projectile-mode)
   (helm-projectile-on))
 #+END_SRC
 
-It is good to run the 
+It is good to run the
 
 #+BEGIN_SRC emacs-lisp
 (projectile-discover-projects-in-search-path)
@@ -1573,11 +1642,12 @@ to index the projects in the search path.
 
 #+BEGIN_SRC emacs-lisp
 (use-package iqa
-  :ensure t
   :custom
   (iqa-user-init-file (concat user-emacs-directory "config.org"))
-  :config
-  (iqa-setup-default))
+  :bind (:map ctl-x-map
+              ("M-f" . iqa-find-user-init-file)
+              ("M-r" . iqa-reload-user-init-file)
+              ("M-d" . iqa-find-user-init-directory)))
 #+END_SRC
 
 ** ibuffers
@@ -1594,6 +1664,7 @@ to index the projects in the search path.
 
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
+  :demand t
   :diminish which-key-mode
   :custom
   (which-key-idle-delay 0.3)
@@ -1633,30 +1704,28 @@ Auto refresh dired
 
 #+BEGIN_SRC emacs-lisp
 (use-package ibuffer-vc
-  :ensure t)
+  :hook
+  (ibuffer . (lambda ()
+               (ibuffer-vc-set-filter-groups-by-vc-root)
+               (unless (eq ibuffer-sorting-mode 'alphabetic)
+                 (ibuffer-do-sort-by-alphabetic)))))
 #+END_SRC
 
 ** Magit
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
-  :defer t
-  :ensure t
   :custom
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1 "Enable fullscreen")
   :bind
   ("C-x g" . magit-status)
   ("C-x M-g" . fikovnik/dotfiles-magit))
-
-(use-package magit-popup
-  :ensure t)
 #+END_SRC
 
 ** Highlight chnages in files
 
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
-  :ensure t
   :hook
   ((prog-mode . diff-hl-mode)
    (prog-mode . diff-hl-margin-mode)
@@ -1706,7 +1775,6 @@ and =--git-dir= options explicitly set. For this I define a new function
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  :defer t
   ;; to be sure we have the latest Org version
   :ensure org-plus-contrib
   :mode
@@ -1748,7 +1816,6 @@ and =--git-dir= options explicitly set. For this I define a new function
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
-  :ensure t
   :custom
   (org-bullets-bullet-list '("•"))
   (org-ellipsis "↴")
@@ -1766,29 +1833,26 @@ The way Org-mode binds the TAB key (binding to [tab] instead of \t) overrules ya
 The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-
 (add-hook 'org-mode-hook
           (lambda ()
             (make-variable-buffer-local 'yas/trigger-key)
             (setq yas/trigger-key [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field)))
+            (add-to-list 'org-tab-first-hook 'yas-expand)
+            (define-key yas-keymap [tab] 'yas-next-field)))
 #+END_SRC
+
 ** Babel
 
 #+BEGIN_SRC emacs-lisp
 (use-package ob
-  ;; it is a part of org-plus-contrib
-  :ensure nil
-  :defer t
+  :ensure org-plus-contrib
+  :after org
   :commands org-babel-load-languages
   :custom
   (org-babel-load-languages
    '((shell . t)
      (emacs-lisp . t)))
-  :init
+  :config
   (progn
     (defun fikovnik/-org-babel-do-load-languages ()
       "Load all the languages declared in `org-babel-load-languages'."
@@ -1819,7 +1883,6 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
   :ensure nil
-  :defer t
   :diminish eldoc-mode
   :commands eldoc-mode)
 #+END_SRC
@@ -1828,22 +1891,16 @@ The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
-  :ensure t
-  :defer t
   :custom
   (lsp-prefer-flymake t)
   :commands lsp)
 
 (use-package lsp-ui
-  :ensure t
-  :defer t
   :custom
   (lsp-ui-sideline-enable nil)
   :commands lsp-ui-mode)
 
 (use-package company-lsp
-  :ensure t
-  :defer t
   :custom
   (company-transformers nil)
   (company-lsp-async t)
@@ -1865,14 +1922,10 @@ Use [[https://github.com/MaskRay/ccls/wiki/lsp-mode][ccls]] as the backend for C
 
 #+BEGIN_SRC emacs-lisp
 (use-package ccls
-  :ensure t
-  :defer t
   :custom
   (ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
   ;; no semantic highlighting
   (ccls-sem-highlight-method nil)
-  :config
-  (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc))
   :hook
   ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
 #+END_SRC
@@ -1988,7 +2041,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 
 #+BEGIN_SRC emacs-lisp
 (use-package base16-theme
-  :ensure t
+  :demand t
   :config
   (load-theme 'base16-oceanicnext t))
 #+END_SRC
@@ -2010,7 +2063,7 @@ TODO: font size hydra
 - if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package doom-modeline
-  :ensure t
+  :demand t
   :config
   (add-hook 'after-init-hook #'doom-modeline-init)
   :custom
@@ -2087,9 +2140,8 @@ TODO: font size hydra
 *** Fix org colors
 
 #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'org-todo nil :weight 'bold)
+;(set-face-attribute 'org-todo nil :weight 'bold)
 #+END_SRC
-
 * Troubleshooting
 ** Invalid function: =org-preserve-local-variables=
 
@@ -2121,3 +2173,8 @@ file on MELPA, it might be due to an outdated local index. Use:
 #+BEGIN_SRC emacs-lisp :tangle no
 (package-refresh-contents)
 #+END_SRC
+* Local variables
+
+# Local Variables:
+# eval: (add-hook 'after-save-hook 'fikovnik/sync-configuration nil t)
+# End:
