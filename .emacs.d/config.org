@@ -374,9 +374,11 @@ case conversion in this way.
                          (?I  "XK_I"            ("C-S" "C-M-S"))
                          (?M  "XK_M"            ("C-S" "C-M-S"))
                          (?J  "XK_J"            ("C-S" "C-M-S"))
-                         (?m  "XK_m"            ("C" "C-M")     (([C-m]) ([C-M-m])))
-                         (?i  "XK_i"            ("C" "C-M")     (([C-i]) ([C-M-i])))
-                         (?O  "XK_O"            ("C-S" "C-M-S"))))
+                         (?m  "XK_m"            ("C" "C-M")               (([C-m]) ([C-M-m])))
+                         (?i  "XK_i"            ("C" "C-M")               (([C-i]) ([C-M-i])))
+                         (?O  "XK_O"            ("C-S" "C-M-S"))
+                         (? "XK_BackSpace"    ("C" "C-M" "C-S" "C-M-S") (([C-]) ([C-M-]) ([C-S-]) ([C-M-S-])))
+                         ))
 #+END_SRC
 
 - The =C-m=, =C-M-m, =C-i= and =C-M-i= can be bind using symbol =[C-m]=, etc.
@@ -837,7 +839,7 @@ These command will be used in the [[Editing]] and [[Navigation]].
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key [remap kill-while-line] #'crux-kill-whole-line)
-(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+(global-set-key [C-] #'crux-kill-line-backwards)
 #+END_SRC
 
 ** Deleting spaces
