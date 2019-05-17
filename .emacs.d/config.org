@@ -1,8 +1,6 @@
 #+TITLE: Emacs configuration file
 #+AUTHOR: Filip Krikava
-#+PROPERTY: header-args :comments link
-#+PROPERTY: header-args :results none
-#+PROPERTY: header-args :eval yes
+#+PROPERTY: header-args :comments link :results silent :eval yes
 
 * Overview
 ** TODO descrive the idea behind this configuration
@@ -71,14 +69,16 @@ I like lexical scoping.
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
 
-** Time the init
+** Time the initialization
 
 #+BEGIN_SRC emacs-lisp
-(defvar my-init-el-start-time (current-time) "Time when init.el was started")
+(defconst emacs-start-time (current-time))
 
 (add-hook 'after-init-hook
-          (lambda ()
-            (message "Initialized in %.2fs" (float-time (time-subtract (current-time) my-init-el-start-time))))
+          `(lambda ()
+             (message "Loaded %s in %.3fs"
+                      ,load-file-name
+                      (float-time (time-subtract (current-time) emacs-start-time))))
           t)
 #+END_SRC
 
@@ -109,15 +109,32 @@ hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][J
 
 #+BEGIN_SRC emacs-lisp
 (eval-and-compile
-  (defun fikovnik/sync-configuration ()
+  (defun fikovnik/recompile-elpa ()
+    "Recompile packages in elpa directory"
+    (interactive)
+    (byte-recompile-directory package-user-dir 0 nil))
+
+  (defun fikovnik/sync-configuration (arg)
+    "Tangle the ~/.emacs.d/config.org file into
+    ~/.emacs.d/init.el and if called with universal argument also
+    byte compile it into ~/.emacs.d/init.elc"
+
+    (interactive "P")
     (let ((config-file (emacs-path "config.org"))
-          (init-file (emacs-path "init.el")))
+          (init-file (emacs-path "init.el"))
+          (init-file-elc (emacs-path "init.elc")))
       (org-babel-tangle-file config-file init-file "emacs-lisp")
-      (byte-compile-file init-file nil)))
+      (when (file-exists-p init-file-elc) (delete-file init-file-elc))
+      (when arg (byte-compile-file init-file))))
+
+  (defun fikovnik/sync-configuration-and-compile ()
+    (interactive)
+    (fikovnik/sync-configuration t))
 
   (defun emacs-path (path)
     (expand-file-name path user-emacs-directory)))
 #+END_SRC
+
 ** init.el file debugging
 
 #+BEGIN_SRC emacs-lisp
@@ -129,7 +146,6 @@ hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][J
   (setq use-package-verbose nil
         use-package-expand-minimally t))
 #+END_SRC
-
 ** Turn off messages
 
 #+BEGIN_SRC emacs-lisp
@@ -199,10 +215,9 @@ keywords in =(use-package)=.
 (use-package bind-key
   :demand t)
 #+END_SRC
-
 * Defaults
 ** Global variables
-
+*** Declarations
 #+BEGIN_SRC emacs-lisp
 (defvar fikovnik/backup-dir (emacs-path "backups")
   "backup directory")
@@ -216,67 +231,11 @@ keywords in =(use-package)=.
 (defvar fikovnik/my-keys-debug nil
   "Toggle my-keys debugging")
 
-(defvar fikovnik/st-dir nil
+(defvar fikovnik/st-dir "~/Projects/st"
   "The location of st terminal sources")
 
-(defvar fikovnik/projects-search-path nil
+(defvar fikovnik/projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications")
   "Paths where projects are stored. Used in projectile")
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(unless (file-exists-p fikovnik/savefile-dir)
-  (make-directory fikovnik/savefile-dir))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(setq fikovnik/st-dir "~/Projects/st"
-      fikovnik/my-keys-debug t
-      fikovnik/my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
-                         (?:  "XK_colon"        ("C-S" "C-M-S"))
-                         (?'  "XK_apostrophe"   ("C" "C-M"))
-                         (?\" "XK_quotedbl"     ("C-S" "C-M-S"))
-                         (?.  "XK_period"       ("C" "C-M"))
-                         (?,  "XK_comma"        ("C" "C-M"))
-                         (?=  "XK_equal"        ("C" "C-M"))
-                         (?<  "XK_less"         ("C-S" "C-M-S"))
-                         (?>  "XK_greater"      ("C-S" "C-M-S"))
-                         (??  "XK_question"     ("C-S" "C-M-S"))
-                         (?/  "XK_slash"        ("C" "C-M"))
-                         (?\\ "XK_backslash"    ("C" "C-M"))
-                         (?|  "XK_bar"          ("C-S" "C-M-S"))
-                         (?~  "XK_asciitilde"   ("C-S" "C-M-S"))
-                         (?`  "XK_grave"        ("C" "C-S"))
-                         (?{  "XK_braceleft"    ("C-S" "C-M-S"))
-                         (?}  "XK_braceright"   ("C-S" "C-M-S"))
-                         (?\] "XK_bracketright" ("C" "C-M"))
-                         (?\( "XK_parenleft"    ("C-S" "C-M-S"))
-                         (?\) "XK_parenright"   ("C-S" "C-M-S"))
-                         (?C  "XK_C"            ("C-S" "C-M-S"))
-                         (?X  "XK_X"            ("C-S" "C-M-S"))
-                         (?V  "XK_V"            ("C-S" "C-M-S"))
-                         (?I  "XK_I"            ("C-S" "C-M-S"))
-                         (?M  "XK_M"            ("C-S" "C-M-S"))
-                         (?J  "XK_J"            ("C-S" "C-M-S"))
-                         (?m  "XK_m"            ("C" "C-M")     (([C-m]) ([C-M-m])))
-                         (?i  "XK_i"            ("C" "C-M")     (([C-i]) ([C-M-i]))))
-      fikovnik/projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications"))
-#+END_SRC
-
-- The =C-m=, =C-M-m, =C-i= and =C-M-i= can be bind using symbol =[C-m]=, etc.
-  They are not =C-m=, but =<C-m>= from Emacs perspective.
-- It would be possible to map as well =C-j= but that is handy for inserting the
-  new line literal (using =C-q=) for example for replace.
-
-*** Add =C-<number>= and =C-M-<number>=
-
-#+BEGIN_SRC emacs-lisp
-(let ((nums '(1 2 3 4 5 6 7 8 9)))
-  (mapc (lambda (x)
-          ;; DEC 48 is '0' in ASCII table
-          (let* ((code (+ 48 x))
-                 (e (list code (format "XK_%d" x) (list "C" "C-M"))))
-            (setq fikovnik/my-keys (append fikovnik/my-keys (list e)))))
-        nums))
 #+END_SRC
 
 ** ST terminal
@@ -385,6 +344,58 @@ case conversion in this way.
 - It is also possible to bind keys using a vector like =[C-S-M]= which will
   create a =<C-M>= binding, a different from =C-S-M=.
 *** Configuration
+**** Default keys
+
+#+BEGIN_SRC emacs-lisp
+(setq fikovnik/my-keys-debug nil
+      fikovnik/my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
+                         (?:  "XK_colon"        ("C-S" "C-M-S"))
+                         (?'  "XK_apostrophe"   ("C" "C-M"))
+                         (?\" "XK_quotedbl"     ("C-S" "C-M-S"))
+                         (?.  "XK_period"       ("C" "C-M"))
+                         (?,  "XK_comma"        ("C" "C-M"))
+                         (?=  "XK_equal"        ("C" "C-M"))
+                         (?<  "XK_less"         ("C-S" "C-M-S"))
+                         (?>  "XK_greater"      ("C-S" "C-M-S"))
+                         (??  "XK_question"     ("C-S" "C-M-S"))
+                         (?/  "XK_slash"        ("C" "C-M"))
+                         (?\\ "XK_backslash"    ("C" "C-M"))
+                         (?|  "XK_bar"          ("C-S" "C-M-S"))
+                         (?~  "XK_asciitilde"   ("C-S" "C-M-S"))
+                         (?`  "XK_grave"        ("C" "C-S"))
+                         (?{  "XK_braceleft"    ("C-S" "C-M-S"))
+                         (?}  "XK_braceright"   ("C-S" "C-M-S"))
+                         (?\] "XK_bracketright" ("C" "C-M"))
+                         (?\( "XK_parenleft"    ("C-S" "C-M-S"))
+                         (?\) "XK_parenright"   ("C-S" "C-M-S"))
+                         (?C  "XK_C"            ("C-S" "C-M-S"))
+                         (?X  "XK_X"            ("C-S" "C-M-S"))
+                         (?V  "XK_V"            ("C-S" "C-M-S"))
+                         (?I  "XK_I"            ("C-S" "C-M-S"))
+                         (?M  "XK_M"            ("C-S" "C-M-S"))
+                         (?J  "XK_J"            ("C-S" "C-M-S"))
+                         (?m  "XK_m"            ("C" "C-M")     (([C-m]) ([C-M-m])))
+                         (?i  "XK_i"            ("C" "C-M")     (([C-i]) ([C-M-i])))
+                         (?O  "XK_O"            ("C-S" "C-M-S"))))
+#+END_SRC
+
+- The =C-m=, =C-M-m, =C-i= and =C-M-i= can be bind using symbol =[C-m]=, etc.
+  They are not =C-m=, but =<C-m>= from Emacs perspective.
+- It would be possible to map as well =C-j= but that is handy for inserting the
+  new line literal (using =C-q=) for example for replace.
+
+**** =C-<number>= and =C-M-<number>= keys
+
+#+BEGIN_SRC emacs-lisp
+(let ((nums '(1 2 3 4 5 6 7 8 9)))
+  (mapc (lambda (x)
+          ;; DEC 48 is '0' in ASCII table
+          (let* ((code (+ 48 x))
+                 (e (list code (format "XK_%d" x) (list "C" "C-M"))))
+            (setq fikovnik/my-keys (append fikovnik/my-keys (list e)))))
+        nums))
+#+END_SRC
+
 **** Auxiliary functions
 
 #+BEGIN_SRC emacs-lisp
@@ -412,7 +423,9 @@ case conversion in this way.
   "Escape code sequence suffix")
 
 (defconst fikovnik/-my-keys-modifiers
-  '(("C"     . ("ControlMask"                        5))
+  '(("M"     . ("Mod1Mask"                           3))
+    ("M-S"   . ("Mod1Mask | ShiftMask"               4))
+    ("C"     . ("ControlMask"                        5))
     ("C-S"   . ("ControlMask | ShiftMask"            6))
     ("C-M"   . ("ControlMask | Mod1Mask"             7))
     ("C-M-S" . ("ControlMask | Mod1Mask | ShiftMask" 8)))
@@ -527,7 +540,7 @@ customize settings in [[file:init.el][init.el]].
 (setq custom-file (emacs-path "custom.el"))
 (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
-(load custom-file)
+;(load custom-file)
 #+END_SRC
 
 ** Install hydra
@@ -582,6 +595,7 @@ These functions are useful so activate them.
       create-lockfiles                   nil
 )
 #+END_SRC
+*** TODO backup walker
 
 ** Auto save file buffers
 
@@ -591,6 +605,7 @@ and on windows switch.
 #+BEGIN_SRC emacs-lisp
 (use-package super-save
   :defer 2
+  :diminish (super-save-mode . "AS")
   :config
   ;; add integration with ace-window
   (add-to-list 'super-save-triggers 'ace-window)
@@ -781,8 +796,50 @@ This remembers your location in a file when saving files.
   :config
   (recentf-mode +1))
 #+END_SRC
+** Install crux
+
+This package defines a bunch of useful functions that I would otherwise had to
+define.
+
+#+BEGIN_SRC emacs-lisp
+(use-package crux
+  :commands
+  crux-smart-open-line-above
+  crux-smart-open-line
+  crux-open-with
+  crux-top-join-line
+  crux-rename-file-and-buffer
+  crux-with-region-or-line
+  crux-kill-line-backwards
+  crux-kill-whole-line)
+#+END_SRC
+
+These command will be used in the [[Editing]] and [[Navigation]].
+
+** Minibuffer
+
+#+BEGIN_SRC emacs-lisp
+(use-package minibuffer
+  :ensure nil
+  :config
+  (defun my-minibuffer-setup-hook ()
+    (setq gc-cons-threshold most-positive-fixnum))
+
+  (defun my-minibuffer-exit-hook ()
+    (setq gc-cons-threshold 800000))
+
+  (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+  (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook))
+#+END_SRC
 
 * Editing
+** Killing lines
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [remap kill-while-line] #'crux-kill-whole-line)
+(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+#+END_SRC
+
 ** Deleting spaces
 
 | Key     | Description                                                | Function                 |
@@ -901,14 +958,7 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 ** Join lines
 
 The =join-line= command (aliased to =delete-indentation=) works from the last
-line to be joined upwards. I prefer the other way around (cf. [[https://emacsredux.com/blog/2013/05/30/joining-lines/][here]]).
-
-#+BEGIN_SRC emacs-lisp
-(defun fikovnik/join-line ()
-  "Join the current line with the line beneath it."
-  (interactive)
-  (delete-indentation 1))
-#+END_SRC
+line to be joined upwards. Most of the time I prefer the other way around.
 
 | Key   | Description                                       |
 |-------+---------------------------------------------------|
@@ -916,62 +966,43 @@ line to be joined upwards. I prefer the other way around (cf. [[https://emacsred
 | =M-J= | Join the current line with the line *over* it.    |
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-j") 'fikovnik/join-line)
-(global-set-key (kbd "M-J") 'join-line)
+(global-set-key (kbd "M-j") #'crux-top-join-line)
+(global-set-key (kbd "M-J") #'join-line)
 #+END_SRC
 
-** Open line above / bellow
+** Open line above and bellow
 
-| Key     | Description                                        |
-|---------+----------------------------------------------------|
-| =C-PEM= | To insert a blank line *above* the line you're on. |
-| =C-EM=  | To insert a blank line *below* the line you're on. |
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-S-O") #'crux-smart-open-line-above)
+(global-set-key (kbd "C-o") #'crux-smart-open-line)
+#+END_SRC
 
 ** Comment / un-comment lines
-*** Functions
-First, define a function taken from [[https://stackoverflow.com/a/11517584/219584][here]]:
+
+First, we extend the functionality of the =comment-or-uncomment-region= to work
+on a single line in the case no region is active:
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/comment-or-uncomment-line-or-region ()
-  "Comments or uncomments the current line or region."
-  (interactive)
-  (if (region-active-p)
-      (comment-or-uncomment-region (region-beginning) (region-end))
-    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+(crux-with-region-or-line comment-or-uncomment-region)
 #+END_SRC
 
-*** Binding
+Next, we bind it:
 
 #+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "C-/"))
-(global-set-key (kbd "C-/") 'fikovnik/comment-or-uncomment-line-or-region)
+(global-set-key (kbd "C-/") #'comment-or-uncomment-region)
 #+END_SRC
 
-** Whole line
+** Copy and cut whole lines
 
-The following [[https://emacs.stackexchange.com/questions/2347/kill-or-copy-current-line-with-minimal-keystrokes][snippet]] changes the behavior of:
-- =C-w=: with no active region, kill a single line instead
-- =M-w=: with no active region, copy a single line instead
+If no region is active, make the =M-w= and =C-w= copy and cut whole line
+respectivelly.
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/slick-cut (beg end)
-  (interactive
-   (if mark-active
-       (list (region-beginning) (region-end))
-     (list (line-beginning-position) (line-beginning-position 2)))))
-
-(advice-add 'kill-region :before #'fikovnik/slick-cut)
-
-(defun fikovnik/slick-copy (beg end)
-  (interactive
-   (if mark-active
-       (list (region-beginning) (region-end))
-     (message "Copied line")
-     (list (line-beginning-position) (line-beginning-position 2)))))
-
-(advice-add 'kill-ring-save :before #'fikovnik/slick-copy)
+(crux-with-region-or-line kill-region)
+(crux-with-region-or-line kill-ring-save)
 #+END_SRC
-** Expand region (=M-r=)
+
+** Expand region (=C-==)
 
 Define a function that simply selects the current line.
 
@@ -992,33 +1023,33 @@ Define the =M-r= prefix and use it for expand region, including the line
 selection defined above.
 
 #+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "M-r"))
-#+END_SRC
+(setq my-expand-region-map (make-sparse-keymap))
 
-#+BEGIN_SRC emacs-lisp
 (use-package expand-region
-  :bind
-  (("M-r m"  . er/expand-region)
-   ("M-r ("  . er/mark-inside-pairs)
-   ("M-r )"  . er/mark-outside-pairs)
-   ("M-r '"  . er/mark-inside-quotes)
-   ("M-r \"" . er/mark-outside-quotes) ; it's just a quotation mark
-   ("M-r o" . er/mark-org-parent)
-   ("M-r u" . er/mark-url)
-   ("M-r b" . er/mark-org-code-block)
-   ("M-r ." . er/mark-method-call)
-   ("M-r >" . er/mark-next-accessor)
-   ("M-r w" . er/mark-word)
-   ("M-r d" . er/mark-defun)
-   ("M-r e" . er/mark-email)
-   ("M-r ," . er/mark-symbol)
-   ("M-r <" . er/mark-symbol-with-prefix)
-   ("M-r ;" . er/mark-comment)
-   ("M-r s" . er/mark-sentence)
-   ("M-r S" . er/mark-text-sentence)
-   ("M-r p" . er/mark-paragraph)
-   ("M-r P" . er/mark-text-paragraph)
-   ("M-r l" . fikovnik/select-line)))
+  :bind-keymap
+  ("C-=" . my-expand-region-map)
+  :bind (:map my-expand-region-map
+              ("="  . er/expand-region)
+              ("("  . er/mark-inside-pairs)
+              (")"  . er/mark-outside-pairs)
+              ("'"  . er/mark-inside-quotes)
+              ("\"" . er/mark-outside-quotes)
+              ("o" . er/mark-org-parent)
+              ("u" . er/mark-url)
+              ("b" . er/mark-org-code-block)
+              ("." . er/mark-method-call)
+              (">" . er/mark-next-accessor)
+              ("w" . er/mark-word)
+              ("d" . er/mark-defun)
+              ("e" . er/mark-email)
+              ("," . er/mark-symbol)
+              ("<" . er/mark-symbol-with-prefix)
+              (";" . er/mark-comment)
+              ("s" . er/mark-sentence)
+              ("S" . er/mark-text-sentence)
+              ("p" . er/mark-paragraph)
+              ("P" . er/mark-text-paragraph)
+              ("l" . fikovnik/select-line)))
 #+END_SRC
 
 ** Snippets
@@ -1026,19 +1057,46 @@ selection defined above.
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :defer 2
-  :diminish yas-minor-mode
+  :diminish (yas-minor-mode . "YAS")
   :commands yas-minor-mode
   :config
   (yas-global-mode 1)
   (yas-reload-all))
 #+end_src
+*** TODO configure
+
+#+BEGIN_SRC emacs-lisp :tangle no
+
+(use-package yasnippet
+  :demand t
+  :diminish yas-minor-mode
+  :commands yas-expand
+  :bind (("C-c y d" . yas-load-directory)
+         ("C-c y i" . yas-insert-snippet)
+         ("C-c y f" . yas-visit-snippet-file)
+         ("C-c y n" . yas-new-snippet)
+         ("C-c y t" . yas-tryout-snippet)
+         ("C-c y l" . yas-describe-tables)
+         ("C-c y g" . yas/global-mode)
+         ("C-c y m" . yas/minor-mode)
+         ("C-c y r" . yas-reload-all)
+         ("C-c y x" . yas-expand))
+  :bind (:map yas-keymap
+              ("C-i" . yas-next-field-or-maybe-expand))
+  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :config
+  (yas-load-directory (emacs-path "snippets"))
+  (yas-global-mode 1))
+#+END_SRC
 
 ** Auto completion
 *** Company mode
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :diminish company-mode
+  :defer 5
+  :diminish (company-mode . "AC")
+  :commands (company-mode company-indent-or-complete-common)
   :custom
   (company-dabbrev-ignore-case t)
   (company-dabbrev-code-ignore-case t)
@@ -1051,9 +1109,19 @@ selection defined above.
 #+END_SRC
 
 **** TODO configure backends
-**** TODO [[https://github.com/expez/company-quickhelp][company-quick-help]]
+**** [[https://github.com/expez/company-quickhelp][company-quick-help]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-quickhelp
+  :after company
+  :bind (:map company-active-map
+              ("C-c ?" . company-quickhelp-manual-begin)))
+#+END_SRC
 
 *** Hippie expand
+
+(yas-hippie-try-expand try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)
+
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
@@ -1064,6 +1132,16 @@ selection defined above.
 *** Configuration
 
 Spell check using aspell.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ispell
+  :no-require t
+  :bind (("C-c i c" . ispell-comments-and-strings)
+         ("C-c i d" . ispell-change-dictionary)
+         ("C-c i k" . ispell-kill-ispell)
+         ("C-c i m" . ispell-message)
+         ("C-c i r" . ispell-region)))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
@@ -1427,6 +1505,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
+  :diminish (helm-mode . "H")
   :custom
   (helm-echo-input-in-header-line        t)
   (helm-move-to-line-cycle-in-source     t)
@@ -1508,6 +1587,13 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ([remap describe-bindings] . helm-descbinds))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(use-package helm-describe-modes
+  :after helm
+  :bind
+  ([remap describe-mode] . helm-describe-modes))
+#+END_SRC
+
 *** Other
 **** helm-flyspell
 
@@ -1558,6 +1644,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("C-x p r" . helm-projectile-recentf)
   ("C-x p a" . helm-projectile-find-other-file))
 #+END_SRC
+
 
 ** TODO text objects
 - https://github.com/clemera/objed
@@ -1618,6 +1705,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :defer 1
+  :diminish (projectile-mode . "P")
   :custom
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'helm)
@@ -1638,18 +1726,6 @@ to index the projects in the search path.
 *** TODO create a keymap for =C-x p=
 
 * Packages
-** iqa - quick access to config file
-
-#+BEGIN_SRC emacs-lisp
-(use-package iqa
-  :custom
-  (iqa-user-init-file (concat user-emacs-directory "config.org"))
-  :bind (:map ctl-x-map
-              ("M-f" . iqa-find-user-init-file)
-              ("M-r" . iqa-reload-user-init-file)
-              ("M-d" . iqa-find-user-init-directory)))
-#+END_SRC
-
 ** ibuffers
 
 #+BEGIN_SRC emacs-lisp
@@ -1665,7 +1741,7 @@ to index the projects in the search path.
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :demand t
-  :diminish which-key-mode
+  :diminish
   :custom
   (which-key-idle-delay 0.3)
   :config
@@ -1685,7 +1761,12 @@ Auto refresh dired
       dired-listing-switches              "-alh"
 )
 #+END_SRC
-
+*** TODO double pane setup
+https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1027
+*** TODO dired toggle
+https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1162
+*** TODO diredx
+https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1172
 *** TODO hydra
 ** info
 *** TODO hydra
@@ -1698,7 +1779,58 @@ Auto refresh dired
   (setq-default ediff-highlight-all-diffs 'nil)
   (setq ediff-diff-options "-w"))
 #+END_SRC
+
+*** TODO keybinding
+https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
+
 ** TODO kbd macros
+* Helpers
+** init.el and Emacs lifecycle helpers
+
+#+BEGIN_SRC emacs-lisp
+(use-package iqa
+  :custom
+  (iqa-user-init-file (emacs-path "config.org"))
+  :bind (:map ctl-x-map
+         :prefix "E"
+         :prefix-map my-emacs-helper-map
+         :prefix-docstring "Emacs init.el related"
+         ("e" . iqa-find-user-init-file)
+         ("r" . iqa-reload-user-init-file)
+         ("d" . iqa-find-user-init-directory)
+         ("g" . fikovnik/dotfiles-magit)
+         ("s" . fikovnik/sync-configuration)
+         ("c" . fikovnik/sync-configuration-and-compile))
+  :init
+  (which-key-add-key-based-replacements "C-x E" "Emacs")
+  (which-key-add-key-based-replacements "C-x E c" "sync & compile")
+  (which-key-add-key-based-replacements "C-x E s" "sync")
+  (which-key-add-key-based-replacements "C-x E g" "magit")
+  (which-key-add-key-based-replacements "C-x E r" "reload config"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package restart-emacs
+  :init
+  (defun fikovnik/sync-configuration-and-restart ()
+    (interactive)
+    (fikovnik/sync-configuration nil)
+    (restart-emacs))
+
+  (defun fikovnik/restart-emacs-with-debug ()
+    (interactive)
+    (restart-emacs '("--debug-init")))
+
+  (which-key-add-key-based-replacements "C-x E R" "restart Emacs")
+  (which-key-add-key-based-replacements "C-x E D" "restart Emacs with debug")
+  (which-key-add-key-based-replacements "C-x E S" "sync & restart Emacs")
+  :commands restart-emacs
+  :bind (:map my-emacs-helper-map
+              ("R" . restart-emacs)
+              ("D" . fikovnik/restart-emacs-with-debug)
+              ("S" . fikovnik/sync-configuration-and-restart)))
+#+END_SRC
+
 * Version control
 ** Sort buffers in ibuffer based on git
 
@@ -1775,6 +1907,7 @@ and =--git-dir= options explicitly set. For this I define a new function
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
+  :demand t
   ;; to be sure we have the latest Org version
   :ensure org-plus-contrib
   :mode
@@ -1875,6 +2008,7 @@ The following is the _official_ way to fix it:
 ** TODO org-projectile
 ** TODO org-present ?
 ** TODO better refiling
+** TODO lazy load
 * Languages
 ** General
 *** TODO Enable flymake
@@ -1883,7 +2017,7 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
   :ensure nil
-  :diminish eldoc-mode
+  :diminish (eldoc-mode . "ELD")
   :commands eldoc-mode)
 #+END_SRC
 
@@ -2140,10 +2274,12 @@ TODO: font size hydra
 *** Fix org colors
 
 #+BEGIN_SRC emacs-lisp
-;(set-face-attribute 'org-todo nil :weight 'bold)
+(eval-after-load "org"
+  (lambda () (progn
+               (set-face-attribute 'org-todo nil :weight 'bold))))
 #+END_SRC
 * Troubleshooting
-** Invalid function: =org-preserve-local-variables=
+** Invalid function =org-preserve-local-variables=
 
 As indicated in [[https://github.com/syl20bnr/spacemacs/issues/11801#issuecomment-451755821][spacemacs/11801]], the problem is in version misalignment which
 can be fixed by removing all =org-*/*.elc= files and compiling it again:
@@ -2154,16 +2290,22 @@ find ~/.emacs.d/elpa/org*/*.elc -print0 | xargs -0 rm
 
 And then running the following function
 
-#+BEGIN_SRC emacs-lisp :results no
-(defun fikovnik/recompile-elpa ()
-  "Recompile packages in elpa directory"
-  (interactive)
-  (byte-recompile-directory package-user-dir 0 nil))
+#+BEGIN_SRC emacs-lisp :tangle no
+(fikovnik/recompile-elpa)
+#+END_SRC
+
+** Invalid function =org-outline-overlay-data=
+
+Similar to the above, this time caused by expand region [[https://github.com/syl20bnr/spacemacs/issues/12099][spacemacs/12099]].
+
+#+BEGIN_SRC sh
+find ~/.emacs.d/elpa/expand-region*/*.elc -print0 | xargs -0 rm
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (fikovnik/recompile-elpa)
 #+END_SRC
+
 
 ** Unable to install a package
 
@@ -2173,8 +2315,3 @@ file on MELPA, it might be due to an outdated local index. Use:
 #+BEGIN_SRC emacs-lisp :tangle no
 (package-refresh-contents)
 #+END_SRC
-* Local variables
-
-# Local Variables:
-# eval: (add-hook 'after-save-hook 'fikovnik/sync-configuration nil t)
-# End:
