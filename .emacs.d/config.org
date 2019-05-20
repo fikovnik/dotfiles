@@ -1512,6 +1512,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (use-package helm
   :diminish (helm-mode . "H")
   :custom
+  (helm-M-x-always-save-history          t)
   (helm-echo-input-in-header-line        t)
   (helm-move-to-line-cycle-in-source     t)
   (helm-idle-delay                       0.0)
