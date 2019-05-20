@@ -1532,6 +1532,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   (helm-follow-mode-persistent t)
   :config
   (helm-mode 1)
+  (helm-adaptive-mode 1)
   (add-hook 'helm-minibuffer-set-up-hook #'fikovnik/helm-hide-minibuffer-maybe)
   :bind-keymap
   ("C-x c" . fikovnik/helm-key-map)
@@ -2055,6 +2056,26 @@ The following is the _official_ way to fix it:
 | =C-M-.= |                  | =xref-find-apropos=     |
 
 *** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]] or realgud
+*** Interpreters
+
+- make the interpreter work like an interpreter
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package comint
+  :defer 2
+  :ensure nil
+  :bind (:map comint-mode-map 
+              ([up] . comint-previous-matching-input-from-input)
+              ([down] . comint-next-matching-input-from-input)
+              ("C-k" . kill-line))
+  :custom
+  (comint-scroll-to-bottom-on-output 'others)
+  (comint-scroll-show-maximum-output t)
+  (comint-move-point-for-matching-input 'end-of-line)
+  (comint-scroll-to-bottom-on-input 'this))
+#+END_SRC
+
 ** C/C++
 *** Backend
 
