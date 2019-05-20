@@ -2189,8 +2189,42 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 
 #+END_SRC
 
-** TODO R
-- ESS or lsp
+** R
+
+#+BEGIN_SRC emacs-lisp
+(use-package ess
+  :mode (("/R/.*\\.q\\'"       . R-mode)
+         ("\\.[rR]\\'"         . R-mode)
+         ("\\.[rR]nw\\'"       . Rnw-mode)
+         ("\\.[sS]nw\\'"       . Snw-mode)
+         ("\\.[rR]profile\\'"  . R-mode)
+         ("NAMESPACE\\'"       . R-mode)
+         ("CITATION\\'"        . R-mode)
+         ("\\.Rd\\'"           . Rd-mode))
+  :commands R
+  :hook (ess-mode . subword-mode)
+  :custom
+  (ess-default-style 'Rstudio)
+  (ess-indent-level 4)
+  (ess-nuke-trailing-whitespace-p t)
+  (ess-tab-complete-in-script t)
+  (ess-build-tags-command "system(\"~/bin/rtags.R '%s' '%s'\")")
+  (ess-indent-with-fancy-comments nil)
+  (ess-R-argument-suffix "=")
+  (ess-smart-S-assign-key nil)
+  (ess-R-font-lock-keywords '((ess-R-fl-keyword:fun-defs . t)
+                              (ess-R-fl-keyword:modifiers . t)
+                              (ess-R-fl-keyword:keywords . t)
+                              (ess-R-fl-keyword:assign-ops . t)
+                              (ess-R-fl-keyword:constants . t)
+                              (ess-R-fl-keyword:F&T . t)
+                              (ess-fl-keyword:fun-calls . t)
+                              (ess-fl-keyword:numbers . t)
+                              (ess-fl-keyword:operators)
+                              (ess-fl-keyword:delimiters)
+                              (ess-fl-keyword:=))))
+#+END_SRC
+
 ** TODO Latex
 * Applications
 ** TODO agenda / calendar
