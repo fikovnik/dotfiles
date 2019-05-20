@@ -798,6 +798,12 @@ This remembers your location in a file when saving files.
   :config
   (recentf-mode +1))
 #+END_SRC
+*** <end> is the same as =C-e=
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<end>") #'move-end-of-line)
+#+END_SRC
+
 ** Install crux
 
 This package defines a bunch of useful functions that I would otherwise had to
@@ -1473,16 +1479,13 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 ** TODO ace-link
 - https://github.com/abo-abo/ace-link
-** =C-a= / =home= and =C-e= / =end= keys move to the beginning/end of the line smartly
+** =C-a= / =home= to the beginning
 
 #+BEGIN_SRC emacs-lisp
-(use-package mwim
-  :bind
-  ("C-a" . mwim-beginning)
-  ("C-e" . mwim-end)
-  ("<home>" . mwim-beginning)
-  ("<end>" . mwim-end))
+(global-set-key (kbd "C-a") #'crux-move-beginning-of-line)
+(global-set-key (kbd "<home>") #'crux-move-beginning-of-line)
 #+END_SRC
+
 ** Helm
 *** TODO move higher and move helm-packages into proper categories
 *** Functions
