@@ -1445,6 +1445,16 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
 
 ** TODO macros
 - hydra with dribble / loosage
+** Automatically remove trailing whitespace
+
+But, only if I put them there!
+
+#+BEGIN_SRC emacs-lisp
+(use-package ws-butler
+  :hook ((text-mode prog-mode) . ws-butler-mode)
+  :config (setq ws-butler-keep-whitespace-before-point nil))
+#+END_SRC
+
 * Movement and navigation
 ** Windows (=C-x w=)
 *** Overview
