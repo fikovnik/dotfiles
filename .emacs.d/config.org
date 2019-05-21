@@ -892,6 +892,7 @@ This remembers your location in a file when saving files.
 #+BEGIN_SRC emacs-lisp
 (use-package saveplace
   :demand t
+  :unless noninteractive
   :custom
   (save-place-file (expand-file-name "saveplace" fikovnik/savefile-dir)))
 
