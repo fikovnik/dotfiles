@@ -30,7 +30,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =C-==   | Expand region    |
 
 ** TODO rename variables and functions
-** TODO use varibales for directories
+** TODO use variables for directories
 ** Remove the =init.el= from index tracking
 
 #+BEGIN_SRC sh :tangle no
@@ -39,6 +39,10 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 
 * Sources
 ** TODO clean and describe
+- [[https://github.com/hlissner/doom-emacs/blob/develop/][Doom Emacs]]
+- https://github.com/dakra/dmacs/blob/master/init.org
+  - [[https://github.com/dakra/dmacs/blob/master/init.org#dired][dired]]
+  - [[https://github.com/dakra/dmacs/blob/master/init.org#email][email]]
 - [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][John Wiegley’s config -- use-package author]]
 - [[https://github.com/seagle0128/.emacs.d][Centaur emacs]]
   - look into https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-basic.el
@@ -611,7 +615,6 @@ These functions are useful so activate them.
 )
 #+END_SRC
 *** TODO backup walker
-
 ** Auto save file buffers
 
 Automatically save buffers associated with files on buffer switch
