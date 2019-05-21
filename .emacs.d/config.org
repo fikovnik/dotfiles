@@ -770,9 +770,12 @@ Answering just 'y' or 'n' will do
 
 #+BEGIN_SRC emacs-lisp
 (setq
-      confirm-nonexistent-file-or-buffer  t
       ;; apropos searches more extensively
       apropos-do-all                      t
+      ;; indent or if indeneted, complete
+      tab-always-indent                   'complete
+      confirm-nonexistent-file-or-buffer  t
+
       ;; save existing clipboard into kill ring before replacing it
       save-interprogram-paste-before-kill t
       ;; when middle-clicking the mouse to yank from the clipboard, insert the text where point is, not where the mouse cursor is
@@ -788,21 +791,24 @@ Answering just 'y' or 'n' will do
       exec-path                           (append exec-path '("/usr/local/bin/"))
       ;; single space to indicate end of a sentance
       sentence-end-double-space           nil
-      select-enable-clipboard           t
+      select-enable-clipboard             t
       ;; -i gets alias definitions from shell
       shell-command-switch                "-ic"
       echo-keystrokes                     0.1
-      scroll-step                         1
       use-dialog-box                      nil
       kill-ring-max                       300
       initial-major-mode                  'text-mode
       cursor-in-non-selected-windows      t
       ;; when opening a file, follow symlinks
       vc-follow-symlinks                  t
-      scroll-error-top-bottom             t
+      require-final-line                  t
+      ;; Activate character folding in searches i.e. searching for 'a' matches 'ä' as well
+      search-default-mode                 'char-fold-to-regexp
 )
 
 (setq-default
+      ;; always just use left-to-right text this makes Emacs a bit faster for very long lines
+      bidi-display-reordering             nil
       tab-width                           2
       indent-tabs-mode                    nil
       ;; maximum line width
@@ -830,12 +836,30 @@ Answering just 'y' or 'n' will do
 (transient-mark-mode t)
 (toggle-truncate-lines t)
 (whitespace-mode -1)
+(size-indication-mode t)
 
 (diminish 'visual-line-mode " ↩")
+#+END_SRC
+*** Enable line numbers
 
+#+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 #+END_SRC
+
+*** Nicer scrolling
+
+#+BEGIN_SRC emacs-lisp
+(setq scroll-margin 0
+      scroll-step 1
+      scroll-error-top-bottom t
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1
+      ;; disable auto vscroll (makes scrolling down a bit faster?)
+      auto-window-vscroll nil)
+#+END_SRC
+
+**** TODO make sure this work with the pdf-tools
 
 *** Turn on syntax highlighting whenever possible
 
