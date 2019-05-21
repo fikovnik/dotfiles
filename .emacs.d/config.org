@@ -1455,6 +1455,14 @@ But, only if I put them there!
   :config (setq ws-butler-keep-whitespace-before-point nil))
 #+END_SRC
 
+** Regexp builder
+
+#+BEGIN_SRC emacs-lisp
+(use-package re-builder
+  :defer t
+  :config (setq reb-re-syntax 'string))
+#+END_SRC
+
 * Movement and navigation
 ** Windows (=C-x w=)
 *** Overview
