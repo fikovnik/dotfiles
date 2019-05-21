@@ -918,13 +918,13 @@ This remembers your location in a file when saving files.
   :unless noninteractive
   :custom
   ;; search entries
-  (savehist-additional-variables '(search-ring regexp-search-ring))
+  (savehist-additional-variables '(search-ring regexp-search-ring compile-command kill-ring))
   ;; save every minute
   (savehist-autosave-interval 60)
   ;; keep the home clean
   (savehist-file (expand-file-name "savehist" fikovnik/savefile-dir))
   :config
-  (savehist-mode +1))
+  (savehist-mode 1))
 #+END_SRC
 
 *** Recent files tracking
