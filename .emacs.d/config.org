@@ -2535,6 +2535,15 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 #+END_SRC
 
 ** TODO Latex
+** CSV
+
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode
+  :mode "\\.csv\\'"
+  :custom
+  (csv-separators '("," "	" ";" "|")))
+#+END_SRC
+
 ** TOML
 
 #+BEGIN_SRC emacs-lisp
