@@ -741,18 +741,11 @@ and on windows switch.
 
 ** Use UTF-8
 
-I guess all this is trying to say to use UTF-8 by default.
-
 #+BEGIN_SRC emacs-lisp
-(setq
-      locale-coding-system          'utf-8
-      default-process-coding-system '(utf-8-unix . utf-8-unix)
-)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(set-language-environment 'utf-8)
 (prefer-coding-system 'utf-8)
+
+;; Accept 'UTF-8' (uppercase) as a valid encoding in the coding header
+(define-coding-system-alias 'UTF-8 'utf-8)
 #+END_SRC
 
 ** Sensible defaults
