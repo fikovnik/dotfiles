@@ -698,6 +698,8 @@ These functions are useful so activate them.
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+(put 'erase-buffer 'disabled nil)
+(put 'scroll-left 'disabled nil)
 #+END_SRC
 
 ** File backup                                                         :wip:
