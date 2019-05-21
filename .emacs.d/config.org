@@ -2535,6 +2535,14 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 #+END_SRC
 
 ** TODO Latex
+** Config
+
+#+BEGIN_SRC emacs-lisp
+(use-package conf-mode
+  :mode ("mbsyncrc\\'" "msmtprc\\'" "\\.cnf\\'"
+         "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
+#+END_SRC
+
 ** CSV
 
 #+BEGIN_SRC emacs-lisp
