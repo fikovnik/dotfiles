@@ -915,6 +915,7 @@ This remembers your location in a file when saving files.
 ;; savehist keeps track of some history
 (use-package savehist
   :demand t
+  :unless noninteractive
   :custom
   ;; search entries
   (savehist-additional-variables '(search-ring regexp-search-ring))
