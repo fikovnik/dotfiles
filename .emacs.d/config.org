@@ -4,6 +4,18 @@
 
 * Overview
 ** TODO descrive the idea behind this configuration
+** Key bindings
+
+Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Key-Binding-Conventions.html][key binding conversions]]:
+- =C-x= sequences are for Emacs commands
+- =C-c C-key= sequences are for major modes
+- =C-c {,},<,>,:,;= sequences are for major modes  
+- =C-c key= and =<F5>-<F9>= are for users
+- =C-c <ASCII punctuations / symbols>= sequences are for minor modes 
+- Don't bind =C-h= following any prefix character (including =C-c=)
+- Don't bind a key sequence ending in =<ESC>= except following another =<ESC>= 
+- Don't bind a key sequence ending in =C-g=
+
 ** Micro states
 
 | Key     | Micro state      |
@@ -12,10 +24,11 @@
 | =C-x b= | Buffers          |
 | =C-x t= | Toggles          |
 | =C-x p= | Projects         |
+| =C-x c= | Helm             |
 | =C-c &= | Snippets         |
 | =M-g=   | Go to            |
-| =M-r=   | Expand region    |
-| =M-m=   | Multiple cursors |
+| =C-==   | Expand region    |
+
 ** TODO rename variables and functions
 ** TODO use varibales for directories
 ** Remove the =init.el= from index tracking
