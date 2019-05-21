@@ -77,7 +77,7 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
 
-* Basics
+* Preamble
 ** Lexical scoping
 
 I like lexical scoping.
@@ -87,6 +87,10 @@ I like lexical scoping.
 #+END_SRC
 
 ** Time the initialization
+
+This will time immediate initialization to play the _under a second startup_
+game. Not that it would really matter since I have instance of Emacs being
+launched by systemd.
 
 #+BEGIN_SRC emacs-lisp
 (defconst emacs-start-time (current-time))
@@ -102,26 +106,112 @@ I like lexical scoping.
 * Startup
 ** Speed up startup
 
-Allow more memory between GC cycle (default is 780kB) at startup and other
-hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][John Wiegley’s config]].
+A few _optimization_ for a faster startup and perhaps a snappier behavior based
+on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][John Wiegley’s config]] and [[https://github.com/hlissner/doom-emacs/blob/develop/early-init.el][Doom Emacs's early-init.el]].
+
+*** Set GC normal and deferred limits
 
 #+BEGIN_SRC emacs-lisp
-(defvar file-name-handler-alist-old file-name-handler-alist)
+(defvar my-gc-cons-threshold (* 16 1024 1024)
+  "The default value to use for `gc-cons-threshold'. If you experience freezing,
+decrease this. If you experience stuttering, increase this.")
 
-(setq file-name-handler-alist nil
-      message-log-max 16384
-      auto-window-vscroll nil
-      gc-cons-threshold (* 384 1024 1024)
-      gc-cons-percentage 0.6)
-
-(add-hook 'after-init-hook
-          `(lambda ()
-             (setq file-name-handler-alist file-name-handler-alist-old
-                   gc-cons-threshold (* 64 1024 1024)
-                   gc-cons-percentage 0.1)
-             (garbage-collect))
-          t)
+(defvar my-gc-cons-upper-limit (* 512 1024 1024)
+  "The temporary value for `gc-cons-threshold' to defer it.")
 #+END_SRC
+
+*** Defer garbage collection further back in the startup process
+
+Allow more memory between GC cycle (default is 780kB) at startup.
+
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold my-gc-cons-upper-limit)
+#+END_SRC
+
+*** Do not immediately load packages
+
+Package initialize occurs automatically, before `user-init-file' is
+loaded, but after `early-init-file'. Doom handles package
+initialization, so we must prevent Emacs from doing it early!
+
+#+BEGIN_SRC emacs-lisp
+(setq package-enable-at-startup nil)
+#+END_SRC
+
+*** Prevent the glimpse of un-styled Emacs by setting these early
+
+#+BEGIN_SRC emacs-lisp
+(if (fboundp 'menu-bar-mode)
+    (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode)
+    (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode)
+    (scroll-bar-mode -1))
+(if (fboundp 'horizontal-scroll-bar-mode)
+    (horizontal-scroll-bar-mode -1))
+#+END_SRC
+
+*** Do not run site file
+
+One less file to load at startup
+
+#+BEGIN_SRC emacs-lisp
+(setq site-run-file nil)
+#+END_SRC
+
+*** Temporarily disable file name handlers
+
+The =filen-name-handler-alist= is consulted on every `require', `load' and
+various path/io functions. One might get a minor speed up by nooping this.
+
+#+BEGIN_SRC emacs-lisp
+(defvar my--file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+#+END_SRC
+
+*** Longer message log
+
+#+BEGIN_SRC emacs-lisp
+(setq message-log-max 16384)
+#+END_SRC
+
+*** Restore startup optimizations
+
+Finally, we need to restore the startup optimizations to their defaults in
+order to prevent stuttering/freezes.
+
+#+BEGIN_SRC emacs-lisp
+(defun my--restore-startup-optimizations ()
+  "Resets garbage collection settings to reasonable defaults (a large
+`gc-cons-threshold' can cause random freezes otherwise) and resets
+`file-name-handler-alist'."
+
+  (setq file-name-handler-alist my--file-name-handler-alist)
+
+  ;; Do this on idle timer to defer a possible GC pause that could result; also
+  ;; allows deferred packages to take advantage of these optimizations.
+  (run-with-idle-timer
+   3 nil
+   (lambda ()
+     (message "Finished initialization")
+     (setq-default gc-cons-threshold my-gc-cons-threshold)
+
+     ;; To speed up minibuffer commands (like helm and ivy), we defer garbage
+     ;; collection while the minibuffer is active.
+     (defun my--defer-garbage-collection ()
+       (setq gc-cons-threshold my-gc-cons-upper-limit))
+     (defun my--restore-garbage-collection ()
+       ;; Defer it so that commands launched from the minibuffer can enjoy the
+       ;; benefits.
+       (run-at-time 1 nil (lambda () (setq gc-cons-threshold my-gc-cons-threshold))))
+
+     (add-hook 'minibuffer-setup-hook #'my--defer-garbage-collection)
+     (add-hook 'minibuffer-exit-hook  #'my--restore-garbage-collection)
+     (add-hook 'focus-out-hook #'garbage-collect))))
+
+(add-hook 'after-init-hook #'my--restore-startup-optimizations nil t)
+#+END_SRC
+
 ** Common functions
 
 #+BEGIN_SRC emacs-lisp
@@ -163,26 +253,15 @@ hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][J
   (setq use-package-verbose nil
         use-package-expand-minimally t))
 #+END_SRC
+
 ** Turn off messages
 
 #+BEGIN_SRC emacs-lisp
-;; turn off messages
-(setq inhibit-startup-message t)
+(setq inhibit-startup-buffer-menu t)
 (setq inhibit-startup-echo-area-message "krikava")
-(setq initial-scratch-message "")
-#+END_SRC
-
-** Turn off the some UI elements to avoid momentary display
-
-#+BEGIN_SRC emacs-lisp
-(if (fboundp 'menu-bar-mode)
-    (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode)
-    (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode)
-    (scroll-bar-mode -1))
-(if (fboundp 'horizontal-scroll-bar-mode)
-    (horizontal-scroll-bar-mode -1))
+(setq inhibit-startup-message t)
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message nil)
 #+END_SRC
 
 ** Initialize package.el
@@ -201,7 +280,7 @@ hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][J
 #+END_SRC
 
 ** Initialize use-package
-*** Basics
+
 #+BEGIN_SRC emacs-lisp
 (setq-default use-package-always-ensure t ; Auto-download package if not exists
               use-package-always-defer t ; Always defer load package to speed up startup
@@ -217,21 +296,49 @@ hacks based on [[https://github.com/jwiegley/dot-emacs/blob/master/init.el#L7][J
   (require 'use-package))
 #+END_SRC
 
-*** Add diminish and bind-keys
+** Benchmark initialization
 
-These additional packages add the ability to diminish minor modes from
-modeline, and to conveniently bind keys using =:diminish= and =:bind-key=
-keywords in =(use-package)=.
+Who would not like to benchmark initialization of his text editor?
+
+#+BEGIN_SRC emacs-lisp
+(use-package benchmark-init
+  :demand t
+  :hook
+  (after-init . benchmark-init/deactivate))
+#+END_SRC
+
+To see the results use either:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(benchmark-init/show-durations-tree)
+#+END_SRC
+
+or
+
+#+BEGIN_SRC emacs-lisp :tangle no
+benchmark-init/show-durations-tabulated
+#+END_SRC
+
+** Install diminish
+
+Allow to use =:diminish= in =use-package= macro to diminish minor mode.
 
 #+BEGIN_SRC emacs-lisp
 ;; :diminish keyword
 (use-package diminish
   :demand t)
+#+END_SRC
 
+** Install bind-key
+
+Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
+
+#+BEGIN_SRC emacs-lisp
 ;; :bind keyword
 (use-package bind-key
   :demand t)
 #+END_SRC
+
 * Defaults
 ** Global variables
 *** Declarations
