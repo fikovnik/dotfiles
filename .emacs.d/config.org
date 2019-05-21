@@ -2535,6 +2535,13 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 #+END_SRC
 
 ** TODO Latex
+** TOML
+
+#+BEGIN_SRC emacs-lisp
+(use-package toml-mode
+  :mode ("\\.toml\\'" "Cargo.lock\\'"))
+#+END_SRC
+
 ** YAML
 
 #+BEGIN_SRC emacs-lisp
