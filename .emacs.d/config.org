@@ -1926,8 +1926,19 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 * Search and replace
 ** TODO search using swoop?
 - https://github.com/ShingoFukuyama/helm-swoop
-** TODO replace
-- is the visual regexp good enough?
+** Replace
+
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :defer 1
+  :bind ([remap query-replace] . anzu-query-replace-regexp)
+  :config
+  (global-anzu-mode 1)
+  (setq-default
+   anzu-cons-mode-line-p nil
+   anzu-replace-to-string-separator (mdi "arrow-right" t)))
+#+END_SRC
+
 ** TODO occur
 * Toggles (=C-x t=)
 ** Setup =C-x t= micro state                                         :hydra:
