@@ -2051,6 +2051,16 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1172
 https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
 
 ** TODO kbd macros
+** View large files
+#+BEGIN_SRC emacs-lisp
+(use-package vlf
+  :custom
+  (large-file-warning-threshold (* 64 1024 1024))
+  :ensure t
+  :config
+  (require 'vlf-setup))
+#+END_SRC
+
 * Helpers
 ** init.el and Emacs lifecycle helpers
 
