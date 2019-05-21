@@ -2336,9 +2336,23 @@ The following is the _official_ way to fix it:
 
 *** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]] or realgud
 *** Interpreters
+**** Create termino for comint with support for ANSI color codes 
 
-- make the interpreter work like an interpreter
+#+BEGIN_SRC sh :tangle no
+cat > /tmp/dumb-emacs-ansi.ti << EOF
+dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
+    am,
+    colors#8, it#8, ncv#13, pairs#64,
+    bold=\E[1m, cud1=^J, ht=^I, ind=^J, op=\E[39;49m,
+    ritm=\E[23m, rmul=\E[24m, setab=\E[4%p1%dm,
+    setaf=\E[3%p1%dm, sgr0=\E[m, sitm=\E[3m, smul=\E[4m,
+EOF
 
+tic -x /tmp/dumb-emacs-ansi.ti
+rm /tmp/dumb-emacs-ansi.ti
+#+END_SRC
+
+**** Make the interpreter work like an interpreter
 
 #+BEGIN_SRC emacs-lisp
 (use-package comint
@@ -2349,6 +2363,8 @@ The following is the _official_ way to fix it:
               ([down] . comint-next-matching-input-from-input)
               ("C-k" . kill-line))
   :custom
+  (comint-buffer-maximum-size 8192)
+  (comint-terminfo-terminal "dumb-emacs-ansi")
   (comint-scroll-to-bottom-on-output 'others)
   (comint-scroll-show-maximum-output t)
   (comint-move-point-for-matching-input 'end-of-line)
