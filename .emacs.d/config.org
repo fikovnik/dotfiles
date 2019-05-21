@@ -2192,6 +2192,7 @@ and =--git-dir= options explicitly set. For this I define a new function
   :hook
   (org-mode . flyspell-mode)
   :custom
+  (org-catch-invisible-edits 'smart)
   (org-src-tab-acts-natively t)
   (org-src-preserve-indentation t)
   (org-confirm-babel-evaluate nil)
