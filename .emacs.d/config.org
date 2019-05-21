@@ -94,14 +94,9 @@ launched by systemd.
 
 #+BEGIN_SRC emacs-lisp
 (defconst emacs-start-time (current-time))
-
-(add-hook 'after-init-hook
-          `(lambda ()
-             (message "Loaded %s in %.3fs"
-                      ,load-file-name
-                      (float-time (time-subtract (current-time) emacs-start-time))))
-          t)
 #+END_SRC
+
+This const will be used in [[Restore startup optimizations]].
 
 * Startup
 ** Speed up startup
@@ -193,7 +188,6 @@ order to prevent stuttering/freezes.
   (run-with-idle-timer
    3 nil
    (lambda ()
-     (message "Finished initialization")
      (setq-default gc-cons-threshold my-gc-cons-threshold)
 
      ;; To speed up minibuffer commands (like helm and ivy), we defer garbage
@@ -207,7 +201,11 @@ order to prevent stuttering/freezes.
 
      (add-hook 'minibuffer-setup-hook #'my--defer-garbage-collection)
      (add-hook 'minibuffer-exit-hook  #'my--restore-garbage-collection)
-     (add-hook 'focus-out-hook #'garbage-collect))))
+     (add-hook 'focus-out-hook #'garbage-collect)
+
+     (message "Loaded %s in %.3fs"
+              ,load-file-name
+              (float-time (time-subtract (current-time) emacs-start-time))))))
 
 (add-hook 'after-init-hook #'my--restore-startup-optimizations nil t)
 #+END_SRC
