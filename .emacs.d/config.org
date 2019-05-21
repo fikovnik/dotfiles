@@ -9,11 +9,11 @@
 Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Key-Binding-Conventions.html][key binding conversions]]:
 - =C-x= sequences are for Emacs commands
 - =C-c C-key= sequences are for major modes
-- =C-c {,},<,>,:,;= sequences are for major modes  
+- =C-c {,},<,>,:,;= sequences are for major modes
 - =C-c key= and =<F5>-<F9>= are for users
-- =C-c <ASCII punctuations / symbols>= sequences are for minor modes 
+- =C-c <ASCII punctuations / symbols>= sequences are for minor modes
 - Don't bind =C-h= following any prefix character (including =C-c=)
-- Don't bind a key sequence ending in =<ESC>= except following another =<ESC>= 
+- Don't bind a key sequence ending in =<ESC>= except following another =<ESC>=
 - Don't bind a key sequence ending in =C-g=
 
 ** Micro states
@@ -1278,7 +1278,7 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package hippie-exp
-  :bind 
+  :bind
   ([remap dabbrev-expand] . hippie-expand)
   :custom
   (hippie-expand-try-functions-list '(try-expand-dabbrev
@@ -2297,7 +2297,8 @@ The following is the _official_ way to fix it:
 ** TODO lazy load
 * Languages
 ** General
-*** TODO Enable flymake
+*** TODO configure flymake
+*** TODO install dash
 *** Documentation with eldoc
 
 #+BEGIN_SRC emacs-lisp
@@ -2336,7 +2337,7 @@ The following is the _official_ way to fix it:
 
 *** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]] or realgud
 *** Interpreters
-**** Create termino for comint with support for ANSI color codes 
+**** Create termino for comint with support for ANSI color codes
 
 #+BEGIN_SRC sh :tangle no
 cat > /tmp/dumb-emacs-ansi.ti << EOF
@@ -2358,7 +2359,7 @@ rm /tmp/dumb-emacs-ansi.ti
 (use-package comint
   :defer 2
   :ensure nil
-  :bind (:map comint-mode-map 
+  :bind (:map comint-mode-map
               ([up] . comint-previous-matching-input-from-input)
               ([down] . comint-next-matching-input-from-input)
               ("C-k" . kill-line))
@@ -2534,6 +2535,10 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
                               (ess-fl-keyword:=))))
 #+END_SRC
 
+*** TODO [[https://github.com/polymode/poly-R][poly-R]]
+*** TODO poly-markdown
+*** TODO poly-org
+
 ** TODO Latex
 ** Config
 
@@ -2566,6 +2571,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :mode ("\\.yaml\\'" "\\.yml\\'"))
 #+END_SRC
 
+** TODO Markdown
 * Applications
 ** TODO agenda / calendar
 ** TODO email
