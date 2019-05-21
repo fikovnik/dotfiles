@@ -1246,10 +1246,15 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :defer 5
+  :defer 2
   :diminish (company-mode . "AC")
   :commands (company-mode company-indent-or-complete-common)
   :custom
+  (company-idle-delay 0.1)
+  (company-tooltip-limit 10)
+  (company-minimum-prefix-length 2)
+  (company-tooltip-align-annotations t)
+  (company-begin-commands '(self-insert-command))
   (company-dabbrev-ignore-case t)
   (company-dabbrev-code-ignore-case t)
   (company-dabbrev-downcase nil)
@@ -1260,7 +1265,6 @@ selection defined above.
               ("TAB" . nil)))
 #+END_SRC
 
-**** TODO configure backends
 **** [[https://github.com/expez/company-quickhelp][company-quick-help]]
 
 #+BEGIN_SRC emacs-lisp
