@@ -1974,7 +1974,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :defer 1
-  :diminish (projectile-mode . "P")
+  :diminish "P"
   :custom
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'helm)
