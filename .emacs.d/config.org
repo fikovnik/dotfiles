@@ -2371,6 +2371,20 @@ rm /tmp/dumb-emacs-ansi.ti
   (comint-scroll-to-bottom-on-input 'this))
 #+END_SRC
 
+*** Compilation
+
+#+BEGIN_SRC emacs-lisp
+(use-package compile
+  :custom
+  ;; always save before compiling
+  (compilation-ask-about-save nil)
+  ;; just kill old compile processes before starting the new one
+  (compilation-always-kill t)
+  ;; scroll with the compilation output
+  ;; set to 'first-error to stop scrolling on first error
+  (compilation-scroll-output t))
+#+END_SRC
+
 ** C/C++
 *** Backend
 
