@@ -1208,7 +1208,7 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
-  :defer 2
+  :defer 1
   :diminish (yas-minor-mode . "YAS")
   :commands yas-minor-mode
   :config
