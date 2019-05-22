@@ -1444,7 +1444,59 @@ But, only if I put them there!
 #+END_SRC
 
 * Movement and navigation
-** Windows (=C-x w=)
+** Generic completion with Ivy
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+  :demand t
+  :bind
+  ("C-x C-r" . ivy-resume)
+  ("C-x C-b" . ivy-switch-buffer)
+  ("C-h F" . counsel-faces)
+  ([remap isearch-forward] . swiper)
+  (:map ivy-mode-map
+        ("C-'" . ivy-avy))
+  (:map read-expression-map
+        ("C-r" . counsel-expression-history))
+  (:map minibuffer-local-map
+        ("C-r" . counsel-minibuffer-history))
+  :custom
+  (enable-recursive-minibuffers t)
+  (ivy-count-format "(%d/%d) ")
+  (ivy-use-virtual-buffers t)
+  (ivy-virtual-abbreviate 'full)
+  (ivy-initial-inputs-alist nil)
+  (ivy-re-builders-alist
+   '((t . ivy--regex-ignore-order)))
+  (counsel-find-file-at-point t)
+  (counsel-rg-base-command "rg -S --no-heading --line-number --follow --color never %s .")
+  :config
+  (ivy-mode 1)
+  (counsel-mode 1))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-rich
+  :demand t
+  :custom
+  (ivy-rich-path-style 'abbrev)
+  :config
+  (ivy-rich-mode 1))
+#+END_SRC
+
+** Imenu
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-i" 'imenu)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package imenu-anywhere
+  :bind
+  ("M-I" . imenu-anywhere))
+#+END_SRC
+
+** Windows (=C-c w=)
 *** Overview
 
 | Key         | Description                          | Function      |
@@ -1556,8 +1608,8 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
    ("S-<down>" enlarge-window)
    ("S-<up>" shrink-window)
    ("S-<right>" enlarge-window-horizontally)
-   ("b" helm-mini :color blue)
-   ("f" helm-find-files :color blue)
+   ("b" ivy-switch-buffer :color blue)
+   ("f" counsel-find-files :color blue)
    ("a" ace-window :color blue)
    ("|" (lambda ()
           (interactive)
@@ -1715,174 +1767,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (global-set-key (kbd "<home>") #'crux-move-beginning-of-line)
 #+END_SRC
 
-** Helm
-*** TODO move higher and move helm-packages into proper categories
-*** Functions
-
-#+BEGIN_SRC emacs-lisp
-(defun fikovnik/helm-hide-minibuffer-maybe ()
-  "Hide minibuffer in Helm session if we use the header line as input field."
-  (when (with-helm-buffer helm-echo-input-in-header-line)
-    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-      (overlay-put ov 'window (selected-window))
-      (overlay-put ov 'face
-                   (let ((bg-color (face-background 'default nil)))
-                     `(:background ,bg-color :foreground ,bg-color)))
-      (setq-local cursor-type nil))))
-#+END_SRC
-
-*** Basics
-
-#+BEGIN_SRC emacs-lisp
-(setq fikovnik/helm-key-map (make-sparse-keymap))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm
-  :diminish (helm-mode . "H")
-  :custom
-  (helm-M-x-always-save-history          t)
-  (helm-echo-input-in-header-line        t)
-  (helm-move-to-line-cycle-in-source     t)
-  (helm-idle-delay                       0.0)
-  (helm-input-idle-delay                 0.01)
-  (helm-quick-update                     t)
-  (helm-ff-file-name-history-use-recentf t)
-  (helm-ff-skip-boring-files             t)
-  ;; fuzzy matching
-  (helm-mode-fuzzy-match                 t)
-  (helm-completion-in-region-fuzzy-match t)
-  (helm-candidate-number-limit           100)
-  ;; position
-  (helm-split-window-in-side-p           t)
-  (helm-split-window-default-side        'below)
-  (helm-autoresize-max-height            0)
-  (helm-autoresize-min-height            20)
-  (helm-follow-mode-persistent t)
-  :config
-  (helm-mode 1)
-  (helm-adaptive-mode 1)
-  (add-hook 'helm-minibuffer-set-up-hook #'fikovnik/helm-hide-minibuffer-maybe)
-  :bind-keymap
-  ("C-x c" . fikovnik/helm-key-map)
-  :bind
-  (("M-x"    . helm-M-x)
-  ("M-y"     . helm-show-kill-ring)
-  ("C-x C-f" . helm-find-files)
-  ("C-x C-r" . helm-recentf)
-  ("C-x C-b" . helm-mini)
-  ;; imenu
-  ("M-i" . helm-imenu)
-  ("M-I" . helm-imenu-anywhere)
-  :map fikovnik/helm-key-map
-  ("c" . helm-resume)
-  ("f" . helm-find-file)
-  ("r" . helm-recentf)
-  ("R" . helm-register)
-  ("o" . helm-occur)
-  ("k" . helm-show-kill-ring)
-  ("m" . helm-all-mark-rings)
-  ("a" . helm-apropos)
-  ("l" . helm-locate)
-  ("b" . helm-filtered-bookmarks)
-  ("i" . helm-imenu)
-  ("I" . helm-imenu-anywhere)
-  :map helm-map
-  ("<tab>" . helm-execute-persistent-action) ; rebind tab to do persistent action
-  ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
-  ("C-z" . helm-select-action) ; list actions using C-z
-  ))
-#+END_SRC
-
-*** Searching with =helm-ag=
-
-#+BEGIN_SRC emacs-lisp
-
-(use-package helm-ag
-  :custom
-  (helm-ag-insert-at-point 'symbol)
-  (helm-ag-base-command "rg --no-heading")
-  :bind
-  ("C-x p s" . helm-ag-project-root)
-  ("C-S-s" . helm-ag))
-#+END_SRC
-
-*** Project files with =helm-ls-git=
-**** TODO how is this connected to [[https://github.com/bbatsov/helm-projectile][helm-projectile]]?
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-ls-git
-  :bind
-  ("C-x p f" . helm-browse-project))
-#+END_SRC
-*** Describe bindings
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-descbinds
-  :bind
-  ([remap describe-bindings] . helm-descbinds))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-describe-modes
-  :after helm
-  :bind
-  ([remap describe-mode] . helm-describe-modes))
-#+END_SRC
-
-*** Other
-**** helm-flyspell
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-flyspell
-  :commands helm-flyspell-correct
-  :bind (:map flyspell-mode-map
-              ("C-?" . 'helm-flyspell-correct)))
-#+END_SRC
-
-**** TODO helm-dictionary
-**** TODO helm-addressbook / helm-mu
-**** TODO helm-c-yasnippet
-**** TODO helm-bibtex
-**** TODO helm-dash
-**** helm-xref
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-xref
-  :commands helm-xref-show-xrefs
-  :custom
-  ;; From spacemacs:
-  ;; This is required to make `xref-find-references' not give a prompt.
-  ;; `xref-find-references' asks the identifier (which has no text property)
-  ;; and then passes it to `lsp-mode', which requires the text property at
-  ;; point to locate the references.
-  ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=29619
-  (xref-prompt-for-identifier '(not xref-find-definitions
-                                    xref-find-definitions-other-window
-                                    xref-find-definitions-other-frame
-                                    xref-find-references))
-  ;; use helm-xref to display xref results.
-  (xref-show-xrefs-function 'helm-xref-show-xrefs))
-#+END_SRC
-
-**** TODO swiper-helm
-**** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]
-**** helm-projectile
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-projectile
-  :bind
-  ("C-x p h" . helm-projectile)
-  ("C-x p p" . helm-projectile-switch-project)
-  ("C-x p b" . helm-projectile-switch-to-buffer)
-  ("C-x p f" . helm-projectile-find-file)
-  ("C-x p F" . helm-projectile-find-file-in-known-projects)
-  ("C-x p r" . helm-projectile-recentf)
-  ("C-x p a" . helm-projectile-find-other-file))
-#+END_SRC
-
-
-** TODO text objects
+*** TODO text objects
 - https://github.com/clemera/objed
 ** TODO isearch
 - a keymap with all the options
@@ -1893,7 +1778,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 | =C-x r l= | List bookmarks         | =bookmark-list=           |
 | =C-x r b= | Jump to a bookmark     | =bookmark-jump=           |
 | =C-x r m= | Set bookmark           | =bookmark-set=            |
-| =C-x c b= | List bookmarks in helm | =helm-filtered-bookmarks= |
 
 #+BEGIN_SRC emacs-lisp
 (use-package bookmark
@@ -1904,8 +1788,6 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 ** TODO popup global mark
 ** TODO go to the last definition
 * Search and replace
-** TODO search using swoop?
-- https://github.com/ShingoFukuyama/helm-swoop
 ** Replace
 
 #+BEGIN_SRC emacs-lisp
@@ -1957,12 +1839,32 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   :diminish "P"
   :custom
   (projectile-indexing-method 'alien)
-  (projectile-completion-system 'helm)
-  (projectile-switch-project-action 'helm-projectile)
+  (projectile-completion-system 'ivy)
   (projectile-project-search-path fikovnik/projects-search-path)
+  ;; enable caching otherwise it will be slow for large projects
+  (projectile-enable-caching t)
+  (projectile-generic-command "fd . -0")
+  (projectile-git-command "fd . -0")
+  (projectile-sort-order 'recently-active)
   :config
-  (projectile-mode)
-  (helm-projectile-on))
+ ;; http://emacs.stackexchange.com/a/10187/115
+  (defun fikovnik/kill-non-project-buffers (&optional kill-special)
+    "Kill buffers that do not belong to a `projectile' project.
+With prefix argument, also kill the special buffers."
+    (interactive "P")
+    (let ((bufs (buffer-list (selected-frame))))
+      (dolist (buf bufs)
+        (with-current-buffer buf
+          (let ((buf-name (buffer-name buf)))
+            (when (or (null (projectile-project-p))
+                      (and kill-special
+                           (string-match "^\*" buf-name)))
+              ;; Preserve buffers with names starting with *scratch or *Messages
+              (unless (string-match "^\\*\\(\\scratch\\|Messages\\)" buf-name)
+                (message "Killing buffer %s" buf-name)
+                (kill-buffer buf))))))))
+
+  (projectile-mode))
 #+END_SRC
 
 It is good to run the
@@ -2109,6 +2011,7 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
 (use-package magit
   :custom
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1 "Enable fullscreen")
+  (magit-completing-read-function 'ivy-completing-read)
   :bind
   ("C-x g" . magit-status)
   ("C-x M-g" . fikovnik/dotfiles-magit))
@@ -2271,7 +2174,6 @@ The following is the _official_ way to fix it:
 ** TODO org-ref
 ** TODO images
 - https://github.com/abo-abo/org-download
-** TODO [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle]]
 ** TODO [[https://github.com/alphapapa/org-sticky-header][org-sticky-header]]
 ** TODO [[https://github.com/bastibe/org-journal][org-journal]]
 ** TODO org-projectile
