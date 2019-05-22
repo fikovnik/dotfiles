@@ -3,9 +3,13 @@
 #+PROPERTY: header-args :comments link :results silent :eval yes
 
 * Overview
-** TODO descrive the idea behind this configuration
-** TODO use (bind-key)
+** Requirements
+- fzf
+- rg
+- fd
+** TODO describe the idea behind this configuration
 ** Key bindings
+*** Emacs conventions
 
 Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Key-Binding-Conventions.html][key binding conversions]]:
 - =C-x= sequences are for Emacs commands
@@ -17,29 +21,40 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 - Don't bind a key sequence ending in =<ESC>= except following another =<ESC>=
 - Don't bind a key sequence ending in =C-g=
 
-** Prefixes
+*** Overview of the main key bindings
 
-| Key     | Micro state         |
-|---------+---------------------|
-| =C-c w= | Windows             |
-| =C-c b= | Buffers             |
-| =C-c t= | Toggles             |
-| =C-c p= | Projects            |
-| =C-c &= | Snippets            |
-| =C-c e= | Emacs configuration |
-| =C-c g= | Magit
-| =M-g=   | Go to               |
-| =M-/=   | Search              |
-| =C-==   | Expand region       |
+| Key       | Micro state                            |
+|-----------+----------------------------------------|
+| =C-c w=   | Windows prefix                         |
+| =C-c b=   | Buffers prefix                         |
+| =C-c t=   | Toggles prefix                         |
+| =C-c p=   | Projects prefix                        |
+| =C-c S=   | Snippets prefix                        |
+| =C-c e=   | Emacs configuration prefix             |
+| =C-c c=   | Org capture                            |
+| =C-c g=   | Magit prefix                           |
+| =M-g=     | Go to prefix                           |
+| =C-==     | Expand region prefix                   |
+| =C-c /=   | Search in project or current directory |
+| =M-'=     | Correct word                           |
+| =M-;=     | Comment or uncomment                   |
+| =M-i=     | imenu                                  |
+| =M-I=     | imenu anywhere                         |
+| =C-x C-k= | Kill buffer and its window             |
+| =C-x C-b= | Switch buffer                          |
+| =C-x o=   | Switch window                          |
+| =M-*=     | Highlight symbol                       |
+| =C-x f=   | Find file using fzf                    |
+|           |                                        |
 
-** TODO rename variables and functions
-** TODO use variables for directories
+** TODO rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
 
 #+BEGIN_SRC sh :tangle no
 config update-index --assume-unchanged ~/.emacs.d/init.el
 #+END_SRC
-
+** Show matching function
+https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
 * Sources
 ** TODO clean and describe
 - [[https://github.com/hlissner/doom-emacs/blob/develop/][Doom Emacs]]
@@ -2253,7 +2268,8 @@ The following is the _official_ way to fix it:
 | =M-?=   | Find references  | =xref-find-references=  |
 | =C-M-.= |                  | =xref-find-apropos=     |
 
-*** TODO enable [[https://github.com/emacs-lsp/dap-mode][dap]] or realgud
+*** TODO move to eglot
+*** TODO realgud
 *** Interpreters
 **** Create termino for comint with support for ANSI color codes
 
