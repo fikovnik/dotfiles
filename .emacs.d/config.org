@@ -1299,18 +1299,32 @@ Spell check using aspell.
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
   :no-require t
-  :bind (("C-c i c" . ispell-comments-and-strings)
-         ("C-c i d" . ispell-change-dictionary)
-         ("C-c i k" . ispell-kill-ispell)
-         ("C-c i m" . ispell-message)
-         ("C-c i r" . ispell-region)))
+  :bind (:prefix "C-c s"
+         :prefix-map my-ispell-map
+         ("c" . ispell-comments-and-strings)
+         ("d" . ispell-change-dictionary)
+         ("k" . ispell-kill-ispell)
+         ("m" . ispell-message)
+         ("r" . ispell-region)
+         ("b" . ispell-buffer)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+  :hook
+  (text-mode . flyspell-mode)
+  (prog-mode . flyspell-prog-mode)
   :custom
   (ispell-program-name "aspell")
   (ispell-extra-args '("--sug-mode=ultra")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell-correct-ivy
+  :bind
+  ("M-'" . flyspell-correct-at-point)
+  (:map my-ispell-map
+        ("s" . flyspell-correct-wrapper)))
 #+END_SRC
 
 ** TODO surround
