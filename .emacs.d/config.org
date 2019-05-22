@@ -4,6 +4,7 @@
 
 * Overview
 ** TODO descrive the idea behind this configuration
+** TODO use (bind-key)
 ** Key bindings
 
 Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Key-Binding-Conventions.html][key binding conversions]]:
@@ -46,10 +47,10 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 - [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][John Wiegley’s config -- use-package author]]
 - [[https://github.com/seagle0128/.emacs.d][Centaur emacs]]
   - look into https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-basic.el
-- https://ensime.github.io/editors/emacs/hacks/
-- http://wikemacs.org/wiki/Starter_Kits
-- https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
-- http://www.emacs-bootstrap.com/
+- [[https://ensime.github.io/editors/emacs/hacks/][Emacs hacks from Ensime folks]]
+  - Coding in Lisp and Scala
+- [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better-defaults.el]]
+- [[http://www.emacs-bootstrap.com/][Emacs Bootstrap]]
 - https://github.com/a13/emacs.d/blob/master/README.org
 - https://github.com/freetonik/emacs-dotfiles/blob/master/init.org
   - emacs podcast guy configuration
@@ -65,8 +66,6 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 - https://melpa.org/#/?sort=downloads&asc=false
 - https://github.com/sam217pa/emacs-config/blob/develop/init.el
 - https://sam217pa.github.io/2016/10/18/context-dependent-keybindings/
-- https://bitbucket.org/holgerschurig/emacsconf/src/74d428aa2f9be88b14a503f6c3a816ae7cd13644/helm.org?at=master&fileviewer=file-view-default
-  - just a helm configuration
 - http://www.matskjesrud.com/emacs.html
 - https://old.reddit.com/r/emacs/comments/bk9k7l/tips_and_tricks_for_r_programming_in_academia/
   - about R
@@ -1995,6 +1994,7 @@ to index the projects in the search path.
 *** TODO create a keymap for =C-x p=
 
 * Packages
+** TODO this section should be removed and the packages moved accrodingly
 ** ibuffers
 
 #+BEGIN_SRC emacs-lisp
