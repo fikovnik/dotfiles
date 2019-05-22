@@ -1433,15 +1433,6 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
   (smartparens-global-mode))
 #+END_SRC
 
-** TODO zap to char
-- M-z
-- M-Z
-
-;; Replace zap-to-char functionaity with the more powerful zop-to-char
-(use-package zop-to-char
-  :bind (("M-z" . zop-up-to-char)
-         ("M-Z" . zop-to-char)))
-
 ** TODO indentation
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1722,10 +1713,17 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+(defun my-zap-to-char (pt)
+  "Kill from point to PT."
+  (if (> pt (point))
+      (kill-region (point) (+ pt 1))
+    (kill-region (- pt 1) (point))))
+
 (use-package avy
   :bind
   ("M-g" . hydra-avy/body)
   :config
+  (add-to-list 'avy-dispatch-alist '(?Z . my-zap-to-char))
   (avy-setup-default)
   (set-face-attribute 'avy-lead-face-0 nil :foreground "black"))
 #+END_SRC
