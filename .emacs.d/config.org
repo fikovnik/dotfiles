@@ -1702,13 +1702,14 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
 (bind-key "C-c w" 'hydra-window/body)
 #+END_SRC
 *** TODO move windows (like spacemacs)
-** Go to (=M-g=)
+** Go to (=M-G=)
 *** Setup Avy
 
 This allows to quickly jump around in the buffer. The way it is setup is by
 remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/avy][avy]] functions.
 
 #+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "M-G"))
 (global-unset-key (kbd "M-g"))
 #+END_SRC
 
@@ -1721,45 +1722,35 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 (use-package avy
   :bind
-  ("M-g" . hydra-avy/body)
+  ("M-G" . hydra-goto/body)
+  ("M-g" . avy-goto-char)
   :config
   (add-to-list 'avy-dispatch-alist '(?Z . my-zap-to-char))
   (avy-setup-default)
   (set-face-attribute 'avy-lead-face-0 nil :foreground "black"))
 #+END_SRC
 
-*** Setup =M-g= micro state                                         :hydra:
+*** Setup =M-G= micro state                                         :hydra:
 
 #+BEGIN_SRC emacs-lisp
-(defhydra hydra-goto (:exit t :hint nil :color blue)
-  "
-   ^Line^   ^Region^   ^Goto^
-  ----------------------------------------------------------
-   _y_ank   _Y_ank     timed _c_har  _C_har
-   _m_ove   _M_ove     _w_ord        any _W_ord
-   _k_ill   _K_ill     _l_ine        end of _L_ine  _g_: line number"
-  ("g" goto-line)
-  ("c" avy-goto-char-timer)
-  ("C" avy-goto-char)
-  ("w" avy-goto-word-1)
-  ("W" avy-goto-word-0)
-  ("l" avy-goto-line)
-  ("L" avy-goto-end-of-line)
-  ("m" avy-move-line)
-  ("M" avy-move-region)
-  ("k" avy-kill-whole-line)
-  ("K" avy-kill-region)
-  ("y" avy-copy-line)
-  ("Y" avy-copy-region)
+(defhydra hydra-goto (:hint nil :color blue)
+  ("c" avy-goto-char "char" :column "Char")
+  ("w" avy-goto-word-1 "word" :column "word")
+  ("W" avy-goto-word-0 "Word")
+  ("g" goto-line "line by number" :column "Line")
+  ("l" avy-goto-line "line" :column "Line")
+  ("L" avy-goto-end-of-line "line end")
+  ("m" avy-move-line "move line" :column "Edit")
+  ("M" avy-move-region "move region" :column "Edit")
+  ("k" avy-kill-whole-line "kill line" :column "Edit")
+  ("K" avy-kill-region "kill region" :column "Edit")
+  ("y" avy-copy-line "copy line" :column "Edit")
+  ("Y" avy-copy-region "copy region" :column "Edit")
   ("q" nil))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-g") 'hydra-goto/body)
-#+END_SRC
-
-*** TODO next error / previous error
-
+*** TODO next / previous error
+*** TODO next / previous spelling problem
 ** Buffers (=C-c b=)
 *** Functions
 
