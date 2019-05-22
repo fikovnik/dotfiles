@@ -2311,7 +2311,31 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)
 #+END_SRC
-** TODO org-ref
+** org-ref
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ref
+  :after (org ivy)
+  :commands org-ref-ivy-cite
+  :custom
+  (reftex-default-bibliography '("~/Sync/Research/Resources/Papers/references.bib"))
+  (org-ref-bibliography-notes "~/Sync/Research/Resources/Papers/notes.org")
+  (org-ref-default-bibliography '("~/Sync/Research/Resources/Papers/references.bib"))
+  (org-ref-pdf-directory "~/Sync/Research/Resources/Papers"))
+#+END_SRC
+
+(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-bibtex
+  :after ivy
+  :commands ivy-bibtex
+  :custom
+  (bibtex-completion-bibliography '("/home/krikava/Sync/Research/Resources/Papers/references.bib"))
+  (bibtex-completion-library-path '("/home/krikava/Sync/Research/Resources/Papers"))
+  (bibtex-completion-notes-path "/home/krikava/Sync/Research/Resources/Papers/notes.org"))
+#+END_SRC
+** TODO [[https://github.com/weirdNox/org-noter][org-noter]]
 ** TODO images
 - https://github.com/abo-abo/org-download
 ** TODO [[https://github.com/alphapapa/org-sticky-header][org-sticky-header]]
