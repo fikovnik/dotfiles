@@ -17,18 +17,20 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 - Don't bind a key sequence ending in =<ESC>= except following another =<ESC>=
 - Don't bind a key sequence ending in =C-g=
 
-** Micro states
+** Prefixes
 
-| Key     | Micro state      |
-|---------+------------------|
-| =C-x w= | Windows          |
-| =C-x b= | Buffers          |
-| =C-x t= | Toggles          |
-| =C-x p= | Projects         |
-| =C-x c= | Helm             |
-| =C-c &= | Snippets         |
-| =M-g=   | Go to            |
-| =C-==   | Expand region    |
+| Key     | Micro state         |
+|---------+---------------------|
+| =C-c w= | Windows             |
+| =C-c b= | Buffers             |
+| =C-c t= | Toggles             |
+| =C-c p= | Projects            |
+| =C-c &= | Snippets            |
+| =C-c e= | Emacs configuration |
+| =C-c g= | Magit
+| =M-g=   | Go to               |
+| =M-/=   | Search              |
+| =C-==   | Expand region       |
 
 ** TODO rename variables and functions
 ** TODO use variables for directories
@@ -1573,7 +1575,7 @@ default =other-window= command.
   ("C-x o" . ace-window))
 #+END_SRC
 
-*** Setup =C-x w= micro state                                       :hydra:
+*** Setup =C-c w= micro state                                       :hydra:
 **** Functions
 Define a function to [[https://gist.github.com/3402786][maximize window]].
 
@@ -1636,10 +1638,10 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x w") 'hydra-window/body)
+(bind-key "C-c w" 'hydra-window/body)
 #+END_SRC
 *** TODO move windows (like spacemacs)
-** Go to (=M-q=)
+** Go to (=M-g=)
 *** Setup Avy
 
 This allows to quickly jump around in the buffer. The way it is setup is by
@@ -1690,43 +1692,70 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 *** TODO next error / previous error
 
-** Buffers (=C-x b=)
+** Buffers (=C-c b=)
 *** Functions
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/new-empty-buffer ()
-  "Create a new buffer called untitled(<n>)."
+(eval-and-compile
+  (defun fikovnik/new-empty-buffer ()
+    "Create a new buffer called untitled(<n>)."
+
+    (interactive)
+    (let ((newbuf (generate-new-buffer "untitled")))
+      (with-current-buffer newbuf
+        (setq-local buffer-offer-save t))
+      (switch-to-buffer newbuf nil 'force-same-window)))
+
+  (defun fikovnik/switch-to-messages-buffer (&optional arg)
+    "Switch to the `*Messages*' buffer. If prefix argument ARG is
+given, switch to it in an other, possibly new window."
+
+    (interactive "P")
+    (with-current-buffer (messages-buffer)
+      (goto-char (point-max))
+      (if arg
+          (switch-to-buffer-other-window (current-buffer))
+        (switch-to-buffer (current-buffer)))))
+
+(defun fikovnik/switch-to-scratch-buffer (&optional arg)
+  "Switch to the `*scratch*' buffer, creating it first if needed.
+If prefix argument ARG is given, switch to it in an other,
+possibly new window."
+
+  (interactive "P")
+  (let ((exists (get-buffer "*scratch*")))
+    (if arg
+        (switch-to-buffer-other-window (get-buffer-create "*scratch*"))
+      (switch-to-buffer (get-buffer-create "*scratch*")))))
+
+(defun fikovnik/kill-buffer-and-window ()
   (interactive)
-  (let ((newbuf (generate-new-buffer "untitled")))
-    (with-current-buffer newbuf
-      (setq-local buffer-offer-save t))
-    (switch-to-buffer newbuf nil 'force-same-window)))
+  (if (> (count-windows) 1)
+      (kill-buffer-and-window)
+    (kill-buffer))))
 #+END_SRC
 
-*** Setup =C-x b= micro state                                       :hydra:
-**** TODO switch to messages buffer
-**** TODO switch to scratch buffer
+*** Setup =C-c b= micro state                                       :hydra:
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-buffers (:exit t :hint nil)
-("b" helm-mini "list")
-("n" next-buffer "next")
-("p" previous-buffer "previous")
-("k" kill-this-buffer "kill")
-("x" kill-buffer-and-window "close")
-("R" revert-buffer "revert")
-("N" fikovnik/new-empty-buffer "new")
-("i" ibuffer "ibuffer")
-)
+  ("b" switch-buffer "list")
+  ("n" next-buffer "next")
+  ("p" previous-buffer "previous")
+  ("k" kill-this-buffer "kill")
+  ("x" fikovnik/kill-buffer-and-window "close")
+  ("R" revert-buffer "revert")
+  ("N" fikovnik/new-empty-buffer "new")
+  ("m" fikovnik/switch-to-messages-buffer "switch to messages")
+  ("s" fikovnik/switch-to-scratch-buffer "switch to scratch")
+  ("i" ibuffer "ibuffer"))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x b") 'hydra-buffers/body)
-#+END_SRC
 *** Binding
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+(bind-key "C-c b" 'hydra-buffers/body)
+(bind-key "C-x C-k" 'fikovnik/kill-buffer-and-window)
 #+END_SRC
 
 ** TODO pgup/pgdown go to the same location
@@ -1803,9 +1832,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   (global-anzu-mode 1))
 #+END_SRC
 
-** TODO occur
-* Toggles (=C-x t=)
-** Setup =C-x t= micro state                                         :hydra:
+* Toggles (=C-c t=)
+** Setup =C-c t= micro state                                         :hydra:
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-toggle (:color blue :hint nil)
@@ -1827,16 +1855,23 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x t") 'hydra-toggle/body)
+(bind-key "C-c t" 'hydra-toggle/body)
 #+END_SRC
+
 * TODO Mouse
 * Projects
-** Configuration
+** Projectile configuration (=C-c p=)
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :defer 1
   :diminish "P"
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :bind
+  ("M-/" . projectile-ripgrep)
+  (:map projectile-command-map
+        ("C-k" . fikovnik/kill-non-project-buffers))
   :custom
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'ivy)
@@ -1874,8 +1909,6 @@ It is good to run the
 #+END_SRC
 
 to index the projects in the search path.
-*** TODO create a keymap for =C-x p=
-
 * Packages
 ** TODO this section should be removed and the packages moved accrodingly
 ** ibuffers
@@ -1947,14 +1980,13 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
 #+END_SRC
 
 * Helpers
-** init.el and Emacs lifecycle helpers
+** config.org and init.el helpers
 
 #+BEGIN_SRC emacs-lisp
 (use-package iqa
   :custom
   (iqa-user-init-file (emacs-path "config.org"))
-  :bind (:map ctl-x-map
-         :prefix "E"
+  :bind (:prefix "C-c e"
          :prefix-map my-emacs-helper-map
          :prefix-docstring "Emacs init.el related"
          ("e" . iqa-find-user-init-file)
@@ -1964,12 +1996,14 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
          ("s" . fikovnik/sync-configuration)
          ("c" . fikovnik/sync-configuration-and-compile))
   :init
-  (which-key-add-key-based-replacements "C-x E" "Emacs")
-  (which-key-add-key-based-replacements "C-x E c" "sync & compile")
-  (which-key-add-key-based-replacements "C-x E s" "sync")
-  (which-key-add-key-based-replacements "C-x E g" "magit")
-  (which-key-add-key-based-replacements "C-x E r" "reload config"))
+  (which-key-add-key-based-replacements "C-c e" "Emacs")
+  (which-key-add-key-based-replacements "C-c e c" "sync & compile")
+  (which-key-add-key-based-replacements "C-c e s" "sync")
+  (which-key-add-key-based-replacements "C-c e g" "magit")
+  (which-key-add-key-based-replacements "C-c e r" "reload config"))
 #+END_SRC
+
+** Life cycle
 
 #+BEGIN_SRC emacs-lisp
 (use-package restart-emacs
@@ -1983,9 +2017,9 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
     (interactive)
     (restart-emacs '("--debug-init")))
 
-  (which-key-add-key-based-replacements "C-x E R" "restart Emacs")
-  (which-key-add-key-based-replacements "C-x E D" "restart Emacs with debug")
-  (which-key-add-key-based-replacements "C-x E S" "sync & restart Emacs")
+  (which-key-add-key-based-replacements "C-c e R" "restart Emacs")
+  (which-key-add-key-based-replacements "C-c e D" "restart Emacs with debug")
+  (which-key-add-key-based-replacements "C-c e S" "sync & restart Emacs")
   :commands restart-emacs
   :bind (:map my-emacs-helper-map
               ("R" . restart-emacs)
@@ -2013,8 +2047,7 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1 "Enable fullscreen")
   (magit-completing-read-function 'ivy-completing-read)
   :bind
-  ("C-x g" . magit-status)
-  ("C-x M-g" . fikovnik/dotfiles-magit))
+  ("C-c g" . magit-status))
 #+END_SRC
 
 ** Highlight chnages in files
