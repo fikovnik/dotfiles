@@ -770,7 +770,7 @@ Taken mostly from the [[https://github.com/hrs/sensible-defaults.el/blob/master/
 *** Eval expression
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-:") 'eval-expression)
+(bind-key "M-:" 'eval-expression)
 #+END_SRC
 
 *** Yes/No confirmation
@@ -960,7 +960,7 @@ This remembers your location in a file when saving files.
 *** <end> is the same as =C-e=
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<end>") #'move-end-of-line)
+(bind-key "<end>" #'move-end-of-line)
 #+END_SRC
 
 ** Install crux
@@ -1003,8 +1003,8 @@ These command will be used in the [[Editing]] and [[Navigation]].
 ** Killing lines
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key [remap kill-while-line] #'crux-kill-whole-line)
-(global-set-key [C-] #'crux-kill-line-backwards)
+(bind-key [remap kill-while-line] #'crux-kill-whole-line)
+(bind-key [C-] #'crux-kill-line-backwards)
 #+END_SRC
 
 ** Deleting spaces
@@ -1066,8 +1066,8 @@ pastes from X-SECONDARY."
 Bind =C-S-X= to cut and =C-X-C= to copy.
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-S-X") 'fikovnik/cut-to-xclipboard)
-(global-set-key (kbd "C-S-C") 'fikovnik/copy-to-xclipboard)
+(bind-key "C-S-X" 'fikovnik/cut-to-xclipboard)
+(bind-key "C-S-C" 'fikovnik/copy-to-xclipboard)
 #+END_SRC
 
 The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
@@ -1075,7 +1075,7 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 
 #+BEGIN_SRC emacs-lisp
 (when (display-graphic-p)
-  (global-set-key (kbd "C-S-V") 'fikovnik/paste-from-xclipboard))
+  (bind-key "C-S-V" 'fikovnik/paste-from-xclipboard))
 #+END_SRC
 
 ** Fill/unfill paragraph
@@ -1133,15 +1133,15 @@ line to be joined upwards. Most of the time I prefer the other way around.
 | =M-J= | Join the current line with the line *over* it.    |
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-j") #'crux-top-join-line)
-(global-set-key (kbd "M-J") #'join-line)
+(bind-key "M-j" #'crux-top-join-line)
+(bind-key "M-J" #'join-line)
 #+END_SRC
 
 ** Open line above and bellow
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-S-O") #'crux-smart-open-line-above)
-(global-set-key (kbd "C-o") #'crux-smart-open-line)
+(bind-key "C-S-O" #'crux-smart-open-line-above)
+(bind-key "C-o" #'crux-smart-open-line)
 #+END_SRC
 
 ** Comment / un-comment lines
@@ -1156,7 +1156,7 @@ on a single line in the case no region is active:
 Next, we bind it:
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-/") #'comment-or-uncomment-region)
+(bind-key "C-/" #'comment-or-uncomment-region)
 #+END_SRC
 
 ** Copy and cut whole lines
@@ -1549,8 +1549,8 @@ keybinding, instead it is bound by the =hydra-window=.
   (interactive)
   (other-window -1))
 
-(global-set-key (kbd "C-,") #'prev-window)
-(global-set-key (kbd "C-.") #'other-window)
+(bind-key "C-," #'prev-window)
+(bind-key "C-." #'other-window)
 #+END_SRC
 
 *** Save window layout stack using the =winner-mode=
@@ -1807,14 +1807,12 @@ possibly new window."
 ** =C-a= / =home= to the beginning
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-a") #'crux-move-beginning-of-line)
-(global-set-key (kbd "<home>") #'crux-move-beginning-of-line)
+(bind-key "C-a" #'crux-move-beginning-of-line)
+(bind-key "<home>" #'crux-move-beginning-of-line)
 #+END_SRC
 
 *** TODO text objects
 - https://github.com/clemera/objed
-** TODO isearch
-- a keymap with all the options
 ** Bookmarks
 
 | Key       | Description            | Function                  |
