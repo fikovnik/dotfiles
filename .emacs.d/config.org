@@ -1823,16 +1823,12 @@ possibly new window."
 ** Highlight symbols (=M-*=)
 
 #+BEGIN_SRC emacs-lisp
-(use-package highlight-symbol
-  :diminish highlight-symbol-mode
-  :commands highlight-symbol
-  :bind
-  ("M-*" . highlight-symbol))
-#+END_SRC
+(defun fikovnik/swiper-at-point (initial-input)
+  (interactive (list (thing-at-point 'symbol)))
+  (swiper initial-input))
 
-*** TODO set navigation (=M-*= - next and =M-#= previous)
-*** TODO search symbol in project
-- look at spacemacs configuration
+(bind-key "M-*" 'fikovnik/swiper-at-point)
+#+END_SRC
 
 ** TODO move to previous/next edit location
 
