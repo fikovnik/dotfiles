@@ -1173,70 +1173,52 @@ Define the =M-r= prefix and use it for expand region, including the line
 selection defined above.
 
 #+BEGIN_SRC emacs-lisp
-(setq my-expand-region-map (make-sparse-keymap))
-
 (use-package expand-region
-  :bind-keymap
-  ("C-=" . my-expand-region-map)
-  :bind (:map my-expand-region-map
-              ("="  . er/expand-region)
-              ("("  . er/mark-inside-pairs)
-              (")"  . er/mark-outside-pairs)
-              ("'"  . er/mark-inside-quotes)
-              ("\"" . er/mark-outside-quotes)
-              ("o" . er/mark-org-parent)
-              ("u" . er/mark-url)
-              ("b" . er/mark-org-code-block)
-              ("." . er/mark-method-call)
-              (">" . er/mark-next-accessor)
-              ("w" . er/mark-word)
-              ("d" . er/mark-defun)
-              ("e" . er/mark-email)
-              ("," . er/mark-symbol)
-              ("<" . er/mark-symbol-with-prefix)
-              (";" . er/mark-comment)
-              ("s" . er/mark-sentence)
-              ("S" . er/mark-text-sentence)
-              ("p" . er/mark-paragraph)
-              ("P" . er/mark-text-paragraph)
-              ("l" . fikovnik/select-line)))
+  :bind (:prefix "C-="
+         :prefix-map my-expand-region-map
+         ("="  . er/expand-region)
+         ("("  . er/mark-inside-pairs)
+         (")"  . er/mark-outside-pairs)
+         ("'"  . er/mark-inside-quotes)
+         ("\"" . er/mark-outside-quotes)
+         ("o" . er/mark-org-parent)
+         ("u" . er/mark-url)
+         ("b" . er/mark-org-code-block)
+         ("." . er/mark-method-call)
+         (">" . er/mark-next-accessor)
+         ("w" . er/mark-word)
+         ("d" . er/mark-defun)
+         ("e" . er/mark-email)
+         ("," . er/mark-symbol)
+         ("<" . er/mark-symbol-with-prefix)
+         (";" . er/mark-comment)
+         ("s" . er/mark-sentence)
+         ("S" . er/mark-text-sentence)
+         ("p" . er/mark-paragraph)
+         ("P" . er/mark-text-paragraph)
+         ("l" . fikovnik/select-line)))
 #+END_SRC
 
-** Snippets
+** Snippets                                                          :hydra:
 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :defer 1
   :diminish (yas-minor-mode . "YAS")
   :commands yas-minor-mode
+  :bind
+  ("C-c S" . hydra-yas/body)
   :config
+  (defhydra hydra-yas (:exit t :hint nil)
+    ("i" yas-insert-snippet "insert")
+    ("n" yas-new-snippet "new")
+    ("f" yas-visit-snippet-file "visit")
+    ("r" yas-reload-all "reload")
+    ("x" yas-expand "expand")
+    ("t" yas-tryout-snippet "try")
+    ("l" yas-describe-tables "list"))
   (yas-global-mode 1)
   (yas-reload-all))
-#+end_src
-*** TODO configure
-
-#+BEGIN_SRC emacs-lisp :tangle no
-
-(use-package yasnippet
-  :demand t
-  :diminish yas-minor-mode
-  :commands yas-expand
-  :bind (("C-c y d" . yas-load-directory)
-         ("C-c y i" . yas-insert-snippet)
-         ("C-c y f" . yas-visit-snippet-file)
-         ("C-c y n" . yas-new-snippet)
-         ("C-c y t" . yas-tryout-snippet)
-         ("C-c y l" . yas-describe-tables)
-         ("C-c y g" . yas/global-mode)
-         ("C-c y m" . yas/minor-mode)
-         ("C-c y r" . yas-reload-all)
-         ("C-c y x" . yas-expand))
-  :bind (:map yas-keymap
-              ("C-i" . yas-next-field-or-maybe-expand))
-  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :config
-  (yas-load-directory (emacs-path "snippets"))
-  (yas-global-mode 1))
 #+END_SRC
 
 ** Auto completion
