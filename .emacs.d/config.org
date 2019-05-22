@@ -200,11 +200,10 @@ order to prevent stuttering/freezes.
 
      (add-hook 'minibuffer-setup-hook #'my--defer-garbage-collection)
      (add-hook 'minibuffer-exit-hook  #'my--restore-garbage-collection)
-     (add-hook 'focus-out-hook #'garbage-collect)
+     (add-hook 'focus-out-hook #'garbage-collect)))
 
-     (message "Loaded %s in %.3fs"
-              ,load-file-name
-              (float-time (time-subtract (current-time) emacs-start-time))))))
+  (message "Loaded in %.3fs"
+           (float-time (time-subtract (current-time) emacs-start-time))))
 
 (add-hook 'after-init-hook #'my--restore-startup-optimizations nil t)
 #+END_SRC
