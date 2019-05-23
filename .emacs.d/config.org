@@ -693,20 +693,6 @@ customize settings in [[file:init.el][init.el]].
 (use-package hydra)
 #+END_SRC
 
-** Install smartrep                                           :experimental:
-
-I would prefer to use hydra for all, but it somehow does not work with multiple
-cursors.
-
-#+BEGIN_SRC emacs-lisp
-(use-package smartrep
-  :custom
-  (smartrep-mode-line-string-activated "[SR]")
-  ;; no modeline higlighting
-  (smartrep-mode-line-active-bg (face-background 'mode-line))
-)
-#+END_SRC
-
 ** Enable some useful functions
 
 These functions are useful so activate them.
@@ -1092,28 +1078,6 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
   ([remap fill-paragraph] . unfill-toggle))
 #+END_SRC
 
-** Multiple cursors
-
-#+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "M-m"))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors
-  :config
-  (smartrep-define-key global-map "M-m"
-    '(("n" . 'mc/mark-next-like-this)
-      ("u" . 'mc/unmark-next-like-this)
-      ("s" . 'mc/skip-to-next-like-this)
-      ("N" . 'mc/mark-previous-like-this)
-      ("U" . 'mc/unmark-previous-like-this)
-      ("S" . 'mc/skip-to-previous-like-this)
-      ;; TODO: this should be (er/mark-word) followed by (mc/hydra)
-      ("m" . 'mc/mark-more-like-this-extended)
-      ("a" . 'mc/mark-all-like-this)
-      ("d" . 'mc/mark-all-like-this-dwim)
-      ("r" . 'mc/reverse-regions))))
-#+END_SRC
 ** TODO replace multiple cursors with iedit?
 ** Move lines up / down
 *** TODO fix this in org-mode which takes over this binding
