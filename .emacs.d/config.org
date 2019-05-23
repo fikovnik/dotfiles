@@ -351,6 +351,11 @@ Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
 (use-package bind-key
   :demand t)
 #+END_SRC
+** Universal argument
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-u" 'universal-argument)
+#+END_SRC
 
 * Defaults
 ** Global variables
@@ -1709,8 +1714,8 @@ This allows to quickly jump around in the buffer. The way it is setup is by
 remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/avy][avy]] functions.
 
 #+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "M-G"))
-(global-unset-key (kbd "M-g"))
+(unbind-key "M-G")
+(unbind-key "M-g")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1720,10 +1725,16 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
       (kill-region (point) (+ pt 1))
     (kill-region (- pt 1) (point))))
 
+(defun my-avy-goto-char (arg)
+  (interactive "P")
+  (if arg
+      (call-interactively 'avy-goto-char)
+    (call-interactively 'avy-goto-char-in-line)))
+
 (use-package avy
   :bind
   ("M-G" . hydra-goto/body)
-  ("M-g" . avy-goto-char)
+  ("M-g" . my-avy-goto-char)
   :config
   (add-to-list 'avy-dispatch-alist '(?Z . my-zap-to-char))
   (avy-setup-default)
