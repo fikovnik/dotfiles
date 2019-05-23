@@ -1135,7 +1135,7 @@ respectivelly.
 
 #+BEGIN_SRC emacs-lisp
 (crux-with-region-or-line kill-region)
-(crux-with-region-or-line kill-ring-save)
+(crux-with-region-or-point-to-eol kill-ring-save)
 #+END_SRC
 
 ** Expand region (=C-==)
