@@ -1441,19 +1441,11 @@ But, only if I put them there!
 (use-package ivy
   :demand t
   :bind
-  ("C-x f" . counsel-fzf)
   ("C-x C-r" . ivy-resume)
   ("C-x C-b" . ivy-switch-buffer)
-  ("C-h F" . counsel-faces)
-  ([remap isearch-forward] . swiper)
-  ([remap isearch-backward] . swiper)
-  (:map ivy-mode-map
-        ("C-'" . ivy-avy)
-        ("C-w" . ivy-yank-word))
-  (:map read-expression-map
-        ("C-r" . counsel-expression-history))
-  (:map minibuffer-local-map
-        ("C-r" . counsel-minibuffer-history))
+  (:map ivy-minibuffer-map
+        ("C-w" . ivy-yank-word)
+        ("C-'" . ivy-avy))
   :custom
   (enable-recursive-minibuffers t)
   (ivy-height 15)
@@ -1465,28 +1457,14 @@ But, only if I put them there!
   (ivy-on-del-error-function nil)
   (ivy-re-builders-alist
    '((t . ivy--regex-ignore-order)))
-  (swiper-action-recenter t)
-
-  (counsel-find-file-at-point t)
-  ;; Use rg as backend for counsel-git
-  (counsel-git-cmd "rg -S --files")
-  ;; max preview and follow symlinks
-  (counsel-rg-base-command "rg --max-columns 160 --smart-case --no-heading --line-number --follow --color never %s .")
-  ;; use rg instad of grep
-  (counsel-grep-base-command "rg --max-columns 160 --smart-case --no-heading --line-number --color never  %s %s")
   :config
-  (ivy-mode 1)
-  (counsel-mode 1))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-hydra
-  :after (ivy hydra))
+  (ivy-mode 1))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
   :demand t
+  :after counsel
   :custom
   (ivy-rich-parse-remote-buffer nil)
   (ivy-rich-path-style 'abbrev)
@@ -1495,9 +1473,68 @@ But, only if I put them there!
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+(use-package ivy-hydra
+  :after (ivy hydra))
+#+END_SRC
+
+** Counsel
+
+#+BEGIN_SRC emacs-lisp
+(unbind-key "C-x f")
+
+(use-package counsel
+  :demand t
+  :after ivy
+  :bind
+  ("C-x f" . counsel-fzf)
+  ("C-h F" . counsel-faces)
+  (:map read-expression-map
+        ("C-r" . counsel-expression-history))
+  (:map minibuffer-local-map
+        ("C-r" . counsel-minibuffer-history))
+  :custom
+  (counsel-find-file-at-point t)
+  ;; Use rg as backend for counsel-git
+  (counsel-git-cmd "rg -S --files")
+  ;; max preview and follow symlinks
+  (counsel-rg-base-command "rg --max-columns 160 --smart-case --no-heading --line-number --follow --color never %s .")
+  ;; use rg instad of grep
+  (counsel-grep-base-command "rg --max-columns 160 --smart-case --no-heading --line-number --color never  %s %s")
+  :config
+  (counsel-mode 1)
+  (eval-after-load "org"
+    (lambda ()
+     (setq counsel-org-goto-display-style 'path
+           counsel-org-goto-separator " / "
+           counsel-org-goto-face-style 'org
+           org-goto-interface 'outline-path-completion
+           org-outline-path-complete-in-steps nil)
+
+     (bind-key "C-c c" #'counsel-org-capture)
+     (bind-keys :map org-mode-map
+                ("C-c C-j" . counsel-org-goto)
+                ("C-u C-c C-j" . counsel-org-goto-all)))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package smex
+  :after counsel
+  :commands smex
   :custom
   (smex-history-length 50))
+#+END_SRC
+
+** Swiper
+
+#+BEGIN_SRC emacs-lisp
+(use-package swiper
+  :demand t
+  :after ivy
+  :bind
+  ([remap isearch-forward] . swiper)
+  ([remap isearch-backward] . swiper)
+  :custom
+  (swiper-action-recenter t))
 #+END_SRC
 
 *** TODO better colors for the match
