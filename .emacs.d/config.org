@@ -33,7 +33,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =C-c e=   | Emacs configuration prefix             |
 | =C-c c=   | Org capture                            |
 | =C-c g=   | Magit prefix                           |
-| =M-g=     | Go to prefix                           |
+| =M-G=     | Go to prefix                           |
 | =C-==     | Expand region prefix                   |
 | =C-c /=   | Search in project or current directory |
 | =M-'=     | Correct word                           |
@@ -43,9 +43,10 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =C-x C-k= | Kill buffer and its window             |
 | =C-x C-b= | Switch buffer                          |
 | =C-x o=   | Switch window                          |
-| =M-*=     | Highlight symbol                       |
+| =M-*=     | Search for a symbol with swiper        |
 | =C-x f=   | Find file using fzf                    |
-|           |                                        |
+| =M-g=     | Go to char in line                     |
+| =M-u M-g= | Go to char                             |
 
 ** TODO rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
