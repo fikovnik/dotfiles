@@ -2352,8 +2352,18 @@ The following is the _official_ way to fix it:
   (bibtex-completion-notes-path org-ref-bibliography-notes)
 #+END_SRC
 
+** [[https://github.com/weirdNox/org-noter][org-noter]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-noter
+  :after org
+  :commands org-noter
+  :custom
+  (org-noter-default-notes-file-names org-ref-bibliography-notes)
+  (org-noter-notes-search-path fikovnik/bibliography-path)
+  (org-noter-separate-notes-from-heading t))
 #+END_SRC
-** TODO [[https://github.com/weirdNox/org-noter][org-noter]]
+
 ** TODO images
 - https://github.com/abo-abo/org-download
 ** TODO [[https://github.com/alphapapa/org-sticky-header][org-sticky-header]]
