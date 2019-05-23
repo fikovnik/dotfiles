@@ -382,6 +382,12 @@ Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
 
 (defvar fikovnik/bibliography-path "~/Sync/Research/Resources/Papers"
   "Path where I keep papers")
+
+(defvar fikovnik/bibliography-bib-file (expand-file-name "references.bib" fikovnik/bibliography-path)
+  "The main bibliography bibtex file")
+
+(defvar fikovnik/bibliography-notes-file (expand-file-name "notes.org" fikovnik/bibliography-path)
+  "The main bibliography notes file")
 #+END_SRC
 
 ** ST terminal
@@ -2101,6 +2107,14 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
   :config
   (require 'vlf-setup))
 #+END_SRC
+** PDF tools
+
+#+BEGIN_SRC emacs-lisp
+(use-package pdf-tools
+  :mode (("\\.pdf\\'" . pdf-view-mode))
+  :config
+  (pdf-tools-install))
+#+END_SRC
 
 * Helpers
 ** config.org and init.el helpers
@@ -2327,17 +2341,29 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)
 #+END_SRC
-** org-ref
+** [[https://github.com/jkitchin/org-ref/][org-ref]]
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-ref
   :after (org ivy)
   :commands org-ref-ivy-cite
   :custom
-  (reftex-default-bibliography reftex-default-bibliography)
-  (org-ref-bibliography-notes (expand-fina-name "notes.org" fikovnik/bibliography-path))
-  (org-ref-default-bibliography '(,(expand-fina-name "references.bib" fikovnik/bibliography-path)))
-  (org-ref-pdf-directory fikovnik/bibliography-path)
+  (org-ref-bibliography-notes fikovnik/bibliography-notes-file)
+  (org-ref-default-bibliography (list fikovnik/bibliography-bib-file))
+  (org-ref-pdf-directory (concat fikovnik/bibliography-path "/"))
+  (org-ref-note-title-format
+   "* TODO %a (%y): %t
+ :PROPERTIES:
+ :Custom_ID: %k
+ :Book: %b
+ :URL: %U
+ :NOTER_DOCUMENT: %f
+ :END:
+")
+  :config
+  (eval-after-load "reftex"
+    (lambda ()
+      (reftex-default-bibliography org-ref-default-bibliography))))
 #+END_SRC
 
 (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
@@ -2347,21 +2373,18 @@ The following is the _official_ way to fix it:
   :after ivy
   :commands ivy-bibtex
   :custom
-  (bibtex-completion-bibliography org-ref-default-bibliography)
-  (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path org-ref-bibliography-notes)
-#+END_SRC
-
-** [[https://github.com/weirdNox/org-noter][org-noter]]
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-noter
-  :after org
-  :commands org-noter
-  :custom
-  (org-noter-default-notes-file-names org-ref-bibliography-notes)
-  (org-noter-notes-search-path fikovnik/bibliography-path)
-  (org-noter-separate-notes-from-heading t))
+  (bibtex-completion-bibliography fikovnik/bibliography-bib-file)
+  (bibtex-completion-library-path fikovnik/bibliography-path)
+  (bibtex-completion-notes-path fikovnik/bibliography-notes-file)
+  (bibtex-completion-notes-template-one-file
+   "* TODO ${author} (${year}): ${title}
+:PROPERTIES:
+:Custom_ID: ${=key=}
+:Book: ${booktitle}
+:URL: ${url}
+:NOTER_DOCUMENT: ${file}
+:END:
+"))
 #+END_SRC
 
 ** TODO images
