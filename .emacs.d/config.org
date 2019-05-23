@@ -379,6 +379,9 @@ Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
 
 (defvar fikovnik/projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications")
   "Paths where projects are stored. Used in projectile")
+
+(defvar fikovnik/bibliography-path "~/Sync/Research/Resources/Papers"
+  "Path where I keep papers")
 #+END_SRC
 
 ** ST terminal
@@ -2331,10 +2334,10 @@ The following is the _official_ way to fix it:
   :after (org ivy)
   :commands org-ref-ivy-cite
   :custom
-  (reftex-default-bibliography '("~/Sync/Research/Resources/Papers/references.bib"))
-  (org-ref-bibliography-notes "~/Sync/Research/Resources/Papers/notes.org")
-  (org-ref-default-bibliography '("~/Sync/Research/Resources/Papers/references.bib"))
-  (org-ref-pdf-directory "~/Sync/Research/Resources/Papers"))
+  (reftex-default-bibliography reftex-default-bibliography)
+  (org-ref-bibliography-notes (expand-fina-name "notes.org" fikovnik/bibliography-path))
+  (org-ref-default-bibliography '(,(expand-fina-name "references.bib" fikovnik/bibliography-path)))
+  (org-ref-pdf-directory fikovnik/bibliography-path)
 #+END_SRC
 
 (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
@@ -2344,9 +2347,11 @@ The following is the _official_ way to fix it:
   :after ivy
   :commands ivy-bibtex
   :custom
-  (bibtex-completion-bibliography '("/home/krikava/Sync/Research/Resources/Papers/references.bib"))
-  (bibtex-completion-library-path '("/home/krikava/Sync/Research/Resources/Papers"))
-  (bibtex-completion-notes-path "/home/krikava/Sync/Research/Resources/Papers/notes.org"))
+  (bibtex-completion-bibliography org-ref-default-bibliography)
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-notes-path org-ref-bibliography-notes)
+#+END_SRC
+
 #+END_SRC
 ** TODO [[https://github.com/weirdNox/org-noter][org-noter]]
 ** TODO images
