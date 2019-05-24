@@ -1521,7 +1521,8 @@ But, only if I put them there!
   (ivy-re-builders-alist
    '((t . ivy--regex-ignore-order)))
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+  (minibuffer-depth-indicate-mode 1))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
