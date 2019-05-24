@@ -1582,7 +1582,7 @@ But, only if I put them there!
   (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
 #+END_SRC
 
-** Windows (=C-c w=)
+** Windows (=C-c w=)                                                   :wip:
 *** Overview
 
 | Key         | Description                          | Function      |
@@ -1590,25 +1590,45 @@ But, only if I put them there!
 | =C-c left=  | Undo changes in window configuration | =winner-undo= |
 | =C-c right= | Redo changes in window configuration | =winner-redo= |
 | =C-x o=     | Select window using Avy              | =ace-window=  |
-
-*** Selecting windows
-
-**** Windmove
-
-Windmove defines functions to easily select windows. We do not use the default
-keybinding, instead it is bound by the =hydra-window=.
+*** Move to the window after split
 
 #+BEGIN_SRC emacs-lisp
-(use-package windmove
+(defun my-split-window-horizontally-and-move ()
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1))
+
+(defun my-split-window-vertically-and-move ()
+  (interactive)
+  (split-window-vertically)
+  (other-window 1))
+
+(bind-key "C-x 2" #'my-split-window-vertically-and-move)
+(bind-key "C-x 3" #'my-split-window-horizontally-and-move)
+#+END_SRC
+
+*** Selecting windows
+**** By number
+
+#+BEGIN_SRC emacs-lisp
+(use-package winum
   :demand t
   :custom
-  (windmove-wrap-around t)
-  :config
-  (windmove-default-keybindings)
-  (add-hook 'org-shiftup-final-hook 'windmove-up)
-  (add-hook 'org-shiftleft-final-hook 'windmove-left)
-  (add-hook 'org-shiftdown-final-hook 'windmove-down)
-  (add-hook 'org-shiftright-final-hook 'windmove-right))
+  (winum-scope 'frame-local)
+  :bind (:map winum-keymap
+      ("C-`" . winum-select-window-by-number)
+      ("M-0" . winum-select-window-0-or-10)
+      ("M-1" . winum-select-window-1)
+      ("M-2" . winum-select-window-2)
+      ("M-3" . winum-select-window-3)
+      ("M-4" . winum-select-window-4)
+      ("M-5" . winum-select-window-5)
+      ("M-6" . winum-select-window-6)
+      ("M-7" . winum-select-window-7)
+      ("M-8" . winum-select-window-8)
+      ("M-9" . winum-select-window-9))
+   :config
+   (winum-mode))
 #+END_SRC
 
 **** Other window, previous on =C-,= and =C-.=
@@ -1635,8 +1655,8 @@ This will allow to go back/fort between window layouts.
 
 *** Jump between windows
 
-Use [[https://github.com/abo-abo/ace-window][ace-window]] to quickly switch between windows using =C-x o= instead of the
-default =other-window= command.
+Use [[https://github.com/abo-abo/ace-window][ace-window]] to switch between windows using =C-x o= instead of the default
+=other-window= command.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
@@ -1697,14 +1717,8 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
    ("b" ivy-switch-buffer :color blue)
    ("f" counsel-find-files :color blue)
    ("a" ace-window :color blue)
-   ("|" (lambda ()
-          (interactive)
-          (split-window-right)
-          (windmove-right)))
-   ("-" (lambda ()
-          (interactive)
-          (split-window-below)
-          (windmove-down)))
+   ("|" my-split-window-horizontally-and-move)
+   ("-" my-split-window-vertically-and-move)
    ("s" (lambda ()
           (interactive)
           (ace-window 4)
