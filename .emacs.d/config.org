@@ -1820,8 +1820,9 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 (use-package avy
   :bind
-  ("M-G" . hydra-goto/body)
   ("M-g" . my-avy-goto-char)
+  ("M-l" . avy-goto-line)
+  ("M-L" . avy-goto-end-of-line)
   :config
   (add-to-list 'avy-dispatch-alist '(?Z . my-zap-to-char))
   (avy-setup-default)
@@ -1845,6 +1846,10 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("y" avy-copy-line "copy line" :column "Edit")
   ("Y" avy-copy-region "copy region" :column "Edit")
   ("q" nil))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-G" #'hydra-goto/body)
 #+END_SRC
 
 *** TODO next / previous error
