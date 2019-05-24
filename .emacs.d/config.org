@@ -856,9 +856,6 @@ Answering just 'y' or 'n' will do
 (column-number-mode t)
 (global-visual-line-mode t)
 (global-hl-line-mode t)
-;; when something changes a file, automatically refresh the buffer containing
-;; that file so they can't get out of sync.
-(global-auto-revert-mode t)
 (transient-mark-mode t)
 (toggle-truncate-lines t)
 (whitespace-mode -1)
@@ -1009,6 +1006,23 @@ These command will be used in the [[Editing]] and [[Navigation]].
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook))
 #+END_SRC
+** Revert buffers
+
+Revert buffers when files on disk change
+
+#+BEGIN_SRC emacs-lisp
+(use-package autorevert
+  :defer 3
+  :custom
+  ;; auto refresh dired, but be quiet about it
+  (global-auto-revert-non-file-buffers t)
+  ;; revert pdf without asking
+  (auto-revert-verbose nil)
+  (revert-without-query '("\\.pdf"))
+  :config
+  (global-auto-revert-mode 1))
+#+END_SRC
+
 ** TODO prettify symbol mode
 (setq-default prettify-symbols-alist
                 '(("#+BEGIN_SRC"     . "λ")
