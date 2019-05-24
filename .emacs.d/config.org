@@ -1756,7 +1756,7 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
       _↑_      _-_: vertical     _b_uffer             ⇧         _u_ndo/_r_edo
     _←_   _→_    _|_: horizontal   _f_ind files       ⇦   ⇨       _a_ce-window
       _↓_      ^ ^               _s_wap               ⇩         _d_elete/ace-_D_elete
-   ^ ^         ^ ^               _m_aximize/_B_alance
+   ^ ^         ^ ^               _m_aximize/_B_alance             _t_ranspose windows
 "
    ("<left>" windmove-left)
    ("<down>" windmove-down)
@@ -1778,6 +1778,7 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
                     'hydra-window/body)))
    ("d" kill-buffer-and-window :color blue)
    ("D" ace-delete-window)
+   ("t" crux-transpose-windows)
    ("m" fikovnik/maximize-window :color blue)
    ("B" balance-windows-area)
    ("u" (progn
