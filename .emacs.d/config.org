@@ -2131,14 +2131,14 @@ Ivy's call is like helm's follow-mode.
 
 Auto refresh dired
 #+BEGIN_SRC emacs-lisp
-(add-hook 'dired-mode-hook 'auto-revert-mode)
-(setq
-      global-auto-revert-non-file-buffers t
-      auto-revert-verbose                 nil
-      ;; file sizes in human-readable units (KB, MB, etc)
-      dired-listing-switches              "-alh"
-)
+(use-package dired
+  :demand t
+  :ensure nil
+  :custom
+  ;; file sizes in human-readable units (KB, MB, etc)
+  (dired-listing-switches "-alh"))
 #+END_SRC
+
 *** TODO double pane setup
 https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1027
 *** TODO dired toggle
