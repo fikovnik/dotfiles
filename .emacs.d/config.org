@@ -32,6 +32,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =C-c s=   | Snippets prefix                        |
 | =C-c e=   | Emacs configuration prefix             |
 | =C-c c=   | Org capture                            |
+| =C-c d=   | Dired                                  |
 | =C-c g=   | Magit prefix                           |
 | =M-G=     | Go to prefix                           |
 | =C-==     | Expand region prefix                   |
@@ -2142,6 +2143,10 @@ Auto refresh dired
 (use-package dired
   :demand t
   :ensure nil
+  :bind (:prefix "C-c d"
+         :prefix-map my-dired-map
+         ("j" . dired-jump)
+         ("J" . dired-jump-other-window))
   :custom
   ;; file sizes in human-readable units (KB, MB, etc)
   (dired-listing-switches "-alh"))
