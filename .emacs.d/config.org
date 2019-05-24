@@ -1590,6 +1590,7 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
   :after counsel
   :commands smex
   :custom
+  (smex-save-file (expand-file-name "smex-items" fikovnik/savefile-dir))
   (smex-history-length 50))
 #+END_SRC
 
