@@ -1465,6 +1465,7 @@ But, only if I put them there!
   :custom
   (enable-recursive-minibuffers t)
   (ivy-height 15)
+  (ivy-fixed-height-minibuffer t)
   (ivy-count-format "(%d/%d) ")
   (ivy-use-virtual-buffers t)
   (ivy-virtual-abbreviate 'full)
