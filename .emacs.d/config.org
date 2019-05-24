@@ -58,6 +58,15 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
 * Sources
 ** TODO clean and describe
+*** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
+- pure init.el
+*** TODO https://shrysr.github.io/docs/sr-config/
+  - based scimax
+*** TODO https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org
+*** TODO https://karl-voit.at/2017/06/03/emacs-org/
+*** TODO https://writequit.org/org/
+*** TODO http://doc.norang.ca/org-mode.html
+*** Visited
 - [[https://github.com/hlissner/doom-emacs/blob/develop/][Doom Emacs]]
 - https://github.com/dakra/dmacs/blob/master/init.org
   - [[https://github.com/dakra/dmacs/blob/master/init.org#dired][dired]]
@@ -1000,6 +1009,10 @@ These command will be used in the [[Editing]] and [[Navigation]].
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook))
 #+END_SRC
+** TODO prettify symbol mode
+(setq-default prettify-symbols-alist
+                '(("#+BEGIN_SRC"     . "λ")
+                  ("#+END_SRC"       . "λ"))
 
 * Editing
 ** Killing lines
@@ -1096,6 +1109,14 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 ** TODO replace multiple cursors with iedit?
 ** Move lines up / down
 *** TODO fix this in org-mode which takes over this binding
+
+What I want is:
+- M-up/down move lines / region
+- M-S-up/down duplicate lines / region
+
+In org mode:
+- M-up at heading / table moves subtree / row
+- M-S-up/down duplicate lines / region
 
 #+BEGIN_SRC emacs-lisp
 (use-package move-dup
@@ -1498,6 +1519,12 @@ But, only if I put them there!
 (use-package ivy-hydra
   :after (ivy hydra))
 #+END_SRC
+
+*** TODO better keys in the ivy minibuffer
+- left/right select dirs
+- tab show actions
+https://oremacs.com/swiper/#key-bindings
+https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
 
 ** Counsel
 
@@ -2803,6 +2830,8 @@ TODO: font size hydra
   (lambda () (progn
                (set-face-attribute 'org-todo nil :weight 'bold))))
 #+END_SRC
+*** TODO better indication of selected window
+*** TODO better indication of current chunk in magit
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
 
@@ -2830,7 +2859,6 @@ find ~/.emacs.d/elpa/expand-region*/*.elc -print0 | xargs -0 rm
 #+BEGIN_SRC emacs-lisp :tangle no
 (fikovnik/recompile-elpa)
 #+END_SRC
-
 
 ** Unable to install a package
 
