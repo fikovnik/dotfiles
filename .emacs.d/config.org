@@ -48,7 +48,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =M-g=     | Go to char in line                     |
 | =M-u M-g= | Go to char                             |
 
-** TODO rename variables and functions (fikovnik -> my-)
+** rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
 
 #+BEGIN_SRC sh :tangle no
@@ -1739,7 +1739,7 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
 (bind-key "C-c w" 'hydra-window/body)
 #+END_SRC
 *** TODO move windows (like spacemacs)
-** Go to (=M-G=)
+** Go to (=M-G=)                                                       :wip:
 *** Setup Avy
 
 This allows to quickly jump around in the buffer. The way it is setup is by
@@ -1794,7 +1794,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 *** TODO next / previous error
 *** TODO next / previous spelling problem
-** Buffers (=C-c b=)
+** Buffers (=C-c b=)                                                   :wip:
 *** Functions
 
 #+BEGIN_SRC emacs-lisp
@@ -1863,6 +1863,7 @@ possibly new window."
 ** TODO pgup/pgdown go to the same location
 ** TODO Go to matching paren
 ** TODO Gentle navigation
+or some more precise navigation which I could use for defining key macros
 ** Highlight symbols (=M-*=)
 
 #+BEGIN_SRC emacs-lisp
@@ -1871,18 +1872,6 @@ possibly new window."
   (swiper initial-input))
 
 (bind-key "M-*" 'fikovnik/swiper-at-point)
-#+END_SRC
-
-** TODO move to previous/next edit location
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package goto-chg
-  :commands goto-last-change
-  ;; complementary to
-  ;; C-x r m / C-x r l
-  ;; and C-<space> C-<space> / C-u C-<space>
-  :bind (("C-." . goto-last-change)
-         ("C-," . goto-last-change-reverse)))
 #+END_SRC
 
 ** TODO ace-link
@@ -1911,7 +1900,9 @@ possibly new window."
   (bookmark-save-flag 1))
 #+END_SRC
 ** TODO popup global mark
-** TODO go to the last definition
+- merge popup mark and global one
+- check the back button
+- go back and forth
 * Search and replace
 ** Replace
 
