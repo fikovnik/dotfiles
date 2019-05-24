@@ -1458,7 +1458,7 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
   (smartparens-global-mode))
 #+END_SRC
 
-** TODO indentation
+** Indentation
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (defun indent-buffer ()
@@ -1468,6 +1468,12 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max) nil)
     (untabify (point-min) (point-max))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :hook
+  (prog-mode . aggressive-indent-mode))
 #+END_SRC
 
 ** TODO macros
