@@ -1911,7 +1911,8 @@ possibly new window."
   ("N" fikovnik/new-empty-buffer "new")
   ("m" fikovnik/switch-to-messages-buffer "switch to messages")
   ("s" fikovnik/switch-to-scratch-buffer "switch to scratch")
-  ("i" ibuffer "ibuffer"))
+  ("i" ibuffer "ibuffer")
+  ("e" erase-buffer "erase"))
 #+END_SRC
 
 *** Binding
