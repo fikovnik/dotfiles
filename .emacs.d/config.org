@@ -526,6 +526,7 @@ case conversion in this way.
                          (?I  "XK_I"            ("C-S" "C-M-S"))
                          (?M  "XK_M"            ("C-S" "C-M-S"))
                          (?J  "XK_J"            ("C-S" "C-M-S"))
+                         (?K  "XK_K"            ("C-S" "C-M-S"))
                          (?m  "XK_m"            ("C" "C-M")               (([C-m]) ([C-M-m])))
                          (?i  "XK_i"            ("C" "C-M")               (([C-i]) ([C-M-i])))
                          (?O  "XK_O"            ("C-S" "C-M-S"))
@@ -1003,8 +1004,12 @@ These command will be used in the [[Editing]] and [[Navigation]].
 * Editing
 ** Killing lines
 
+The following binding does not work.
+There should be also GUI version.
+
 #+BEGIN_SRC emacs-lisp
-(bind-key [remap kill-while-line] #'crux-kill-whole-line)
+(bind-key "C-S-K" #'crux-kill-whole-line)
+(bind-key [remap kill-whole-line] #'crux-kill-whole-line)
 (bind-key [C-] #'crux-kill-line-backwards)
 #+END_SRC
 
