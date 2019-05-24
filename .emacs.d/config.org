@@ -29,7 +29,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =C-c b=   | Buffers prefix                         |
 | =C-c t=   | Toggles prefix                         |
 | =C-c p=   | Projects prefix                        |
-| =C-c S=   | Snippets prefix                        |
+| =C-c s=   | Snippets prefix                        |
 | =C-c e=   | Emacs configuration prefix             |
 | =C-c c=   | Org capture                            |
 | =C-c g=   | Magit prefix                           |
@@ -1202,19 +1202,25 @@ selection defined above.
   :defer 1
   :diminish (yas-minor-mode . "YAS")
   :commands yas-minor-mode
-  :bind
-  ("C-c S" . hydra-yas/body)
+  :bind (:prefix "C-c s"
+         :prefix-map my-yasnippet-map
+         :prefix-docstring "Yasnippet key"
+         ("i" . yas-insert-snippet)
+         ("n" . yas-new-snippet)
+         ("f" . yas-visit-snippet-file)
+         ("r" . yas-reload-all)
+         ("x" . yas-expand)
+         ("t" . yas-tryout-snippet)
+         ("l" . yas-describe-tables))
   :config
-  (defhydra hydra-yas (:exit t :hint nil)
-    ("i" yas-insert-snippet "insert")
-    ("n" yas-new-snippet "new")
-    ("f" yas-visit-snippet-file "visit")
-    ("r" yas-reload-all "reload")
-    ("x" yas-expand "expand")
-    ("t" yas-tryout-snippet "try")
-    ("l" yas-describe-tables "list"))
   (yas-global-mode 1)
   (yas-reload-all))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-yasnippet
+  :bind (:map my-yasnippet-map
+              ("s" . ivy-yasnippet)))
 #+END_SRC
 
 ** Auto completion
