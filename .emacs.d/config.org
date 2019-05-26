@@ -1378,34 +1378,54 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
-  :no-require t
-  :bind (:prefix "C-c s"
-         :prefix-map my-ispell-map
-         ("c" . ispell-comments-and-strings)
-         ("d" . ispell-change-dictionary)
-         ("k" . ispell-kill-ispell)
-         ("m" . ispell-message)
-         ("r" . ispell-region)
-         ("b" . ispell-buffer)))
+  :defer 2
+  :custom
+  (ispell-personal-dictionary (expand-file-name "my-ispell-dictionary" fikovnik/private-conf-dir))
+  (ispell-dictionary "en_US")
+  (ispell-program-name (executable-find "hunspell"))
+  (ispell-really-hunspell t)
+  (ispell-silently-savep t))
 #+END_SRC
+
+*** flyspell
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+  :after ispell
   :hook
   (text-mode . flyspell-mode)
   (prog-mode . flyspell-prog-mode)
+  :bind (:map flyspell-mode-map
+              ("C-;" . nil)
+              ("C-," . nil))
   :custom
-  (ispell-program-name "aspell")
-  (ispell-extra-args '("--sug-mode=ultra")))
+  (flyspell-abbrev-p t)
+  (flyspell-issue-welcome-flag nil))
 #+END_SRC
 
+*** flyspell / ivy integration
+helo is not correct
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell-correct-ivy
+  :demand t
+  :after (flyspell ivy)
+  :init
+  (setq flyspell-correct-interface #'flyspell-correct-ivy)
   :bind
-  ("M-'" . flyspell-correct-at-point)
-  (:map my-ispell-map
-        ("s" . flyspell-correct-wrapper)))
+  ("M-'" . flyspell-correct-wrapper))
 #+END_SRC
+*** TODO functions to change dictionaries
+
+Something like:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(lambda ()
+  (interactive)
+  (ispell-change-dictionary "en_GB")
+  (flyspell-buffer))
+#+END_SRC
+
+and use ivy to propose the available dictionaries.
 
 ** TODO surround
 - https://github.com/ganmacs/emacs-surround
@@ -2052,6 +2072,7 @@ or some more precise navigation which I could use for defining key macros
 [_t_] truncate-lines:    %`truncate-lines
 [_w_] whitespace-mode:   %`whitespace-mode
 [_l_] org link display:  %`org-descriptive-links
+[_s_] spell check:       %`flyspell-mode
 "
   ("a" abbrev-mode)
   ("d" toggle-debug-on-error)
