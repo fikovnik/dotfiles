@@ -2282,6 +2282,13 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
 ** config.org and init.el helpers
 
 #+BEGIN_SRC emacs-lisp
+(defun fikovnik/sync-configuration-and-reload ()
+  (interactive)
+  (call-interactively 'fikovnik/sync-configuration)
+  (call-interactively 'iqa-reload-user-init-file))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package iqa
   :custom
   (iqa-user-init-file (emacs-path "config.org"))
@@ -2289,7 +2296,7 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
          :prefix-map my-emacs-helper-map
          :prefix-docstring "Emacs init.el related"
          ("e" . iqa-find-user-init-file)
-         ("r" . iqa-reload-user-init-file)
+         ("r" . fikovnik/sync-configuration-and-reload)
          ("d" . iqa-find-user-init-directory)
          ("g" . fikovnik/dotfiles-magit)
          ("s" . fikovnik/sync-configuration)
@@ -2299,7 +2306,7 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
   (which-key-add-key-based-replacements "C-c e c" "sync & compile")
   (which-key-add-key-based-replacements "C-c e s" "sync")
   (which-key-add-key-based-replacements "C-c e g" "magit")
-  (which-key-add-key-based-replacements "C-c e r" "reload config"))
+  (which-key-add-key-based-replacements "C-c e r" "sync & reload"))
 #+END_SRC
 
 ** Life cycle
