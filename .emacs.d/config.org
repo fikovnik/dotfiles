@@ -1183,6 +1183,11 @@ There should be also GUI version.
 (bind-key [remap kill-whole-line] #'crux-kill-whole-line my-key-map)
 (bind-key [C-] #'crux-kill-line-backwards my-key-map)
 #+END_SRC
+** Marking
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-c" #'mark-sexp my-key-map)
+#+END_SRC
 
 ** Deleting spaces
 
