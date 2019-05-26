@@ -844,7 +844,8 @@ Answering just 'y' or 'n' will do
       ;; when middle-clicking the mouse to yank from the clipboard, insert the text where point is, not where the mouse cursor is
       mouse-yank-at-point                 t
       require-final-newline               t
-      visible-bell                        t
+      ;; this the most useful setting
+      visible-bell                        nil
       ;; http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
       minibuffer-prompt-properties        '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)
       ;; Disable non selected window highlight
