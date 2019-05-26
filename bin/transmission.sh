@@ -1,7 +1,7 @@
 #!/bin/sh
 
 name=transmission
-country="Czechia"
+country="cz"
 
 # TODO: refactor to some docker utils
 function rm_stopped {
@@ -20,15 +20,13 @@ function status {
 }
 
 function start {
-    local password=$(pass show internet/windscribe-vpn | head -1)
-    local username=$(pass show internet/windscribe-vpn | tail -1 | sed 's/username: //g')
+    local password=$(pass show internet/nordvpn.com | head -1)
+    local username=$(pass show internet/nordvpn.com | tail -1 | sed 's/username: //g')
 
     docker run --cap-add=NET_ADMIN --device=/dev/net/tun -d \
            -v $HOME/NoBackup/transmission/:/data \
            -v /etc/localtime:/etc/localtime:ro \
-           -v $HOME/.openvpn/windscribe/Czechia-udp.ovpn:/etc/openvpn/windscribe/Czechia-udp.ovpn:ro \
-           -e "OPENVPN_PROVIDER=WINDSCRIBE" \
-           -e "OPENVPN_CONFIG=$country-udp" \
+           -e "OPENVPN_PROVIDER=NORDVPN" \
            -e "OPENVPN_USERNAME=$username" \
            -e "OPENVPN_PASSWORD=$password" \
            -e "PUID=$(id -u)" \
