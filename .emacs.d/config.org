@@ -1158,7 +1158,28 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
   ([remap fill-paragraph] . unfill-toggle))
 #+END_SRC
 
-** TODO replace multiple cursors with iedit?
+** iedit
+
+Start iedit on the current line only.
+
+| Key   | Action                                        |
+|-------+-----------------------------------------------|
+| =M-n= | Select next occurrence                        |
+| =M-p= | Select previous occurrence                    |
+| =M-{= | Extend the search region by the next line     |
+| =M-}= | Extend the search region by the previous line |
+| =M-H= | Narrow the search region to current defun     |
+
+#+BEGIN_SRC emacs-lisp
+(use-package iedit
+  :demand t
+  :preface
+  (defun my-iedit-mode-narrow-to-current-line ()
+    (iedit-restrict-current-line))
+  :hook
+  (iedit-mode . my-iedit-mode-narrow-to-current-line))
+#+END_SRC
+
 ** Move lines up / down
 *** TODO fix this in org-mode which takes over this binding
 
