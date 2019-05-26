@@ -1535,9 +1535,9 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
 
 ** Indentation
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun indent-buffer ()
-  "Indent the entire buffer."
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/reformat-buffer ()
+  "Indent the entire buffer, remove trailing white space and tabs"
   (interactive)
   (save-excursion
     (delete-trailing-whitespace)
