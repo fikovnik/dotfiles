@@ -2030,6 +2030,8 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("M-g" . my-avy-goto-char)
   ("M-l" . avy-goto-line)
   ("M-L" . avy-goto-end-of-line)
+  :custom
+  (avy-single-candidate-jump nil)
   :config
   (add-to-list 'avy-dispatch-alist '(?Z . my-zap-to-char))
   (avy-setup-default)
