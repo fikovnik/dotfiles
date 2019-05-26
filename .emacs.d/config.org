@@ -1066,6 +1066,112 @@ Revert buffers when files on disk change
                 '(("#+BEGIN_SRC"     . "λ")
                   ("#+END_SRC"       . "λ"))
 
+* Appearance
+** Theme
+*** base16-oceanicnext theme
+
+#+BEGIN_SRC emacs-lisp
+(use-package base16-theme
+  :demand t
+  :config
+  (load-theme 'base16-oceanicnext t))
+#+END_SRC
+*** Region selection color
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'region nil :foreground "black" :background "magenta")
+#+END_SRC
+
+*** Highlight color
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'highlight nil :foreground "black" :background "brightblack")
+#+END_SRC
+
+** Font
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist
+  (cond
+    ((string-equal system-type "darwin")    '(font . "dejavu sans mono"))
+    ((string-equal system-type "gnu/linux") '(font . "dejavu sans mono"))))
+#+END_SRC
+
+*** TODO font size hydra
+
+** Modeline
+*** TODO better modeline?
+- if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package doom-modeline
+  :demand t
+  :config
+  (add-hook 'after-init-hook #'doom-modeline-init)
+  :custom
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-buffer-file-name-style 'buffer-name)
+  (doom-modeline-icon t))
+#+END_SRC
+** Cursor
+*** TODO bar cursor
+*** Color
+**** Functions
+
+- TODO: defvar for shape and color at the beginning
+
+#+BEGIN_SRC emacs-lisp
+(defconst fikovnik/cursor-types '((box-blink  . 1)
+                                  (box        . 2)
+                                  (hbar-blink . 3)
+                                  (hbar       . 4)
+                                  (bar-blink  . 5)
+                                  (bar        . 6))
+  "Available cursor types as tuple of name and terminal code")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun fikovnik/-tmux-p ()
+  "Running in tmux."
+  (getenv "TMUX"))
+
+(defun fikovnik/-make-tmux-seq (seq)
+  (format "\ePtmux;\e%s\e\\" seq))
+
+(defun fikovnik/-cursor-shape-seq (shape)
+  "Make escape sequence for XTerm compatible terminals."
+  (let* ((cursor-code (cdr (assoc shape fikovnik/cursor-types)))
+         (seq (format "\e[%d q" cursor-code)))
+    (if (fikovnik/-tmux-p)
+        (fikovnik/-make-tmux-seq seq)
+      seq)))
+
+(defun fikovnik/set-cursor-shape (shape)
+  (let ((seq (fikovnik/-cursor-shape-seq shape)))
+    (message "%s" seq)
+    (send-string-to-terminal seq)))
+
+(defun fikovnik/-cursor-color-seq (color)
+  "Make escape sequence for cursor color (in HEX)."
+  (let ((seq (format "\e]12;%s\a" color)))
+    (if (fikovnik/-tmux-p)
+        (fikovnik/-make-tmux-seq seq)
+      seq)))
+
+(defun fikovnik/set-cursor-color (color)
+  (let ((seq (fikovnik/-cursor-color-seq color)))
+    (message "%s" seq)
+    (send-string-to-terminal seq)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(set-cursor-color "#ee30a7")
+(setq-default cursor-type 'bar)
+#+END_SRC
+**** TODO cursor color in GUI
+
+**** TODO sync with tmux region color 30;45 ideally
+
+*** TODO better indication of current chunk in magit
 * Editing
 ** Killing lines
 
@@ -2466,7 +2572,9 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
   (org-startup-indented 1)
-  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)"))))
+  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+  :config
+  (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
 
 ** Better appearance
@@ -2868,117 +2976,6 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 ** TODO email
 ** TODO elfeed
 - https://github.com/abo-abo/elfeed
-* Appearance
-** Theme
-*** base16-oceanicnext theme
-#+BEGIN_SRC emacs-lisp
-(use-package base16-theme
-  :demand t
-  :config
-  (load-theme 'base16-oceanicnext t))
-#+END_SRC
-
-*** TODO better contrast between hl-line and region
-** Font
-
-TODO: font size hydra
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist
-  (cond
-    ((string-equal system-type "darwin")    '(font . "dejavu sans mono"))
-    ((string-equal system-type "gnu/linux") '(font . "dejavu sans mono"))))
-#+END_SRC
-
-** Modeline
-*** TODO better modeline?
-- if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package doom-modeline
-  :demand t
-  :config
-  (add-hook 'after-init-hook #'doom-modeline-init)
-  :custom
-  (doom-modeline-major-mode-icon t)
-  (doom-modeline-buffer-file-name-style 'buffer-name)
-  (doom-modeline-icon t))
-#+END_SRC
-** Cursor
-*** TODO bar cursor
-** Colors
-*** Cursor color
-**** Functions
-
-- TODO: defvar for shape and color at the beginning
-
-#+BEGIN_SRC emacs-lisp
-(defconst fikovnik/cursor-types '((box-blink  . 1)
-                                  (box        . 2)
-                                  (hbar-blink . 3)
-                                  (hbar       . 4)
-                                  (bar-blink  . 5)
-                                  (bar        . 6))
-  "Available cursor types as tuple of name and terminal code")
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun fikovnik/-tmux-p ()
-  "Running in tmux."
-  (getenv "TMUX"))
-
-(defun fikovnik/-make-tmux-seq (seq)
-  (format "\ePtmux;\e%s\e\\" seq))
-
-(defun fikovnik/-cursor-shape-seq (shape)
-  "Make escape sequence for XTerm compatible terminals."
-  (let* ((cursor-code (cdr (assoc shape fikovnik/cursor-types)))
-         (seq (format "\e[%d q" cursor-code)))
-    (if (fikovnik/-tmux-p)
-        (fikovnik/-make-tmux-seq seq)
-      seq)))
-
-(defun fikovnik/set-cursor-shape (shape)
-  (let ((seq (fikovnik/-cursor-shape-seq shape)))
-    (message "%s" seq)
-    (send-string-to-terminal seq)))
-
-(defun fikovnik/-cursor-color-seq (color)
-  "Make escape sequence for cursor color (in HEX)."
-  (let ((seq (format "\e]12;%s\a" color)))
-    (if (fikovnik/-tmux-p)
-        (fikovnik/-make-tmux-seq seq)
-      seq)))
-
-(defun fikovnik/set-cursor-color (color)
-  (let ((seq (fikovnik/-cursor-color-seq color)))
-    (message "%s" seq)
-    (send-string-to-terminal seq)))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(set-cursor-color "#ee30a7")
-(setq-default cursor-type 'bar)
-#+END_SRC
-**** TODO cursor color in GUI
-
-*** Region color
-
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'region nil :foreground "#000000" :background "#cd6090")
-#+END_SRC
-
-**** TODO sync with tmux region color 30;45 ideally
-
-*** Fix org colors
-
-#+BEGIN_SRC emacs-lisp
-(eval-after-load "org"
-  (lambda () (progn
-               (set-face-attribute 'org-todo nil :weight 'bold))))
-#+END_SRC
-*** TODO better indication of selected window
-*** TODO better indication of current chunk in magit
-
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
 
