@@ -1363,10 +1363,18 @@ selection defined above.
 #+END_SRC
 
 ** TODO delete syntax
-** Spell checking
-*** Configuration
+** wgrep
 
-Spell check using aspell.
+#+BEGIN_SRC emacs-lisp
+(use-package wgrep
+  :demand t
+  :custom
+  (wgrep-auto-save-buffer t)
+  (wgrep-enable-key "e"))
+#+END_SRC
+
+** Spell checking
+*** ispell
 
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
