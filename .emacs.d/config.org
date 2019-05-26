@@ -2707,34 +2707,23 @@ The following is the _official_ way to fix it:
   :commands eldoc-mode)
 #+END_SRC
 
-*** Enable LSP
+*** TODO LSP using eglot
 
 #+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :custom
-  (lsp-prefer-flymake t)
-  :commands lsp)
-
-(use-package lsp-ui
-  :custom
-  (lsp-ui-sideline-enable nil)
-  :commands lsp-ui-mode)
-
-(use-package company-lsp
-  :custom
-  (company-transformers nil)
-  (company-lsp-async t)
-  (company-lsp-cache-candidates nil)
-  :commands company-lsp)
+(use-package eglot
+  :commands eglot
+  :preface
+  (defun projectile-project-find-function (dir)
+    (let* ((root (projectile-project-root dir)))
+      (and root (cons 'transient root))))
+  :hook
+  ((c-mode c++-mode) . eglot-ensure)
+  :config
+  (with-eval-after-load 'project
+    (add-to-list 'project-find-functions 'projectile-project-find-function)))
 #+END_SRC
-
-| Key     | Description      | Function                |
-|---------+------------------+-------------------------|
-| =M-.=   | Find definitions | =xref-find-definitions= |
-| =M-?=   | Find references  | =xref-find-references=  |
-| =C-M-.= |                  | =xref-find-apropos=     |
-
-*** TODO move to eglot
+**** TODO configure completion
+https://github.com/MaskRay/ccls/wiki/eglot
 *** TODO realgud
 *** Interpreters
 **** Create termino for comint with support for ANSI color codes
@@ -2787,52 +2776,10 @@ rm /tmp/dumb-emacs-ansi.ti
 #+END_SRC
 
 ** C/C++
-*** Backend
-
-Use [[https://github.com/MaskRay/ccls/wiki/lsp-mode][ccls]] as the backend for C/C++.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ccls
-  :custom
-  (ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
-  ;; no semantic highlighting
-  (ccls-sem-highlight-method nil)
-  :hook
-  ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
-#+END_SRC
-
-Not sure why it is needed, but without I get =lsp--location-to-td-position:
-Wrong type argument: hash-table-p, nil=, cf. [[https://github.com/MaskRay/emacs-ccls/issues/17][emacs-ccls:#17]]
-
-#+BEGIN_SRC emacs-lisp
-(setq xref-prompt-for-identifier
-      '(not xref-find-definitions
-            xref-find-definitions-other-window
-            xref-find-definitions-other-frame
-            xref-find-references))
-#+END_SRC
-
-*** TODO Semantic movement
-
-Bind these to some keys?
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(ccls-navigate "D") ;; roughly sp-down-sexp
-(ccls-navigate "L")
-(ccls-navigate "R")
-(ccls-navigate "U")
-#+END_SRC
-
-*** TODO C++ hierarchy
-ccls-member-hierarchy $ccls/member hierarchy:true
-
-(ccls-call-hierarchy nil) ; caller hierarchy
-(ccls-call-hierarchy t) ; callee hierarchy
-
-$ccls/call
-
-(ccls-inheritance-hierarchy nil) ; base hierarchy
-(ccls-inheritance-hierarchy t) ; derived hierarchy
+*** TODO completion
+https://github.com/MaskRay/ccls/wiki/eglot
+*** TODO hierarchy
+https://github.com/MaskRay/ccls/wiki/eglot
 ** TODO Elisp
 
 We set up smartparens above, but when it’s enabled in strict mode for lisps it
