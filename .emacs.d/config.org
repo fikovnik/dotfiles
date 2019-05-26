@@ -250,16 +250,16 @@ order to prevent stuttering/freezes.
 
   (defun fikovnik/sync-configuration (arg)
     "Tangle the ~/.emacs.d/config.org file into
-    ~/.emacs.d/init.el and if called with universal argument also
-    byte compile it into ~/.emacs.d/init.elc"
+    ~/.emacs.d/config.el and if called with universal argument also
+    byte compile it into ~/.emacs.d/config.elc"
 
     (interactive "P")
     (let ((config-file (emacs-path "config.org"))
-          (init-file (emacs-path "init.el"))
-          (init-file-elc (emacs-path "init.elc")))
-      (org-babel-tangle-file config-file init-file "emacs-lisp")
-      (when (file-exists-p init-file-elc) (delete-file init-file-elc))
-      (when arg (byte-compile-file init-file))))
+          (config-file-el (emacs-path "config.el"))
+          (config-file-elc (emacs-path "config.elc")))
+      (org-babel-tangle-file config-file config-file-el "emacs-lisp")
+      (when (file-exists-p config-file-elc) (delete-file config-file-elc))
+      (when arg (byte-compile-file config-file-el))))
 
   (defun fikovnik/sync-configuration-and-compile ()
     (interactive)
