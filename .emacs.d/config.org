@@ -1333,6 +1333,15 @@ selection defined above.
   :bind (:map company-active-map
               ("C-c ?" . company-quickhelp-manual-begin)))
 #+END_SRC
+*** Abbrevs
+
+#+BEGIN_SRC emacs-lisp
+(use-package abbrev
+  :ensure nil
+  :custom
+  (abbrev-file-name (expand-file-name "abbrev_defs" fikovnik/private-conf-dir))
+  (save-abbrevs 'silently))
+#+END_SRC
 
 *** Hippie expand
 
