@@ -1677,12 +1677,6 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
     (untabify (point-min) (point-max))))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
-  :hook
-  (prog-mode . aggressive-indent-mode))
-#+END_SRC
-
 ** TODO macros
 - hydra with dribble / loosage
 ** Automatically remove trailing whitespace
