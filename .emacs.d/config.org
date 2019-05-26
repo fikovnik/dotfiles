@@ -780,6 +780,36 @@ and on windows switch.
 ;; Accept 'UTF-8' (uppercase) as a valid encoding in the coding header
 (define-coding-system-alias 'UTF-8 'utf-8)
 #+END_SRC
+** Define my-minor-mode that will define all my global key bindings
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-key-map (make-sparse-keymap)
+  "my-minor-mode keymap.")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode my-minor-mode
+  :init-value t
+  :lighter "MY"
+  :keymap my-key-map)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun my-keys-have-priority (_file)
+  "Try to ensure that my keybindings retain priority over other minor modes.
+Called via the `after-load-functions' special hook."
+
+  (unless (eq (caar minor-mode-map-alist) 'my-minor-mode)
+    (let ((my (assq 'my-minor-mode minor-mode-map-alist)))
+      (assq-delete-all 'my-minor-mode minor-mode-map-alist)
+      (add-to-list 'minor-mode-map-alist my))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(my-minor-mode 1)
+
+(add-hook 'after-load-functions 'my-keys-have-priority)
+#+END_SRC
 
 ** Sensible defaults
 
@@ -975,7 +1005,7 @@ This remembers your location in a file when saving files.
 *** <end> is the same as =C-e=
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "<end>" #'move-end-of-line)
+(bind-key "<end>" #'move-end-of-line my-key-map)
 #+END_SRC
 
 ** Install crux
@@ -1042,9 +1072,9 @@ The following binding does not work.
 There should be also GUI version.
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-S-K" #'crux-kill-whole-line)
-(bind-key [remap kill-whole-line] #'crux-kill-whole-line)
-(bind-key [C-] #'crux-kill-line-backwards)
+(bind-key "C-S-K" #'crux-kill-whole-line my-key-map)
+(bind-key [remap kill-whole-line] #'crux-kill-whole-line my-key-map)
+(bind-key [C-] #'crux-kill-line-backwards my-key-map)
 #+END_SRC
 
 ** Deleting spaces
@@ -1106,8 +1136,8 @@ pastes from X-SECONDARY."
 Bind =C-S-X= to cut and =C-X-C= to copy.
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-S-X" 'fikovnik/cut-to-xclipboard)
-(bind-key "C-S-C" 'fikovnik/copy-to-xclipboard)
+(bind-key "C-S-X" 'fikovnik/cut-to-xclipboard my-key-map)
+(bind-key "C-S-C" 'fikovnik/copy-to-xclipboard my-key-map)
 #+END_SRC
 
 The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
@@ -1115,7 +1145,7 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 
 #+BEGIN_SRC emacs-lisp
 (when (display-graphic-p)
-  (bind-key "C-S-V" 'fikovnik/paste-from-xclipboard))
+  (bind-key "C-S-V" 'fikovnik/paste-from-xclipboard my-key-map))
 #+END_SRC
 
 ** Fill/unfill paragraph
@@ -1159,15 +1189,15 @@ line to be joined upwards. Most of the time I prefer the other way around.
 | =M-J= | Join the current line with the line *over* it.    |
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "M-j" #'crux-top-join-line)
-(bind-key "M-J" #'join-line)
+(bind-key "M-j" #'crux-top-join-line my-key-map)
+(bind-key "M-J" #'join-line my-key-map)
 #+END_SRC
 
 ** Open line above and bellow
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-S-O" #'crux-smart-open-line-above)
-(bind-key "C-o" #'crux-smart-open-line)
+(bind-key "C-S-O" #'crux-smart-open-line-above my-key-map)
+(bind-key "C-o" #'crux-smart-open-line my-key-map)
 #+END_SRC
 
 ** Comment / un-comment lines
@@ -1182,7 +1212,7 @@ on a single line in the case no region is active:
 Next, we bind it:
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-/" #'comment-or-uncomment-region)
+(bind-key "C-/" #'comment-or-uncomment-region my-key-map)
 #+END_SRC
 
 ** Copy and cut whole lines
@@ -1587,7 +1617,7 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
            org-goto-interface 'outline-path-completion
            org-outline-path-complete-in-steps nil)
 
-     (bind-key "C-c c" #'counsel-org-capture)
+     (bind-key "C-c c" #'counsel-org-capture my-key-map)
      (bind-keys :map org-mode-map
                 ("C-c C-j" . counsel-org-goto)
                 ("C-u C-c C-j" . counsel-org-goto-all)))))
@@ -1664,8 +1694,8 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
   (split-window-vertically)
   (other-window 1))
 
-(bind-key "C-x 2" #'my-split-window-vertically-and-move)
-(bind-key "C-x 3" #'my-split-window-horizontally-and-move)
+(bind-key "C-x 2" #'my-split-window-vertically-and-move my-key-map)
+(bind-key "C-x 3" #'my-split-window-horizontally-and-move my-key-map)
 #+END_SRC
 
 *** Selecting windows
@@ -1699,8 +1729,8 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
   (interactive)
   (other-window -1))
 
-(bind-key "C-," #'prev-window)
-(bind-key "C-." #'other-window)
+(bind-key "C-," #'prev-window my-key-map)
+(bind-key "C-." #'other-window my-key-map)
 #+END_SRC
 
 *** Save window layout stack using the =winner-mode=
@@ -1798,7 +1828,7 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-c w" 'hydra-window/body)
+(bind-key "C-c w" 'hydra-window/body my-key-map)
 #+END_SRC
 *** TODO move windows (like spacemacs)
 ** Go to (=M-G=)                                                       :wip:
@@ -1856,7 +1886,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "M-G" #'hydra-goto/body)
+(bind-key "M-G" #'hydra-goto/body my-key-map)
 #+END_SRC
 
 *** TODO next / previous error
@@ -1907,25 +1937,29 @@ possibly new window."
 *** Setup =C-c b= micro state                                       :hydra:
 
 #+BEGIN_SRC emacs-lisp
-(defhydra hydra-buffers (:exit t :hint nil)
-  ("b" switch-buffer "list")
-  ("n" next-buffer "next")
-  ("p" previous-buffer "previous")
-  ("k" kill-this-buffer "kill")
-  ("x" fikovnik/kill-buffer-and-window "close")
-  ("R" revert-buffer "revert")
-  ("N" fikovnik/new-empty-buffer "new")
-  ("m" fikovnik/switch-to-messages-buffer "switch to messages")
-  ("s" fikovnik/switch-to-scratch-buffer "switch to scratch")
-  ("i" ibuffer "ibuffer")
-  ("e" erase-buffer "erase"))
+(defhydra hydra-buffers (:hint nil)
+  ("n" next-buffer "next" :column "Local")
+  ("p" previous-buffer "previous" :column "Local")
+  ("k" kill-this-buffer "kill" :column "Local")
+  ("x" fikovnik/kill-buffer-and-window "close" :column "Local")
+  ("R" revert-buffer "revert" :column "Local")
+  ("f" (crux-with-region-or-buffer indent-region) "format" :column "Local")
+  ("F" fikovnik/reformat-buffer "reformat" :column "Local")
+  ("e" erase-buffer "erase" :column "Local")
+  ("b" ivy-switch-buffer "list" :exit t :column "Other")
+  ("N" fikovnik/new-empty-buffer "new" :exit t :column "Other")
+  ("m" fikovnik/switch-to-messages-buffer "switch to messages" :exit t :column "Other")
+  ("s" fikovnik/switch-to-scratch-buffer "switch to scratch" :exit t :column "Other")
+  ("c" ispell-buffer "check spelling" :exit t :column "Other")
+  ("i" ibuffer "ibuffer" :exit t :column "Other"))
 #+END_SRC
 
 *** Binding
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-c b" 'hydra-buffers/body)
-(bind-key "C-x C-k" 'fikovnik/kill-buffer-and-window)
+(bind-key "C-c b" 'hydra-buffers/body my-key-map)
+(bind-key "C-x C-k" 'kill-buffer my-key-map)
+(bind-key "C-x C-S-k" 'fikovnik/kill-buffer-and-window my-key-map)
 #+END_SRC
 
 ** TODO pgup/pgdown go to the same location
@@ -1939,7 +1973,7 @@ or some more precise navigation which I could use for defining key macros
   (interactive (list (thing-at-point 'symbol)))
   (swiper initial-input))
 
-(bind-key "M-*" 'fikovnik/swiper-at-point)
+(bind-key "M-*" 'fikovnik/swiper-at-point my-key-map)
 #+END_SRC
 
 ** TODO ace-link
@@ -1947,8 +1981,8 @@ or some more precise navigation which I could use for defining key macros
 ** =C-a= / =home= to the beginning
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-a" #'crux-move-beginning-of-line)
-(bind-key "<home>" #'crux-move-beginning-of-line)
+(bind-key "C-a" #'crux-move-beginning-of-line my-key-map)
+(bind-key "<home>" #'crux-move-beginning-of-line my-key-map)
 #+END_SRC
 
 *** TODO text objects
@@ -2007,11 +2041,12 @@ or some more precise navigation which I could use for defining key macros
   ("t" toggle-truncate-lines)
   ("w" whitespace-mode)
   ("l" org-toggle-link-display)
+  ("s" flyspell-mode)
   ("q" nil "quit"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-c t" 'hydra-toggle/body)
+(bind-key "C-c t" 'hydra-toggle/body my-key-map)
 #+END_SRC
 
 *** TODO use pretty hydra
