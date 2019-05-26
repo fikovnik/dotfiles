@@ -23,31 +23,32 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 
 *** Overview of the main key bindings
 
-| Key       | Micro state                            |
-|-----------+----------------------------------------|
-| =C-c w=   | Windows prefix                         |
-| =C-c b=   | Buffers prefix                         |
-| =C-c t=   | Toggles prefix                         |
-| =C-c p=   | Projects prefix                        |
-| =C-c s=   | Snippets prefix                        |
-| =C-c e=   | Emacs configuration prefix             |
-| =C-c c=   | Org capture                            |
-| =C-c d=   | Dired                                  |
-| =C-c g=   | Magit prefix                           |
-| =M-G=     | Go to prefix                           |
-| =C-==     | Expand region prefix                   |
-| =C-c /=   | Search in project or current directory |
-| =M-'=     | Correct word                           |
-| =M-;=     | Comment or uncomment                   |
-| =M-i=     | imenu                                  |
-| =M-I=     | imenu anywhere                         |
-| =C-x C-k= | Kill buffer and its window             |
-| =C-x C-b= | Switch buffer                          |
-| =C-x o=   | Switch window                          |
-| =M-*=     | Search for a symbol with swiper        |
-| =C-x f=   | Find file using fzf                    |
-| =M-g=     | Go to char in line                     |
-| =M-u M-g= | Go to char                             |
+| Key         | Micro state                            |
+|-------------+----------------------------------------|
+| =C-c w=     | Windows prefix                         |
+| =C-c b=     | Buffers prefix                         |
+| =C-c t=     | Toggles prefix                         |
+| =C-c p=     | Projects prefix                        |
+| =C-c s=     | Snippets prefix                        |
+| =C-c e=     | Emacs configuration prefix             |
+| =C-c c=     | Org capture                            |
+| =C-c d=     | Dired                                  |
+| =C-c g=     | Magit prefix                           |
+| =M-S-g=     | Go to prefix                           |
+| =C-==       | Expand region prefix                   |
+| =C-c /=     | Search in project or current directory |
+| =M-'=       | Correct word                           |
+| =M-;=       | Comment or uncomment                   |
+| =M-i=       | imenu                                  |
+| =M-I=       | imenu anywhere                         |
+| =C-x C-k=   | Kill buffer                            |
+| =C-x C-S-k= | Kill buffer and its window             |
+| =C-x C-b=   | Switch buffer                          |
+| =C-x o=     | Switch window                          |
+| =M-*=       | Search for a symbol with swiper        |
+| =C-x f=     | Find file using fzf                    |
+| =M-g=       | Go to char in line                     |
+| =M-u M-g=   | Go to char                             |
 
 ** rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
@@ -55,8 +56,10 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 #+BEGIN_SRC sh :tangle no
 config update-index --assume-unchanged ~/.emacs.d/init.el
 #+END_SRC
-** Show matching function
+** TODO Show matching function
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
+** TODO use =:preable= for functions
+** TODO use =(executable-find)=
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -362,6 +365,7 @@ Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
 (use-package bind-key
   :demand t)
 #+END_SRC
+
 ** Universal argument
 
 #+BEGIN_SRC emacs-lisp
@@ -402,9 +406,11 @@ Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
 
 ** ST terminal
 Treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'term-file-aliases (quote ("st" . "xterm")))
 #+END_SRC
+
 ** Input map in terminal
 
 This section fixes key bindings in Emacs running in a terminal.
@@ -1961,6 +1967,7 @@ or some more precise navigation which I could use for defining key macros
   (bookmark-default-file (expand-file-name "bookmarks" fikovnik/savefile-dir))
   (bookmark-save-flag 1))
 #+END_SRC
+
 ** TODO popup global mark
 - merge popup mark and global one
 - check the back button
@@ -2006,6 +2013,9 @@ or some more precise navigation which I could use for defining key macros
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-c t" 'hydra-toggle/body)
 #+END_SRC
+
+*** TODO use pretty hydra
+https://github.com/jerrypnz/major-mode-hydra.el
 
 * TODO Mouse
 * Projects
@@ -2758,7 +2768,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 - https://github.com/abo-abo/elfeed
 * Appearance
 ** Theme
-
+*** base16-oceanicnext theme
 #+BEGIN_SRC emacs-lisp
 (use-package base16-theme
   :demand t
@@ -2866,6 +2876,7 @@ TODO: font size hydra
 #+END_SRC
 *** TODO better indication of selected window
 *** TODO better indication of current chunk in magit
+
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
 
