@@ -1189,6 +1189,7 @@ Start iedit on the current line only.
 | =M-{= | Extend the search region by the next line     |
 | =M-}= | Extend the search region by the previous line |
 | =M-H= | Narrow the search region to current defun     |
+| =M-I= | Narrow the search region to current line      |
 
 #+BEGIN_SRC emacs-lisp
 (use-package iedit
@@ -1197,12 +1198,19 @@ Start iedit on the current line only.
   (set-face-attribute 'iedit-occurrence nil :foreground "black" :background "brightblack"))
 #+END_SRC
 
+*** TODO start with narrow to current line
+
+Adding a hook like:
+
+#+BEGIN_SRC emacs-lisp :tangle no
   :preface
   (defun my-iedit-mode-narrow-to-current-line ()
     (iedit-restrict-current-line))
   :hook
   (iedit-mode . my-iedit-mode-narrow-to-current-line))
 #+END_SRC
+
+does not work.
 
 ** Move lines up / down
 *** TODO fix this in org-mode which takes over this binding
