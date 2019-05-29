@@ -293,6 +293,9 @@ Allow to use =:bind-key= in =use-package= macro to easily bind-keys.
 
 ** Universal argument
 
+It is super convenient to use =M-u= as the universal argument for =M-<key>=
+commands.
+
 #+BEGIN_SRC emacs-lisp
 (bind-key "M-u" 'universal-argument)
 #+END_SRC
@@ -2619,6 +2622,21 @@ The following is the _official_ way to fix it:
 ** TODO org-present ?
 ** TODO better refiling
 ** TODO lazy load
+** TODO org-bookmark-heading
+
+For some reason, the default bookmark behavior in org mode is that the bookmark
+is not linked to the org-id. This means that if the heading is shifted
+somewhere, the bookmark becomes useless! The remedy seems to be using the
+package org-bookmark-heading
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-bookmark-heading
+  :ensure t
+  :defer t
+  :config
+  (require 'org-bookmark-heading))
+#+END_SRC
+
 * Languages
 ** General
 *** TODO configure flymake
