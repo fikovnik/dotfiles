@@ -106,7 +106,6 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** To check
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
-
 * Preamble
 ** Lexical scoping
 
@@ -115,18 +114,6 @@ I like lexical scoping.
 #+BEGIN_SRC emacs-lisp
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
-
-** Time the initialization
-
-This will time immediate initialization to play the _under a second startup_
-game. Not that it would really matter since I have instance of Emacs being
-launched by systemd.
-
-#+BEGIN_SRC emacs-lisp
-(defconst emacs-start-time (current-time))
-#+END_SRC
-
-This const will be used in [[Restore startup optimizations]].
 
 * Startup
 ** Speed up startup
@@ -143,24 +130,6 @@ decrease this. If you experience stuttering, increase this.")
 
 (defvar my-gc-cons-upper-limit (* 512 1024 1024)
   "The temporary value for `gc-cons-threshold' to defer it.")
-#+END_SRC
-
-*** Defer garbage collection further back in the startup process
-
-Allow more memory between GC cycle (default is 780kB) at startup.
-
-#+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold my-gc-cons-upper-limit)
-#+END_SRC
-
-*** Do not immediately load packages
-
-Package initialize occurs automatically, before `user-init-file' is
-loaded, but after `early-init-file'. Doom handles package
-initialization, so we must prevent Emacs from doing it early!
-
-#+BEGIN_SRC emacs-lisp
-(setq package-enable-at-startup nil)
 #+END_SRC
 
 *** Prevent the glimpse of un-styled Emacs by setting these early
@@ -269,18 +238,6 @@ order to prevent stuttering/freezes.
     (expand-file-name path user-emacs-directory)))
 #+END_SRC
 
-** init.el file debugging
-
-#+BEGIN_SRC emacs-lisp
-(if init-file-debug
-    (setq use-package-verbose t
-          use-package-expand-minimally nil
-          use-package-compute-statistics t
-          debug-on-error t)
-  (setq use-package-verbose nil
-        use-package-expand-minimally t))
-#+END_SRC
-
 ** Turn off messages
 
 #+BEGIN_SRC emacs-lisp
@@ -289,38 +246,6 @@ order to prevent stuttering/freezes.
 (setq inhibit-startup-message t)
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
-#+END_SRC
-
-** Initialize package.el
-
-#+BEGIN_SRC emacs-lisp
-(package-initialize)
-#+END_SRC
-
-** Setup package sources
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("org" . "http://orgmode.org/elpa/") t)
-#+END_SRC
-
-** Initialize use-package
-
-#+BEGIN_SRC emacs-lisp
-(setq-default use-package-always-ensure t ; Auto-download package if not exists
-              use-package-always-defer t ; Always defer load package to speed up startup
-              use-package-verbose nil ; Don't report loading details
-              use-package-expand-minimally t  ; make the expanded code as minimal as possible
-              use-package-enable-imenu-support t) ; Let imenu finds use-package definitions
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
 #+END_SRC
 
 ** Benchmark initialization
@@ -2538,8 +2463,8 @@ and =--git-dir= options explicitly set. For this I define a new function
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :demand t
-  ;; to be sure we have the latest Org version
-  :ensure org-plus-contrib
+  ;; org is installed from init.el
+  :ensure nil
   :mode
   ("\\.org$" . org-mode)
   :hook
@@ -2611,7 +2536,7 @@ The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp
 (use-package ob
-  :ensure org-plus-contrib
+  :ensure nil
   :after org
   :commands org-babel-load-languages
   :custom
