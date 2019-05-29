@@ -2791,7 +2791,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :commands R
   :hook (ess-mode . subword-mode)
   :custom
-  (ess-default-style 'Rstudio)
+  (ess-default-style 'RStudio)
   (ess-indent-level 4)
   (ess-nuke-trailing-whitespace-p t)
   (ess-tab-complete-in-script t)
