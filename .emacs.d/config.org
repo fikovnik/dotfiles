@@ -997,12 +997,6 @@ Revert buffers when files on disk change
 (set-face-attribute 'region nil :foreground "black" :background "magenta")
 #+END_SRC
 
-*** Highlight color
-
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'highlight nil :foreground "black" :background "brightblack")
-#+END_SRC
-
 ** Font
 
 #+BEGIN_SRC emacs-lisp
@@ -1199,6 +1193,10 @@ Start iedit on the current line only.
 #+BEGIN_SRC emacs-lisp
 (use-package iedit
   :demand t
+  :config
+  (set-face-attribute 'iedit-occurrence nil :foreground "black" :background "brightblack"))
+#+END_SRC
+
   :preface
   (defun my-iedit-mode-narrow-to-current-line ()
     (iedit-restrict-current-line))
