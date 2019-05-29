@@ -60,6 +60,7 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
 ** TODO use =:preable= for functions
 ** TODO use =(executable-find)=
+** TODO use straight.el
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
