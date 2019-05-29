@@ -2690,7 +2690,7 @@ rm /tmp/dumb-emacs-ansi.ti
   (comint-move-point-for-matching-input 'end-of-line)
   (comint-scroll-to-bottom-on-input 'this))
 #+END_SRC
-
+**** TODO do not highlight current line when at the prompt
 *** Compilation
 
 #+BEGIN_SRC emacs-lisp
