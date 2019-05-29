@@ -41,8 +41,8 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =M-;=       | Comment or uncomment                   |
 | =M-i=       | imenu                                  |
 | =M-I=       | imenu anywhere                         |
-| =C-x C-k=   | Kill buffer                            |
-| =C-x C-S-k= | Kill buffer and its window             |
+| =C-x C-k=   | Kill current buffer                    |
+| =C-x C-S-k= | Kill current buffer and its window     |
 | =C-x C-b=   | Switch buffer                          |
 | =C-x o=     | Switch window                          |
 | =M-*=       | Search for a symbol with swiper        |
@@ -2038,7 +2038,7 @@ possibly new window."
 
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-c b" 'hydra-buffers/body my-key-map)
-(bind-key "C-x C-k" 'kill-buffer my-key-map)
+(bind-key "C-x C-k" 'kill-current-buffer my-key-map)
 (bind-key "C-x C-S-k" 'fikovnik/kill-buffer-and-window my-key-map)
 #+END_SRC
 
