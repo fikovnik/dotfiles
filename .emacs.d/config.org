@@ -1435,11 +1435,11 @@ selection defined above.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
-  :defer 2
+  :defer 3
   :custom
   (ispell-personal-dictionary (expand-file-name "my-ispell-dictionary" fikovnik/private-conf-dir))
   (ispell-dictionary "en_US")
-  (ispell-program-name (executable-find "hunspell"))
+  (ispell-program-name (executable-find "aspell"))
   (ispell-really-hunspell t)
   (ispell-silently-savep t))
 #+END_SRC
@@ -1461,16 +1461,16 @@ selection defined above.
 #+END_SRC
 
 *** flyspell / ivy integration
-helo is not correct
+
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell-correct-ivy
-  :demand t
   :after (flyspell ivy)
   :init
   (setq flyspell-correct-interface #'flyspell-correct-ivy)
   :bind
   ("M-'" . flyspell-correct-wrapper))
 #+END_SRC
+
 *** TODO functions to change dictionaries
 
 Something like:
