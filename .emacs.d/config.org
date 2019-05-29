@@ -217,23 +217,6 @@ order to prevent stuttering/freezes.
     (interactive)
     (byte-recompile-directory package-user-dir 0 nil))
 
-  (defun fikovnik/sync-configuration (arg)
-    "Tangle the ~/.emacs.d/config.org file into
-    ~/.emacs.d/config.el and if called with universal argument also
-    byte compile it into ~/.emacs.d/config.elc"
-
-    (interactive "P")
-    (let ((config-file (emacs-path "config.org"))
-          (config-file-el (emacs-path "config.el"))
-          (config-file-elc (emacs-path "config.elc")))
-      (org-babel-tangle-file config-file config-file-el "emacs-lisp")
-      (when (file-exists-p config-file-elc) (delete-file config-file-elc))
-      (when arg (byte-compile-file config-file-el))))
-
-  (defun fikovnik/sync-configuration-and-compile ()
-    (interactive)
-    (fikovnik/sync-configuration t))
-
   (defun emacs-path (path)
     (expand-file-name path user-emacs-directory)))
 #+END_SRC
@@ -304,6 +287,9 @@ commands.
 ** Global variables
 *** Declarations
 #+BEGIN_SRC emacs-lisp
+(defconst fikovnik/config-file (emacs-path "config.org")
+  "This Emacs's configuration file")
+
 (defvar fikovnik/private-conf-dir (emacs-path "private")
   "Directory where to store my private config")
 
@@ -2338,55 +2324,49 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
 ** config.org and init.el helpers
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/sync-configuration-and-reload ()
-  (interactive)
-  (call-interactively 'fikovnik/sync-configuration)
-  (call-interactively 'iqa-reload-user-init-file))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package iqa
-  :custom
-  (iqa-user-init-file (emacs-path "config.org"))
-  :bind (:prefix "C-c e"
-         :prefix-map my-emacs-helper-map
-         :prefix-docstring "Emacs init.el related"
-         ("e" . iqa-find-user-init-file)
-         ("r" . fikovnik/sync-configuration-and-reload)
-         ("d" . iqa-find-user-init-directory)
-         ("g" . fikovnik/dotfiles-magit)
-         ("s" . fikovnik/sync-configuration)
-         ("c" . fikovnik/sync-configuration-and-compile))
-  :init
-  (which-key-add-key-based-replacements "C-c e" "Emacs")
-  (which-key-add-key-based-replacements "C-c e c" "sync & compile")
-  (which-key-add-key-based-replacements "C-c e s" "sync")
-  (which-key-add-key-based-replacements "C-c e g" "magit")
-  (which-key-add-key-based-replacements "C-c e r" "sync & reload"))
-#+END_SRC
-
-** Life cycle
-
-#+BEGIN_SRC emacs-lisp
 (use-package restart-emacs
-  :init
-  (defun fikovnik/sync-configuration-and-restart ()
+  :preface
+  (defun fikovnik/reload-config-file ()
     (interactive)
-    (fikovnik/sync-configuration nil)
-    (restart-emacs))
+    (let* ((init-file (emacs-path fikovnik/config-file))
+           (init-file-buffer (get-file-buffer init-file)))
+      (when (and init-file-buffer
+                 (buffer-modified-p init-file-buffer)
+                 (y-or-n-p (format "Save file %s? " init-file)))
+        (with-current-buffer init-file-buffer
+          (save-buffer)))
+      (org-babel-load-file init-file)))
+
+  (defun fikovnik/find-config-file ()
+    (interactive)
+    (find-file fikovnik/config-file))
+
+  (defun fikovnik/find-config-dir ()
+    (interactive)
+    (find-file (file-name-directory fikovnik/config-file)))
 
   (defun fikovnik/restart-emacs-with-debug ()
     (interactive)
     (restart-emacs '("--debug-init")))
 
-  (which-key-add-key-based-replacements "C-c e R" "restart Emacs")
+  :bind (:prefix "C-c e"
+         :prefix-map my-emacs-helper-map
+         :prefix-docstring "Emacs init.el related"
+         ("d" . fikovnik/find-config-dir)
+         ("e" . fikovnik/find-config-file)
+         ("g" . fikovnik/dotfiles-magit)
+         ("r" . fikovnik/reload-config-file)
+         ("D" . fikovnik/restart-emacs-with-debug)
+         ("R" . restart-emacs))
+  :init
+  (which-key-add-key-based-replacements "C-c e" "Emacs")
+  (which-key-add-key-based-replacements "C-c e d" "Find .emacs.d")
+  (which-key-add-key-based-replacements "C-c e e" "Find config.el")
+  (which-key-add-key-based-replacements "C-c e g" "magit")
+  (which-key-add-key-based-replacements "C-c e r" "reload config")
   (which-key-add-key-based-replacements "C-c e D" "restart Emacs with debug")
-  (which-key-add-key-based-replacements "C-c e S" "sync & restart Emacs")
-  :commands restart-emacs
-  :bind (:map my-emacs-helper-map
-              ("R" . restart-emacs)
-              ("D" . fikovnik/restart-emacs-with-debug)
-              ("S" . fikovnik/sync-configuration-and-restart)))
+  (which-key-add-key-based-replacements "C-c e R" "restart Emacs")
+  :commands restart-emacs)
 #+END_SRC
 
 * Version control
