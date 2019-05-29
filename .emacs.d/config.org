@@ -1363,7 +1363,7 @@ selection defined above.
   (company-begin-commands '(self-insert-command))
   (company-dabbrev-ignore-case t)
   (company-dabbrev-code-ignore-case t)
-  (company-dabbrev-downcase nil)
+  (company-dabbrev-downcase t)
   :hook
   (after-init . global-company-mode)
   :bind (:map company-active-map
