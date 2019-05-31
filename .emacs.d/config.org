@@ -2677,9 +2677,10 @@ package org-bookmark-heading
   :config
   (with-eval-after-load 'project
     (add-to-list 'project-find-functions 'projectile-project-find-function)))
+  (setq company-backends
+        (cons 'company-capf
+              (remove 'company-capf company-backends))))
 #+END_SRC
-**** TODO configure completion
-https://github.com/MaskRay/ccls/wiki/eglot
 *** TODO realgud
 *** Interpreters
 **** Create termino for comint with support for ANSI color codes
