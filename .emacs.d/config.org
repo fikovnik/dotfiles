@@ -61,6 +61,7 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO use =:preable= for functions
 ** TODO use =(executable-find)=
 ** TODO use straight.el
+** TODO use shackle instead of popwin
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
