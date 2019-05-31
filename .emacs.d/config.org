@@ -682,6 +682,7 @@ and on windows switch.
   :diminish (super-save-mode . "AS")
   :custom
   (super-save-auto-save-when-idle t)
+  (super-save-idle-duration 30)
   :config
   ;; add integration with ace-window
   (add-to-list 'super-save-triggers 'ace-window)
