@@ -1310,31 +1310,42 @@ Define a function that simply selects the current line.
 Define the =M-r= prefix and use it for expand region, including the line
 selection defined above.
 
+The reason I have to add an advice is that I use a custom mapping for =C-==
+(=[61;5u=) so the original =er/prepare-for-more-expansions-internal= will
+return =u= as the keybinding for expand more region instead of ===.
+
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
-  :bind (:prefix "C-="
-         :prefix-map my-expand-region-map
-         ("="  . er/expand-region)
-         ("("  . er/mark-inside-pairs)
-         (")"  . er/mark-outside-pairs)
-         ("'"  . er/mark-inside-quotes)
-         ("\"" . er/mark-outside-quotes)
-         ("o" . er/mark-org-parent)
-         ("u" . er/mark-url)
-         ("b" . er/mark-org-code-block)
-         ("." . er/mark-method-call)
-         (">" . er/mark-next-accessor)
-         ("w" . er/mark-word)
-         ("d" . er/mark-defun)
-         ("e" . er/mark-email)
-         ("," . er/mark-symbol)
-         ("<" . er/mark-symbol-with-prefix)
-         (";" . er/mark-comment)
-         ("s" . er/mark-sentence)
-         ("S" . er/mark-text-sentence)
-         ("p" . er/mark-paragraph)
-         ("P" . er/mark-text-paragraph)
-         ("l" . fikovnik/select-line)))
+  :preface
+  (defun my--er-prepare-for-more-expansions-internal (orig &rest r)
+    (funcall orig "="))
+  :config
+  (advice-add 'er/prepare-for-more-expansions-internal :around #'my--er-prepare-for-more-expansions-internal)
+  :bind
+  ("C-=" . er/expand-region)
+  (:prefix "C-c C-="
+   :prefix-map my-expand-region-map
+   ("="  . er/expand-region)
+   ("("  . er/mark-inside-pairs)
+   (")"  . er/mark-outside-pairs)
+   ("'"  . er/mark-inside-quotes)
+   ("\"" . er/mark-outside-quotes)
+   ("o" . er/mark-org-parent)
+   ("u" . er/mark-url)
+   ("b" . er/mark-org-code-block)
+   ("." . er/mark-method-call)
+   (">" . er/mark-next-accessor)
+   ("w" . er/mark-word)
+   ("d" . er/mark-defun)
+   ("e" . er/mark-email)
+   ("," . er/mark-symbol)
+   ("<" . er/mark-symbol-with-prefix)
+   (";" . er/mark-comment)
+   ("s" . er/mark-sentence)
+   ("S" . er/mark-text-sentence)
+   ("p" . er/mark-paragraph)
+   ("P" . er/mark-text-paragraph)
+   ("l" . fikovnik/select-line)))
 #+END_SRC
 
 ** Snippets                                                          :hydra:
