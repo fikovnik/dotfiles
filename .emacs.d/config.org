@@ -2704,12 +2704,26 @@ rm /tmp/dumb-emacs-ansi.ti
 #+BEGIN_SRC emacs-lisp
 (use-package comint
   :defer 2
+  :preface
+  (defun my-locally-disable-hl-line-mode ()
+    "Locally disable global-hl-line-mode"
+    (interactive)
+    (setq-local global-hl-line-mode nil))
+
+(defun my-comint-clear-buffer ()
+  (interactive)
+  (let ((comint-buffer-maximum-size 0))
+    (comint-truncate-buffer)))
   :ensure nil
   :bind (:map comint-mode-map
               ([up] . comint-previous-matching-input-from-input)
               ([down] . comint-next-matching-input-from-input)
-              ("C-k" . kill-line))
+              ("C-k" . kill-line)
+              ("C-l" . my-comint-clear-buffer))
+  :hook
+  (comint-mode . my-locally-disable-hl-line-mode)
   :custom
+  (comint-prompt-read-only t)
   (comint-buffer-maximum-size 8192)
   (comint-terminfo-terminal "dumb-emacs-ansi")
   (comint-scroll-to-bottom-on-output 'others)
