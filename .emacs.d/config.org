@@ -1012,16 +1012,25 @@ Revert buffers when files on disk change
 
 ** Modeline
 *** TODO better modeline?
-- if so look at [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package powerline
+  :demand t
+  :config
+  (powerline-default-theme))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package doom-modeline
   :demand t
   :config
   (add-hook 'after-init-hook #'doom-modeline-init)
   :custom
-  (doom-modeline-major-mode-icon t)
+  (doom-modeline-icon nil)
+  (doom-modeline-minor-modes t)
+  (doom-modeline-buffer-encoding t)
   (doom-modeline-buffer-file-name-style 'buffer-name)
-  (doom-modeline-icon t))
+)
 #+END_SRC
 ** Cursor
 *** TODO bar cursor
