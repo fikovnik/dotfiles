@@ -2669,14 +2669,14 @@ package org-bookmark-heading
 (use-package eglot
   :commands eglot
   :preface
-  (defun projectile-project-find-function (dir)
+  (defun my--projectile-project-find-function (dir)
     (let* ((root (projectile-project-root dir)))
       (and root (cons 'transient root))))
   :hook
   ((c-mode c++-mode) . eglot-ensure)
   :config
   (with-eval-after-load 'project
-    (add-to-list 'project-find-functions 'projectile-project-find-function)))
+    (add-to-list 'project-find-functions 'my--projectile-project-find-function))
   (setq company-backends
         (cons 'company-capf
               (remove 'company-capf company-backends))))
