@@ -1883,6 +1883,12 @@ Use [[https://github.com/abo-abo/ace-window][ace-window]] to switch between wind
   :bind
   ("C-x o" . ace-window))
 #+END_SRC
+*** Rotate layouts
+
+#+BEGIN_SRC emacs-lisp
+(use-package rotate
+  :commands (rotate-layout rotate-window))
+#+END_SRC
 
 *** Setup =C-c w= micro state                                       :hydra:
 **** Functions
@@ -1903,42 +1909,33 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-window (:hint nil)
-   "
-   ^Select^    ^Split^           ^Switch^           ^Resize^      ^Misc^
-  -----------------------------------------------------------------------
-      _↑_      _-_: vertical     _b_uffer             ⇧         _u_ndo/_r_edo
-    _←_   _→_    _|_: horizontal   _f_ind files       ⇦   ⇨       _a_ce-window
-      _↓_      ^ ^               _s_wap               ⇩         _d_elete/ace-_D_elete
-   ^ ^         ^ ^               _m_aximize/_B_alance             _t_ranspose windows
-"
-   ("<left>" windmove-left)
-   ("<down>" windmove-down)
-   ("<up>" windmove-up)
-   ("<right>" windmove-right)
-   ("S-<left>" shrink-window-horizontally)
-   ("S-<down>" enlarge-window)
-   ("S-<up>" shrink-window)
-   ("S-<right>" enlarge-window-horizontally)
-   ("b" ivy-switch-buffer :color blue)
-   ("f" counsel-find-files :color blue)
-   ("a" ace-window :color blue)
-   ("|" my-split-window-horizontally-and-move)
-   ("-" my-split-window-vertically-and-move)
+   ("<left>" windmove-left "left" :column "Select")
+   ("<down>" windmove-down "down"  :column "Select")
+   ("<up>" windmove-up "up" :column "Select")
+   ("<right>" windmove-right "right" :column "Select")
+   ("S-<left>" shrink-window-horizontally "shrink left" :column "Resize")
+   ("S-<down>" enlarge-window "enlarge right" :column "Resize")
+   ("S-<up>" shrink-window "shrink up" :column "Resize")
+   ("S-<right>" enlarge-window-horizontally "enlarge down" :column "Resize")
+   ("a" ace-window "ace window" :color blue)
+   ("|" my-split-window-horizontally-and-move "split horizontal" :column "Layout")
+   ("-" my-split-window-vertically-and-move "split vertical" :column "Layout")
    ("s" (lambda ()
           (interactive)
           (ace-window 4)
           (add-hook 'ace-window-end-once-hook
-                    'hydra-window/body)))
-   ("d" kill-buffer-and-window :color blue)
-   ("D" ace-delete-window)
-   ("t" crux-transpose-windows)
-   ("m" fikovnik/maximize-window :color blue)
-   ("B" balance-windows-area)
-   ("u" (progn
+                    'hydra-window/body)) "swap" :column "Layout")
+   ("d" kill-buffer-and-window "close" :color blue :column "Other")
+   ("D" ace-delete-window "ace close" :column "Other")
+   ("t" crux-transpose-windows "transpose" :column "Layout")
+   ("m" fikovnik/maximize-window "maximize" :color blue :column "Layout")
+   ("b" balance-windows-area "balance" :column "Layout")
+   ("r" rotate-layout "rotate" :column "Layout")
+   ("C-<left>" (progn
           (winner-undo)
-          (setq this-command 'winner-undo)))
-   ("r" winner-redo)
-   ("q" nil :color blue))
+          (setq this-command 'winner-undo)) "undo" :column "Layout")
+   ("C-<right>" winner-redo "redo" :column "Layout")
+   ("q" nil "quit" :column "Other" :color blue))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
