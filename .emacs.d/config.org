@@ -1628,6 +1628,12 @@ But, only if I put them there!
   :defer t
   :config (setq reb-re-syntax 'string))
 #+END_SRC
+** Zap to char
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-Z" #'zap-to-char)
+(bind-key "M-z" #'zap-up-to-char)
+#+END_SRC
 
 * Movement and navigation
 ** Generic completion with Ivy
@@ -1957,7 +1963,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
   ("M-l" . avy-goto-line)
   ("M-L" . avy-goto-end-of-line)
   :custom
-  (avy-single-candidate-jump nil)
+  (avy-single-candidate-jump t)
   :config
   (add-to-list 'avy-dispatch-alist '(?Z . my-zap-to-char))
   (avy-setup-default)
