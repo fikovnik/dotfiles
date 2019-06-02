@@ -2516,6 +2516,11 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-startup-with-inline-images t)
   (org-startup-indented 1)
   (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+  (org-show-context-detail
+   '((agenda . local)
+     (bookmark-jump . lineage)
+     (isearch . tree) ; I want to see more info when looking at tree
+     (default . ancestors)))
   :config
   (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
