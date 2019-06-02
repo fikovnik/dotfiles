@@ -7,7 +7,6 @@
 - fzf
 - rg
 - fd
-** TODO describe the idea behind this configuration
 ** Key bindings
 *** Emacs conventions
 
@@ -50,18 +49,45 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =M-g=       | Go to char in line                     |
 | =M-u M-g=   | Go to char                             |
 
-** rename variables and functions (fikovnik -> my-)
+** Rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
 
 #+BEGIN_SRC sh :tangle no
 config update-index --assume-unchanged ~/.emacs.d/init.el
 #+END_SRC
+** TODO describe the idea behind this configuration
 ** TODO Show matching function
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
 ** TODO use =:preable= for functions
 ** TODO use =(executable-find)=
 ** TODO use straight.el
-** TODO use shackle instead of popwin
+** TODO Fix adding new line after { in R mode
+** TODO Use emacs as less pages
+** TODO org habit
+** TODO polymode
+** TODO switch buffer only for the project
+** TODO company in org mode and abbrev
+** TODO better ivy keys
+- [ ] mode arrow to enter / exit
+- [ ] ivy tab to show actions
+** TODO better window management
+- [ ] use shackle instead of popwin
+- [ ] position R
+** TODO better color scheme
+- [ ] 24bit support
+- [ ] hl-line
+- [ ] line indicating current line in R debugger session
+- [ ] org todo keywords
+- [ ] region
+- [ ] iedit highling
+- [ ] modeline of active / inactive window
+- [ ] org-outline-4 which inherits from outline-4 which inherits from font-lock-comment-face
+- [ ] comments are dark and this makes it ugly
+- [ ] org-verbatim is also too dark
+** TODO in org-mode set the C-A to move at the beginning of the heading if at heading
+- currently it only moves to the beginning of the line - in front of all the stars
+** TODO in hippie expand / abbrev is it possible to add suggestion based on spelling
+** TODO fix creating the lockfiles
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -690,6 +716,9 @@ and on windows switch.
   (add-to-list 'super-save-hook-triggers 'find-file-hook)
   (super-save-mode 1))
 #+END_SRC
+
+*** TODO trigger on buffer change
+- just select-window is not enough as we need to find what is the new window.
 
 ** Use UTF-8
 
@@ -2864,6 +2893,8 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 *** TODO poly-org
 
 ** TODO Latex
+- auctex
+- latexmk
 ** Config
 
 #+BEGIN_SRC emacs-lisp
