@@ -1683,12 +1683,47 @@ But, only if I put them there!
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :demand t
+  :preface
+  (defun my--ivy-is-directory-p ()
+      (and
+       (> ivy--length 0)
+       (not (string= (ivy-state-current ivy-last) "./"))
+       (not (null (ivy-expand-file-if-directory (ivy-state-current ivy-last))))))
+
+  (defun my--enter-directory-or-insert ()
+    (interactive)
+    (if (my--ivy-is-directory-p)
+        (counsel-down-directory)
+      (progn
+        (let ((last-input (ivy--input)))
+          (ivy-insert-current)
+          (when (string= last-input (ivy--input))
+            (ivy-call))))))
+
+  (defun my--ivy-dired ()
+    (interactive)
+    (if ivy--directory
+        (ivy-quit-and-run
+          (dired ivy--directory)
+          (when (re-search-forward
+                 (regexp-quote
+                  (substring ivy--current 0 -1)) nil t)
+            (goto-char (match-beginning 0))))
+      (user-error
+       "Not completing files currently")))
   :bind
   ("C-x C-r" . ivy-resume)
   ("C-x C-b" . ivy-switch-buffer)
   (:map ivy-minibuffer-map
+        ("M-RET" . ivy-immediate-done)
+        ("C-z" . ivy-dispatching-done)
         ("C-w" . ivy-yank-word)
-        ("C-'" . ivy-avy))
+        ("C-'" . ivy-avy)
+        ("C-:" . my-ivy-dired)
+        ("<left>" . counsel-up-directory)
+        ("<backtab>" . counsel-up-directory)
+        ("<right>" . my--enter-directory-or-insert)
+        ("TAB" . my--enter-directory-or-insert))
   :custom
   (enable-recursive-minibuffers t)
   (ivy-height 15)
