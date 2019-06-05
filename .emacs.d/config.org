@@ -1386,6 +1386,8 @@ return =u= as the keybinding for expand more region instead of ===.
 (use-package yasnippet
   :defer 1
   :diminish (yas-minor-mode . "YAS")
+  :custom
+  (yas-snippet-dirs `(,fikovnik/snippets-dir))
   :commands yas-minor-mode
   :bind (:prefix "C-c s"
          :prefix-map my-yasnippet-map

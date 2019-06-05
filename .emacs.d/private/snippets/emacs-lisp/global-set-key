@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: global-set-key
+# key: key
+# --
+(global-set-key (kbd "$1") '$2)
+$0
