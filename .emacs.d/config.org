@@ -2617,10 +2617,12 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook
           (lambda ()
-            (make-variable-buffer-local 'yas/trigger-key)
-            (setq yas/trigger-key [tab])
-            (add-to-list 'org-tab-first-hook 'yas-expand)
-            (define-key yas-keymap [tab] 'yas-next-field)))
+            (eval-after-load "yas"
+              (lambda ()
+                (make-variable-buffer-local 'yas/trigger-key)
+                (setq yas/trigger-key [tab])
+                (add-to-list 'org-tab-first-hook 'yas-expand)
+                (define-key yas-keymap [tab] 'yas-next-field)))))
 #+END_SRC
 
 ** Babel
