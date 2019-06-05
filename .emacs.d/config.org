@@ -325,6 +325,12 @@ commands.
 (defvar fikovnik/backup-dir (expand-file-name "backups" fikovnik/private-conf-dir)
   "Directory for backups")
 
+(defvar fikovnik/auto-save-dir (expand-file-name "auto-saves" fikovnik/private-conf-dir)
+  "Directory for auto save files")
+
+(defvar fikovnik/snippets-dir (expand-file-name "snippets" fikovnik/private-conf-dir)
+  "Directory for snippets")
+
 (defvar fikovnik/my-keys nil
   "The list of keys to be mapped as pairs of keySym and ascii code")
 
@@ -678,25 +684,77 @@ These functions are useful so activate them.
 
 ** File backup                                                         :wip:
 *** TODO better way to handle backups
-*** TODO document how does it exactly work
+*** Backup files
+
+Create the directory if it does not exist yet.
+
+#+BEGIN_SRC emacs-lisp
+(unless (file-exists-p fikovnik/backup-dir)
+  (make-directory fikovnik/backup-dir t))
+#+END_SRC
+
+I don't want all files to be automatically backed up. Here is a sample filer.
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-backup-ignore-regexps '("^/dev/shm/pass.*" "COMMIT_EDITMSG")
+  "List of filename regexps not to backup")
+
+(defun my-backup-enable-p (name)
+  "Check whether the filename name should be backuped or not"
+  (when (normal-backup-enable-predicate name)
+    (let ((backup t))
+      (mapc (lambda (re)
+              (setq backup (and backup (not (string-match re name)))))
+            my-backup-ignore-regexps)
+      backup)))
+#+END_SRC
+
+Backup settings
 
 #+BEGIN_SRC emacs-lisp
 (setq
-      auto-save-list-file-name           (concat user-emacs-directory "/autosave")
-      backup-directory-alist            `((".*" . ,fikovnik/backup-dir))
-      ;;auto-save-file-name-transforms    `((".*" ,(concat user-emacs-directory "/auto-save-list/") t))
-      version-control                    t
+      backup-enable-predicate           'my-backup-enable-p
+      backup-directory-alist            `(("." . ,fikovnik/backup-dir))
       backup-by-copying                  t
       delete-old-versions                t
       kept-new-versions                  6
       kept-old-versions                  2
-      history-length                     1000
-      backup-inhibited                   nil
       make-backup-files                  t
-      auto-save-default                  t
-      create-lockfiles                   nil
+      version-control                    t
 )
 #+END_SRC
+
+*** Auto-save files
+
+#+BEGIN_SRC emacs-lisp
+(unless (file-exists-p fikovnik/auto-save-dir)
+  (make-directory fikovnik/auto-save-dir t))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq
+      auto-save-default                  t
+      auto-save-list-file-name           (concat fikovnik/private-conf-dir "/auto-save-list")
+      auto-save-file-name-transforms     `(
+                                           ;; remote files
+                                           ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)
+                                           ;; local files
+                                           ("\\(.*\\)" ,fikovnik/auto-save-dir t))
+)
+#+END_SRC
+
+*** Lock files
+
+#+BEGIN_SRC emacs-lisp
+(setq create-lockfiles nil)
+#+END_SRC
+
+*** History
+
+#+BEGIN_SRC emacs-lisp
+(setq history-length 1000)
+#+END_SRC
+
 *** TODO backup walker
 ** Auto save file buffers
 
