@@ -2222,8 +2222,8 @@ or some more precise navigation which I could use for defining key macros
 ** =C-a= / =home= to the beginning
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-a" #'crux-move-beginning-of-line my-key-map)
-(bind-key "<home>" #'crux-move-beginning-of-line my-key-map)
+(bind-key "C-a" #'crux-move-beginning-of-line)
+(bind-key "<home>" #'crux-move-beginning-of-line)
 #+END_SRC
 
 *** TODO text objects
