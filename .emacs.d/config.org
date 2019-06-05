@@ -1448,7 +1448,7 @@ return =u= as the keybinding for expand more region instead of ===.
 (use-package abbrev
   :ensure nil
   :custom
-  (abbrev-file-name (expand-file-name "abbrev_defs" fikovnik/private-conf-dir))
+  (abbrev-file-name (expand-file-name "abbrev-defs" fikovnik/private-conf-dir))
   (save-abbrevs 'silently))
 #+END_SRC
 
