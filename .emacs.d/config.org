@@ -904,7 +904,7 @@ This remembers your location in a file when saving files.
   :demand t
   :unless noninteractive
   :custom
-  (save-place-file (expand-file-name "saveplace" fikovnik/private-conf-dir)))
+  (save-place-file (expand-file-name "save-places" fikovnik/private-conf-dir)))
 
 (save-place-mode 1)
 #+END_SRC
@@ -932,7 +932,7 @@ This remembers your location in a file when saving files.
   ;; save every minute
   (savehist-autosave-interval 60)
   ;; keep the home clean
-  (savehist-file (expand-file-name "savehist" fikovnik/private-conf-dir))
+  (savehist-file (expand-file-name "save-history" fikovnik/private-conf-dir))
   :config
   (savehist-mode 1))
 #+END_SRC
