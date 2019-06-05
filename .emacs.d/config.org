@@ -2259,6 +2259,7 @@ https://github.com/jerrypnz/major-mode-hydra.el
   (projectile-generic-command "fd . -0")
   (projectile-git-command "fd . -0")
   (projectile-sort-order 'recently-active)
+  (projectile-cache-file (concat fikovnik/private-conf-dir "projectile.cache"))
   :config
   ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
   (defun fikovnik/search-in-project-or-dir (initial-input &optional use-current-dir)
