@@ -2675,8 +2675,9 @@ and =--git-dir= options explicitly set. For this I define a new function
      (isearch . tree) ; I want to see more info when looking at tree
      (default . ancestors)))
   :bind
-  ("C-a" . org-beginning-of-line)
-  ("C-e" . org-end-of-line)
+  (:map org-mode-map
+        ("C-a" . org-beginning-of-line)
+        ("C-e" . org-end-of-line))
   :config
   (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
