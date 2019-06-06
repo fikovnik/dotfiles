@@ -61,6 +61,7 @@ config update-index --assume-unchanged ~/.emacs.d/init.el
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
 ** TODO use =:preable= for functions
 ** TODO use =(executable-find)=
+** TODO use =:custom-face= to set faces
 ** TODO use straight.el
 ** TODO Fix adding new line after { in R mode
 ** TODO Use emacs as less pages
@@ -88,7 +89,6 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO in org-mode set the C-A to move at the beginning of the heading if at heading
 - currently it only moves to the beginning of the line - in front of all the stars
 ** TODO in hippie expand / abbrev is it possible to add suggestion based on spelling
-** TODO fix creating the lockfiles
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
