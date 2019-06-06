@@ -2667,12 +2667,16 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
   (org-startup-indented 1)
+  (org-special-ctrl-a/e t)
   (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
   (org-show-context-detail
    '((agenda . local)
      (bookmark-jump . lineage)
      (isearch . tree) ; I want to see more info when looking at tree
      (default . ancestors)))
+  :bind
+  ("C-a" . org-beginning-of-line)
+  ("C-e" . org-end-of-line)
   :config
   (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
