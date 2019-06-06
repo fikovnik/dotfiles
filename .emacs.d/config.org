@@ -2666,7 +2666,7 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
-  (org-startup-indented 1)
+  (org-startup-indented t)
   (org-special-ctrl-a/e t)
   (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
   (org-show-context-detail
