@@ -2244,10 +2244,33 @@ or some more precise navigation which I could use for defining key macros
   (bookmark-save-flag 1))
 #+END_SRC
 
-** TODO popup global mark
-- merge popup mark and global one
-- check the back button
-- go back and forth
+** Move back and forth
+*** Increase the ring size
+
+#+BEGIN_SRC emacs-lisp
+(setq global-mark-ring-max 32
+      mark-ring-max 32)
+#+END_SRC
+
+*** Flash the line
+
+#+BEGIN_SRC emacs-lisp
+(use-package nav-flash
+  :commands nav-flash-show)
+#+END_SRC
+
+*** Back button
+
+#+BEGIN_SRC emacs-lisp
+(use-package back-button
+  :bind
+  ("C-x C-@" . back-button-global)
+  ("C-x SPC" . back-button-local)
+  :config
+  (back-button-mode 1))
+#+END_SRC
+
+*** TODO can this be actually a hydra?
 * Search and replace
 ** Replace
 
