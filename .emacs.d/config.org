@@ -1197,7 +1197,8 @@ There should be also GUI version.
 ** Marking
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "M-c" #'mark-sexp my-key-map)
+(bind-key "M-c" #'mark-word my-key-map)
+(bind-key "M-C" #'mark-sexp my-key-map)
 #+END_SRC
 
 ** Deleting spaces
