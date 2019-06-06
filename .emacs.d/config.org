@@ -241,7 +241,7 @@ order to prevent stuttering/freezes.
 
 #+BEGIN_SRC emacs-lisp
 (eval-and-compile
-  (defun fikovnik/recompile-elpa ()
+  (defun my-recompile-elpa ()
     "Recompile packages in elpa directory"
     (interactive)
     (byte-recompile-directory package-user-dir 0 nil))
@@ -316,40 +316,40 @@ commands.
 ** Global variables
 *** Declarations
 #+BEGIN_SRC emacs-lisp
-(defconst fikovnik/config-file (emacs-path "config.org")
+(defconst my-config-file (emacs-path "config.org")
   "This Emacs's configuration file")
 
-(defvar fikovnik/private-conf-dir (emacs-path "private")
+(defvar my-private-conf-dir (emacs-path "private")
   "Directory where to store my private config")
 
-(defvar fikovnik/backup-dir (expand-file-name "backups" fikovnik/private-conf-dir)
+(defvar my-backup-dir (expand-file-name "backups" my-private-conf-dir)
   "Directory for backups")
 
-(defvar fikovnik/auto-save-dir (expand-file-name "auto-saves" fikovnik/private-conf-dir)
+(defvar my-auto-save-dir (expand-file-name "auto-saves" my-private-conf-dir)
   "Directory for auto save files")
 
-(defvar fikovnik/snippets-dir (expand-file-name "snippets" fikovnik/private-conf-dir)
+(defvar my-snippets-dir (expand-file-name "snippets" my-private-conf-dir)
   "Directory for snippets")
 
-(defvar fikovnik/my-keys nil
+(defvar my-keys nil
   "The list of keys to be mapped as pairs of keySym and ascii code")
 
-(defvar fikovnik/my-keys-debug nil
+(defvar my-keys-debug nil
   "Toggle my-keys debugging")
 
-(defvar fikovnik/st-dir "~/Projects/st"
+(defvar my-st-dir "~/Projects/st"
   "The location of st terminal sources")
 
-(defvar fikovnik/projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications")
+(defvar my-projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications")
   "Paths where projects are stored. Used in projectile")
 
-(defvar fikovnik/bibliography-path "~/Sync/Research/Resources/Papers"
+(defvar my-bibliography-path "~/Sync/Research/Resources/Papers"
   "Path where I keep papers")
 
-(defvar fikovnik/bibliography-bib-file (expand-file-name "references.bib" fikovnik/bibliography-path)
+(defvar my-bibliography-bib-file (expand-file-name "references.bib" my-bibliography-path)
   "The main bibliography bibtex file")
 
-(defvar fikovnik/bibliography-notes-file (expand-file-name "notes.org" fikovnik/bibliography-path)
+(defvar my-bibliography-notes-file (expand-file-name "notes.org" my-bibliography-path)
   "The main bibliography notes file")
 #+END_SRC
 
@@ -464,8 +464,8 @@ case conversion in this way.
 **** Default keys
 
 #+BEGIN_SRC emacs-lisp
-(setq fikovnik/my-keys-debug nil
-      fikovnik/my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
+(setq my-keys-debug nil
+      my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
                          (?:  "XK_colon"        ("C-S" "C-M-S"))
                          (?'  "XK_apostrophe"   ("C" "C-M"))
                          (?\" "XK_quotedbl"     ("C-S" "C-M-S"))
@@ -512,7 +512,7 @@ case conversion in this way.
           ;; DEC 48 is '0' in ASCII table
           (let* ((code (+ 48 x))
                  (e (list code (format "XK_%d" x) (list "C" "C-M"))))
-            (setq fikovnik/my-keys (append fikovnik/my-keys (list e)))))
+            (setq my-keys (append my-keys (list e)))))
         nums))
 #+END_SRC
 
@@ -536,13 +536,13 @@ case conversion in this way.
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defconst fikovnik/-my-keys-prefix "\033["
+(defconst my--my-keys-prefix "\033["
   "Escape code sequence prefix")
 
-(defconst fikovnik/-my-keys-suffix "u"
+(defconst my--my-keys-suffix "u"
   "Escape code sequence suffix")
 
-(defconst fikovnik/-my-keys-modifiers
+(defconst my--my-keys-modifiers
   '(("M"     . ("Mod1Mask"                           3))
     ("M-S"   . ("Mod1Mask | ShiftMask"               4))
     ("C"     . ("ControlMask"                        5))
@@ -551,12 +551,12 @@ case conversion in this way.
     ("C-M-S" . ("ControlMask | Mod1Mask | ShiftMask" 8)))
   "The key modifiers as triplets of st emacs name, st name and code")
 
-(defun fikovnik/-encode-key-mod (key-code mod-code)
-  (format "%s%d;%d%s" fikovnik/-my-keys-prefix key-code mod-code fikovnik/-my-keys-suffix))
+(defun my--encode-key-mod (key-code mod-code)
+  (format "%s%d;%d%s" my--my-keys-prefix key-code mod-code my--my-keys-suffix))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/-iterate-keys (fun)
+(defun my--iterate-keys (fun)
   (mapcan
    (lambda (key)
      (let ((key-code (car key))
@@ -567,16 +567,16 @@ case conversion in this way.
         (lambda (x)
           (let* ((mod (car x))
                  (key-emacs (cadr x))
-                 (mod-info (cdr (assoc mod fikovnik/-my-keys-modifiers))))
+                 (mod-info (cdr (assoc mod my--my-keys-modifiers))))
             (funcall fun key-code key-sym mod mod-info key-emacs)))
         (zip mods keys-emacs))))
-   fikovnik/my-keys))
+   my-keys))
 #+END_SRC
 
 **** Enabling my-keys in st
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/-escape-string (s)
+(defun my--escape-string (s)
   (mapconcat
    (lambda (x)
      (if (and (>= x 32) (<= x 255))
@@ -585,36 +585,36 @@ case conversion in this way.
    (append s nil)
    ""))
 
-(defun fikovnik/-st-encode-keys ()
+(defun my--st-encode-keys ()
   (delete-dups
-   (fikovnik/-iterate-keys
+   (my--iterate-keys
     (lambda (key-code key-sym mod mod-info key-emacs)
       (let ((mod-sym (car mod-info))
             (mod-code (cadr mod-info)))
         (format "{%s, %s, \"%s\", 0, 0}"
                 key-sym
                 mod-sym
-                (fikovnik/-escape-string (fikovnik/-encode-key-mod key-code mod-code))))))))
+                (my--escape-string (my--encode-key-mod key-code mod-code))))))))
 
-(defun fikovnik/-st-encode-mapped-keys ()
+(defun my--st-encode-mapped-keys ()
   (delete-dups
-   (fikovnik/-iterate-keys
+   (my--iterate-keys
     (lambda (key-code key-sym mod mod-info key-emacs)
       (format "%s" key-sym)))))
 
-(defun fikovnik/st-sync-mapped-keys ()
+(defun my-st-sync-mapped-keys ()
   (interactive)
   (with-temp-buffer
-    (insert (concat (join ",\n" (fikovnik/-st-encode-keys)) ",\n"))
-    (write-region (point-min) (point-max) (expand-file-name "my-keys.h" fikovnik/st-dir)))
+    (insert (concat (join ",\n" (my--st-encode-keys)) ",\n"))
+    (write-region (point-min) (point-max) (expand-file-name "my-keys.h" my-st-dir)))
 
   (with-temp-buffer
-    (insert (concat (join ",\n" (fikovnik/-st-encode-mapped-keys)) ",\n"))
-    (write-region (point-min) (point-max) (expand-file-name "my-mapped-keys.h" fikovnik/st-dir))))
+    (insert (concat (join ",\n" (my--st-encode-mapped-keys)) ",\n"))
+    (write-region (point-min) (point-max) (expand-file-name "my-mapped-keys.h" my-st-dir))))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(fikovnik/st-sync-mapped-keys)
+(my-st-sync-mapped-keys)
 #+END_SRC
 
 **** Enabling my-keys in Emacs
@@ -622,25 +622,25 @@ case conversion in this way.
 Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html][input-decode-map]].
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/emacs-encode-keys ()
-  (fikovnik/-iterate-keys
+(defun my-emacs-encode-keys ()
+  (my--iterate-keys
    (lambda (key-code key-sym mod mod-info key-emacs)
      (let* ((mod-code (cadr mod-info))
-            (input (fikovnik/-encode-key-mod key-code mod-code))
+            (input (my--encode-key-mod key-code mod-code))
             (key (if (null key-emacs)
                      (kbd (format "%s-%c" mod key-code))
                    key-emacs)))
-       (when fikovnik/my-keys-debug
+       (when my-keys-debug
          (message "binding: %s to %s (%s-%c)" input key mod key-code))
 
        ;(define-key input-decode-map input key)
        (define-key xterm-function-map input key)))))
 
-(when fikovnik/my-keys
+(when my-keys
   (message "Enabling my-keys")
-  (eval-after-load "xterm" '(fikovnik/emacs-encode-keys)))
+  (eval-after-load "xterm" '(my-emacs-encode-keys)))
 ;;(unless (display-graphic-p)
-;;  (fikovnik/emacs-encode-keys))
+;;  (my-emacs-encode-keys))
 #+END_SRC
 
 **** TODO should this go the the xterm-function-map instead?
@@ -689,8 +689,8 @@ These functions are useful so activate them.
 Create the directory if it does not exist yet.
 
 #+BEGIN_SRC emacs-lisp
-(unless (file-exists-p fikovnik/backup-dir)
-  (make-directory fikovnik/backup-dir t))
+(unless (file-exists-p my-backup-dir)
+  (make-directory my-backup-dir t))
 #+END_SRC
 
 I don't want all files to be automatically backed up. Here is a sample filer.
@@ -714,7 +714,7 @@ Backup settings
 #+BEGIN_SRC emacs-lisp
 (setq
       backup-enable-predicate           'my-backup-enable-p
-      backup-directory-alist            `(("." . ,fikovnik/backup-dir))
+      backup-directory-alist            `(("." . ,my-backup-dir))
       backup-by-copying                  t
       delete-old-versions                t
       kept-new-versions                  6
@@ -727,19 +727,19 @@ Backup settings
 *** Auto-save files
 
 #+BEGIN_SRC emacs-lisp
-(unless (file-exists-p fikovnik/auto-save-dir)
-  (make-directory fikovnik/auto-save-dir t))
+(unless (file-exists-p my-auto-save-dir)
+  (make-directory my-auto-save-dir t))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (setq
       auto-save-default                  t
-      auto-save-list-file-name           (concat fikovnik/private-conf-dir "/auto-save-list")
+      auto-save-list-file-name           my-auto-save-dir
       auto-save-file-name-transforms     `(
                                            ;; remote files
                                            ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)
                                            ;; local files
-                                           ("\\(.*\\)" ,fikovnik/auto-save-dir t))
+                                           ("\\(.*\\)" ,(concat my-auto-save-dir "/a") t))
 )
 #+END_SRC
 
@@ -963,7 +963,7 @@ This remembers your location in a file when saving files.
   :demand t
   :unless noninteractive
   :custom
-  (save-place-file (expand-file-name "save-places" fikovnik/private-conf-dir)))
+  (save-place-file (expand-file-name "save-places" my-private-conf-dir)))
 
 (save-place-mode 1)
 #+END_SRC
@@ -991,7 +991,7 @@ This remembers your location in a file when saving files.
   ;; save every minute
   (savehist-autosave-interval 60)
   ;; keep the home clean
-  (savehist-file (expand-file-name "save-history" fikovnik/private-conf-dir))
+  (savehist-file (expand-file-name "save-history" my-private-conf-dir))
   :config
   (savehist-mode 1))
 #+END_SRC
@@ -1002,7 +1002,7 @@ This remembers your location in a file when saving files.
 (use-package recentf
   :demand t
   :custom
-  (recentf-save-file (expand-file-name "recentf" fikovnik/private-conf-dir))
+  (recentf-save-file (expand-file-name "recentf" my-private-conf-dir))
   (recentf-max-saved-items 500)
   (recentf-max-menu-items 15)
   ;; disable recentf-cleanup on Emacs start, because it can cause
@@ -1131,7 +1131,7 @@ Revert buffers when files on disk change
 - TODO: defvar for shape and color at the beginning
 
 #+BEGIN_SRC emacs-lisp
-(defconst fikovnik/cursor-types '((box-blink  . 1)
+(defconst my-cursor-types '((box-blink  . 1)
                                   (box        . 2)
                                   (hbar-blink . 3)
                                   (hbar       . 4)
@@ -1141,35 +1141,35 @@ Revert buffers when files on disk change
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/-tmux-p ()
+(defun my--tmux-p ()
   "Running in tmux."
   (getenv "TMUX"))
 
-(defun fikovnik/-make-tmux-seq (seq)
+(defun my--make-tmux-seq (seq)
   (format "\ePtmux;\e%s\e\\" seq))
 
-(defun fikovnik/-cursor-shape-seq (shape)
+(defun my--cursor-shape-seq (shape)
   "Make escape sequence for XTerm compatible terminals."
-  (let* ((cursor-code (cdr (assoc shape fikovnik/cursor-types)))
+  (let* ((cursor-code (cdr (assoc shape my-cursor-types)))
          (seq (format "\e[%d q" cursor-code)))
-    (if (fikovnik/-tmux-p)
-        (fikovnik/-make-tmux-seq seq)
+    (if (my--tmux-p)
+        (my--make-tmux-seq seq)
       seq)))
 
-(defun fikovnik/set-cursor-shape (shape)
-  (let ((seq (fikovnik/-cursor-shape-seq shape)))
+(defun my-set-cursor-shape (shape)
+  (let ((seq (my--cursor-shape-seq shape)))
     (message "%s" seq)
     (send-string-to-terminal seq)))
 
-(defun fikovnik/-cursor-color-seq (color)
+(defun my--cursor-color-seq (color)
   "Make escape sequence for cursor color (in HEX)."
   (let ((seq (format "\e]12;%s\a" color)))
-    (if (fikovnik/-tmux-p)
-        (fikovnik/-make-tmux-seq seq)
+    (if (my--tmux-p)
+        (my--make-tmux-seq seq)
       seq)))
 
-(defun fikovnik/set-cursor-color (color)
-  (let ((seq (fikovnik/-cursor-color-seq color)))
+(defun my-set-cursor-color (color)
+  (let ((seq (my--cursor-color-seq color)))
     (message "%s" seq)
     (send-string-to-terminal seq)))
 #+END_SRC
@@ -1215,7 +1215,7 @@ These functions allow to C&P to the system clipboard using either terminal
 escape code or xsel command if running in GUI.
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/copy-to-xclipboard ()
+(defun my-copy-to-xclipboard ()
   (interactive)
   (if (use-region-p)
       (if (not (display-graphic-p))
@@ -1234,12 +1234,12 @@ escape code or xsel command if running in GUI.
           (error "Is program `xsel' installed?")))
     (message "Nothing to yank to terminal clipboard")))
 
-(defun fikovnik/cut-to-xclipboard ()
+(defun my-cut-to-xclipboard ()
   (interactive)
-  (fikovnik/copy-to-xclipboard)
+  (my-copy-to-xclipboard)
   (kill-region (region-beginning) (region-end)))
 
-(defun fikovnik/paste-from-xclipboard ()
+(defun my-paste-from-xclipboard ()
   "Uses shell command `xsel -o' to paste from x-clipboard. With
 one prefix arg, pastes from X-PRIMARY, and with two prefix args,
 pastes from X-SECONDARY."
@@ -1260,8 +1260,8 @@ pastes from X-SECONDARY."
 Bind =C-S-X= to cut and =C-X-C= to copy.
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-S-X" 'fikovnik/cut-to-xclipboard my-key-map)
-(bind-key "C-S-C" 'fikovnik/copy-to-xclipboard my-key-map)
+(bind-key "C-S-X" 'my-cut-to-xclipboard my-key-map)
+(bind-key "C-S-C" 'my-copy-to-xclipboard my-key-map)
 #+END_SRC
 
 The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
@@ -1269,7 +1269,7 @@ is better to use the terminal paste since it will be a [[https://cirw.in/blog/br
 
 #+BEGIN_SRC emacs-lisp
 (when (display-graphic-p)
-  (bind-key "C-S-V" 'fikovnik/paste-from-xclipboard my-key-map))
+  (bind-key "C-S-V" 'my-paste-from-xclipboard my-key-map))
 #+END_SRC
 
 ** Fill/unfill paragraph
@@ -1387,7 +1387,7 @@ respectivelly.
 Define a function that simply selects the current line.
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/select-line ()
+(defun my-select-line ()
   "Select current line. If region is active, extend selection downward by line."
   (interactive)
   (if (region-active-p)
@@ -1437,7 +1437,7 @@ return =u= as the keybinding for expand more region instead of ===.
    ("S" . er/mark-text-sentence)
    ("p" . er/mark-paragraph)
    ("P" . er/mark-text-paragraph)
-   ("l" . fikovnik/select-line)))
+   ("l" . my-select-line)))
 #+END_SRC
 
 ** Snippets                                                          :hydra:
@@ -1447,7 +1447,7 @@ return =u= as the keybinding for expand more region instead of ===.
   :defer 1
   :diminish (yas-minor-mode . "YAS")
   :custom
-  (yas-snippet-dirs `(,fikovnik/snippets-dir))
+  (yas-snippet-dirs `(,my-snippets-dir))
   :commands yas-minor-mode
   :bind (:prefix "C-c s"
          :prefix-map my-yasnippet-map
@@ -1508,7 +1508,7 @@ return =u= as the keybinding for expand more region instead of ===.
 (use-package abbrev
   :ensure nil
   :custom
-  (abbrev-file-name (expand-file-name "abbrev-defs" fikovnik/private-conf-dir))
+  (abbrev-file-name (expand-file-name "abbrev-defs" my-private-conf-dir))
   (save-abbrevs 'silently))
 #+END_SRC
 
@@ -1549,7 +1549,7 @@ return =u= as the keybinding for expand more region instead of ===.
 (use-package ispell
   :defer 3
   :custom
-  (ispell-personal-dictionary (expand-file-name "my-ispell-dictionary" fikovnik/private-conf-dir))
+  (ispell-personal-dictionary (expand-file-name "my-ispell-dictionary" my-private-conf-dir))
   (ispell-dictionary "en_US")
   (ispell-program-name (executable-find "aspell"))
   (ispell-really-hunspell t)
@@ -1705,7 +1705,7 @@ from: https://ensime.github.io/editors/emacs/hacks/#general
 ** Indentation
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/reformat-buffer ()
+(defun my-reformat-buffer ()
   "Indent the entire buffer, remove trailing white space and tabs"
   (interactive)
   (save-excursion
@@ -1870,7 +1870,7 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
   :after counsel
   :commands smex
   :custom
-  (smex-save-file (expand-file-name "smex-items" fikovnik/private-conf-dir))
+  (smex-save-file (expand-file-name "smex-items" my-private-conf-dir))
   (smex-history-length 50))
 #+END_SRC
 
@@ -2023,7 +2023,7 @@ Use [[https://github.com/abo-abo/ace-window][ace-window]] to switch between wind
 Define a function to [[https://gist.github.com/3402786][maximize window]].
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/maximize-window ()
+(defun my-maximize-window ()
   (interactive)
   (if (and (= 1 (length (window-list)))
            (assoc ?_ register-alist))
@@ -2056,7 +2056,7 @@ Define a function to [[https://gist.github.com/3402786][maximize window]].
    ("d" kill-buffer-and-window "close" :color blue :column "Other")
    ("D" ace-delete-window "ace close" :column "Other")
    ("t" crux-transpose-windows "transpose" :column "Layout")
-   ("m" fikovnik/maximize-window "maximize" :color blue :column "Layout")
+   ("m" my-maximize-window "maximize" :color blue :column "Layout")
    ("b" balance-windows-area "balance" :column "Layout")
    ("r" rotate-layout "rotate" :column "Layout")
    ("C-<left>" (progn
@@ -2137,7 +2137,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 
 #+BEGIN_SRC emacs-lisp
 (eval-and-compile
-  (defun fikovnik/new-empty-buffer ()
+  (defun my-new-empty-buffer ()
     "Create a new buffer called untitled(<n>)."
 
     (interactive)
@@ -2146,7 +2146,7 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
         (setq-local buffer-offer-save t))
       (switch-to-buffer newbuf nil 'force-same-window)))
 
-  (defun fikovnik/switch-to-messages-buffer (&optional arg)
+  (defun my-switch-to-messages-buffer (&optional arg)
     "Switch to the `*Messages*' buffer. If prefix argument ARG is
 given, switch to it in an other, possibly new window."
 
@@ -2157,7 +2157,7 @@ given, switch to it in an other, possibly new window."
           (switch-to-buffer-other-window (current-buffer))
         (switch-to-buffer (current-buffer)))))
 
-(defun fikovnik/switch-to-scratch-buffer (&optional arg)
+(defun my-switch-to-scratch-buffer (&optional arg)
   "Switch to the `*scratch*' buffer, creating it first if needed.
 If prefix argument ARG is given, switch to it in an other,
 possibly new window."
@@ -2168,7 +2168,7 @@ possibly new window."
         (switch-to-buffer-other-window (get-buffer-create "*scratch*"))
       (switch-to-buffer (get-buffer-create "*scratch*")))))
 
-(defun fikovnik/kill-buffer-and-window ()
+(defun my-kill-buffer-and-window ()
   (interactive)
   (if (> (count-windows) 1)
       (kill-buffer-and-window)
@@ -2182,15 +2182,15 @@ possibly new window."
   ("n" next-buffer "next" :column "Local")
   ("p" previous-buffer "previous" :column "Local")
   ("k" kill-this-buffer "kill" :column "Local")
-  ("x" fikovnik/kill-buffer-and-window "close" :column "Local")
+  ("x" my-kill-buffer-and-window "close" :column "Local")
   ("R" revert-buffer "revert" :column "Local")
   ("f" (crux-with-region-or-buffer indent-region) "format" :column "Local")
-  ("F" fikovnik/reformat-buffer "reformat" :column "Local")
+  ("F" my-reformat-buffer "reformat" :column "Local")
   ("e" erase-buffer "erase" :column "Local")
   ("b" ivy-switch-buffer "list" :exit t :column "Other")
-  ("N" fikovnik/new-empty-buffer "new" :exit t :column "Other")
-  ("m" fikovnik/switch-to-messages-buffer "switch to messages" :exit t :column "Other")
-  ("s" fikovnik/switch-to-scratch-buffer "switch to scratch" :exit t :column "Other")
+  ("N" my-new-empty-buffer "new" :exit t :column "Other")
+  ("m" my-switch-to-messages-buffer "switch to messages" :exit t :column "Other")
+  ("s" my-switch-to-scratch-buffer "switch to scratch" :exit t :column "Other")
   ("c" ispell-buffer "check spelling" :exit t :column "Other")
   ("i" ibuffer "ibuffer" :exit t :column "Other"))
 #+END_SRC
@@ -2200,8 +2200,8 @@ possibly new window."
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-c b" 'hydra-buffers/body my-key-map)
 (bind-key "C-x C-k" 'kill-current-buffer my-key-map)
-(bind-key "C-x C-S-k" 'fikovnik/kill-buffer-and-window my-key-map)
-(bind-key "C-x K" 'fikovnik/kill-buffer-and-window my-key-map)
+(bind-key "C-x C-S-k" 'my-kill-buffer-and-window my-key-map)
+(bind-key "C-x K" 'my-kill-buffer-and-window my-key-map)
 #+END_SRC
 
 ** TODO pgup/pgdown go to the same location
@@ -2211,11 +2211,11 @@ or some more precise navigation which I could use for defining key macros
 ** Highlight symbols (=M-*=)
 
 #+BEGIN_SRC emacs-lisp
-(defun fikovnik/swiper-at-point (initial-input)
+(defun my-swiper-at-point (initial-input)
   (interactive (list (thing-at-point 'symbol)))
   (swiper initial-input))
 
-(bind-key "M-*" 'fikovnik/swiper-at-point my-key-map)
+(bind-key "M-*" 'my-swiper-at-point my-key-map)
 #+END_SRC
 
 ** TODO ace-link
@@ -2240,7 +2240,7 @@ or some more precise navigation which I could use for defining key macros
 #+BEGIN_SRC emacs-lisp
 (use-package bookmark
   :custom
-  (bookmark-default-file (expand-file-name "bookmarks" fikovnik/private-conf-dir))
+  (bookmark-default-file (expand-file-name "bookmarks" my-private-conf-dir))
   (bookmark-save-flag 1))
 #+END_SRC
 
@@ -2329,23 +2329,23 @@ https://github.com/jerrypnz/major-mode-hydra.el
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :bind
-  ("C-c /" . fikovnik/search-in-project-or-dir-empty)
+  ("C-c /" . my-search-in-project-or-dir-empty)
   (:map projectile-command-map
-        ("C-k" . fikovnik/kill-non-project-buffers)
-        ("/" . fikovnik/search-in-project-or-dir-empty))
+        ("C-k" . my-kill-non-project-buffers)
+        ("/" . my-search-in-project-or-dir-empty))
   :custom
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'ivy)
-  (projectile-project-search-path fikovnik/projects-search-path)
+  (projectile-project-search-path my-projects-search-path)
   ;; enable caching otherwise it will be slow for large projects
   (projectile-enable-caching t)
   (projectile-generic-command "fd . -0")
   (projectile-git-command "fd . -0")
   (projectile-sort-order 'recently-active)
-  (projectile-cache-file (concat fikovnik/private-conf-dir "projectile.cache"))
+  (projectile-cache-file (concat my-private-conf-dir "projectile.cache"))
   :config
   ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
-  (defun fikovnik/search-in-project-or-dir (initial-input &optional use-current-dir)
+  (defun my-search-in-project-or-dir (initial-input &optional use-current-dir)
     "Search using `counsel-rg' from the project root for INITIAL-INPUT.
      If there is no project root, or if the prefix argument
      USE-CURRENT-DIR is set, then search from the current
@@ -2378,13 +2378,13 @@ https://github.com/jerrypnz/major-mode-hydra.el
                  (parent-directory default-directory use-current-dir)))))
       (counsel-rg initial-input dir ignored (projectile-prepend-project-name "rg "))))
 
-  (defun fikovnik/search-in-project-or-dir-empty (&optional use-current-dir)
-    "Like fikovnik/search-in-project-or-dir with no initial input."
+  (defun my-search-in-project-or-dir-empty (&optional use-current-dir)
+    "Like my-search-in-project-or-dir with no initial input."
     (interactive "P")
-    (fikovnik/search-in-project-or-dir "" use-current-dir))
+    (my-search-in-project-or-dir "" use-current-dir))
 
   ;; http://emacs.stackexchange.com/a/10187/115
-  (defun fikovnik/kill-non-project-buffers (&optional kill-special)
+  (defun my-kill-non-project-buffers (&optional kill-special)
     "Kill buffers that do not belong to a `projectile' project.
 With prefix argument, also kill the special buffers."
     (interactive "P")
@@ -2512,9 +2512,9 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
 #+BEGIN_SRC emacs-lisp
 (use-package restart-emacs
   :preface
-  (defun fikovnik/reload-config-file ()
+  (defun my-reload-config-file ()
     (interactive)
-    (let* ((init-file (emacs-path fikovnik/config-file))
+    (let* ((init-file (emacs-path my-config-file))
            (init-file-buffer (get-file-buffer init-file)))
       (when (and init-file-buffer
                  (buffer-modified-p init-file-buffer)
@@ -2523,26 +2523,26 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
           (save-buffer)))
       (org-babel-load-file init-file)))
 
-  (defun fikovnik/find-config-file ()
+  (defun my-find-config-file ()
     (interactive)
-    (find-file fikovnik/config-file))
+    (find-file my-config-file))
 
-  (defun fikovnik/find-config-dir ()
+  (defun my-find-config-dir ()
     (interactive)
-    (find-file (file-name-directory fikovnik/config-file)))
+    (find-file (file-name-directory my-config-file)))
 
-  (defun fikovnik/restart-emacs-with-debug ()
+  (defun my-restart-emacs-with-debug ()
     (interactive)
     (restart-emacs '("--debug-init")))
 
   :bind (:prefix "C-c e"
          :prefix-map my-emacs-helper-map
          :prefix-docstring "Emacs init.el related"
-         ("d" . fikovnik/find-config-dir)
-         ("e" . fikovnik/find-config-file)
-         ("g" . fikovnik/dotfiles-magit)
-         ("r" . fikovnik/reload-config-file)
-         ("D" . fikovnik/restart-emacs-with-debug)
+         ("d" . my-find-config-dir)
+         ("e" . my-find-config-file)
+         ("g" . my-dotfiles-magit)
+         ("r" . my-reload-config-file)
+         ("D" . my-restart-emacs-with-debug)
          ("R" . restart-emacs))
   :init
   (which-key-add-key-based-replacements "C-c e" "Emacs")
@@ -2599,28 +2599,28 @@ them such as [[https://github.com/RichiH/vcsh][vcsh]], I prefer the simplest pos
 else. The trick is to separate work tree and git directory. While this work
 well, magit does not understand this and has to have the relevant =--work-tree=
 and =--git-dir= options explicitly set. For this I define a new function
-=fikovnik/dotfiles-magit= which tries to do that.
+=my-dotfiles-magit= which tries to do that.
 
 #+BEGIN_SRC emacs-lisp
-(defconst fikovnik/dotfiles-git-dir (expand-file-name "~/.dotfiles"))
+(defconst my-dotfiles-git-dir (expand-file-name "~/.dotfiles"))
 
-(defun fikovnik/-dotfiles-remove-magit-config (&optional kill)
+(defun my--dotfiles-remove-magit-config (&optional kill)
   (setq magit-git-global-arguments
         (remove (format "--work-tree=%s" (getenv "HOME")) magit-git-global-arguments))
   (setq magit-git-global-arguments
-        (remove (format "--git-dir=%s" fikovnik/dotfiles-git-dir) magit-git-global-arguments))
-  (advice-remove 'magit-mode-bury-buffer #'fikovnik/-dotfiles-remove-magit-config))
+        (remove (format "--git-dir=%s" my-dotfiles-git-dir) magit-git-global-arguments))
+  (advice-remove 'magit-mode-bury-buffer #'my--dotfiles-remove-magit-config))
 
-(defun fikovnik/dotfiles-magit ()
+(defun my-dotfiles-magit ()
   (interactive)
   (when (and (boundp 'magit-git-global-arguments)
-             (file-exists-p fikovnik/dotfiles-git-dir))
+             (file-exists-p my-dotfiles-git-dir))
     (let ((home (getenv "HOME")))
       (add-to-list 'magit-git-global-arguments
                    (format "--work-tree=%s" home))
       (add-to-list 'magit-git-global-arguments
-                   (format "--git-dir=%s" fikovnik/dotfiles-git-dir))
-      (advice-add 'magit-mode-bury-buffer :after #'fikovnik/-dotfiles-remove-magit-config)
+                   (format "--git-dir=%s" my-dotfiles-git-dir))
+      (advice-add 'magit-mode-bury-buffer :after #'my--dotfiles-remove-magit-config)
       (magit-status-setup-buffer home))))
 #+END_SRC
 *** TODO allow the =dotfiles-magit= work even if magit have not been initialized yet
@@ -2724,7 +2724,7 @@ The following is the _official_ way to fix it:
    '((shell . t)
      (emacs-lisp . t)))
   :config
-  (defun fikovnik/-org-babel-do-load-languages ()
+  (defun my--org-babel-do-load-languages ()
     "Load all the languages declared in `org-babel-load-languages'."
     (org-babel-do-load-languages 'org-babel-load-languages
                                  org-babel-load-languages))
@@ -2737,7 +2737,7 @@ The following is the _official_ way to fix it:
       (while (re-search-forward org-babel-src-block-regexp nil t)
         (org-babel-remove-result))))
 
-  (add-hook 'org-mode-hook 'fikovnik/-org-babel-do-load-languages))
+  (add-hook 'org-mode-hook 'my--org-babel-do-load-languages))
 #+END_SRC
 
 *** TODO Fix redisplay of inline images after a code block evaluation.
@@ -2752,9 +2752,9 @@ The following is the _official_ way to fix it:
   :after (org ivy)
   :commands org-ref-ivy-cite
   :custom
-  (org-ref-bibliography-notes fikovnik/bibliography-notes-file)
-  (org-ref-default-bibliography (list fikovnik/bibliography-bib-file))
-  (org-ref-pdf-directory (concat fikovnik/bibliography-path "/"))
+  (org-ref-bibliography-notes my-bibliography-notes-file)
+  (org-ref-default-bibliography (list my-bibliography-bib-file))
+  (org-ref-pdf-directory (concat my-bibliography-path "/"))
   (org-ref-note-title-format
    "* TODO %a (%y): %t
  :PROPERTIES:
@@ -2777,9 +2777,9 @@ The following is the _official_ way to fix it:
   :after ivy
   :commands ivy-bibtex
   :custom
-  (bibtex-completion-bibliography fikovnik/bibliography-bib-file)
-  (bibtex-completion-library-path fikovnik/bibliography-path)
-  (bibtex-completion-notes-path fikovnik/bibliography-notes-file)
+  (bibtex-completion-bibliography my-bibliography-bib-file)
+  (bibtex-completion-library-path my-bibliography-path)
+  (bibtex-completion-notes-path my-bibliography-notes-file)
   (bibtex-completion-notes-template-one-file
    "* TODO ${author} (${year}): ${title}
 :PROPERTIES:
@@ -3074,7 +3074,7 @@ find ~/.emacs.d/elpa/org*/*.elc -print0 | xargs -0 rm
 And then running the following function
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(fikovnik/recompile-elpa)
+(my-recompile-elpa)
 #+END_SRC
 
 ** Invalid function =org-outline-overlay-data=
@@ -3086,7 +3086,7 @@ find ~/.emacs.d/elpa/expand-region*/*.elc -print0 | xargs -0 rm
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(fikovnik/recompile-elpa)
+(my-recompile-elpa)
 #+END_SRC
 
 ** Unable to install a package
