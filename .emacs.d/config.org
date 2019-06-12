@@ -2289,7 +2289,7 @@ or some more precise navigation which I could use for defining key macros
   :config
   (global-anzu-mode 1))
 #+END_SRC
-
+** TODO search in current directory regardless whether in git or not
 * Toggles (=C-c t=)
 ** Setup =C-c t= micro state                                         :hydra:
 
@@ -2426,7 +2426,7 @@ to index the projects in the search path.
 *** Notes
 
 Ivy's call is like helm's follow-mode.
-
+** TODO org-projectile
 * Packages
 ** TODO this section should be removed and the packages moved accrodingly
 ** ibuffers
@@ -2876,7 +2876,10 @@ package org-bookmark-heading
         (cons 'company-capf
               (remove 'company-capf company-backends))))
 #+END_SRC
-*** TODO realgud
+*** TODO Debugger
+
+The gud debugger is quite nice for gdb.
+How to debug Java/Scala/Rust?
 *** Interpreters
 **** Create termino for comint with support for ANSI color codes
 
