@@ -2304,6 +2304,7 @@ or some more precise navigation which I could use for defining key macros
 [_w_] whitespace-mode:   %`whitespace-mode
 [_l_] org link display:  %`org-descriptive-links
 [_s_] spell check:       %`flyspell-mode
+[_S_] syntax:            %`font-lock-mode
 "
   ("a" abbrev-mode)
   ("d" toggle-debug-on-error)
@@ -2312,6 +2313,7 @@ or some more precise navigation which I could use for defining key macros
   ("w" whitespace-mode)
   ("l" org-toggle-link-display)
   ("s" flyspell-mode)
+  ("S" font-lock-mode)
   ("q" nil "quit"))
 #+END_SRC
 
