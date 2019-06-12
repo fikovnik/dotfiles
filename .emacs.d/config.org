@@ -351,6 +351,9 @@ commands.
 
 (defvar my-bibliography-notes-file (expand-file-name "notes.org" my-bibliography-path)
   "The main bibliography notes file")
+
+(defvar my-dash-docsets '("C" "C++" "Emacs_Lisp" "Java_SE12" "R" "Rust" "Scala")
+  "The DASH docsets to install")
 #+END_SRC
 
 ** ST terminal
@@ -2818,7 +2821,34 @@ package org-bookmark-heading
 * Languages
 ** General
 *** TODO configure flymake
-*** TODO install dash
+*** Documentation with dash
+
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-dash
+  :commands counsel-dash counsel-dash-install-docset
+  :hook
+  (c-mode . (lambda () (setq-local counsel-dash-docsets '("C"))))
+  (c++-mode . (lambda () (setq-local counsel-dash-docsets '("C++"))))
+  (emacs-lisp-mode . (lambda () (setq-local counsel-dash-docsets '("Emacs Lisp"))))
+  (java-mode . (lambda () (setq-local counsel-dash-docsets '("Java"))))
+  (ess-mode . (lambda () (setq-local counsel-dash-docsets '("R"))))
+  (inferior-ess-mode . (lambda () (setq-local counsel-dash-docsets '("R"))))
+  (rust-mode . (lambda () (setq-local counsel-dash-docsets '("Rust"))))
+  (scala-mode . (lambda () (setq-local counsel-dash-docsets '("Scala"))))
+  :config
+  ;; it does not work with custom from some reason
+  (setq counsel-dash-docsets-path (expand-file-name "~/.config/dash-docset")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dash-docsets-install ()
+  (interactive)
+  (mapc (lambda (docset)
+          (unless (dash-docs-docset-installed-p docset)
+            (counsel-dash-install-docset docset)))
+        my-dash-docsets))
+#+END_SRC
+
 *** Documentation with eldoc
 
 #+BEGIN_SRC emacs-lisp
