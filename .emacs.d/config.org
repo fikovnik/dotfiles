@@ -1914,7 +1914,8 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-xref
   :after (ivy xref)
-  :config
+  :commands ivy-xref-show-xrefs
+  :init
   (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
 #+END_SRC
 
