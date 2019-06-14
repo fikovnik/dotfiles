@@ -3054,29 +3054,27 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 
 *** Evaluate last function call with =C-x C-e=
 
-This is similar to =eval-last-sexp= but for R function calls. The cursor should
-be at the end of the closing parenthesis.
-
 #+BEGIN_SRC emacs-lisp
-(defun my-r-eval-last-function-call ()
-  "Evaluate the last function call (does not work with infix notation)"
-  (interactive)
-  (unless (string= (buffer-substring-no-properties (- (point) 1) (point)) ")")
-    (error "Not at the end of a function call"))
-  (let ((end (point)))
-    (save-excursion
-      ;; go to the beginning of the function argument list
-      (backward-list)
-      ;; go to the beginning of the function name
-      (backward-sexp)
-      (ess-eval-region (point) end t (format "Eval call to %s" (thing-at-point 'symbol))))))
-#+END_SRC
-
-The default key binding is the same as is for the =eval-last-sexp=, in the
-keymap active in R mode (=ess-r-mode-map=).
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "C-x C-e" #'my-r-eval-last-function-call ess-r-mode-map)
+(use-package ess-r-mode
+  :preface
+  (defun my-r-eval-last-function-call ()
+    "Evaluate the last function call (does not work with infix
+     notation) The cursor should be poisitioned at the end of the
+     call, i.e. after the closing paren."
+    (interactive)
+    (unless (string= (buffer-substring-no-properties (- (point) 1) (point)) ")")
+      (error "Not at the end of a function call"))
+    (let ((end (point)))
+      (save-excursion
+        ;; go to the beginning of the function argument list
+        (backward-list)
+        ;; go to the beginning of the function name
+        (backward-sexp)
+        (ess-eval-region (point) end t (format "Eval call to %s" (thing-at-point 'symbol))))))
+  :ensure ess
+  :bind
+  (:map ess-r-mode-map
+        ("C-x C-e" . my-r-eval-last-function-call)))
 #+END_SRC
 
 *** TODO [[https://github.com/polymode/poly-R][poly-R]]
