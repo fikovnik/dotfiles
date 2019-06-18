@@ -2270,8 +2270,13 @@ possibly new window."
 Use same syntax for moving back and forth, and deleting a =word=.
 
 #+BEGIN_SRC emacs-lisp
+(defun my-backward-same-syntax ()
+  (interactive) (forward-same-syntax -1))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (bind-key "M-f" #'forward-same-syntax my-key-map)
-(bind-key "M-b" #'backward-same-syntax my-key-map)
+(bind-key "M-b" #'my-backward-same-syntax my-key-map)
 (bind-key "M-d" #'my-kill-synax my-key-map)
 #+END_SRC
 
