@@ -65,7 +65,6 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO use straight.el
 ** TODO Fix adding new line after { in R mode
 ** TODO Use emacs as less pages
-** TODO org habit
 ** TODO polymode
 ** TODO switch buffer only for the project
 ** TODO company in org mode and abbrev
@@ -2860,6 +2859,23 @@ The following is the _official_ way to fix it:
 :END:
 "))
 #+END_SRC
+** Habits
+
+Tracks habits using [[https://orgmode.org/manual/Tracking-your-habits.html][org-habit]].
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-modules 'org-habit)
+(use-package org-habit
+  :ensure nil
+  :custom
+  (org-habit-show-all-today t)
+  (org-habit-show-habits-only-for-today t)
+  (org-habit-show-done-always-green t)
+  (org-habit-graph-column 60)
+  (org-habit-preceding-days 28)
+  (org-habit-following-days 7))
+#+END_SRC
+
 
 ** TODO images
 - https://github.com/abo-abo/org-download
