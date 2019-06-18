@@ -88,6 +88,11 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO in org-mode set the C-A to move at the beginning of the heading if at heading
 - currently it only moves to the beginning of the line - in front of all the stars
 ** TODO in hippie expand / abbrev is it possible to add suggestion based on spelling
+** TODO Keyfreq
+** TODO smerge
+** TODO Synosaurus
+** TODO Dired collapse https://github.com/Fuco1/dired-hacks/blob/master/dired-collapse.el
+** TODO use a better theme - less syntax highlighting?
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -2876,6 +2881,13 @@ Tracks habits using [[https://orgmode.org/manual/Tracking-your-habits.html][org-
   (org-habit-following-days 7))
 #+END_SRC
 
+** TODO Queries
+- Once this is up on MELPA https://github.com/alphapapa/org-ql
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-ql
+  :commands org-ql-search org-ql org-ql-query org-ql-agenda)
+#+END_SRC
 
 ** TODO images
 - https://github.com/abo-abo/org-download
@@ -3202,6 +3214,14 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 ** TODO email
 ** TODO elfeed
 - https://github.com/abo-abo/elfeed
+** TODO browser
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package w3m
+  :demand t
+  :custom
+  (browse-url-browser-function 'w3m-browse-url))
+#+END_SRC
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
 
