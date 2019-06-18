@@ -498,7 +498,7 @@ case conversion in this way.
                          (?m  "XK_m"            ("C" "C-M")               (([C-m]) ([C-M-m])))
                          (?i  "XK_i"            ("C" "C-M")               (([C-i]) ([C-M-i])))
                          (?O  "XK_O"            ("C-S" "C-M-S"))
-                         (? "XK_BackSpace"    ("C" "C-M" "C-S" "C-M-S") (([C-]) ([C-M-]) ([C-S-]) ([C-M-S-])))
+                         (? "XK_BackSpace"    ("C" "C-M" "M-S" "C-S" "C-M-S") (([C-]) ([C-M-]) ([M-S-]) ([C-S-]) ([C-M-S-])))
                          ))
 #+END_SRC
 
@@ -1187,20 +1187,67 @@ Revert buffers when files on disk change
 
 *** TODO better indication of current chunk in magit
 * Editing
-** Killing lines
+** Killing words
 
-The following binding does not work.
-There should be also GUI version.
+I prefer fine-grained killing :-)
+
+#+BEGIN_SRC emacs-lisp
+(defun my-kill-syntax (&optional arg)
+  (interactive "p")
+  (let ((opoint (point)))
+    (forward-same-syntax arg)
+    (kill-region opoint (point))))
+
+(defun my-backward-kill-syntax (&optional arg)
+  (interactive)
+(my-kill-syntax -1))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "<C-backspace>" #'my-backward-kill-syntax my-key-map)
+(bind-key "M-DEL" #'my-backward-kill-syntax my-key-map)
+(bind-key [M-S-] #'crux-kill-line-backwards my-key-map)
+#+END_SRC
+
+*** TODO There should be also GUI version.                   :check:in:gui:
+
+** Killing lines
 
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-S-K" #'crux-kill-whole-line my-key-map)
 (bind-key [remap kill-whole-line] #'crux-kill-whole-line my-key-map)
-(bind-key [C-] #'crux-kill-line-backwards my-key-map)
 #+END_SRC
-** Marking
+
+*** TODO There should be also GUI version.                   :check:in:gui:
+
+** Mark words and SEXPs
+
+Similarly to killing by syntax, mark by syntax as well.
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "M-c" #'mark-word my-key-map)
+(defun my-mark-syntax (&optional arg)
+  "Based on the `mark-word` but using `forward-same-synax`
+instead of `forward-word`."
+  (interactive "P")
+  (cond ((or (and (eq last-command this-command) (mark t))
+             (region-active-p))
+         (setq arg (if arg (prefix-numeric-value arg)
+                     (if (< (mark) (point)) -1 1)))
+         (set-mark
+          (save-excursion
+            (goto-char (mark))
+            (forward-same-syntax arg)
+            (point))))
+        (t
+         (push-mark
+          (save-excursion
+            (forward-same-syntax (prefix-numeric-value arg))
+            (point))
+          nil t))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-c" #'my-mark-syntax my-key-map)
 (bind-key "M-C" #'mark-sexp my-key-map)
 #+END_SRC
 
@@ -1807,6 +1854,8 @@ But, only if I put them there!
   (minibuffer-depth-indicate-mode 1))
 #+END_SRC
 
+With ivy one can use =C-M-n / C-M-p= to preview the selection.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
   :demand t
@@ -2210,8 +2259,24 @@ possibly new window."
 
 ** TODO pgup/pgdown go to the same location
 ** TODO Go to matching paren
-** TODO Gentle navigation
-or some more precise navigation which I could use for defining key macros
+** Fine grain navigation using syntax rather than words
+
+Use same syntax for moving back and forth, and deleting a =word=.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-f" #'forward-same-syntax my-key-map)
+(bind-key "M-b" #'backward-same-syntax my-key-map)
+(bind-key "M-d" #'my-kill-synax my-key-map)
+#+END_SRC
+
+The =shift= modifier will resume the original functionality.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-F" #'forward-word my-key-map)
+(bind-key "M-B" #'backward-word my-key-map)
+(bind-key "M-D" #'kill-word)
+#+END_SRC
+
 ** Highlight symbols (=M-*=)
 
 #+BEGIN_SRC emacs-lisp
