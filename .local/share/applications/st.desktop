@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=st Terminal
+Comment=Terminal Emulator
+Exec=/usr/local/bin/st
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=System;TerminalEmulator;
+StartupNotify=true
