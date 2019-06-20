@@ -534,14 +534,14 @@ case conversion in this way.
 (defun join (sep lst)
    (mapconcat 'identity lst sep))
 
- (defun zip (xs ys)
-   (if (and (null xs) (null ys))
-       ()
-     (cons (cond
-            ((null xs) (cons '(nil) (car ys)))
-            ((null ys) (cons (car xs) '(nil)))
-            (t (cons (car xs) (car ys))))
-           (zip (cdr xs) (cdr ys)))))
+(defun zip (xs ys)
+  (if (and (null xs) (null ys))
+      ()
+    (cons (cond
+           ((null xs) (cons '(nil) (car ys)))
+           ((null ys) (cons (car xs) '(nil)))
+           (t (cons (car xs) (car ys))))
+          (zip (cdr xs) (cdr ys)))))
 
 (defun filter (condp lst)
   (delq nil
