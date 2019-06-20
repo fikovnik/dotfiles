@@ -542,6 +542,10 @@ case conversion in this way.
             ((null ys) (cons (car xs) '(nil)))
             (t (cons (car xs) (car ys))))
            (zip (cdr xs) (cdr ys)))))
+
+(defun filter (condp lst)
+  (delq nil
+        (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -2416,6 +2420,9 @@ https://github.com/jerrypnz/major-mode-hydra.el
         ("C-k" . my-kill-non-project-buffers)
         ("/" . my-search-in-project-or-dir-empty)
         ("?" . my-search-in-project-or-dir))
+  :init
+  ;; use only existing directories
+  (setq my-projects-search-path (filter 'file-exists-p my-projects-search-path))
   :custom
   (projectile-indexing-method 'alien)
   (projectile-completion-system 'ivy)
