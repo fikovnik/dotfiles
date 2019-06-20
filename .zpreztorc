@@ -126,14 +126,14 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time background_job
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_HIDE_BRANCH_ICON=true
 POWERLEVEL9K_EXECUTION_TIME_ICON=''
-POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-stash git-remotebranch git-tagname)
+#POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-stash git-remotebranch git-tagname)
 
 case "$TERM" in
   eterm-color)
     zstyle ':prezto:module:prompt' theme 'sorin'
     ;;
   *)
-    zstyle ':prezto:module:prompt' theme 'powerlevel9k'
+    zstyle :prezto:module:prompt theme powerlevel10k
     ;;
 esac
 
