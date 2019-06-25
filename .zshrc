@@ -51,15 +51,6 @@ HELPDIR=/usr/local/share/zsh/help
 setopt NO_CLOBBER
 # This makes cd=pushd
 setopt AUTO_PUSHD
-# This will use named dirs when possible
-setopt AUTO_NAME_DIRS
-
-# vcs_info
-#VCS_BRANCH_ICON=""
-#VCS_REMOTE_BRANCH_ICON=""
-#zstyle ':vcs_info:git:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
-#zstyle ':vcs_info:git-svn:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
-#zstyle ':vcs_info:hg:*' formats "%F{$VCS_FOREGROUND_COLOR}%s:%b%f"
 
 if [ -z "$SSH_CONNECTION" ] || emacsclient --version >/dev/null 2>&1; then
     export ALTERNATE_EDITOR="vim"

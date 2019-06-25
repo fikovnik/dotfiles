@@ -130,7 +130,7 @@ POWERLEVEL9K_EXECUTION_TIME_ICON=''
 
 case "$TERM" in
   eterm-color)
-    zstyle ':prezto:module:prompt' theme 'sorin'
+    zstyle :prezto:module:prompt theme sorin
     ;;
   *)
     zstyle :prezto:module:prompt theme powerlevel10k
