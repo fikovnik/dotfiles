@@ -1202,15 +1202,13 @@ Revert buffers when files on disk change
 I prefer fine-grained killing :-)
 
 #+BEGIN_SRC emacs-lisp
-(defun my-kill-syntax (&optional arg)
+(defun my-kill-syntax (arg)
   (interactive "p")
-  (let ((opoint (point)))
-    (forward-same-syntax arg)
-    (kill-region opoint (point))))
+  (kill-region (point) (progn (forward-same-syntax arg) (point))))
 
-(defun my-backward-kill-syntax (&optional arg)
+(defun my-backward-kill-syntax ()
   (interactive)
-(my-kill-syntax -1))
+  (my-kill-syntax -1))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1236,7 +1234,7 @@ Similarly to killing by syntax, mark by syntax as well.
 
 #+BEGIN_SRC emacs-lisp
 (defun my-mark-syntax (&optional arg)
-  "Based on the `mark-word` but using `forward-same-synax`
+  "Based on the `mark-word` but using `forward-same-syntax`
 instead of `forward-word`."
   (interactive "P")
   (cond ((or (and (eq last-command this-command) (mark t))
@@ -2281,7 +2279,7 @@ Use same syntax for moving back and forth, and deleting a =word=.
 #+BEGIN_SRC emacs-lisp
 (bind-key "M-f" #'forward-same-syntax my-key-map)
 (bind-key "M-b" #'my-backward-same-syntax my-key-map)
-(bind-key "M-d" #'my-kill-synax my-key-map)
+(bind-key "M-d" #'my-kill-syntax my-key-map)
 #+END_SRC
 
 The =shift= modifier will resume the original functionality.
