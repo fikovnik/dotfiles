@@ -93,6 +93,10 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO Synosaurus
 ** TODO Dired collapse https://github.com/Fuco1/dired-hacks/blob/master/dired-collapse.el
 ** TODO use a better theme - less syntax highlighting?
+** TODO install [[https://github.com/agzam/mw-thesaurus.el][mw-thesaurus]]
+** TODO install a major mode hydra
+- use it for bibtex for example (org-ref-hydra/body)
+** TODO configure dot-mode
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -2931,11 +2935,12 @@ package org-bookmark-heading
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-bookmark-heading
-  :ensure t
-  :defer t
+  :demand t
   :config
   (require 'org-bookmark-heading))
 #+END_SRC
+
+*** TODO load lazily
 
 * Languages
 ** General
