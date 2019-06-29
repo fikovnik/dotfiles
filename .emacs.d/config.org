@@ -751,7 +751,7 @@ Backup settings
 #+BEGIN_SRC emacs-lisp
 (setq
       auto-save-default                  t
-      auto-save-list-file-name           my-auto-save-dir
+      auto-save-list-file-name           (expand-file-name "list" my-auto-save-dir)
       auto-save-file-name-transforms     `(
                                            ;; remote files
                                            ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)
