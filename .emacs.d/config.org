@@ -330,10 +330,10 @@ commands.
 (defvar my-private-conf-dir (emacs-path "private")
   "Directory where to store my private config")
 
-(defvar my-backup-dir (expand-file-name "backups" my-private-conf-dir)
+(defvar my-backup-dir (expand-file-name (concat "backups/" system-name) my-private-conf-dir)
   "Directory for backups")
 
-(defvar my-auto-save-dir (expand-file-name "auto-saves" my-private-conf-dir)
+(defvar my-auto-save-dir (expand-file-name (concat "auto-saves/" system-name) my-private-conf-dir)
   "Directory for auto save files")
 
 (defvar my-snippets-dir (emacs-path "snippets")
