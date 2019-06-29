@@ -336,7 +336,7 @@ commands.
 (defvar my-auto-save-dir (expand-file-name "auto-saves" my-private-conf-dir)
   "Directory for auto save files")
 
-(defvar my-snippets-dir (expand-file-name "snippets" my-private-conf-dir)
+(defvar my-snippets-dir (emacs-path "snippets")
   "Directory for snippets")
 
 (defvar my-keys nil

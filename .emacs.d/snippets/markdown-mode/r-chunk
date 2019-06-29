@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: R chunk
+# key: <r
+# --
+\`\`\`{r$1}
+$0
+\`\`\`
