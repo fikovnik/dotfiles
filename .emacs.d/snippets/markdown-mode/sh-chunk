@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: shell code block
+# key: <s
+# --
+\`\`\`{sh${1: eval=FALSE}}
+$0
+\`\`\`

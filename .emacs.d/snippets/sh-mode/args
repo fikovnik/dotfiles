@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name:args
+# key: args
+# --
+if [ $# -lt ${1:2} ]; then
+   echo "Usage: \$0 $2"
+   exit 1
+fi
+$0
