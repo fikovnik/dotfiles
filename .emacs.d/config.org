@@ -2950,7 +2950,6 @@ package org-bookmark-heading
 
 * Languages
 ** General
-*** TODO configure flymake
 *** Documentation with dash
 
 #+BEGIN_SRC emacs-lisp
@@ -3073,6 +3072,27 @@ rm /tmp/dumb-emacs-ansi.ti
   ;; set to 'first-error to stop scrolling on first error
   (compilation-scroll-output t))
 #+END_SRC
+*** Checking with flycheck
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :preface
+  (defhydra hydra-flycheck
+    (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
+          :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
+          :hint nil)
+  "Errors"
+  ("f"  flycheck-error-list-set-filter                            "Filter")
+  ("j"  flycheck-next-error                                       "Next")
+  ("k"  flycheck-previous-error                                   "Previous")
+  ("gg" flycheck-first-error                                      "First")
+  ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+  ("q"  nil))
+  :custom
+  (flycheck-textlint-config "~/.config/textlint/textlintrc.json")
+  :init (global-flycheck-mode))
+#+END_SRC
+
 
 ** C/C++
 *** TODO completion
