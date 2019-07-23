@@ -3120,6 +3120,63 @@ Add checker
 (add-to-list 'flycheck-checkers 'proselint)
 #+END_SRC
 
+**** Add support for textlint
+***** Installation
+
+Install textlint
+
+#+BEGIN_SRC
+yay -S textlint
+#+END_SRC
+
+Install rules
+
+#+BEGIN_SRC sh :tangle no
+sudo npm install \
+     textlint-rule-write-good \
+     textlint-plugin-latex \
+     textlint-rule-write-good \
+     textlint-rule-no-start-duplicated-conjunction \
+     textlint-rule-max-comma \
+     textlint-rule-terminology \
+     textlint-rule-period-in-list-item \
+     textlint-rule-unexpanded-acronym \
+     textlint-rule-abbr-within-parentheses \
+     textlint-rule-alex \
+     textlint-rule-common-misspellings \
+     textlint-rule-en-max-word-count \
+     textlint-rule-diacritics \
+     textlint-rule-stop-words
+#+END_SRC
+
+For more information check [[https://www.macs.hw.ac.uk/~rs46/posts/2018-12-29-textlint-flycheck.html][documentation]].
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "flycheck"
+  (lambda ()
+    (add-to-list 'flycheck-textlint-plugin-alist '(tex-mode . "latex"))))
+#+END_SRC
+
+***** Global configuration
+
+#+BEGIN_SRC json :tangle no
+{
+    "rules": {
+        "write-good": true,
+        "max-comma": true,
+        "no-start-duplicated-conjunction": true,
+        "max-comma": true,
+        "terminology": true,
+        "period-in-list-item": true,
+        "abbr-within-parentheses": true,
+        "alex": true,
+        "common-misspellings": true,
+        "en-max-word-count": true,
+        "diacritics": true,
+        "stop-words": true
+    }
+}
+#+END_SRC
 
 ** C/C++
 *** TODO completion
