@@ -3320,9 +3320,81 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   ("\\.Rmd\\'" . poly-markdown+R-mode))
 #+END_SRC
 
-** TODO Latex
-- auctex
-- latexmk
+** Latex
+*** Auctex
+
+#+BEGIN_SRC emacs-lisp
+(use-package tex
+  :ensure auctex
+  :mode ("\\.tex\\'" . latex-mode)
+  :custom
+  (TeX-auto-save t)
+  ;; automatically insert braces after sub/superscript in math mode
+  (TeX-electric-sub-and-superscript t)
+  (TeX-parse-self t)
+  (TeX-PDF-mode t)
+  (TeX-show-compilation nil )
+  (TeX-source-correlate-mode t)
+  (TeX-source-correlate-method 'synctex)
+  (TeX-source-correlate-start-server nil)
+  ;; Don't insert line-break at inline math
+  (LaTeX-fill-break-at-separators nil))
+#+END_SRC
+*** Reftex
+
+#+BEGIN_SRC emacs-lisp
+(use-package reftex
+  :ensure nil
+  :after tex
+  :demand t
+  :hook
+  (LaTeX-mode . turn-on-reftex)
+  :custom
+  (reftex-use-fonts t))
+#+END_SRC
+
+*** Latexmk
+
+#+BEGIN_SRC emacs-lisp
+(use-package auctex-latexmk
+  :preface
+  (defun my-latexmk-build ()
+    (interactive)
+    (let ((TeX-save-query nil))
+      (TeX-save-document (TeX-master-file)))
+    (TeX-command "LatexMk" 'TeX-master-file -1))
+  :after tex
+  :demand t
+  :bind
+  (:map LaTeX-mode-map
+   ("C-c C-b" . my-latexmk-build))
+  :custom
+  (auctex-latexmk-inherit-TeX-PDF-mode t)
+  (TeX-command-default "LatexMk")
+  :config
+  (auctex-latexmk-setup))
+#+END_SRC
+
+*** Company
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-auctex
+  :after tex
+  :demand t
+  :config
+  (add-to-list 'company-backends
+               '(company-auctex-macros company-auctex-symbols company-auctex-environments)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-reftex
+  :after (tex reftex)
+  :demand t
+  :config
+  (add-to-list 'company-backends
+               '(company-reftex-labels company-reftex-citations)))
+#+END_SRC
+
 ** Config
 
 #+BEGIN_SRC emacs-lisp
