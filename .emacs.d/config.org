@@ -2208,7 +2208,13 @@ remapping the =M-g= to a hydra that calls various [[https://github.com/abo-abo/a
 (bind-key "M-G" #'hydra-goto/body my-key-map)
 #+END_SRC
 
-*** TODO next / previous error
+*** Next / previous error
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-N" #'next-error)
+(bind-key "M-P" #'previous-error)
+#+END_SRC
+
 *** TODO next / previous spelling problem
 ** Buffers (=C-c b=)                                                   :wip:
 *** Functions
