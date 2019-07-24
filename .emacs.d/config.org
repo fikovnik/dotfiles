@@ -3093,6 +3093,56 @@ rm /tmp/dumb-emacs-ansi.ti
   :init (global-flycheck-mode))
 #+END_SRC
 
+**** Add support for textidote
+
+***** Install textidote and language tool
+
+#+BEGIN_SRC sh :tangle no
+yay -S textidote languagetool
+#+END_SRC
+
+***** Create a wrapper
+
+#+BEGIN_SRC sh :tangle no
+#!/bin/bash
+
+filename=$(basename ${@: -1})
+output=$(mktemp)
+
+textidote \
+    --ignore sh:seclen \
+    --no-color \
+    --check en \
+    --dict ~/.config/languagetool/ignore-words.txt \
+    "$@" > $output
+
+exit_code=$?
+
+cat $output | \
+    perl -pe "s/\* L(\d+)C(\d+)[^ ]+/$filename:\1:\2 --/" | \
+    perl -pe 's/([^]]) \n$/\1 /' | \
+    perl -pe 's/[ ]+/ /g' | \
+    perl -pe 's/(.*) -- (.*)\[(.*)\] $/\1: [\3] \2/' | \
+    grep -v '^\s\+'
+
+rm $output
+#+END_SRC
+
+***** Add a checker
+
+#+BEGIN_SRC emacs-lisp
+(flycheck-define-checker my-latex
+  "My latex checker"
+  :command
+  ("/home/krikava/bin/textidote-wrapper.sh" source)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": [" (id (1+ (not (any "]")))) "] " (message) line-end))
+  :modes
+  (latex-mode))
+
+(add-to-list 'flycheck-checkers 'my-latex)
+#+END_SRC
+
 **** Add support for proselint
 
 Install proselint
