@@ -3143,13 +3143,13 @@ rm $output
 
 **** Add support for proselint
 
-Install proselint
+***** Install proselint
 
 #+BEGIN_SRC sh :tangle no
 yay -S proselint
 #+END_SRC
 
-Add checker
+***** Add a checker
 
 #+BEGIN_SRC emacs-lisp
 (flycheck-define-checker proselint
