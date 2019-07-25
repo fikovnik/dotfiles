@@ -22,33 +22,34 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 
 *** Overview of the main key bindings
 
-| Key         | Micro state                            |
-|-------------+----------------------------------------|
-| =C-c w=     | Windows prefix                         |
-| =C-c b=     | Buffers prefix                         |
-| =C-c t=     | Toggles prefix                         |
-| =C-c p=     | Projects prefix                        |
-| =C-c s=     | Snippets prefix                        |
-| =C-c e=     | Emacs configuration prefix             |
-| =C-c c=     | Org capture                            |
-| =C-c d=     | Dired                                  |
-| =C-c g=     | Magit prefix                           |
-| =M-S-g=     | Go to prefix                           |
-| =C-==       | Expand region prefix                   |
-| =C-c /=     | Search in project or current directory |
-| =M-'=       | Correct word                           |
-| =M-;=       | Comment or uncomment                   |
-| =M-i=       | imenu                                  |
-| =M-I=       | imenu anywhere                         |
-| =C-x C-k=   | Kill current buffer                    |
-| =C-x C-S-k= | Kill current buffer and its window     |
-| =C-x S-k=   | Kill current buffer and its window     |
-| =C-x C-b=   | Switch buffer                          |
-| =C-x o=     | Switch window                          |
-| =M-*=       | Search for a symbol with swiper        |
-| =C-x f=     | Find file using fzf                    |
-| =M-g=       | Go to char in line                     |
-| =M-u M-g=   | Go to char                             |
+| Key         | Micro state                                    |
+|-------------+------------------------------------------------|
+| =C-c w=     | Windows prefix                                 |
+| =C-c b=     | Buffers prefix                                 |
+| =C-c t=     | Toggles prefix                                 |
+| =C-c p=     | Projects prefix                                |
+| =C-c s=     | Snippets prefix                                |
+| =C-c e=     | Emacs configuration prefix                     |
+| =C-c c=     | Org capture                                    |
+| =C-c d=     | Dired                                          |
+| =C-c g=     | Magit prefix                                   |
+| =M-S-g=     | Go to prefix                                   |
+| =C-==       | Expand region prefix                           |
+| =C-c /=     | Search in project or current directory         |
+| =M-'=       | Correct word                                   |
+| =M-;=       | Comment or uncomment                           |
+| =M-i=       | imenu                                          |
+| =M-I=       | imenu anywhere                                 |
+| =C-x C-k=   | Kill current buffer                            |
+| =C-x C-S-k= | Kill current buffer and its window             |
+| =C-x S-k=   | Kill current buffer and its window             |
+| =C-x C-b=   | Switch buffer                                  |
+| =C-x o=     | Switch window                                  |
+| =M-*=       | Search for a symbol with swiper                |
+| =M-u M-*=   | Search for a symbol with swiper in all buffers |
+| =C-x f=     | Find file using fzf                            |
+| =M-g=       | Go to char in line                             |
+| =M-u M-g=   | Go to char                                     |
 
 ** Rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
@@ -2316,9 +2317,11 @@ The =shift= modifier will resume the original functionality.
 ** Highlight symbols (=M-*=)
 
 #+BEGIN_SRC emacs-lisp
-(defun my-swiper-at-point (initial-input)
-  (interactive (list (thing-at-point 'symbol)))
-  (swiper initial-input))
+(defun my-swiper-at-point (arg)
+  (interactive "P")
+  (if (null arg)
+      (swiper-thing-at-point)
+    (swiper-all-thing-at-point)))
 
 (bind-key "M-*" 'my-swiper-at-point my-key-map)
 #+END_SRC
