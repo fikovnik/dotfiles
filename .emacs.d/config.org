@@ -3144,32 +3144,6 @@ rm $output
 (add-to-list 'flycheck-checkers 'my-latex)
 #+END_SRC
 
-**** Add support for proselint
-
-***** Install proselint
-
-#+BEGIN_SRC sh :tangle no
-yay -S proselint
-#+END_SRC
-
-***** Add a checker
-
-#+BEGIN_SRC emacs-lisp
-(flycheck-define-checker proselint
-  "A linter for prose."
-  :command ("proselint" source-inplace)
-  :error-patterns
-  ((warning line-start (file-name) ":" line ":" column ": "
-            (id (one-or-more (not (any " "))))
-            (message) line-end))
-  :modes (gfm-mode
-          markdown-mode
-          org-mode
-          text-mode
-          latex-mode))
-
-(add-to-list 'flycheck-checkers 'proselint)
-#+END_SRC
 
 ** C/C++
 *** TODO completion
