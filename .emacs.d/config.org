@@ -1424,9 +1424,12 @@ line to be joined upwards. Most of the time I prefer the other way around.
 ** Open line above and bellow
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-S-O" #'crux-smart-open-line-above my-key-map)
-(bind-key "C-o" #'crux-smart-open-line my-key-map)
+(bind-key "C-S-O" #'crux-smart-open-line-above)
+(bind-key "C-o" #'crux-smart-open-line)
 #+END_SRC
+
+These do not go into =my-key-map= since that will break ivy-read (=C-o= in
+minibuffer).
 
 ** Comment / un-comment lines
 
