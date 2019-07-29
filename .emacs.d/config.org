@@ -1944,7 +1944,6 @@ https://github.com/abo-abo/oremacs/blob/github/modes/ora-ivy.el
            org-goto-interface 'outline-path-completion
            org-outline-path-complete-in-steps nil)
 
-     (bind-key "C-c c" #'counsel-org-capture my-key-map)
      (bind-keys :map org-mode-map
                 ("C-c C-j" . counsel-org-goto)
                 ("C-u C-c C-j" . counsel-org-goto-all)))))
