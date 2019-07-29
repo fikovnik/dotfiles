@@ -1850,9 +1850,16 @@ But, only if I put them there!
             (goto-char (match-beginning 0))))
       (user-error
        "Not completing files currently")))
+
+  (defun my-counsel-switch-buffer (arg)
+    (interactive "P")
+    (if (null arg)
+        (counsel-switch-buffer)
+      (counsel-switch-buffer-other-window)))
   :bind
   ("C-x C-r" . ivy-resume)
   ("C-x C-b" . ivy-switch-buffer)
+  ("C-x B" . my-counsel-switch-buffer)
   (:map ivy-minibuffer-map
         ("M-RET" . ivy-immediate-done)
         ("C-z" . ivy-dispatching-done)
