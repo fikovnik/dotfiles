@@ -961,13 +961,42 @@ Answering just 'y' or 'n' will do
           'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
 
-*** Popup window management
+*** Popup window management with Shackle
 
 #+BEGIN_SRC emacs-lisp
-(use-package popwin
+(use-package shackle
   :demand t
+  :custom
+  (shackle-default-alignment 'below)
+	(shackle-default-size 0.5)
+  (shackle-default-rule '(:select t))
+	(shackle-rules
+   '(("*Backtrace*"             :select nil :size 0.25 :popup t)
+     (compilation-mode          :select nil :size 0.25 :popup t)
+     ("*compilation*"           :select nil :size 0.25 :popup t)
+     ("*Error*"                 :select nil :size 0.25 :popup t)
+     (flycheck-error-list-mode  :select t   :size 0.15 :popup t :align 'below) ;; does not size the window without the :align
+     (help-mode                 :select t)
+     (helpful-mode              :select nil)
+     (magit-status-mode         :same t :inhibit-window-quit t)
+     (magit-log-mode            :same t :inhibit-window-quit t)
+     (magit-commit-mode         :ignore t)
+     (magit-diff-mode           :select nil)
+     (git-commit-mode           :same t)
+     (vc-annotate-mode          :same t)
+     ("*Org Links*"             :select nil :size 0.15 :popup t)
+     ("*Org Select*"            :select t              :popup t)
+     ("*Org Export Dispatcher*" :select t              :popup t)
+     ("*Warnings*"              :select nil :size 0.25)
+     ))
   :config
-  (popwin-mode 1))
+  (shackle-mode 1)
+  (eval-after-load "org"
+    (lambda ()
+    ;; re-define org-switch-to-buffer-other-window to NOT use org-no-popups.
+    ;; primarily for compatibility with shackle.
+    (defun org-switch-to-buffer-other-window (args)
+    (switch-to-buffer-other-window args)))))
 #+END_SRC
 
 The package seems not to be maintained, an alternative might be [[https://github.com/wasamasa/shackle][shackle]].
