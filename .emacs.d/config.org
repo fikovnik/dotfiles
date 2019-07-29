@@ -3458,3 +3458,24 @@ file on MELPA, it might be due to an outdated local index. Use:
 #+BEGIN_SRC emacs-lisp :tangle no
 (package-refresh-contents)
 #+END_SRC
+** Problems with contacting GNU ELPA
+
+If the [[https://elpa.gnu.org/][ELPA]] is not down yet you get
+
+#+BEGIN_SRC txt
+Failed to download ‘gnu’ archive.
+#+END_SRC
+
+Try setting
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+#+END_SRC
+
+or running
+
+#+BEGIN_SRC sh :tangle no
+emacs --insecure
+#+END_SRC
+
+for the package install.
