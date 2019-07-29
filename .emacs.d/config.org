@@ -1865,7 +1865,7 @@ But, only if I put them there!
         ("C-z" . ivy-dispatching-done)
         ("C-w" . ivy-yank-word)
         ("C-'" . ivy-avy)
-        ("C-:" . my-ivy-dired)
+        ("C-:" . my--ivy-dired)
         ("<left>" . counsel-up-directory)
         ("<backtab>" . counsel-up-directory)
         ("<right>" . my--enter-directory-or-insert)
