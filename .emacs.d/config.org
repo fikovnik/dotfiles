@@ -57,6 +57,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 #+BEGIN_SRC sh :tangle no
 config update-index --assume-unchanged ~/.emacs.d/init.el
 #+END_SRC
+
 ** TODO describe the idea behind this configuration
 ** TODO Show matching function
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
@@ -108,6 +109,10 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 *** TODO https://karl-voit.at/2017/06/03/emacs-org/
 *** TODO https://writequit.org/org/
 *** TODO http://doc.norang.ca/org-mode.html
+*** TODO https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast
+*** TODO https://github.com/raxod502/straight.el
+*** TODO https://github.com/wasamasa/dotemacs/blob/master/init.org
+- has nice hydras
 *** Visited
 - [[https://github.com/hlissner/doom-emacs/blob/develop/][Doom Emacs]]
 - https://github.com/dakra/dmacs/blob/master/init.org
@@ -815,6 +820,7 @@ and on windows switch.
 
 #+BEGIN_SRC emacs-lisp
 (define-minor-mode my-minor-mode
+  "My minor mode"
   :init-value t
   :lighter "MY"
   :keymap my-key-map)
@@ -3347,6 +3353,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   ;; Don't insert line-break at inline math
   (LaTeX-fill-break-at-separators nil))
 #+END_SRC
+
 *** Reftex
 
 #+BEGIN_SRC emacs-lisp
