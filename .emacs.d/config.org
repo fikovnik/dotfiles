@@ -1582,14 +1582,15 @@ return =u= as the keybinding for expand more region instead of ===.
   :diminish (company-mode . "AC")
   :commands (company-mode company-indent-or-complete-common)
   :custom
-  (company-idle-delay 0.1)
-  (company-tooltip-limit 10)
-  (company-minimum-prefix-length 2)
-  (company-tooltip-align-annotations t)
-  (company-begin-commands '(self-insert-command))
   (company-dabbrev-ignore-case t)
   (company-dabbrev-code-ignore-case t)
-  (company-dabbrev-downcase t)
+  (company-dabbrev-downcase nil)
+  (company-idle-delay 0.1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-selection-wrap-around t)
+  (company-tooltip-align-annotations t)
+  (company-tooltip-limit 10)
   :hook
   (after-init . global-company-mode)
   :bind (:map company-active-map
