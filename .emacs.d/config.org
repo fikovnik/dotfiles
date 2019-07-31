@@ -2813,7 +2813,7 @@ and =--git-dir= options explicitly set. For this I define a new function
   ;; org is installed from init.el
   :ensure nil
   :mode
-  ("\\.org$" . org-mode)
+  ("\\.org\\'" . org-mode)
   :hook
   (org-mode . flyspell-mode)
   :custom
@@ -2838,8 +2838,8 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-refile-active-region-within-subtree t)
   (org-refile-allow-creating-parent-nodes 'confirm)
   (org-refile-targets '((nil :maxlevel . 6) (org-agenda-files :maxlevel . 7)))
-  (org-refile-use-cache t)
-  (org-refile-use-outline-path t)
+  (org-refile-use-cache nil)
+  (org-refile-use-outline-path 'file)
   (org-src-fontify-natively t)
   (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
@@ -2854,9 +2854,11 @@ and =--git-dir= options explicitly set. For this I define a new function
      (default . ancestors)))
   :bind
   ("C-c c" . org-capture)
+  ("C-c a" . org-agenda-list)
   (:map org-mode-map
         ("C-a" . org-beginning-of-line)
-        ("C-e" . org-end-of-line))
+        ("C-e" . org-end-of-line)
+        ("C-c M-RET" . org-insert-todo-heading))
   :config
   (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
