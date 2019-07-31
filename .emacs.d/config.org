@@ -2846,7 +2846,7 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-startup-with-inline-images t)
   (org-startup-indented t)
   (org-special-ctrl-a/e t)
-  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w@)" "NEXT(n)" "|" "DONE(d@)" "CANCELED(c@)")))
+  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w)" "NEXT(n)" "|" "DONE(d!)" "CANCELED(c@)")))
   (org-show-context-detail
    '((agenda . local)
      (bookmark-jump . lineage)
