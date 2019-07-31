@@ -3254,6 +3254,32 @@ enabled. M-<delete> is also incredibly useful.
             (smartparens-strict-mode)
             (rainbow-delimiters-mode)))
 #+END_SRC
+** HTML
+
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-enable-current-element-highlight t)
+  :mode
+  ("\\.phtml\\'"      . web-mode)
+  ("\\.tpl\\.php\\'"  . web-mode)
+  ("\\.twig\\'"       . web-mode)
+  ("\\.xml\\'"        . web-mode)
+  ("\\.html?\\'"      . web-mode)
+  ("\\.[gj]sp\\'"     . web-mode)
+  ("\\.as[cp]x?\\'"   . web-mode)
+  ("\\.eex\\'"        . web-mode)
+  ("\\.erb\\'"        . web-mode)
+  ("\\.mustache\\'"   . web-mode)
+  ("\\.handlebars\\'" . web-mode)
+  ("\\.hbs\\'"        . web-mode)
+  ("\\.eco\\'"        . web-mode)
+  ("\\.ejs\\'"        . web-mode)
+  ("\\.djhtml\\'"     . web-mode))
+#+END_SRC
 
 ** TODO scala
 - using ensime?
