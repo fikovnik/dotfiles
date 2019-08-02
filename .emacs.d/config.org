@@ -1263,7 +1263,8 @@ I prefer fine-grained killing :-)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "<C-backspace>" #'my-backward-kill-syntax my-key-map)
+(bind-key "<C-S->" #'backward-kill-word my-key-map)
+(bind-key "<C->" #'my-backward-kill-syntax my-key-map)
 (bind-key "M-DEL" #'my-backward-kill-syntax my-key-map)
 (bind-key [M-S-] #'crux-kill-line-backwards my-key-map)
 #+END_SRC
