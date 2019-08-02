@@ -2745,6 +2745,8 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
   :hook
   ((prog-mode . diff-hl-mode)
    (prog-mode . diff-hl-margin-mode)
+   (TeX-mode . diff-hl-mode)
+   (TeX-mode . diff-hl-margin-mode)
    (org-mode . diff-hl-mode)
    (org-mode . diff-hl-margin-mode)
    (dired-mode . diff-hl-dired-mode))
