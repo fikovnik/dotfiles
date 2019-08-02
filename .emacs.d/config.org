@@ -354,16 +354,19 @@ commands.
 (defvar my-st-dir "~/Projects/st"
   "The location of st terminal sources")
 
+(defvar my-notes-dir "~/Notes"
+  "The location of my notes directory")
+
 (defvar my-projects-search-path '("~/Projects" "~/Research/Projects" "~/Research/Publications")
   "Paths where projects are stored. Used in projectile")
 
-(defvar my-bibliography-path "~/Sync/Research/Resources/Papers"
+(defvar my-bibliography-path "~/Sync/Papers"
   "Path where I keep papers")
 
 (defvar my-bibliography-bib-file (expand-file-name "references.bib" my-bibliography-path)
   "The main bibliography bibtex file")
 
-(defvar my-bibliography-notes-file (expand-file-name "notes.org" my-bibliography-path)
+(defvar my-bibliography-notes-file (expand-file-name "Journal/Readings.org" my-notes-dir)
   "The main bibliography notes file")
 
 (defvar my-dash-docsets '("C" "C++" "Emacs_Lisp" "Java_SE12" "R" "Rust" "Scala")
@@ -2925,29 +2928,9 @@ The following is the _official_ way to fix it:
   :config
   (eval-after-load "reftex"
     (lambda ()
-      (reftex-default-bibliography org-ref-default-bibliography))))
+      (setq reftex-default-bibliography org-ref-default-bibliography))))
 #+END_SRC
 
-(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-bibtex
-  :after ivy
-  :commands ivy-bibtex
-  :custom
-  (bibtex-completion-bibliography my-bibliography-bib-file)
-  (bibtex-completion-library-path my-bibliography-path)
-  (bibtex-completion-notes-path my-bibliography-notes-file)
-  (bibtex-completion-notes-template-one-file
-   "* TODO ${author} (${year}): ${title}
-:PROPERTIES:
-:Custom_ID: ${=key=}
-:Book: ${booktitle}
-:URL: ${url}
-:NOTER_DOCUMENT: ${file}
-:END:
-"))
-#+END_SRC
 ** Habits
 
 Tracks habits using [[https://orgmode.org/manual/Tracking-your-habits.html][org-habit]].
@@ -3340,8 +3323,14 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 (use-package tex
   :ensure auctex
   :mode ("\\.tex\\'" . latex-mode)
+  :bind
+  ;; swap the command - the run all is just much more useful
+  (:map TeX-mode-map
+        ("C-c C-c" . TeX-command-run-all)
+        ("C-c C-a" . TeX-command-master))
   :custom
   (TeX-auto-save t)
+  (TeX-save-query nil)
   ;; automatically insert braces after sub/superscript in math mode
   (TeX-electric-sub-and-superscript t)
   (TeX-parse-self t)
@@ -3352,6 +3341,33 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   (TeX-source-correlate-start-server nil)
   ;; Don't insert line-break at inline math
   (LaTeX-fill-break-at-separators nil))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun flymake-get-tex-args (file-name)
+  (list "pdflatex" (list "-file-line-error" "-draftmode" "-interaction=nonstopmode" file-name)))
+#+END_SRC
+
+*** Bibtex
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-bibtex
+  :after ivy
+  :commands ivy-bibtex
+  :custom
+  (bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool)
+  (bibtex-completion-bibliography my-bibliography-bib-file)
+  (bibtex-completion-library-path `(,my-bibliography-path "references"))
+  (bibtex-completion-notes-path my-bibliography-notes-file)
+  (bibtex-completion-notes-template-one-file
+   "* TODO ${author} (${year}): ${title}
+:PROPERTIES:
+:Custom_ID: ${=key=}
+:Book: ${booktitle}
+:URL: ${url}
+:NOTER_DOCUMENT: ${file}
+:END:
+"))
 #+END_SRC
 
 *** Reftex
@@ -3369,7 +3385,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 
 *** Latexmk
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package auctex-latexmk
   :preface
   (defun my-latexmk-build ()
