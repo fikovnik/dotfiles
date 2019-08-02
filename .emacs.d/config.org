@@ -3249,7 +3249,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 #+END_SRC
 
 ** R
-
+*** ESS
 #+BEGIN_SRC emacs-lisp
 (use-package ess
   :mode (("/R/.*\\.q\\'"       . R-mode)
@@ -3317,6 +3317,13 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :mode
   ("\\.Rd\\'" . poly-Rd-mode)
   ("\\.Rmd\\'" . poly-markdown+R-mode))
+#+END_SRC
+*** Flycheck settings
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "flycheck"
+  (lambda ()
+    (setq flycheck-lintr-linters "with_defaults(infix_spaces_linter=NULL, line_length_linter=NULL)")))
 #+END_SRC
 
 ** Latex
