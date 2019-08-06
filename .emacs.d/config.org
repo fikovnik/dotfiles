@@ -3365,7 +3365,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :after ivy
   :commands ivy-bibtex
   :custom
-  (bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool)
+  (bibtex-completion-pdf-open-function 'counsel-locate-action-extern)
   (bibtex-completion-bibliography my-bibliography-bib-file)
   (bibtex-completion-library-path `(,my-bibliography-path "references"))
   (bibtex-completion-notes-path my-bibliography-notes-file)
