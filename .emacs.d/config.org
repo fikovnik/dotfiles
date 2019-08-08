@@ -3424,7 +3424,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :demand t
   :config
   (add-to-list 'company-backends
-               '(company-auctex-macros company-auctex-symbols company-auctex-environments)))
+               '(company-auctex-macros company-auctex-symbols company-auctex-environments company-dabbrev)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
