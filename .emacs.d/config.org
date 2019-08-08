@@ -1595,6 +1595,7 @@ return =u= as the keybinding for expand more region instead of ===.
   (company-dabbrev-ignore-case t)
   (company-dabbrev-code-ignore-case t)
   (company-dabbrev-downcase nil)
+  (company-dabbrev-code-other-buffers t)
   (company-idle-delay 0.1)
   (company-minimum-prefix-length 2)
   (company-show-numbers t)
@@ -1604,8 +1605,8 @@ return =u= as the keybinding for expand more region instead of ===.
   :hook
   (after-init . global-company-mode)
   :bind (:map company-active-map
-              ([tab] . nil)
-              ("TAB" . nil)))
+              ([tab] . counsel-company)
+              ("TAB" . counsel-company)))
 #+END_SRC
 
 **** [[https://github.com/expez/company-quickhelp][company-quick-help]]
