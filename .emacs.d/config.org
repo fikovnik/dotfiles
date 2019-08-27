@@ -99,6 +99,7 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO install a major mode hydra
 - use it for bibtex for example (org-ref-hydra/body)
 ** TODO configure dot-mode
+** TODO stop using always-ensure an instead commit packages to a git repo
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -113,6 +114,9 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 *** TODO https://github.com/raxod502/straight.el
 *** TODO https://github.com/wasamasa/dotemacs/blob/master/init.org
 - has nice hydras
+*** TODO https://emacs.readthedocs.io/en/latest/ui__emacs_looks_cool.html
+- yet another setup
+- nice docs
 *** Visited
 - [[https://github.com/hlissner/doom-emacs/blob/develop/][Doom Emacs]]
 - https://github.com/dakra/dmacs/blob/master/init.org
@@ -982,10 +986,10 @@ Answering just 'y' or 'n' will do
 	(shackle-rules
    '(("*Backtrace*"             :select nil :size 0.25 :popup t)
      (compilation-mode          :select nil :size 0.25 :popup t)
-     ("*compilation*"           :select nil :size 0.25 :popup t)
+     ("*compilation*"           :select nil :size 0.25 :align t)
      ("*Error*"                 :select nil :size 0.25 :popup t)
      (flycheck-error-list-mode  :select t   :size 0.15 :popup t :align 'below) ;; does not size the window without the :align
-     (help-mode                 :select t)
+     (help-mode                 :select t   :align t)
      (helpful-mode              :select nil)
      (magit-status-mode         :same t :inhibit-window-quit t)
      (magit-log-mode            :same t :inhibit-window-quit t)
@@ -1008,7 +1012,9 @@ Answering just 'y' or 'n' will do
     (switch-to-buffer-other-window args)))))
 #+END_SRC
 
-The package seems not to be maintained, an alternative might be [[https://github.com/wasamasa/shackle][shackle]].
+The package seems not to be maintained, better would be just to use
+=display-buffer-alist= variable directly (cf. [[https://www.reddit.com/r/emacs/comments/cpdr6m/any_additional_docstutorials_on_displaybuffer_and/][reddit]], [[https://ess.r-project.org/Manual/ess.html#Controlling-buffer-display][ess]])
+
 *** TODO replace popwin with better one
 *** Save placesss
 
@@ -1071,6 +1077,17 @@ This remembers your location in a file when saving files.
 
 #+BEGIN_SRC emacs-lisp
 (bind-key "<end>" #'move-end-of-line my-key-map)
+#+END_SRC
+*** Set =process-connection-type= to use pipe
+
+Without this, =browse-url-of-file= with =xdg-open= does not work (cf. [[https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell][SO19344]]).
+
+This does not work, better to use =setsid -w xdg-open=:
+https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell
+https://askubuntu.com/questions/646631/emacs-doesnot-work-with-xdg-open
+
+#+BEGIN_SRC emacs-lisp
+(setq process-connection-type t)
 #+END_SRC
 
 ** Install crux
@@ -1246,7 +1263,7 @@ Sets a default window margin. Without this, the poly-r mode kind o flips annoyin
 #+BEGIN_SRC emacs-lisp
 (setq-default left-margin-width 1)
 #+END_SRC
-
+*** TODO doom-one?
 * Editing
 ** Killing words
 
@@ -2376,6 +2393,8 @@ The =shift= modifier will resume the original functionality.
 (bind-key "M-*" 'my-swiper-at-point my-key-map)
 #+END_SRC
 
+*** TODO use [[https://github.com/wolray/symbol-overlay][symbol-overlay]] mode
+
 ** TODO ace-link
 - https://github.com/abo-abo/ace-link
 ** =C-a= / =home= to the beginning
@@ -2633,6 +2652,7 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1162
 *** TODO diredx
 https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1172
 *** TODO hydra
+*** TODO multi stage https://github.com/Fuco1/dired-hacks#multi-stage-copypasting-of-files
 ** info
 *** TODO hydra
 ** diff
@@ -2915,7 +2935,7 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp
 (use-package org-ref
   :after (org ivy)
-  :commands org-ref-ivy-cite
+  :defer 2
   :custom
   (org-ref-bibliography-notes my-bibliography-notes-file)
   (org-ref-default-bibliography (list my-bibliography-bib-file))
@@ -2950,6 +2970,12 @@ Tracks habits using [[https://orgmode.org/manual/Tracking-your-habits.html][org-
   (org-habit-graph-column 60)
   (org-habit-preceding-days 28)
   (org-habit-following-days 7))
+#+END_SRC
+** Polymode for org
+
+#+BEGIN_SRC emacs-lisp
+(use-package poly-org
+  :mode ("\\.org\\'" . poly-org-mode))
 #+END_SRC
 
 ** TODO Queries
@@ -3381,6 +3407,8 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 "))
 #+END_SRC
 
+**** TODO try https://github.com/joostkremers/ebib
+
 *** Reftex
 
 #+BEGIN_SRC emacs-lisp
@@ -3499,6 +3527,89 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :demand t
   :custom
   (browse-url-browser-function 'w3m-browse-url))
+#+END_SRC
+** eshell
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-eshell-aliases
+  '(("q"  "exit")
+    ("rg" "rg --color=always $*")
+    ("ag" "ag --color=always $*")
+    ("j" "z")
+    ("l"  "ls -lh")
+    ("ll" "ls -lah")
+    ("clear" "clear-scrollback")))
+
+(use-package shrink-path
+  :commands shrink-path-file)
+
+(use-package eshell
+  :preface
+  (defface my-eshell-prompt-pwd '((t :inherit font-lock-constant-face))
+    "Eshell prompt pwd face"
+    :group 'eshell)
+
+  (defface my-eshell-prompt-git-branch '((t :inherit font-lock-builtin-face))
+    "Eshell prompt git branch face"
+    :group 'eshell)
+
+  (defun my--eshell-current-git-branch ()
+  (let ((branch (car (cl-loop for match in (split-string (shell-command-to-string "git branch") "\n")
+                              if (string-match-p "^\*" match)
+                              collect match))))
+    (if (not (eq branch nil))
+        (format " [%s]" (substring branch 2))
+      "")))
+
+  (defun my-eshell-default-prompt ()
+    "Generate the prompt string for eshell. Use for `eshell-prompt-function'."
+    (concat (if (bobp) "" "\n")
+            (let ((pwd (eshell/pwd)))
+              (propertize (if (equal pwd "~")
+                              pwd
+                            (abbreviate-file-name (shrink-path-file pwd)))
+                          'face 'my-eshell-prompt-pwd))
+            (propertize (my--eshell-current-git-branch)
+                        'face 'my-eshell-prompt-git-branch)
+            (propertize " λ" 'face (if (zerop eshell-last-command-status) 'success 'error))
+            " "))
+
+  (defun my--eshell-init-aliases ()
+    (setq eshell-command-aliases-list (append eshell-command-aliases-list my-eshell-aliases)))
+  :custom
+  (eshell-banner-message
+        '(format "%s %s\n"
+                 (propertize (format " %s " (string-trim (buffer-name)))
+                             'face 'mode-line-highlight)
+                 (propertize (current-time-string)
+                             'face 'font-lock-keyword-face)))
+  (eshell-scroll-to-bottom-on-input 'all)
+  (eshell-scroll-to-bottom-on-output 'all)
+  (eshell-buffer-shorthand t)
+  (eshell-kill-processes-on-exit t)
+  (eshell-hist-ignoredups t)
+  (eshell-prompt-regexp "^.* λ ")
+  (eshell-prompt-function #'my-eshell-default-prompt)
+  (eshell-glob-case-insensitive t)
+  (eshell-error-if-no-glob t)
+  :config
+  (add-hook 'eshell-alias-load-hook #'my--eshell-init-aliases)
+  (advice-add #'eshell-write-aliases-list :override #'ignore))
+
+(use-package eshell-z
+  :after eshell
+  :config)
+  ;; Use zsh's db if it exists, otherwise, store it in `doom-cache-dir'
+  ;;(unless (file-exists-p eshell-z-freq-dir-hash-table-file-name)
+  ;;  (setq eshell-z-freq-dir-hash-table-file-name
+  ;;        (expand-file-name "z" eshell-directory-name))))
+
+(use-package esh-autosuggest
+  :after eshell
+  :hook (eshell-mode . esh-autosuggest-mode))
+  ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
+  ;; line below instead:
+  ;; :hook (eshell-mode-hook . esh-autosuggest-mode))
 #+END_SRC
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
