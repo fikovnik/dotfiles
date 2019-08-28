@@ -1078,18 +1078,6 @@ This remembers your location in a file when saving files.
 #+BEGIN_SRC emacs-lisp
 (bind-key "<end>" #'move-end-of-line my-key-map)
 #+END_SRC
-*** Set =process-connection-type= to use pipe
-
-Without this, =browse-url-of-file= with =xdg-open= does not work (cf. [[https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell][SO19344]]).
-
-This does not work, better to use =setsid -w xdg-open=:
-https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell
-https://askubuntu.com/questions/646631/emacs-doesnot-work-with-xdg-open
-
-#+BEGIN_SRC emacs-lisp
-(setq process-connection-type t)
-#+END_SRC
-
 ** Install crux
 
 This package defines a bunch of useful functions that I would otherwise had to
@@ -2865,6 +2853,23 @@ and =--git-dir= options explicitly set. For this I define a new function
   :config
   (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
+** Fix opening files with xdg-open
+
+From some reason the just calling =xdg-open= does not work from org-ref (e.g.
+=org-ref-open-pdf-at-point=) or =browse-url-or-file= unless the
+=process-connection-type= is set to =pipe= (cf. [[https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell][SO19344]]). This, however breaks
+lot of other things so better to use:
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "org"
+  (lambda ()
+    (add-to-list 'org-file-apps '("\\.pdf\\'" . "setsid -w xdg-open \"%s\""))
+    (add-to-list 'org-file-apps '("\\.pdf::\\([0-9]+\\)\\'" . "setsid -w xdg-open \"%s\" -p %1"))))
+#+END_SRC
+
+More info
+- [[https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell][why-does-xdg-open-not-work-in-eshell]]
+- [[https://askubuntu.com/questions/646631/emacs-doesnot-work-with-xdg-open][emacs-doesnot-work-with-xdg-open]]
 
 ** Better appearance
 
