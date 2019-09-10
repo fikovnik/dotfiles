@@ -1013,7 +1013,8 @@ Answering just 'y' or 'n' will do
 #+END_SRC
 
 The package seems not to be maintained, better would be just to use
-=display-buffer-alist= variable directly (cf. [[https://www.reddit.com/r/emacs/comments/cpdr6m/any_additional_docstutorials_on_displaybuffer_and/][reddit]], [[https://ess.r-project.org/Manual/ess.html#Controlling-buffer-display][ess]])
+=display-buffer-alist= variable directly (cf. [[https://www.reddit.com/r/emacs/comments/cpdr6m/any_additional_docstutorials_on_displaybuffer_and/][reddit]], [[https://ess.r-project.org/Manual/ess.html#Controlling-buffer-display][ess]], [[https://web.archive.org/web/20160409014815/https://www.lunaryorn.com/2015/04/29/the-power-of-display-buffer-alist.html][example]])
+Example with popwin: https://github.com/lkzz/emacs.d/blob/a746cf44a6f23a1eb7f4f8b80d1f4e491f79793c/lisp/init-windows-popup.el
 
 *** TODO replace popwin with better one
 *** Save placesss
