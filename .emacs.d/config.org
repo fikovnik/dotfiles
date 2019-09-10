@@ -2501,6 +2501,7 @@ https://github.com/jerrypnz/major-mode-hydra.el
   :bind
   ("C-c /" . my-search-in-project-or-dir-empty)
   (:map projectile-command-map
+        ("c" . my-projectile-compile)
         ("C-k" . my-kill-non-project-buffers)
         ("/" . my-search-in-project-or-dir-empty)
         ("?" . my-search-in-project-or-dir))
@@ -2515,6 +2516,11 @@ https://github.com/jerrypnz/major-mode-hydra.el
   (projectile-sort-order 'recently-active)
   (projectile-cache-file (concat my-private-conf-dir "projectile.cache"))
   :preface
+  (defun my-projectile-compile (arg)
+    (interactive "P")
+    (if arg
+        (projectile-compile-project arg)
+      (recompile)))
   (defun my-search-in-project-or-dir (initial-input &optional use-current-dir)
     "Search using `counsel-rg' from the project root for INITIAL-INPUT.
      If there is no project root, or if the prefix argument
