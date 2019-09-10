@@ -3145,6 +3145,15 @@ rm /tmp/dumb-emacs-ansi.ti
   ;; set to 'first-error to stop scrolling on first error
   (compilation-scroll-output t))
 #+END_SRC
+
+**** Bury compilation buffer on success
+
+#+BEGIN_SRC emacs-lisp
+(use-package bury-successful-compilation
+  :hook
+  ((yaml-mode prog-mode) . bury-successful-compilation))
+#+END_SRC
+
 *** Checking with flycheck
 
 #+BEGIN_SRC emacs-lisp
@@ -3213,7 +3222,6 @@ rm $output
 
 (add-to-list 'flycheck-checkers 'my-latex)
 #+END_SRC
-
 
 ** C/C++
 *** TODO completion
