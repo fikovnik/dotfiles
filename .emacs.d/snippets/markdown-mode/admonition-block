@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: admonition block
+# key: !!!
+# --
+<div class="admonition-block warning">
+<p>$1</p>
+</div>

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: scala chunk
+# key: <scala
+# --
+\`\`\`scala
+$0
+\`\`\`

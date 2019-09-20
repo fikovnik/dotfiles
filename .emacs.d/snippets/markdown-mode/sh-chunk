@@ -2,6 +2,6 @@
 # name: shell code block
 # key: <s
 # --
-\`\`\`{sh${1: eval=FALSE}}
+\`\`\`sh
 $0
 \`\`\`
