@@ -2929,7 +2929,7 @@ The following is the _official_ way to fix it:
     (org-babel-do-load-languages 'org-babel-load-languages
                                  org-babel-load-languages))
 
-  (defun org-babel-remove-result-buffer ()
+  (defun my-org-babel-remove-result-buffer ()
     "Remove results from every code block in buffer."
     (interactive)
     (save-excursion
