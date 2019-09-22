@@ -2921,7 +2921,8 @@ The following is the _official_ way to fix it:
   :custom
   (org-babel-load-languages
    '((shell . t)
-     (emacs-lisp . t)))
+     (emacs-lisp . t)
+     (ammonite . t)))
   :config
   (defun my--org-babel-do-load-languages ()
     "Load all the languages declared in `org-babel-load-languages'."
@@ -3571,6 +3572,29 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   :mode
   ("\\.sml\\'" . sml-mode))
 #+END_SRC
+
+** Scala
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ob-ammonite)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; Enable scala-mode and sbt-mode
+(use-package scala-mode
+  :mode "\\.s\\(cala\\|bt\\)$")
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map))
+#+END_SRC
+
 * Applications
 ** TODO agenda / calendar
 ** TODO email
