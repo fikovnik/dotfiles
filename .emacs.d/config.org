@@ -1862,7 +1862,7 @@ But, only if I put them there!
 #+END_SRC
 ** Polymode
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package polymode)
 #+END_SRC
 
@@ -2987,7 +2987,7 @@ Tracks habits using [[https://orgmode.org/manual/Tracking-your-habits.html][org-
 #+END_SRC
 ** Polymode for org
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package poly-org
   :mode ("\\.org\\'" . poly-org-mode))
 #+END_SRC
@@ -3387,7 +3387,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 
 *** Poly mode [[https://github.com/polymode/poly-R][poly-R]]
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package poly-R
   :mode
   ("\\.Rd\\'" . poly-Rd-mode)
