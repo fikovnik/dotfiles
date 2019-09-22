@@ -1563,7 +1563,7 @@ return =u= as the keybinding for expand more region instead of ===.
 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
-  :defer 1
+  :demand t
   :diminish (yas-minor-mode . "YAS")
   :custom
   (yas-snippet-dirs `(,my-snippets-dir))
