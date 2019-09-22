@@ -3064,9 +3064,9 @@ package org-bookmark-heading
   :commands eldoc-mode)
 #+END_SRC
 
-*** TODO LSP using eglot
+*** LSP using eglot (not used)
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package eglot
   :commands eglot
   :preface
@@ -3074,14 +3074,37 @@ package org-bookmark-heading
     (let* ((root (projectile-project-root dir)))
       (and root (cons 'transient root))))
   :hook
-  ((c-mode c++-mode) . eglot-ensure)
+  ((c-mode c++-mode scala-mode) . eglot-ensure)
   :config
+  (add-to-list 'eglot-server-programs '(scala-mode . ("metals-emacs")))
   (with-eval-after-load 'project
     (add-to-list 'project-find-functions 'my--projectile-project-find-function))
   (setq company-backends
         (cons 'company-capf
               (remove 'company-capf company-backends))))
 #+END_SRC
+*** LSP using lsp-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :hook
+  (scala-mode . lsp)
+  :custom
+  (lsp-prefer-flymake nil)
+  :commands lsp)
+
+(use-package lsp-ui
+  :custom
+  (lsp-ui-sideline-enable nil)
+  :commands lsp-ui-mode)
+
+(use-package company-lsp
+  :commands company-lsp)
+
+(use-package helm-lsp
+  :commands helm-lsp-workspace-symbol)
+#+END_SRC
+
 *** TODO Debugger
 
 The gud debugger is quite nice for gdb.
