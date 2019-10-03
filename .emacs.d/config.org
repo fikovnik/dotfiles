@@ -2999,7 +2999,8 @@ Tracks habits using [[https://orgmode.org/manual/Tracking-your-habits.html][org-
   (org-habit-preceding-days 28)
   (org-habit-following-days 7))
 #+END_SRC
-** Polymode for org
+
+** TODO Polymode for org
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package poly-org
