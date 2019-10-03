@@ -3100,8 +3100,6 @@ package org-bookmark-heading
 
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
-  :hook
-  (scala-mode . lsp)
   :custom
   (lsp-prefer-flymake nil)
   :commands lsp)
