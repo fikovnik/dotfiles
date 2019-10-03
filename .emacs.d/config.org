@@ -2912,6 +2912,7 @@ The following is the _official_ way to fix it:
 #+END_SRC
 
 ** Babel
+*** General
 
 #+BEGIN_SRC emacs-lisp
 (use-package ob
@@ -2920,9 +2921,10 @@ The following is the _official_ way to fix it:
   :commands org-babel-load-languages
   :custom
   (org-babel-load-languages
-   '((shell . t)
+   '((ammonite . t)
      (emacs-lisp . t)
-     (ammonite . t)))
+     (shell . t)
+     (tmux . t)))
   :config
   (defun my--org-babel-do-load-languages ()
     "Load all the languages declared in `org-babel-load-languages'."
@@ -2945,6 +2947,17 @@ The following is the _official_ way to fix it:
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)
 #+END_SRC
+
+*** tmux support
+
+#+BEGIN_SRC emacs-lisp
+(use-package ob-tmux
+  :custom
+  (org-babel-tmux-session-prefix "ob-")
+  (org-babel-tmux-terminal "st")
+  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e")))
+#+END_SRC
+
 ** [[https://github.com/jkitchin/org-ref/][org-ref]]
 
 #+BEGIN_SRC emacs-lisp
