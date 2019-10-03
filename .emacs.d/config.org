@@ -3725,6 +3725,122 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   ;; line below instead:
   ;; :hook (eshell-mode-hook . esh-autosuggest-mode))
 #+END_SRC
+** Presentations
+*** Presentation mode
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-presentation-mode-text-scale 4)
+(defvar my-presentation-mode--org-block-background nil)
+
+(defun my-presentation-mode-enter ()
+  (interactive)
+  ;;(load-theme 'base16-one-light t)
+  (text-scale-increase 0)
+  (text-scale-increase my-presentation-mode-text-scale)
+  (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
+  (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold)
+  (set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold)
+  ;;(setq my-presentation-mode--org-block-background (face-attribute 'org-block :background))
+  (setq org-hide-emphasis-markers t)
+  ;;(set-face-attribute 'org-block nil :background "#F0F0F1")
+  )
+
+(defun my-presentation-mode-exit ()
+  (interactive)
+  ;;(load-theme 'base16-oceanicnext t)
+  (text-scale-increase 0)
+  (mapc
+   (lambda (face) (set-face-attribute face nil :height 1.0 :weight 'normal))
+   `(,'org-level-1 ,'org-level-2 ,'org-level-3))
+  (setq org-hide-emphasis-markers nil)
+  ;;(set-face-attribute 'org-block nil :background my-presentation-mode--org-block-background)
+  )
+#+END_SRC
+
+*** Send to terminal mode
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-send-to-term-target nil
+  "The target tern of the my-send-*-to-term")
+
+(defun my-has-major-mode (mode) (lambda (buffer) (with-current-buffer buffer (string= major-mode mode))))
+
+(defun my-send-to-term-reset-target ()
+  (interactive)
+  (setq my-send-to-term-target nil))
+
+(defun my-send-to-term-set-target (&optional target)
+  (interactive
+    (letrec ((terms (seq-filter (my-has-major-mode "term-mode") (buffer-list)))
+             (names (seq-map 'buffer-name terms)))
+      (ivy-read "Select target terminal: " names :require-match t)))
+
+  (setq my-send-to-term-target target)
+  (message "Set target for send-to-term to %s" my-send-to-term-target))
+
+(defun my--send-to-term-sanitize-string (s)
+  (s-replace-regexp "^\n" "" s))
+
+(defun my-send-string-to-term (s)
+  (when (null my-send-to-term-target)
+      (my-send-to-term-set-target))
+
+  (let ((str (s-replace-regexp "^\n" "" (concat s "\n"))))
+    (message "Sending to %s ..." my-send-to-term-target)
+    (process-send-string my-send-to-term-target str)))
+
+(defun my-send-region-to-term (beg end)
+  (interactive "r")
+  (my-send-string-to-term (buffer-substring beg end)))
+
+(defun my-send-buffer-to-term ()
+  (interactive)
+  (my-send-string-to-term (buffer-string)))
+
+(defun my-send-line-to-term ()
+  (interactive)
+  (my-send-string-to-term (thing-at-point 'line t))
+  (next-line))
+
+(defun my-send-paragraph-to-term ()
+  (interactive)
+  (let ((par (thing-at-point 'paragraph t)))
+    (if (and (null par) (not (eobp)))
+        (progn
+          (forward-paragraph)
+          (call-interactively 'my-send-paragraph-to-term))
+      (progn
+        (my-send-string-to-term (thing-at-point 'paragraph t))
+        (let ((pos (1+ (count-lines 1 (point)))))
+          (forward-paragraph)
+          (forward-paragraph)
+          (backward-paragraph)
+          (when (equal pos (1+ (count-lines 1 (point))))
+            (forward-paragraph)))))))
+
+(defvar my-send-to-term-mode-map
+  (let ((map (make-sparse-keymap)))
+    (bind-key "C-c C-b" #'my-send-buffer-to-term map)
+    (bind-key "C-c C-r" #'my-send-region-to-term map)
+    (bind-key "C-c C-l" #'my-send-line-to-term map)
+    (bind-key "C-c C-c" #'my-send-paragraph-to-term map)
+    map))
+
+    (bind-key "C-c C-c" #'my-send-paragraph-to-term my-send-to-term-mode-map)
+
+(define-minor-mode my-send-to-term-mode
+  "Send to term mode"
+  ;; The initial value.
+  :lighter " STM"
+  :global nil)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun my-run-ammonite ()
+  (interactive)
+  (let ((term-name (ansi-term "amm" "scala")))
+    (setq my-send-to-term-target term-name)))
+#+END_SRC
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
 
@@ -3782,30 +3898,3 @@ emacs --insecure
 #+END_SRC
 
 for the package install.
-* Presentations
-** My presentation mode
-
-#+BEGIN_SRC emacs-lisp
-(defvar my-presentation-mode-text-scale 4)
-(defvar my-presentation-mode--org-block-background nil)
-
-(defun my-presentation-mode-enter ()
-  (interactive)
-  (load-theme 'base16-one-light t)
-  (text-scale-increase 0)
-  (text-scale-increase my-presentation-mode-text-scale)
-  (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
-  (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold)
-  (set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold)
-  (setq my-presentation-mode--org-block-background (face-attribute 'org-block :background))
-  (set-face-attribute 'org-block nil :background "#F0F0F1"))
-
-(defun my-presentation-mode-exit ()
-  (interactive)
-  (load-theme 'base16-oceanicnext t)
-  (text-scale-increase 0)
-  (mapc
-   (lambda (face) (set-face-attribute face nil :height 1.0 :weight 'normal))
-   `(,'org-level-1 ,'org-level-2 ,'org-level-3))
-  (set-face-attribute 'org-block nil :background my-presentation-mode--org-block-background))
-#+END_SRC
