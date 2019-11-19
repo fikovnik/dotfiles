@@ -3862,6 +3862,21 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   (let ((term-name (ansi-term "amm" "scala")))
     (setq my-send-to-term-target term-name)))
 #+END_SRC
+*** TODO Scale latex preview in org
+
+- this code should only be enabled in ORG more
+- the hook only in org mode
+
+#+BEGIN_SRC emacs-lisp
+(defun update-org-latex-fragment-scale ()
+  (when (string-equal major-mode "org-mode")
+    (let ((text-scale-factor (expt text-scale-mode-step text-scale-mode-amount)))
+      (plist-put org-format-latex-options :scale (* 2.5 text-scale-factor)))
+    (org-remove-latex-fragment-image-overlays)
+    (org-preview-latex-fragment 16)))
+
+(add-hook 'text-scale-mode-hook 'update-org-latex-fragment-scale)
+#+END_SRC
 * Troubleshooting
 ** Invalid function =org-preserve-local-variables=
 
