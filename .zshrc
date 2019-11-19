@@ -110,3 +110,9 @@ case $(uname) in
     Darwin*) config_osx ;;
     Linux*) config_linux ;;
 esac
+
+[[ -f /usr/bin/thefuck ]] && eval $(thefuck --alias fck)
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/krikava/.sdkman"
+[[ -s "/home/krikava/.sdkman/bin/sdkman-init.sh" ]] && source "/home/krikava/.sdkman/bin/sdkman-init.sh"
