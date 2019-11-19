@@ -3757,9 +3757,13 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
   (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold)
   (set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold)
-  ;;(setq my-presentation-mode--org-block-background (face-attribute 'org-block :background))
+  (setq my-presentation-mode--org-block-background (face-attribute 'org-block :background))
   (setq org-hide-emphasis-markers t)
-  ;;(set-face-attribute 'org-block nil :background "#F0F0F1")
+  (set-face-attribute 'org-block nil :background "#F0F0F1")
+  (bind-key "C-c r" #'org-babel-remove-result org-mode-map)
+  (setq-default prettify-symbols-alist
+                '(("#+BEGIN_SRC"     . "λ")
+                  ("#+END_SRC"       . "λ")))
   )
 
 (defun my-presentation-mode-exit ()
@@ -3770,7 +3774,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
    (lambda (face) (set-face-attribute face nil :height 1.0 :weight 'normal))
    `(,'org-level-1 ,'org-level-2 ,'org-level-3))
   (setq org-hide-emphasis-markers nil)
-  ;;(set-face-attribute 'org-block nil :background my-presentation-mode--org-block-background)
+  (set-face-attribute 'org-block nil :background my-presentation-mode--org-block-background)
   )
 #+END_SRC
 
