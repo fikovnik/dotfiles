@@ -1154,7 +1154,9 @@ Revert buffers when files on disk change
 (use-package base16-theme
   :demand t
   :config
-  (load-theme 'base16-oceanicnext t))
+  (if (display-graphic-p)
+      (load-theme 'base16-one-light t)
+  (load-theme 'base16-oceanicnext t)))
 #+END_SRC
 *** Region selection color
 
