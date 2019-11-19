@@ -1860,11 +1860,6 @@ But, only if I put them there!
 (bind-key "M-Z" #'zap-to-char)
 (bind-key "M-z" #'zap-up-to-char)
 #+END_SRC
-** Polymode
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package polymode)
-#+END_SRC
 
 * Movement and navigation
 ** Generic completion with Ivy
@@ -3038,7 +3033,6 @@ package org-bookmark-heading
 #+END_SRC
 
 *** TODO load lazily
-
 * Languages
 ** General
 *** Documentation with dash
@@ -3429,6 +3423,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   ("\\.Rd\\'" . poly-Rd-mode)
   ("\\.Rmd\\'" . poly-markdown+R-mode))
 #+END_SRC
+
 *** Flycheck settings
 
 #+BEGIN_SRC emacs-lisp
