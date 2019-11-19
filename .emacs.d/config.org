@@ -51,7 +51,6 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 | =M-g=       | Go to char in line                             |
 | =M-u M-g=   | Go to char                                     |
 
-** Rename variables and functions (fikovnik -> my-)
 ** Remove the =init.el= from index tracking
 
 #+BEGIN_SRC sh :tangle no
@@ -64,12 +63,18 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO use =:preable= for functions
 ** TODO use =(executable-find)=
 ** TODO use =:custom-face= to set faces
-** TODO use straight.el
+** TODO download all packages and commit them into the repository
 ** TODO Fix adding new line after { in R mode
-** TODO Use emacs as less pages
 ** TODO polymode
-** TODO switch buffer only for the project
+- how to make it work seamlessly with C-c C-c
+** TODO better company mode configuration
+- [ ] do not suggest so aggressively
+- [ ] do not use enter to accept
+- [ ] support for org-mode and abbrev
+- [ ] hippie expand / abbrev using company mode
+- [ ] possible to suggest based on spelling
 ** TODO company in org mode and abbrev
+** TODO company for file name completion
 ** TODO better ivy keys
 - [ ] mode arrow to enter / exit
 - [ ] ivy tab to show actions
@@ -87,19 +92,25 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 - [ ] org-outline-4 which inherits from outline-4 which inherits from font-lock-comment-face
 - [ ] comments are dark and this makes it ugly
 - [ ] org-verbatim is also too dark
-** TODO in org-mode set the C-A to move at the beginning of the heading if at heading
-- currently it only moves to the beginning of the line - in front of all the stars
-** TODO in hippie expand / abbrev is it possible to add suggestion based on spelling
+- [ ] be able to switch between dark / light color schemes
+- [ ] use the nord scheme - less syntactic highlight
 ** TODO Keyfreq
 ** TODO smerge
 ** TODO Synosaurus
-** TODO Dired collapse https://github.com/Fuco1/dired-hacks/blob/master/dired-collapse.el
-** TODO use a better theme - less syntax highlighting?
+** TODO dired
+- [ ] Dired collapse https://github.com/Fuco1/dired-hacks/blob/master/dired-collapse.el
+- [ ] Diredx
+** TODO fix kill like - I want it to kill the whole sentence
+** TODO describe all killing / moving . transposing key binding
 ** TODO install [[https://github.com/agzam/mw-thesaurus.el][mw-thesaurus]]
 ** TODO install a major mode hydra
 - use it for bibtex for example (org-ref-hydra/body)
 ** TODO configure dot-mode
 ** TODO stop using always-ensure an instead commit packages to a git repo
+** TODO duplicate line in org!
+** TODO better search and replace
+- quickly replace like in sublime
+- replace in multiple files that I pattern select before
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -153,7 +164,7 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** To check
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
-* Preamble
+* Startup
 ** Lexical scoping
 
 I like lexical scoping.
@@ -162,7 +173,6 @@ I like lexical scoping.
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
 
-* Startup
 ** Speed up startup
 
 A few _optimization_ for a faster startup and perhaps a snappier behavior based
