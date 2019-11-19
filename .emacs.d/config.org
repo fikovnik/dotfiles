@@ -2907,6 +2907,22 @@ The following is the _official_ way to fix it:
 #+END_SRC
 
 ** Babel
+*** Scala support
+
+#+BEGIN_SRC emacs-lisp
+(use-package ob-ammonite)
+#+END_SRC
+
+*** tmux support
+
+#+BEGIN_SRC emacs-lisp
+(use-package ob-tmux
+  :custom
+  (org-babel-tmux-session-prefix "ob-")
+  (org-babel-tmux-terminal "st")
+  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e")))
+#+END_SRC
+
 *** General
 
 #+BEGIN_SRC emacs-lisp
@@ -2941,16 +2957,6 @@ The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)
-#+END_SRC
-
-*** tmux support
-
-#+BEGIN_SRC emacs-lisp
-(use-package ob-tmux
-  :custom
-  (org-babel-tmux-session-prefix "ob-")
-  (org-babel-tmux-terminal "st")
-  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e")))
 #+END_SRC
 
 ** [[https://github.com/jkitchin/org-ref/][org-ref]]
@@ -3604,10 +3610,6 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 #+END_SRC
 
 ** Scala
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ob-ammonite)
-#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 ;; Enable scala-mode and sbt-mode
