@@ -1148,20 +1148,51 @@ Revert buffers when files on disk change
 
 * Appearance
 ** Theme
-*** base16-oceanicnext theme
+*** nord theme from doom-theme
 
 #+BEGIN_SRC emacs-lisp
-(use-package base16-theme
-  :demand t
-  :config
-  (if (display-graphic-p)
-      (load-theme 'base16-one-light t)
-  (load-theme 'base16-oceanicnext t)))
+(use-package doom-themes
+  :custom
+  (doom-nord-brighter-modeline t)
+  (doom-nord-padded-modeline t)
+  (doom-nord-light-brighter-modeline t)
+  (doom-nord-light-padded-modeline t))
 #+END_SRC
+
+*** toggle themes
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-themes
+  '((light . doom-nord-light)
+    (dark . doom-nord))
+  "Associate light and dark theme")
+
+(defvar my-theme-current 'dark
+  "Current theme version")
+
+(defun my-theme-toggle ()
+  (interactive)
+  (if (eq my-theme-current 'light)
+      (setq my-theme-current 'dark)
+    (setq my-theme-current 'light))
+  (my-theme-load))
+
+(defun my-theme-load ()
+   (let ((theme (cdr (assoc my-theme-current my-themes))))
+     (load-theme theme t)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(when (display-graphic-p)
+    (setq my-theme-current 'dark))
+
+(my-theme-load)
+#+END_SRC
+
 *** Region selection color
 
 #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'region nil :foreground "black" :background "magenta")
+;(set-face-attribute 'region nil :foreground "black" :background "magenta")
 #+END_SRC
 
 ** Font
