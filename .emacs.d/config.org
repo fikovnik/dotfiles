@@ -2970,6 +2970,7 @@ The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp
 (use-package ob-plantuml
+  :ensure nil
   :custom
   (org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar"))
 #+END_SRC
