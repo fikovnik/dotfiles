@@ -111,6 +111,36 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO better search and replace
 - quickly replace like in sublime
 - replace in multiple files that I pattern select before
+** TODO dot-mode
+** TODO helpful
+https://github.com/Wilfred/helpful
+** TODO undohist
+from: https://www.reddit.com/r/emacs/comments/dyv74e/how_do_you_cope_with_the_lack_of_reliable/
+https://github.com/m2ym/undohist-el/pull/5
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package undohist
+  :straight (:host github :repo "halbtuerke/undohist-el"
+                   :branch "do-not-save-undo-file-for-ignored-files")
+  :defer t
+  :init
+  (autoload 'undohist-initialize "undohist")
+  (undohist-initialize)
+  :config
+  (setq undohist-ignored-files '("\\.gpg\\'" "COMMIT_EDITMSG")))
+#+END_SRC
+or
+#+BEGIN_SRC emacs-lisp
+(advice-add 'undohist-save-1 :before-while
+            (defun undohist-only-save-file-buffers+ (&rest _)
+              (and (buffer-file-name (current-buffer))
+                   (undohist-recover-file-p (buffer-file-name (current-buffer))))))
+
+(setq undohist-ignored-files
+      '("COMMIT_EDITMSG"
+        "\\.gpg\\'"
+        file-remote-p
+        ignoramus-boring-p))
+#+END_SRC
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -164,6 +194,10 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** To check
 https://github.com/milkypostman/powerline
 https://github.com/Fuco1/smartparens
+https://github.com/caisah/emacs.dz/
+https://github.com/andreyorst/dotfiles/tree/master/.config/emacs
+https://github.com/lepisma/rogue/tree/75ab1c3422b409f41daa4c003b931e869eed0914
+- nice org mode setup
 * Startup
 ** Lexical scoping
 
@@ -2792,6 +2826,8 @@ https://github.com/jwiegley/dot-emacs/blob/master/init.el#L1268
   ("C-c g" . magit-status))
 #+END_SRC
 
+*** TODO add to some hydra magit blame
+
 ** Highlight chnages in files
 
 #+BEGIN_SRC emacs-lisp
@@ -3092,6 +3128,35 @@ package org-bookmark-heading
 #+END_SRC
 
 *** TODO load lazily
+** TODO ox-latex
+
+from: https://www.reddit.com/r/emacs/comments/dvpl28/emacs_is_amazing/f7e02r8?utm_source=share&utm_medium=web2x
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ox-latex
+  :defer t
+  :config
+  (defun my-org-export-latex-to-pdf-and-open (a s v b)
+    "suppresses prompt to reread pdf file after re-exporting.
+this is acheived through let-binding `revert-without-query'."
+    (if a (org-latex-export-to-pdf t s v b)
+      (let* ((filename
+              (org-latex-export-to-pdf nil s v b))
+             (revert-without-query (list filename)))
+        (org-open-file filename))))
+
+  (defun my-reinstall-org-export-latex-stuff ()
+    "replace the lambda function from org-export backend with my function"
+    (require 'cl-lib)
+    (setf (cl-caddar (cl-member-if (lambda (elt)
+                                     (eq (car elt) 111))
+                                   (caddr (seq-find (lambda (elt)
+                                                      (and (listp elt)
+                                                           (eq (car elt) ?l)
+                                                           (string= "Export to LaTeX" (cadr elt))))
+                                                    (org-export-get-backend 'latex)))))
+          #'my-org-export-latex-to-pdf-and-open))
+  (my-reinstall-org-export-latex-stuff))
+#+END_SRC
 * Languages
 ** General
 *** Documentation with dash
