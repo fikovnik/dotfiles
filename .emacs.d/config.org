@@ -3158,7 +3158,7 @@ this is acheived through let-binding `revert-without-query'."
   (my-reinstall-org-export-latex-stuff))
 #+END_SRC
 * Languages
-** General
+** All
 *** Documentation with dash
 
 #+BEGIN_SRC emacs-lisp
@@ -3385,6 +3385,23 @@ rm $output
 https://github.com/MaskRay/ccls/wiki/eglot
 *** TODO hierarchy
 https://github.com/MaskRay/ccls/wiki/eglot
+** Config
+
+#+BEGIN_SRC emacs-lisp
+(use-package conf-mode
+  :mode ("mbsyncrc\\'" "msmtprc\\'" "\\.cnf\\'"
+         "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
+#+END_SRC
+
+** CSV
+
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode
+  :mode "\\.csv\\'"
+  :custom
+  (csv-separators '("," "	" ";" "|")))
+#+END_SRC
+
 ** TODO Elisp
 
 We set up smartparens above, but when it’s enabled in strict mode for lisps it
@@ -3435,125 +3452,6 @@ enabled. M-<delete> is also incredibly useful.
   ("\\.eco\\'"        . web-mode)
   ("\\.ejs\\'"        . web-mode)
   ("\\.djhtml\\'"     . web-mode))
-#+END_SRC
-
-** TODO scala
-- using ensime?
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
-(sp-local-pair 'scala-mode "{" nil :post-handlers '(("||\n[i]" "RET") ("| " "SPC")))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun sp-restrict-c (sym)
-  "Smartparens restriction on `SYM' for C-derived parenthesis."
-  (sp-restrict-to-pairs-interactive "{([" sym))
-
-(bind-key "s-<delete>" (sp-restrict-c 'sp-kill-sexp) scala-mode-map)
-(bind-key "s-<backspace>" (sp-restrict-c 'sp-backward-kill-sexp) scala-mode-map)
-(bind-key "s-<home>" (sp-restrict-c 'sp-beginning-of-sexp) scala-mode-map)
-(bind-key "s-<end>" (sp-restrict-c 'sp-end-of-sexp) scala-mode-map)
-#+END_SRC
-
-Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps…
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(bind-key "s-{" 'sp-rewrap-sexp smartparens-mode-map)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(require 'ensime-expand-region)
-
-(add-hook 'scala-mode-hook
-          (lambda ()
-            (show-paren-mode)
-            (smartparens-mode)
-            (yas-minor-mode)
-            (git-gutter-mode)
-            (company-mode)
-            (ensime-mode)
-            (scala-mode:goto-start-of-code)))
-
-#+END_SRC
-
-** R
-*** ESS
-#+BEGIN_SRC emacs-lisp
-(use-package ess
-  :mode (("/R/.*\\.q\\'"       . R-mode)
-         ("\\.[rR]\\'"         . R-mode)
-         ("\\.[rR]nw\\'"       . Rnw-mode)
-         ("\\.[sS]nw\\'"       . Snw-mode)
-         ("\\.[rR]profile\\'"  . R-mode)
-         ("NAMESPACE\\'"       . R-mode)
-         ("CITATION\\'"        . R-mode)
-         ("\\.Rd\\'"           . Rd-mode))
-  :commands R
-  :hook (ess-mode . subword-mode)
-  :custom
-  (ess-default-style 'RStudio)
-  (ess-indent-level 4)
-  (ess-nuke-trailing-whitespace-p t)
-  (ess-tab-complete-in-script t)
-  (ess-build-tags-command "system(\"~/bin/rtags.R '%s' '%s'\")")
-  (ess-indent-with-fancy-comments nil)
-  (ess-R-argument-suffix "=")
-  (ess-smart-S-assign-key nil)
-  (ess-R-font-lock-keywords
-   '((ess-R-fl-keyword:fun-defs . t)
-     (ess-R-fl-keyword:modifiers . t)
-     (ess-R-fl-keyword:keywords . t)
-     (ess-R-fl-keyword:assign-ops . t)
-     (ess-R-fl-keyword:constants . t)
-     (ess-R-fl-keyword:F&T . t)
-     (ess-fl-keyword:fun-calls . t)
-     (ess-fl-keyword:numbers . t)
-     (ess-fl-keyword:operators)
-     (ess-fl-keyword:delimiters)
-     (ess-fl-keyword:=))))
-#+END_SRC
-
-*** Evaluate last function call with =C-x C-e=
-
-#+BEGIN_SRC emacs-lisp
-(use-package ess-r-mode
-  :preface
-  (defun my-r-eval-last-function-call ()
-    "Evaluate the last function call (does not work with infix
-     notation) The cursor should be poisitioned at the end of the
-     call, i.e. after the closing paren."
-    (interactive)
-    (unless (string= (buffer-substring-no-properties (- (point) 1) (point)) ")")
-      (error "Not at the end of a function call"))
-    (let ((end (point)))
-      (save-excursion
-        ;; go to the beginning of the function argument list
-        (backward-list)
-        ;; go to the beginning of the function name
-        (backward-sexp)
-        (ess-eval-region (point) end t (format "Eval call to %s" (thing-at-point 'symbol))))))
-  :ensure ess
-  :bind
-  (:map ess-r-mode-map
-        ("C-x C-e" . my-r-eval-last-function-call)))
-#+END_SRC
-
-*** Poly mode [[https://github.com/polymode/poly-R][poly-R]]
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package poly-R
-  :mode
-  ("\\.Rd\\'" . poly-Rd-mode)
-  ("\\.Rmd\\'" . poly-markdown+R-mode))
-#+END_SRC
-
-*** Flycheck settings
-
-#+BEGIN_SRC emacs-lisp
-(eval-after-load "flycheck"
-  (lambda ()
-    (setq flycheck-lintr-linters "with_defaults(infix_spaces_linter=NULL, line_length_linter=NULL)")))
 #+END_SRC
 
 ** Latex
@@ -3667,37 +3565,6 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
                '(company-reftex-labels company-reftex-citations)))
 #+END_SRC
 
-** Config
-
-#+BEGIN_SRC emacs-lisp
-(use-package conf-mode
-  :mode ("mbsyncrc\\'" "msmtprc\\'" "\\.cnf\\'"
-         "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
-#+END_SRC
-
-** CSV
-
-#+BEGIN_SRC emacs-lisp
-(use-package csv-mode
-  :mode "\\.csv\\'"
-  :custom
-  (csv-separators '("," "	" ";" "|")))
-#+END_SRC
-
-** TOML
-
-#+BEGIN_SRC emacs-lisp
-(use-package toml-mode
-  :mode ("\\.toml\\'" "Cargo.lock\\'"))
-#+END_SRC
-
-** YAML
-
-#+BEGIN_SRC emacs-lisp
-(use-package yaml-mode
-  :mode ("\\.yaml\\'" "\\.yml\\'"))
-#+END_SRC
-
 ** Markdown
 
 #+BEGIN_SRC emacs-lisp
@@ -3717,14 +3584,83 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 (use-package poly-markdown
   :mode "\\.md\\'")
 #+END_SRC
-** SML
+** R
+*** ESS
+#+BEGIN_SRC emacs-lisp
+(use-package ess
+  :mode (("/R/.*\\.q\\'"       . R-mode)
+         ("\\.[rR]\\'"         . R-mode)
+         ("\\.[rR]nw\\'"       . Rnw-mode)
+         ("\\.[sS]nw\\'"       . Snw-mode)
+         ("\\.[rR]profile\\'"  . R-mode)
+         ("NAMESPACE\\'"       . R-mode)
+         ("CITATION\\'"        . R-mode)
+         ("\\.Rd\\'"           . Rd-mode))
+  :commands R
+  :hook (ess-mode . subword-mode)
+  :custom
+  (ess-default-style 'RStudio)
+  (ess-indent-level 4)
+  (ess-nuke-trailing-whitespace-p t)
+  (ess-tab-complete-in-script t)
+  (ess-build-tags-command "system(\"~/bin/rtags.R '%s' '%s'\")")
+  (ess-indent-with-fancy-comments nil)
+  (ess-R-argument-suffix "=")
+  (ess-smart-S-assign-key nil)
+  (ess-R-font-lock-keywords
+   '((ess-R-fl-keyword:fun-defs . t)
+     (ess-R-fl-keyword:modifiers . t)
+     (ess-R-fl-keyword:keywords . t)
+     (ess-R-fl-keyword:assign-ops . t)
+     (ess-R-fl-keyword:constants . t)
+     (ess-R-fl-keyword:F&T . t)
+     (ess-fl-keyword:fun-calls . t)
+     (ess-fl-keyword:numbers . t)
+     (ess-fl-keyword:operators)
+     (ess-fl-keyword:delimiters)
+     (ess-fl-keyword:=))))
+#+END_SRC
+
+*** Evaluate last function call with =C-x C-e=
 
 #+BEGIN_SRC emacs-lisp
-(use-package sml-mode
-  :custom
-  (sml-program-name "smlnj")
+(use-package ess-r-mode
+  :preface
+  (defun my-r-eval-last-function-call ()
+    "Evaluate the last function call (does not work with infix
+     notation) The cursor should be poisitioned at the end of the
+     call, i.e. after the closing paren."
+    (interactive)
+    (unless (string= (buffer-substring-no-properties (- (point) 1) (point)) ")")
+      (error "Not at the end of a function call"))
+    (let ((end (point)))
+      (save-excursion
+        ;; go to the beginning of the function argument list
+        (backward-list)
+        ;; go to the beginning of the function name
+        (backward-sexp)
+        (ess-eval-region (point) end t (format "Eval call to %s" (thing-at-point 'symbol))))))
+  :ensure ess
+  :bind
+  (:map ess-r-mode-map
+        ("C-x C-e" . my-r-eval-last-function-call)))
+#+END_SRC
+
+*** Poly mode [[https://github.com/polymode/poly-R][poly-R]]
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package poly-R
   :mode
-  ("\\.sml\\'" . sml-mode))
+  ("\\.Rd\\'" . poly-Rd-mode)
+  ("\\.Rmd\\'" . poly-markdown+R-mode))
+#+END_SRC
+
+*** Flycheck settings
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "flycheck"
+  (lambda ()
+    (setq flycheck-lintr-linters "with_defaults(infix_spaces_linter=NULL, line_length_linter=NULL)")))
 #+END_SRC
 
 ** Scala
@@ -3743,6 +3679,69 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
    'minibuffer-complete-word
    'self-insert-command
    minibuffer-local-completion-map))
+#+END_SRC
+
+*** TODO additional configuration (based on ensime)
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
+(sp-local-pair 'scala-mode "{" nil :post-handlers '(("||\n[i]" "RET") ("| " "SPC")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun sp-restrict-c (sym)
+  "Smartparens restriction on `SYM' for C-derived parenthesis."
+  (sp-restrict-to-pairs-interactive "{([" sym))
+
+(bind-key "s-<delete>" (sp-restrict-c 'sp-kill-sexp) scala-mode-map)
+(bind-key "s-<backspace>" (sp-restrict-c 'sp-backward-kill-sexp) scala-mode-map)
+(bind-key "s-<home>" (sp-restrict-c 'sp-beginning-of-sexp) scala-mode-map)
+(bind-key "s-<end>" (sp-restrict-c 'sp-end-of-sexp) scala-mode-map)
+#+END_SRC
+
+Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps…
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(bind-key "s-{" 'sp-rewrap-sexp smartparens-mode-map)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'ensime-expand-region)
+
+(add-hook 'scala-mode-hook
+          (lambda ()
+            (show-paren-mode)
+            (smartparens-mode)
+            (yas-minor-mode)
+            (git-gutter-mode)
+            (company-mode)
+            (ensime-mode)
+            (scala-mode:goto-start-of-code)))
+
+#+END_SRC
+
+** SML
+
+#+BEGIN_SRC emacs-lisp
+(use-package sml-mode
+  :custom
+  (sml-program-name "smlnj")
+  :mode
+  ("\\.sml\\'" . sml-mode))
+#+END_SRC
+
+** TOML
+
+#+BEGIN_SRC emacs-lisp
+(use-package toml-mode
+  :mode ("\\.toml\\'" "Cargo.lock\\'"))
+#+END_SRC
+
+** YAML
+
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :mode ("\\.yaml\\'" "\\.yml\\'"))
 #+END_SRC
 
 * Applications
