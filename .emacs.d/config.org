@@ -3386,6 +3386,13 @@ rm $output
 
 (add-to-list 'flycheck-checkers 'my-latex)
 #+END_SRC
+** Agda
+
+#+BEGIN_SRC emacs-lisp
+(use-package agda2-mode
+  :load-path (lambda () (file-name-directory (shell-command-to-string "agda-mode locate")))
+  :mode ("\\.agda\\'" "\\.lagda\\'"))
+#+END_SRC
 
 ** C/C++
 *** TODO completion
