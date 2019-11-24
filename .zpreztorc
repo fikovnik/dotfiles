@@ -42,7 +42,8 @@ zstyle ':prezto:load' pmodule \
   'prompt' \
   'archive' \
   'autosuggestions' \
-  'fasd'
+  'fasd' \
+  'rsync'
   
 #
 # Autosuggestions
