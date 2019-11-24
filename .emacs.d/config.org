@@ -1187,10 +1187,18 @@ Revert buffers when files on disk change
 #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
   :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
+
   (doom-nord-brighter-modeline t)
   (doom-nord-padded-modeline t)
+  (doom-nord-region-highlight 'frost)
+
+  (doom-nord-light-eregion-highlight 'frost)
   (doom-nord-light-brighter-modeline t)
-  (doom-nord-light-padded-modeline t))
+  (doom-nord-light-padded-modeline t)
+  :config
+  (doom-themes-org-config))
 #+END_SRC
 
 *** toggle themes
@@ -1201,18 +1209,17 @@ Revert buffers when files on disk change
     (dark . doom-nord))
   "Associate light and dark theme")
 
-(defvar my-theme-current 'dark
-  "Current theme version")
+(defvar my-theme-is-dark t
+  "Use dark theme")
 
 (defun my-theme-toggle ()
   (interactive)
-  (if (eq my-theme-current 'light)
-      (setq my-theme-current 'dark)
-    (setq my-theme-current 'light))
+  (setq my-theme-is-dark (not my-theme-is-dark))
   (my-theme-load))
 
 (defun my-theme-load ()
-   (let ((theme (cdr (assoc my-theme-current my-themes))))
+   (let* ((variant (if my-theme-is-dark 'dark 'light))
+         (theme (cdr (assoc variant my-themes))))
      (load-theme theme t)))
 #+END_SRC
 
