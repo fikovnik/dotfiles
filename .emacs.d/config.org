@@ -56,7 +56,7 @@ Emacs defines a a few [[https://www.gnu.org/software/emacs/manual/html%5Fnode/el
 #+BEGIN_SRC sh :tangle no
 config update-index --assume-unchanged ~/.emacs.d/init.el
 #+END_SRC
-
+* Work in progress
 ** TODO describe the idea behind this configuration
 ** TODO Show matching function
 https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off-screen/
@@ -100,6 +100,110 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO dired
 - [ ] Dired collapse https://github.com/Fuco1/dired-hacks/blob/master/dired-collapse.el
 - [ ] Diredx
+- [ ] hydra
+
+#+BEGIN_SRC elisp
+(defhydra hydra-dired (:hint nil :color pink)
+  "
+_+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
+_C_opy             _O_ view other   _U_nmark all       _)_ omit-mode      _$_ hide-subdir    C-x C-q : edit
+_D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
+_R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
+_Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
+_S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra   \\ flyspell
+_r_sync            ^ ^              ^ ^                ^ ^                _?_ summary
+_z_ compress-file  _A_ find regexp
+_Z_ compress       _Q_ repl regexp
+
+T - tag prefix
+"
+  ("\\" dired-do-ispell)
+  ("(" dired-hide-details-mode)
+  (")" dired-omit-mode)
+  ("+" dired-create-directory)
+  ("=" diredp-ediff)         ;; smart diff
+  ("?" dired-summary)
+  ("$" diredp-hide-subdir-nomove)
+  ("A" dired-do-find-regexp)
+  ("C" dired-do-copy)        ;; Copy all marked files
+  ("D" dired-do-delete)
+  ("E" dired-mark-extension)
+  ("e" dired-ediff-files)
+  ("F" dired-do-find-marked-files)
+  ("G" dired-do-chgrp)
+  ("g" revert-buffer)        ;; read all directories again (refresh)
+  ("i" dired-maybe-insert-subdir)
+  ("l" dired-do-redisplay)   ;; relist the marked or singel directory
+  ("M" dired-do-chmod)
+  ("m" dired-mark)
+  ("O" dired-display-file)
+  ("o" dired-find-file-other-window)
+  ("Q" dired-do-find-regexp-and-replace)
+  ("R" dired-do-rename)
+  ("r" dired-do-rsynch)
+  ("S" dired-do-symlink)
+  ("s" dired-sort-toggle-or-edit)
+  ("t" dired-toggle-marks)
+  ("U" dired-unmark-all-marks)
+  ("u" dired-unmark)
+  ("v" dired-view-file)      ;; q to exit, s to search, = gets line #
+  ("w" dired-kill-subdir)
+  ("Y" dired-do-relsymlink)
+  ("z" diredp-compress-this-file)
+  ("Z" dired-do-compress)
+  ("q" nil)
+  ("." nil :color blue))
+
+(define-key dired-mode-map "." 'hydra-dired/body)
+#+END_SRC
+
+using
+
+#+BEGIN_SRC elisp
+(spacemacs|define-transient-state helm-navigation
+        :title "Helm Transient State"
+        :doc "
+[_j_/_k_]  next/prev candidate  [_v_]^^     persistent action     [_e_]^^    edit occurrences
+[_h_/_l_]  prev/next source     [_1_.._0_]  action 1..10          [_t_/_T_]  toggle visible/all mark
+[_q_]^^    quit                 [_a_]^^     action selection pg"
+        :foreign-keys run
+        :on-enter (spacemacs//helm-navigation-ms-on-enter)
+        :on-exit  (spacemacs//helm-navigation-ms-on-exit)
+        :bindings
+         ("1" spacemacs/helm-action-1 :exit t)
+         ("2" spacemacs/helm-action-2 :exit t)
+         ("3" spacemacs/helm-action-3 :exit t)
+         ("4" spacemacs/helm-action-4 :exit t)
+         ("5" spacemacs/helm-action-5 :exit t)
+         ("6" spacemacs/helm-action-6 :exit t)
+         ("7" spacemacs/helm-action-7 :exit t)
+         ("8" spacemacs/helm-action-8 :exit t)
+         ("9" spacemacs/helm-action-9 :exit t)
+         ("0" spacemacs/helm-action-10 :exit t)
+        ("<tab>" helm-select-action :exit t)
+        ("TAB" helm-select-action :exit t)
+        ("<RET>" helm-maybe-exit-minibuffer :exit t)
+        ("?" nil :doc (spacemacs//helm-navigation-ms-full-doc))
+        ("a" helm-select-action :post (spacemacs//helm-navigation-ms-set-face))
+        ;; ("?" nil :doc (spacemacs//helm-navigation-ms-full-doc))
+        ("a" spacemacs/helm-micro-state-select-action)
+        ("e" spacemacs/helm-edit)
+        ("g" helm-beginning-of-buffer)
+        ("G" helm-end-of-buffer)
+         ("h" helm-previous-source)
+         ("j" helm-next-line)
+         ("k" helm-previous-line)
+         ("l" helm-next-source)
+         ("q" nil :exit t)
+        ("t" helm-toggle-visible-mark)
+        ("T" helm-toggle-all-marks)
+        ("v" helm-execute-persistent-action))
+      (define-key helm-map (kbd "M-SPC")
+        'spacemacs/helm-navigation-transient-state/body)
+      (define-key helm-map (kbd "s-M-SPC")
+        'spacemacs/helm-navigation-transient-state/body)
+#+END_SRC
+
 ** TODO fix kill like - I want it to kill the whole sentence
 ** TODO describe all killing / moving . transposing key binding
 ** TODO install [[https://github.com/agzam/mw-thesaurus.el][mw-thesaurus]]
@@ -108,6 +212,9 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO configure dot-mode
 ** TODO stop using always-ensure an instead commit packages to a git repo
 ** TODO duplicate line in org!
+- at heading it should move heading
+- in other text it should be just simple moving/duplication
+
 ** TODO better search and replace
 - quickly replace like in sublime
 - replace in multiple files that I pattern select before
@@ -141,6 +248,33 @@ or
         file-remote-p
         ignoramus-boring-p))
 #+END_SRC
+** TODO tmux / vterm integration
+- either use vterm in GUI Emacs
+- or install [[https://github.com/syohex/emacs-emamux/][emamux]] to work with emacs from tmux
+** TODO Fix the project / directory file search in emacs
+
+captured on: [2019-07-25 Thu 17:54]
+- use counsel-fzf / counsel-jump-file
+- starts from projectile root or from current folder
+- with universal argument starts from current folder
+
+** TODO emacs - how can I quickly create a new window layout with an empty buffer?
+
+captured on: [2019-07-30 Tue 11:37]
+
+I have some window layout and now I need to try something completely new (re builder).
+How can I quickly create a new layout - with an empty buffer (scratch)?
+And then come back?
+
+** TODO Archive TODO from agenda
+captured on: [2019-08-03 Sat 18:55]
+- https://emacs.stackexchange.com/questions/29502/archive-todos-from-org-agenda
+- https://www.reddit.com/r/orgmode/comments/9kunnv/archiving_practices/
+** TODO org-hydra
+
+captured on: [2019-08-03 Sat 18:56]
+- https://github.com/abo-abo/hydra/wiki/Org-agenda
+
 * Sources
 ** TODO clean and describe
 *** TODO https://github.com/yiufung/dot-emacs/blob/master/init.el
@@ -198,6 +332,13 @@ https://github.com/caisah/emacs.dz/
 https://github.com/andreyorst/dotfiles/tree/master/.config/emacs
 https://github.com/lepisma/rogue/tree/75ab1c3422b409f41daa4c003b931e869eed0914
 - nice org mode setup
+** TODO Check Lupan's https://lupan.pl/dotemacs/
+
+** TODO Check Demian's emacs configuration
+
+captured on: [2019-07-07 Sun 13:10]
+https://github.com/DamienCassou/emacs.d
+
 * Startup
 ** Lexical scoping
 
@@ -3860,10 +4001,12 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 #+BEGIN_SRC emacs-lisp
 (defvar my-presentation-mode-text-scale 4)
 (defvar my-presentation-mode--org-block-background nil)
+(defvar my-presentation-mode--theme my-theme-is-dark)
 
 (defun my-presentation-mode-enter ()
   (interactive)
-  ;;(load-theme 'base16-one-light t)
+  (setq my-theme-is-dark nil)
+  (my-theme-load)
   (text-scale-increase 0)
   (text-scale-increase my-presentation-mode-text-scale)
   (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
@@ -3871,16 +4014,20 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   (set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold)
   (setq my-presentation-mode--org-block-background (face-attribute 'org-block :background))
   (setq org-hide-emphasis-markers t)
-  (set-face-attribute 'org-block nil :background "#F0F0F1")
+  ;(set-face-attribute 'org-block nil :background "#F0F0F1")
   (bind-key "C-c r" #'org-babel-remove-result org-mode-map)
   (setq-default prettify-symbols-alist
                 '(("#+BEGIN_SRC"     . "λ")
                   ("#+END_SRC"       . "λ")))
+  (prettify-symbols-mode t)
+  (setq-local org-pretty-entities t)
+  (org-toggle-pretty-entities)
   )
 
 (defun my-presentation-mode-exit ()
   (interactive)
-  ;;(load-theme 'base16-oceanicnext t)
+  (setq my-theme-is-dark my-presentation-mode--theme)
+  (my-theme-load)
   (text-scale-increase 0)
   (mapc
    (lambda (face) (set-face-attribute face nil :height 1.0 :weight 'normal))
