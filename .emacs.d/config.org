@@ -1834,7 +1834,7 @@ return =u= as the keybinding for expand more region instead of ===.
   (company-dabbrev-downcase nil)
   (company-dabbrev-ignore-case t)
   (company-dabbrev-other-buffers 'all)
-  (company-idle-delay 0.1)
+  (company-idle-delay 0.5)
   (company-minimum-prefix-length 2)
   (company-show-numbers t)
   (company-selection-wrap-around t)
@@ -1845,10 +1845,11 @@ return =u= as the keybinding for expand more region instead of ===.
   :bind (:map company-active-map
               ("C-j" . company-complete-selection)
               ("RET" . nil)
+              ([return] . nil)
               ("C-n" . company-select-next)
               ("C-p" . company-select-previous)
-              ([tab] . counsel-company)
-              ("TAB" . counsel-company)))
+              ([tab] . nil)
+              ("TAB" . nil)))
 #+END_SRC
 
 **** [[https://github.com/expez/company-quickhelp][company-quick-help]]
