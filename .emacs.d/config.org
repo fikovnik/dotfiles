@@ -68,10 +68,11 @@ https://with-emacs.com/posts/editing/show-matching-lines-when-parentheses-go-off
 ** TODO polymode
 - how to make it work seamlessly with C-c C-c
 ** TODO better company mode configuration
-- [ ] do not suggest so aggressively
-- [ ] do not use enter to accept
-- [ ] support for org-mode and abbrev
+- [X] do not suggest so aggressively
+- [X] do not use enter to accept
+- [X] support for org-mode and abbrev
 - [ ] hippie expand / abbrev using company mode
+  - this is not supported out of the box
 - [ ] possible to suggest based on spelling
 ** TODO company in org mode and abbrev
 ** TODO company for file name completion
@@ -1822,10 +1823,17 @@ return =u= as the keybinding for expand more region instead of ===.
   :diminish (company-mode . "AC")
   :commands (company-mode company-indent-or-complete-common)
   :custom
-  (company-dabbrev-ignore-case t)
-  (company-dabbrev-code-ignore-case t)
-  (company-dabbrev-downcase nil)
+  (company-backends
+   '(company-dabbrev
+     company-capf
+     company-files
+     company-bbdb
+     (company-dabbrev-code company-gtags company-etags company-keywords)))
+  (company-dabbrev-code-ignore-case nil)
   (company-dabbrev-code-other-buffers t)
+  (company-dabbrev-downcase nil)
+  (company-dabbrev-ignore-case t)
+  (company-dabbrev-other-buffers 'all)
   (company-idle-delay 0.1)
   (company-minimum-prefix-length 2)
   (company-show-numbers t)
@@ -1851,6 +1859,7 @@ return =u= as the keybinding for expand more region instead of ===.
   :bind (:map company-active-map
               ("C-c ?" . company-quickhelp-manual-begin)))
 #+END_SRC
+
 *** Abbrevs
 
 #+BEGIN_SRC emacs-lisp
@@ -3707,7 +3716,7 @@ enabled. M-<delete> is also incredibly useful.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company-auctex
-  :after tex
+  :after (company tex)
   :demand t
   :config
   (add-to-list 'company-backends
@@ -3716,7 +3725,7 @@ enabled. M-<delete> is also incredibly useful.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company-reftex
-  :after (tex reftex)
+  :after (company tex reftex)
   :demand t
   :config
   (add-to-list 'company-backends
