@@ -1819,7 +1819,6 @@ return =u= as the keybinding for expand more region instead of ===.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :defer 2
   :diminish (company-mode . "AC")
   :commands (company-mode company-indent-or-complete-common)
   :custom
@@ -1836,6 +1835,10 @@ return =u= as the keybinding for expand more region instead of ===.
   :hook
   (after-init . global-company-mode)
   :bind (:map company-active-map
+              ("C-j" . company-complete-selection)
+              ("RET" . nil)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
               ([tab] . counsel-company)
               ("TAB" . counsel-company)))
 #+END_SRC
