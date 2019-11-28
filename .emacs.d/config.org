@@ -1343,16 +1343,27 @@ Revert buffers when files on disk change
   (doom-themes-org-config))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(defun my-theme--doom-nord-patch ()
+  (with-eval-after-load 'ivy
+      (set-face-foreground 'ivy-current-match "#ffffff")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun my-theme--doom-nord-light-patch())
+#+END_SRC
 *** toggle themes
 
 #+BEGIN_SRC emacs-lisp
-(defvar my-themes
-  '((light . doom-nord-light)
-    (dark . doom-nord))
+(defvar my-themes nil
   "Associate light and dark theme")
 
 (defvar my-theme-is-dark t
   "Use dark theme")
+
+(setq my-themes
+      '((light . (doom-nord-light my-theme--doom-nord-light-patch))
+        (dark . (doom-nord my-theme--doom-nord-patch))))
 
 (defun my-theme-toggle ()
   (interactive)
@@ -1360,9 +1371,13 @@ Revert buffers when files on disk change
   (my-theme-load))
 
 (defun my-theme-load ()
-   (let* ((variant (if my-theme-is-dark 'dark 'light))
-         (theme (cdr (assoc variant my-themes))))
-     (load-theme theme t)))
+  (interactive)
+  (let* ((variant (if my-theme-is-dark 'dark 'light))
+         (theme (cdr (assoc variant my-themes)))
+         (theme-name (car theme))
+         (theme-patch-fun (cadr theme)))
+    (load-theme theme-name t)
+    (funcall theme-patch-fun)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
