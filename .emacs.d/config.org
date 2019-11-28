@@ -3077,6 +3077,7 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-imenu-depth 8)
   (org-latex-prefer-user-labels t)
   (org-log-done t)
+  (org-log-done-with-time nil)
   (org-log-into-drawer t)
   (org-log-reschedule 'time)
   (org-refile-active-region-within-subtree t)
