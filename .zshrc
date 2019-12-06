@@ -127,5 +127,8 @@ esac
 export SDKMAN_DIR="/home/krikava/.sdkman"
 [[ -s "/home/krikava/.sdkman/bin/sdkman-init.sh" ]] && source "/home/krikava/.sdkman/bin/sdkman-init.sh"
 
+# git extras
+[[ -f ~/.local/share/zsh/git-extras-completion.zsh ]] && source ~/.local/share/zsh/git-extras-completion.zsh
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
