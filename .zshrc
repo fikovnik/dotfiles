@@ -58,6 +58,8 @@ alias e="emacsclient -t"
 alias vi=vim
 alias emacs='emacs -nw'
 alias magit='emacsclient -nw -e "(magit-status)"'
+command -v exa >/dev/null 2>&1 && alias ls='exa --group-directories-first --color=auto'
+command -v bat >/dev/null 2>&1 && alias cat=bat
 
 # LESS
 export LESS='-F -g -i -M -R -S -w -X -z-4'
