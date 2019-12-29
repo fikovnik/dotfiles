@@ -1,5 +1,5 @@
 rofi.lines: 15
-rofi.font: DejaVu Sans Mono 9
+rofi.font: DejaVu Sans Mono 12
 rofi.terminal: st
 rofi.matching: fuzzy
 rofi.location: 2

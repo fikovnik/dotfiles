@@ -5,6 +5,6 @@
 # gtkrc file instead (/home/krikava/.config/GIMP/2.10/gtkrc).
 
 include "/usr/share/gimp/2.0/themes/System/gtkrc"
-include "/home/krikava/.config/GIMP/2.10/gtkrc"
+include "/etc/gimp/2.0/gtkrc"
 
 # end of themerc
