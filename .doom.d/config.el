@@ -9,10 +9,14 @@
 ;; ;; - https://github.com/forrestchang/.doom.d
 ;; ;; - and https://github.com/search?l=Emacs+Lisp&o=desc&q=%22.doom.d%22&s=stars&type=Repositories
 
-
 (setq display-line-numbers-type t
       deft-directory (expand-file-name "~/Notes")
       deft-recursive t
+      doom-localleader-key ","
+      doom-localleader-alt-key "M-,"
+      doom-font (font-spec :family "dejavu sans mono" :size 18)
+      doom-big-font (font-spec :family "dejavu sans mono" :size 18)
+      doom-theme 'doom-one
       evil-want-fine-undo t
       org-directory (expand-file-name "~/Notes")    ; must be set before org is loaded
       user-full-name "Filip Krikava"
@@ -23,18 +27,26 @@
 (setq-default evil-shift-width 2
               tab-width 2)
 
-(setq doom-localleader-key ","
-      doom-localleader-alt-key "M-,"
-      doom-font (font-spec :family "dejavu sans mono" :size 18)
-      doom-big-font (font-spec :family "dejavu sans mono" :size 18)
-      doom-theme 'doom-one)
+(after! company
+  (setq company-idle-delay 0.1
+        company-show-numbers t
+        company-selection-wrap-around t)
+
+  (map!
+   :map company-active-map
+   "C-j" #'company-complete-selection ; has to be done explicitly because of evil
+   "RET" nil
+   [return] nil))
+
+(after! dash
+  (dash-enable-font-lock))
 
 (after! doom-modeline
   (doom-modeline-def-modeline 'main
     '(bar window-number modals matches buffer-info remote-host buffer-position selection-info)
     '(objed-state misc-info persp-name irc mu4e github debug input-method buffer-encoding lsp major-mode process vcs checker))
 
- (doom-modeline-def-modeline 'special
+  (doom-modeline-def-modeline 'special
     '(bar window-number modals matches buffer-info-simple buffer-position selection-info)
     '(objed-state misc-info persp-name debug input-method irc-buffers buffer-encoding lsp major-mode process checker))
 
@@ -42,13 +54,60 @@
     '(bar window-number modals buffer-default-directory)
     '(misc-info mu4e github debug battery " " major-mode process)))
 
-(after! web-mode
-  (add-hook 'web-mode-hook #'flycheck-mode)
+(after! evil
+  ;; this makes the Y/P work the same as in vim
+  (evil-put-command-property 'evil-yank-line :motion 'evil-line))
 
-  (setq web-mode-markup-indent-offset 2  ; Indentation
-        web-mode-code-indent-offset 2
-        web-mode-enable-auto-quoting nil ; disbale adding "" after an =
-        web-mode-auto-close-style 2))
+(after! ivy
+  (defun my--ivy-is-directory-p ()
+    (and
+     (> ivy--length 0)
+     (not (string= (ivy-state-current ivy-last) "./"))
+     (not (null (ivy-expand-file-if-directory (ivy-state-current ivy-last))))))
+
+  (defun my--ivy-enter-directory-or-insert ()
+    (interactive)
+    (if (my--ivy-is-directory-p)
+        (counsel-down-directory)
+      (progn
+        (let ((last-input (ivy--input)))
+          (ivy-insert-current)
+          (when (string= last-input (ivy--input))
+            (ivy-call))))))
+
+  (defun my--ivy-other-window-action (file-name)
+    "Opens the current candidate in another window."
+    (select-window
+     (with-ivy-window
+       (find-file-other-window (expand-file-name file-name (ivy-state-directory ivy-last)))
+       (selected-window))))
+
+  ;; M-o show action list
+  ;; C-' ivy-avy
+  ;; C-M-m ivy-call - does the action, but does not exit ivy
+  ;; C-M-o like M-o but does not quit
+  ;; C-M-n/p cobines C-n/p and C-M-m
+  (map! :map ivy-minibuffer-map
+        "C-j" #'ivy-alt-done ; has to be explicit because of evil
+        "C-z" #'ivy-dispatching-done
+        "C-w" #'ivy-yank-word
+        "C-'" #'ivy-avy
+        "<left>" #'counsel-up-directory
+        "<backtab>" #'counsel-up-directory
+        "<right>" #'my--ivy-enter-directory-or-insert
+        "TAB" #'my--ivy-enter-directory-or-insert)
+
+  (setq ivy-count-format "(%d/%d) "
+        ivy-use-virtual-buffers t)
+
+  (mapc
+   (lambda (cmd)
+     (ivy-add-actions
+      cmd
+      '(("O" my--ivy-other-window-action "open in other window"))))
+   '(counsel-find-file counsel-recentf counsel-fzf counsel-dired))
+
+  (minibuffer-depth-indicate-mode 1))
 
 (after! lsp
   ;; These take up a lot of space on my big font size
@@ -56,12 +115,28 @@
         lsp-ui-sideline-show-diagnostics nil
         lsp-signature-render-all nil))
 
-(after! dash
-  (dash-enable-font-lock))
+(after! magit
+  (defconst my-dotfiles-git-dir (expand-file-name "~/.dotfiles"))
 
-(after! evil
-  ;; this makes the Y/P work the same as in vim
-  (evil-put-command-property 'evil-yank-line :motion 'evil-line))
+  (defun my--dotfiles-remove-magit-config (&optional kill)
+    (setq magit-git-global-arguments
+          (remove (format "--work-tree=%s" (getenv "HOME")) magit-git-global-arguments))
+    (setq magit-git-global-arguments
+          (remove (format "--git-dir=%s" my-dotfiles-git-dir) magit-git-global-arguments))
+    (advice-remove 'magit-mode-bury-buffer #'my--dotfiles-remove-magit-config))
+
+  ;; TODO make this work even if magit has not been loaded yet
+  (defun my-dotfiles-magit ()
+    (interactive)
+    (when (and (boundp 'magit-git-global-arguments)
+               (file-exists-p my-dotfiles-git-dir))
+      (let ((home (getenv "HOME")))
+        (add-to-list 'magit-git-global-arguments
+                     (format "--work-tree=%s" home))
+        (add-to-list 'magit-git-global-arguments
+                     (format "--git-dir=%s" my-dotfiles-git-dir))
+        (advice-add 'magit-mode-bury-buffer :after #'my--dotfiles-remove-magit-config)
+        (magit-status-setup-buffer home)))))
 
 (after! org
   (setq org-agenda-files '("~/Notes/Journal")
@@ -99,7 +174,7 @@
           (bookmark-jump . lineage)
           (isearch . tree) ; I want to see more info when looking at tree
           (default . ancestors)))
-
+  
   (defun my-org-babel-remove-result-buffer ()
     "Remove results from every code block in buffer."
     (interactive)
@@ -132,13 +207,20 @@
             "t" #'org-time-stamp
             "T" #'org-time-stamp-inactive)))
 
-(use-package! org-mru-clock
-  :after org
-  :commands (org-mru-clock-in org-mru-clock-select-recent-task)
-  :custom
-  (org-mru-clock-how-many 100)
-  (org-mru-clock-completing-read #'ivy-completing-read)
-  (org-mru-clock-keep-formatting t))
+(after! yasnippet
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets"))
+
+(after! web-mode
+  (add-hook 'web-mode-hook #'flycheck-mode)
+
+  (setq web-mode-markup-indent-offset 2  ; Indentation
+        web-mode-code-indent-offset 2
+        web-mode-enable-auto-quoting nil ; disbale adding "" after an =
+        web-mode-auto-close-style 2))
+
+;; -----------------------------------------------------------------------------
+;; Definitions of my packages
+;; -----------------------------------------------------------------------------
 
 (use-package! org-journal
   :after org
@@ -162,50 +244,46 @@
                '("j" "Journal" entry (function org-journal-find-location)
                   "** %(format-time-string org-journal-time-format)%?")))
 
-(after! ivy
-  (defun my--ivy-is-directory-p ()
-    (and
-     (> ivy--length 0)
-     (not (string= (ivy-state-current ivy-last) "./"))
-     (not (null (ivy-expand-file-if-directory (ivy-state-current ivy-last))))))
+(defun my-save-buffer-and-switch-to-normal-mode ()
+  (interactive)
+  (save-buffer)
+  (evil-force-normal-state))
 
-  (defun my--ivy-enter-directory-or-insert ()
-    (interactive)
-    (if (my--ivy-is-directory-p)
-        (counsel-down-directory)
-      (progn
-        (let ((last-input (ivy--input)))
-          (ivy-insert-current)
-          (when (string= last-input (ivy--input))
-            (ivy-call))))))
+(defun my-kill-buffer-and-window ()
+  (interactive)
+  (if (> (count-windows) 1)
+      (kill-buffer-and-window)
+    (kill-buffer)))
 
-  (map! :map ivy-minibuffer-map
-        "C-z" #'ivy-dispatching-done
-        "C-w" #'ivy-yank-word
-        "C-'" #'ivy-avy
-        "<left>" #'counsel-up-directory
-        "<backtab>" #'counsel-up-directory
-        "<right>" #'my--ivy-enter-directory-or-insert
-        "TAB" #'my--enter-directory-or-insert)
+(defun my-switch-to-messages-buffer (&optional arg)
+    "Switch to the `*Messages*' buffer. If prefix argument ARG is
+given, switch to it in an other, possibly new window."
+    (interactive "P")
+    (with-current-buffer (messages-buffer)
+      (goto-char (point-max))
+      (if arg
+          (switch-to-buffer-other-window (current-buffer))
+        (switch-to-buffer (current-buffer)))))
 
-  (setq ivy-count-format "(%d/%d) "
-        ivy-use-virtual-buffers t)
+(use-package! org-mru-clock
+  :after org
+  :commands (org-mru-clock-in org-mru-clock-select-recent-task)
+  :custom
+  (org-mru-clock-how-many 100)
+  (org-mru-clock-completing-read #'ivy-completing-read)
+  (org-mru-clock-keep-formatting t))
 
-  (minibuffer-depth-indicate-mode 1))
-
-(after! company
-  (setq company-idle-delay 0.1
-        company-show-numbers t
-        company-selection-wrap-around t)
-
-  (map!
-   :map company-active-map
-   "C-j" #'company-complete-selection
-   "RET" nil
-   [return] nil))
-
-(after! yasnippet
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets"))
+(use-package! super-save
+  :unless noninteractive
+  :custom
+  (super-save-auto-save-when-idle t)
+  (super-save-idle-duration 30)
+  :config
+  ;; add integration with ace-window
+  (add-to-list 'super-save-triggers 'ace-window)
+  (add-to-list 'super-save-triggers 'winum-select-window-by-number)
+  (add-to-list 'super-save-hook-triggers 'find-file-hook)
+  (super-save-mode 1))
 
 ;; ----------------------------------------------------------------------------
 ;; GLOBAL MAP
@@ -217,6 +295,7 @@
  :i "C-x s" #'company-yasnippet
  :g "C-s"   #'swiper-isearch
  :i "C-k"   #'kill-visual-line
+ :n "M-y"   #'counsel-yank-pop
  :g "M-1"   #'winum-select-window-1
  :g "M-2"   #'winum-select-window-2
  :g "M-3"   #'winum-select-window-3
@@ -239,30 +318,10 @@
    :g "C-9"   #'+workspace/switch-to-8
    :g "C-0"   #'+workspace/switch-to-final))
 
-(defun my-save-buffer-and-switch-to-normal-mode ()
-  (interactive)
-  (save-buffer)
-  (evil-force-normal-state))
-
-(defun my-kill-buffer-and-window ()
-  (interactive)
-  (if (> (count-windows) 1)
-      (kill-buffer-and-window)
-    (kill-buffer)))
-
-(defun my-switch-to-messages-buffer (&optional arg)
-    "Switch to the `*Messages*' buffer. If prefix argument ARG is
-given, switch to it in an other, possibly new window."
-    (interactive "P")
-    (with-current-buffer (messages-buffer)
-      (goto-char (point-max))
-      (if arg
-          (switch-to-buffer-other-window (current-buffer))
-        (switch-to-buffer (current-buffer)))))
-
 ;; ----------------------------------------------------------------------------
-;; TOGGLE MAP
+;; LEADER MAP
 ;; ----------------------------------------------------------------------------
+
 (map! :leader
       "X" nil
       :desc "Capture" "C" #'org-capture
@@ -280,6 +339,8 @@ given, switch to it in an other, possibly new window."
       (:prefix ("b" . "buffer")
         :desc "Switch to message buffer" "M"  #'my-switch-to-messages-buffer
         :desc "Kill buffer and window" "d" #'my-kill-buffer-and-window)
+      (:prefix ("g". "git")
+        :desc "My dotfiles status" "M" #'my-dotfiles-magit)
       (:prefix ("t" . "toggle")
         :desc "Auto-fill mode" "W" #'auto-fill-mode))
 

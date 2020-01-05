@@ -1,8 +1,9 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
-(package! org-mru-clock)
 (package! org-journal)
+(package! org-mru-clock)
+(package! super-save)
 
 ;; This is where you install packages, by declaring them with the `package!'
 ;; macro, then running 'doom refresh' on the command line. You'll need to
