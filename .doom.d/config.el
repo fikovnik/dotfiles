@@ -27,6 +27,20 @@
 (setq-default evil-shift-width 2
               tab-width 2)
 
+(after! agda2
+  (set-lookup-handlers! 'agda2-mode
+    :definition #'agda2-goto-definition-keyboard)
+
+  (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
+
+  (map! :after agda2-mode
+        :map agda2-mode-map
+        :localleader
+        (:prefix "g"
+          "G" nil
+          "b" #'agda2-go-back
+          "d" #'agda2-goto-definition-keyboard)))
+
 (after! company
   (setq company-idle-delay 0.1
         company-show-numbers t
