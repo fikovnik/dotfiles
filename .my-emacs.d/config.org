@@ -3068,10 +3068,14 @@ and =--git-dir= options explicitly set. For this I define a new function
   (org-agenda-files '("~/Notes/Journal"))
   (org-blank-before-new-entry '(((heading .  t) (plain-list-item . t))))
   (org-capture-templates
-     '(("t" "Todo"         entry (file+headline "~/Notes/Journal/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
-       ("n" "Note"         entry (file+headline "~/Notes/Journal/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i")
-       ("j" "Journal"      entry (file+datetree "~/Notes/Journal/Journal.org")    "* %?\n%i")
-       ("J" "Work Journal" entry (file+datetree "~/Notes/Journal/Work.org")  "* %?\n%i")))
+     '(("t" "Todo"
+        entry (file+headline "~/Notes/Journal/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
+       ("n" "Note"
+        entry (file+headline "~/Notes/Journal/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i")
+       ("j" "Journal"
+        entry (file+datetree "~/Notes/Journal/Journal.org")       "* %?\n%i")
+       ("J" "Work Journal"
+        entry (file+datetree "~/Notes/Journal/Work.org")          "* %?\n%i")))
   (org-catch-invisible-edits 'smart)
   (org-confirm-babel-evaluate nil)
   (org-default-notes-file "~/Notes/Journal/Notes.org")
@@ -3111,6 +3115,27 @@ and =--git-dir= options explicitly set. For this I define a new function
   :config
   (set-face-attribute 'org-todo nil :weight 'bold))
 #+END_SRC
+** Archiving
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries 'org-archive-subtree "/DONE" 'file))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'org
+  (defadvice org-archive-subtree (around my-org-archive-subtree activate)
+    (let ((org-archive-location
+           (if (save-excursion (org-back-to-heading)
+                               (> (org-outline-level) 1))
+               (concat (car (split-string org-archive-location "::"))
+                       "::* "
+                       (car (org-get-outline-path)))
+             org-archive-location)))
+      ad-do-it)))
+#+END_SRC
+
 ** Fix opening files with xdg-open
 
 From some reason the just calling =xdg-open= does not work from org-ref (e.g.
@@ -3165,17 +3190,7 @@ The following is the _official_ way to fix it:
 
 #+BEGIN_SRC emacs-lisp
 (use-package ob
-  :ensure nil
-  :after org
-  :commands org-babel-load-languages
-  :custom
-  (org-babel-load-languages
-   '((ammonite . t)
-     (emacs-lisp . t)
-     (shell . t)
-     (plantuml . t)
-     (tmux . t)))
-  :config
+  :preface
   (defun my--org-babel-do-load-languages ()
     "Load all the languages declared in `org-babel-load-languages'."
     (org-babel-do-load-languages 'org-babel-load-languages
@@ -3188,7 +3203,14 @@ The following is the _official_ way to fix it:
       (goto-char (point-min))
       (while (re-search-forward org-babel-src-block-regexp nil t)
         (org-babel-remove-result))))
-
+  :ensure nil
+  :after org
+  :commands org-babel-load-languages
+  :custom
+  (org-babel-load-languages
+   '((emacs-lisp . t)
+     (shell . t)))
+  :config
   (add-hook 'org-mode-hook 'my--org-babel-do-load-languages))
 #+END_SRC
 
@@ -3205,7 +3227,9 @@ The following is the _official_ way to fix it:
   :custom
   (org-babel-tmux-session-prefix "ob-")
   (org-babel-tmux-terminal "st")
-  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e")))
+  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
+  :init
+  (add-to-list 'org-babel-load-languages '(tmux . t)))
 #+END_SRC
 
 *** plantuml support
@@ -3214,16 +3238,20 @@ The following is the _official_ way to fix it:
 (use-package ob-plantuml
   :ensure nil
   :custom
-  (org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar"))
+  (org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
+  :init
+  (add-to-list 'org-babel-load-languages '(plantuml . t)))
 #+END_SRC
 
-*** Scala (ammonite) support
+*** scala (ammonite) support
 
 #+BEGIN_SRC emacs-lisp
-(use-package ob-ammonite)
+(use-package ob-ammonite
+  :init
+  (add-to-list 'org-babel-load-languages '(ammonite . t)))
 #+END_SRC
 
-** [[https://github.com/jkitchin/org-ref/][org-ref]]
+** Org ref
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-ref
