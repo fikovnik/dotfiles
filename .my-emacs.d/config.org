@@ -1325,6 +1325,41 @@ Revert buffers when files on disk change
 (setq-default prettify-symbols-alist
                 '(("#+BEGIN_SRC"     . "λ")
                   ("#+END_SRC"       . "λ"))
+** Zoom
+#+BEGIN_SRC emacs-lisp
+(defvar my-zoom-original-font-size nil)
+
+(defun my-zoom-set-font-size (size)
+  (let ((old-size (face-attribute 'default :height)))
+    (my-zoom-adjust-font-size (- size old-size))))
+
+(defun my-zoom-adjust-font-size (delta)
+  (let* ((old-size (face-attribute 'default :height))
+         (new-size (max (max delta (- delta)) (min 200 (+ delta old-size)))))
+    (setq my-zoom-original-font-size (or my-zoom-original-font-size old-size))
+    (set-face-attribute 'default nil :height new-size)
+    (message "Font size set to %d (was %d)" (face-attribute 'default :height) old-size)))
+
+(defun my-zoom-zoom-in ()
+  (interactive)
+  (my-zoom-adjust-font-size +10))
+
+(defun my-zoom-zoom-out ()
+  (interactive)
+  (my-zoom-adjust-font-size -10))
+
+(defun my-zoom-zoom-reset ()
+  (interactive)
+  (when my-zoom-original-font-size
+    (set-face-attribute 'default nil :height my-zoom-original-font-size)))
+
+;; Zoom settings
+;(global-set-key [\C-mouse-4] 'zoom-in)
+;(global-set-key [\C-mouse-5] 'zoom-out)
+;(global-set-key [\C-kp-add] 'zoom-in)
+;(global-set-key [\C-kp-subtract] 'zoom-out)
+;(global-set-key (kbd "<C-kp-0>") 'zoom-reset)
+#+END_SRC
 
 * Appearance
 ** Theme
@@ -1872,6 +1907,16 @@ return =u= as the keybinding for expand more region instead of ===.
   :after company
   :bind (:map company-active-map
               ("C-c ?" . company-quickhelp-manual-begin)))
+#+END_SRC
+
+**** company postframe
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-posframe
+  :diminish
+  :after company
+  :config
+  (company-posframe-mode t))
 #+END_SRC
 
 *** Abbrevs
@@ -4054,7 +4099,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
 *** Presentation mode
 
 #+BEGIN_SRC emacs-lisp
-(defvar my-presentation-mode-text-scale 4)
+(defvar my-presentation-mode-text-size 180)
 (defvar my-presentation-mode--org-block-background nil)
 (defvar my-presentation-mode--theme my-theme-is-dark)
 
@@ -4062,8 +4107,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   (interactive)
   (setq my-theme-is-dark nil)
   (my-theme-load)
-  (text-scale-increase 0)
-  (text-scale-increase my-presentation-mode-text-scale)
+  (my-zoom-set-font-size my-presentation-mode-text-size)
   (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
   (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold)
   (set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold)
@@ -4083,7 +4127,7 @@ Ever wanted to change a (_.thing) to a { foo => foo.thing } and back? This helps
   (interactive)
   (setq my-theme-is-dark my-presentation-mode--theme)
   (my-theme-load)
-  (text-scale-increase 0)
+  (my-zoom-reset-font-size)
   (mapc
    (lambda (face) (set-face-attribute face nil :height 1.0 :weight 'normal))
    `(,'org-level-1 ,'org-level-2 ,'org-level-3))
