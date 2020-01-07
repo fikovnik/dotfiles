@@ -9,6 +9,9 @@
 ;; ;; - https://github.com/forrestchang/.doom.d
 ;; ;; - and https://github.com/search?l=Emacs+Lisp&o=desc&q=%22.doom.d%22&s=stars&type=Repositories
 
+;; TODO my terminal mode - make it a private package
+;; (xclip-mode -1)
+
 (setq display-line-numbers-type t
       deft-directory (expand-file-name "~/Notes")
       deft-recursive t
@@ -190,7 +193,7 @@
           (bookmark-jump . lineage)
           (isearch . tree) ; I want to see more info when looking at tree
           (default . ancestors)))
-  
+
   (defun my-org-babel-remove-result-buffer ()
     "Remove results from every code block in buffer."
     (interactive)
@@ -281,6 +284,46 @@ given, switch to it in an other, possibly new window."
           (switch-to-buffer-other-window (current-buffer))
         (switch-to-buffer (current-buffer)))))
 
+(defun my-copy-to-xclipboard ()
+  (interactive)
+  (if (use-region-p)
+      (if (not (display-graphic-p))
+          (letrec ((s (buffer-substring-no-properties (region-beginning) (region-end)))
+                   (s-length (+ (* (length s) 3) 2)))
+            (if (<= s-length 16384) ; magic number set to the same as ESC_BUF_SIZ of suckless termial (st.c)
+                (progn
+                  (send-string-to-terminal (concat "\e]52;c;"
+                                                   (base64-encode-string (encode-coding-string s 'utf-8) t)
+                                                   "\07"))
+                  (message "Yanked region to terminal clipboard")
+                  (deactivate-mark))
+              (message "Selection too long (%d) to send to terminal." s-length)))
+        (if (= 0 (shell-command-on-region (region-beginning) (region-end) "xsel -i -b"))
+            (message "Yanked region to X-clipboard")
+          (error "Is program `xsel' installed?")))
+    (message "Nothing to yank to terminal clipboard")))
+
+(defun my-cut-to-xclipboard ()
+  (interactive)
+  (my-copy-to-xclipboard)
+  (kill-region (region-beginning) (region-end)))
+
+(defun my-paste-from-xclipboard ()
+  "Uses shell command `xsel -o' to paste from x-clipboard. With
+one prefix arg, pastes from X-PRIMARY, and with two prefix args,
+pastes from X-SECONDARY."
+  (interactive)
+  (if (display-graphic-p)
+      (clipboard-yank)
+    (letrec
+        ((opt (prefix-numeric-value current-prefix-arg))
+         (opt (cond
+               ((=  1 opt) "b")
+               ((=  4 opt) "p")
+               ((= 16 opt) "s"))))
+(insert (shell-command-to-string (concat "xsel -o -" opt))))))
+
+
 (use-package! org-mru-clock
   :after org
   :commands (org-mru-clock-in org-mru-clock-select-recent-task)
@@ -311,6 +354,12 @@ given, switch to it in an other, possibly new window."
  :i "C-x s" #'company-yasnippet
  :g "C-s"   #'swiper-isearch
  :i "C-k"   #'kill-visual-line
+ :g "C-S-X" #'my-cut-to-xclipboard
+ :g "C-S-C" #'my-copy-to-xclipboard
+ (:when (display-graphic-p)
+  ; The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
+  ; is better to use the terminal paste since it will be a [[https://cirw.in/blog/bracketed-paste][bracketed paste]].
+  :g "C-S-V" #'my-paste-from-xclipboard)
  :n "M-y"   #'counsel-yank-pop
  :g "M-1"   #'winum-select-window-1
  :g "M-2"   #'winum-select-window-2
