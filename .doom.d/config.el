@@ -56,6 +56,8 @@
   (dash-enable-font-lock))
 
 (after! doom-modeline
+  (setq doom-modeline-modal-icon nil)
+
   (doom-modeline-def-modeline 'main
     '(bar window-number modals matches buffer-info remote-host buffer-position selection-info)
     '(objed-state misc-info persp-name irc mu4e github debug input-method buffer-encoding lsp major-mode process vcs checker))
