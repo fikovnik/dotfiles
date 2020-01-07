@@ -241,6 +241,15 @@
 ;; Definitions of my packages
 ;; -----------------------------------------------------------------------------
 
+(use-package! flyspell-correct-ivy
+  :after (flyspell ivy)
+  :commands (flyspell-correct-wrapper)
+  :init
+  (setq flyspell-correct-interface #'flyspell-correct-ivy)
+  :bind
+  (:map flyspell-mode-map
+    ("M-'" . flyspell-correct-wrapper)))
+
 (use-package! org-journal
   :after org
   :preface
@@ -322,7 +331,6 @@ pastes from X-SECONDARY."
                ((=  4 opt) "p")
                ((= 16 opt) "s"))))
 (insert (shell-command-to-string (concat "xsel -o -" opt))))))
-
 
 (use-package! org-mru-clock
   :after org
