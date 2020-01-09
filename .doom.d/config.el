@@ -22,6 +22,7 @@
       doom-theme 'doom-one
       evil-want-fine-undo t
       org-directory (expand-file-name "~/Notes")    ; must be set before org is loaded
+      projectile-project-search-path '("~/Projects" "~/Research" "~/Sync/Projects" "~/Sync/Research")
       user-full-name "Filip Krikava"
       user-mail-address "krikava@gmail.com"
       visual-order-cursor-movement t
