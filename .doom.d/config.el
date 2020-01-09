@@ -168,7 +168,8 @@
            entry (file+headline "~/Notes/Journal/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i"))
         org-catch-invisible-edits 'smart
         org-confirm-babel-evaluate nil
-        org-ellipsis "↴"
+        org-bullets-bullet-list '("⁖")
+        org-ellipsis " ․․․"
         org-id-link-to-org-use-id 'create-if-interactive
         org-image-actual-width nil
         org-imenu-depth 8
