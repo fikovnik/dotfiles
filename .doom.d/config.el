@@ -74,6 +74,30 @@
     '(bar window-number modals buffer-default-directory)
     '(misc-info mu4e github debug battery " " major-mode process)))
 
+(after! ediff
+  ;; from https://emacs.stackexchange.com/a/21460/26020
+  ;; Check for org mode and existence of buffer
+  (defun f-ediff-org-showhide (buf command &rest cmdargs)
+    "If buffer exists and is orgmode then execute command"
+    (when buf
+      (when (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
+        (save-excursion (set-buffer buf) (apply command cmdargs)))))
+
+  (defun f-ediff-org-unfold-tree-element ()
+    "Unfold tree at diff location"
+    (f-ediff-org-showhide ediff-buffer-A 'org-reveal)
+    (f-ediff-org-showhide ediff-buffer-B 'org-reveal)
+    (f-ediff-org-showhide ediff-buffer-C 'org-reveal))
+
+  (defun f-ediff-org-fold-tree ()
+    "Fold tree back to top level"
+    (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)
+    (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)
+    (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1))
+
+  (add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
+  (add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree))
+
 (after! evil
   ;; this makes the Y/P work the same as in vim
   (evil-put-command-property 'evil-yank-line :motion 'evil-line))
