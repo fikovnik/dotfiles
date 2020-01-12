@@ -149,7 +149,7 @@
      (ivy-add-actions
       cmd
       '(("O" my--ivy-other-window-action "open in other window"))))
-   '(counsel-find-file counsel-recentf counsel-fzf counsel-dired))
+   '(counsel-find-file counsel-recentf counsel-fzf counsel-dired doom/find-file-in-private-config))
 
   (minibuffer-depth-indicate-mode 1))
 
