@@ -239,18 +239,25 @@
              org-archive-location)))
       ad-do-it))
 
-    (map! :map org-mode-map
-          :localleader
-          "d" nil
-          (:prefix ("j" . "journal")
-            "j" #'org-journal-new-entry
-            "s" #'org-journal-search-forever)
-          (:prefix ("d" . "dates")
-            "e" #'org-evaluate-time-range
-            "d" #'org-deadline
-            "s" #'org-schedule
-            "t" #'org-time-stamp
-            "T" #'org-time-stamp-inactive)))
+  (map! :map org-mode-map
+        :localleader
+        "d" nil
+        (:prefix ("j" . "journal")
+          "j" #'org-journal-new-entry
+          "s" #'org-journal-search-forever)
+        (:prefix ("d" . "dates")
+          "e" #'org-evaluate-time-range
+          "d" #'org-deadline
+          "s" #'org-schedule
+          "t" #'org-time-stamp
+          "T" #'org-time-stamp-inactive)))
+
+(after! evil-org
+  (map! :map evil-org-mode-map
+        :i "C-h" nil
+        :i "C-j" nil
+        :i "C-k" #'org-kill-line
+        :i "C-l" nil))
 
 (after! yasnippet
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets"))
