@@ -116,9 +116,43 @@
   (add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
   (add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree))
 
+(after! ess
+  (setq ess-default-style 'RStudio
+        ess-indent-level 4
+        ess-nuke-trailing-whitespace-p t
+        ess-tab-complete-in-script t
+        ess-build-tags-command "system(\"~/bin/rtags.R '%s' '%s'\")"
+        ess-indent-with-fancy-comments nil
+        ess-R-argument-suffix "="
+        ess-smart-S-assign-key nil
+        ess-R-font-lock-keywords
+        '((ess-R-fl-keyword:fun-defs . t)
+          (ess-R-fl-keyword:modifiers . t)
+          (ess-R-fl-keyword:keywords . t)
+          (ess-R-fl-keyword:assign-ops . t)
+          (ess-R-fl-keyword:constants . t)
+          (ess-R-fl-keyword:F&T . t)
+          (ess-fl-keyword:fun-calls . t)
+          (ess-fl-keyword:numbers . t)
+          (ess-fl-keyword:operators)
+          (ess-fl-keyword:delimiters)
+          (ess-fl-keyword:=)))
+
+  (map! :localleader
+        :map ess-mode-map
+        "TAB"     #'ess-switch-to-inferior-or-script-buffer
+        [backtab] #'ess-switch-process)
+
+  (map! :localleader
+        :map inferior-ess-mode-map
+        "TAB"     #'ess-switch-to-inferior-or-script-buffer))
+
 (after! evil
   ;; this makes the Y/P work the same as in vim
   (evil-put-command-property 'evil-yank-line :motion 'evil-line))
+
+(after! flycheck
+  (setq flycheck-lintr-linters "with_defaults(infix_spaces_linter=NULL, line_length_linter=NULL)"))
 
 (after! ivy
   (defun my--ivy-is-directory-p ()
