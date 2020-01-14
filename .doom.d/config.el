@@ -442,7 +442,6 @@ pastes from X-SECONDARY."
 ;; ----------------------------------------------------------------------------
 
 (map!
- :nievg "C-/" #'comment-or-uncomment-region
  :n "C-h" nil
  :i "C-x C-s"  #'my-save-buffer-and-switch-to-normal-mode
  :i "C-x s" #'company-yasnippet
