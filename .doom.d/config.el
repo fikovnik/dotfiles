@@ -45,6 +45,24 @@
           "b" #'agda2-go-back
           "d" #'agda2-goto-definition-keyboard)))
 
+(after! comint
+  (defun my-comint-clear-buffer ()
+    (interactive)
+    (let ((comint-buffer-maximum-size 0))
+      (comint-truncate-buffer)))
+
+  (map! :map comint-mode-map
+        [up] #'comint-previous-matching-input-from-input
+        [down] #'comint-next-matching-input-from-input
+        "C-k" #'kill-line
+        "C-l" #'my-comint-clear-buffer)
+
+  (setq comint-prompt-read-only t
+        comint-scroll-to-bottom-on-output 'others
+        comint-scroll-show-maximum-output t
+        comint-move-point-for-matching-input 'end-of-line
+        comint-scroll-to-bottom-on-input 'this))
+
 (after! company
   (setq company-idle-delay 0.1
         company-show-numbers t
