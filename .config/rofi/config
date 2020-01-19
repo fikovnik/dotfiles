@@ -3,5 +3,5 @@ rofi.font: DejaVu Sans Mono 12
 rofi.terminal: st
 rofi.matching: fuzzy
 rofi.location: 2
-
-rofi.theme: /usr/share/rofi/themes/Arc-Dark.rasi
+rofi.width: 100
+rofi.theme: ~/.config/rofi/flat-orange.rasi
