@@ -1,3 +1,3 @@
 #!/bin/sh
 
-rofi -show drun -show-icons -p "> "
+rofi -show drun -modi drun -show-icons
