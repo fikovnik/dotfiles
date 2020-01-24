@@ -96,11 +96,9 @@ bindkey '^[z' undo
 type azure >/dev/null 2>&1 && . <(azure --completion)
 
 # fzf
-if [ -f /usr/bin/fzf ]; then
-  source /usr/share/fzf/key-bindings.zsh
-  source /usr/share/fzf/completion.zsh
-fi
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 # fix keyboard in st
 bindkey '\e[1;3D' backward-word
