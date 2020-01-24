@@ -22,7 +22,6 @@
       doom-theme 'doom-one
       evil-want-fine-undo t
       org-directory (expand-file-name "~/Notes")    ; must be set before org is loaded
-      projectile-project-search-path '("~/Projects" "~/Research" "~/Sync/Projects" "~/Sync/Research")
       user-full-name "Filip Krikava"
       user-mail-address "krikava@gmail.com"
       visual-order-cursor-movement t
@@ -303,6 +302,12 @@
           "s" #'org-schedule
           "t" #'org-time-stamp
           "T" #'org-time-stamp-inactive)))
+
+(after! projectile
+  (mapc (lambda (x)
+          (when (file-directory-p x)
+            (add-to-list 'projectile-project-search-path x)))
+        '("~/Projects" "~/Research" "~/Sync/Projects" "~/Sync/Research")))
 
 (after! evil-org
   (map! :map evil-org-mode-map
