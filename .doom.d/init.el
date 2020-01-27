@@ -184,6 +184,7 @@
        (default +bindings +smartparens))
 
 (setq evil-want-C-i-jump nil)
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
