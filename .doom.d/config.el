@@ -63,15 +63,9 @@
         comint-scroll-to-bottom-on-input 'this))
 
 (after! company
-  (setq company-idle-delay 0.1
+  (setq company-idle-delay nil
         company-show-numbers t
-        company-selection-wrap-around t)
-
-  (map!
-   :map company-active-map
-   "C-j" #'company-complete-selection ; has to be done explicitly because of evil
-   "RET" nil
-   [return] nil))
+        company-selection-wrap-around t))
 
 (after! dash
   (dash-enable-font-lock))
