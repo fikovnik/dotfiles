@@ -147,6 +147,13 @@
 (after! flycheck
   (setq flycheck-lintr-linters "with_defaults(infix_spaces_linter=NULL, line_length_linter=NULL)"))
 
+(after! flyspell
+  (map! :map flyspell-mouse-map
+        "RET"     nil
+        [return]  nil
+        :n "RET"     #'flyspell-correct-at-point
+        :n [return]  #'flyspell-correct-at-point))
+
 (after! ivy
   (defun my--ivy-is-directory-p ()
     (and
