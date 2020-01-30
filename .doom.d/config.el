@@ -234,6 +234,10 @@
         (advice-add 'magit-mode-bury-buffer :after #'my--dotfiles-remove-magit-config)
         (magit-status-setup-buffer home)))))
 
+(after! evil-nerd-commenter
+  (map!
+   :g "M-;" #'evilnc-comment-or-uncomment-lines))
+
 (after! org
   (setq org-agenda-files '("~/Notes/Journal")
         org-blank-before-new-entry '(((heading .  t) (plain-list-item . t)))
