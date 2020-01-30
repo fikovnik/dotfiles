@@ -328,6 +328,9 @@
         web-mode-enable-auto-quoting nil ; disbale adding "" after an =
         web-mode-auto-close-style 2))
 
+(after! winum
+  (setq winum-scope 'frame-local))
+
 ;; -----------------------------------------------------------------------------
 ;; Definitions of my packages
 ;; -----------------------------------------------------------------------------
