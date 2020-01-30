@@ -63,7 +63,7 @@
         comint-scroll-to-bottom-on-input 'this))
 
 (after! company
-  (setq company-idle-delay nil
+  (setq company-minimum-prefix-length 4
         company-show-numbers t
         company-selection-wrap-around t))
 
