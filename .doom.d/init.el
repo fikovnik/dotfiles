@@ -18,6 +18,11 @@
        ;;chinese
        ;;japanese
 
+       :checkers
+       syntax            ; tasing you for every semicolon you forget
+       (spell +aspell)   ; tasing you for misspelling mispelling
+
+
        :completion
        (company
         +childframe)     ; the ultimate code completion backend
@@ -56,7 +61,7 @@
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       ;;(format +onsave)  ; automated prettiness
+       format            ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -73,9 +78,9 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;;eshell            ; a consistent, cross-platform shell (WIP)
-       ;;shell             ; a terminal REPL for Emacs
-       ;;term              ; terminals in Emacs
+       eshell            ; a consistent, cross-platform shell (WIP)
+       shell             ; a terminal REPL for Emacs
+       term              ; terminals in Emacs
        ;;vterm             ; another terminals in Emacs
 
        :tools
@@ -86,8 +91,6 @@
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
-       flycheck          ; tasing you for every semicolon you forget
-       (flyspell +aspell)  ; tasing you for misspelling mispelling
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +dictionary        ; in dictionary
@@ -177,7 +180,8 @@
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
-       write             ; emacs for writers (fiction, notes, papers, etc.)
+       ;; write             ; emacs for writers (fiction, notes, papers, etc.)
+       regex
 
        :config
        ;;literate
@@ -185,28 +189,3 @@
 
 (setq evil-want-C-i-jump nil)
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(safe-local-variable-values
-   (quote
-    ((eval add-hook
-           (quote after-save-hook)
-           (lambda nil
-             (projectile-with-default-dir
-                 (projectile-ensure-project
-                  (projectile-project-root))
-               (call-interactively
-                (quote recompile))))
-           nil t)
-     (projectile-project-run-cmd . "make open")
-     (projectile-project-compilation-cmd . "make build")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

@@ -15,17 +15,16 @@
 (setq display-line-numbers-type t
       deft-directory (expand-file-name "~/Notes")
       deft-recursive t
-;      doom-localleader-key ","
-;      doom-localleader-alt-key "M-,"
-      doom-font (font-spec :family "dejavu sans mono" :size 18)
-      doom-big-font (font-spec :family "dejavu sans mono" :size 18)
+      ;; doom-localleader-key ","
+      ;; doom-localleader-alt-key "M-,"
+      doom-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 18)
+      doom-big-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 24)
       doom-theme 'doom-one
       evil-want-fine-undo t
       org-directory (expand-file-name "~/Notes")    ; must be set before org is loaded
       user-full-name "Filip Krikava"
       user-mail-address "krikava@gmail.com"
-      visual-order-cursor-movement t
-      which-key-idle-delay 0.3)
+      visual-order-cursor-movement t)
 
 (setq-default evil-shift-width 2
               tab-width 2)
@@ -38,6 +37,7 @@
 
   (map! :after agda2-mode
         :map agda2-mode-map
+        :i [left] #'evil-backward-char
         :localleader
         (:prefix "g"
           "G" nil
@@ -332,6 +332,9 @@
         web-mode-enable-auto-quoting nil ; disbale adding "" after an =
         web-mode-auto-close-style 2))
 
+(after! which-key
+  (setq which-key-idle-delay .8))
+
 (after! winum
   (setq winum-scope 'frame-local))
 
@@ -462,6 +465,7 @@ pastes from X-SECONDARY."
  :i "C-k"   #'kill-visual-line
  :g "C-S-X" #'my-cut-to-xclipboard
  :g "C-S-C" #'my-copy-to-xclipboard
+ :i "C-d"   #'evil-delete-char
  (:when (display-graphic-p)
   ; The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
   ; is better to use the terminal paste since it will be a [[https://cirw.in/blog/bracketed-paste][bracketed paste]].
