@@ -44,6 +44,9 @@
           "b" #'agda2-go-back
           "d" #'agda2-goto-definition-keyboard)))
 
+(after! avy
+  (setq avy-all-windows t))
+
 (after! comint
   (defun my-comint-clear-buffer ()
     (interactive)
