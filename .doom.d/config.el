@@ -21,6 +21,7 @@
       doom-big-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 24)
       doom-theme 'doom-one
       evil-want-fine-undo t
+      evil-cross-lines t
       org-directory (expand-file-name "~/Notes")    ; must be set before org is loaded
       user-full-name "Filip Krikava"
       user-mail-address "krikava@gmail.com"
