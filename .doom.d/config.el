@@ -49,16 +49,11 @@
   (setq avy-all-windows t))
 
 (after! comint
-  (defun my-comint-clear-buffer ()
-    (interactive)
-    (let ((comint-buffer-maximum-size 0))
-      (comint-truncate-buffer)))
-
   (map! :map comint-mode-map
-        [up] #'comint-previous-matching-input-from-input
-        [down] #'comint-next-matching-input-from-input
-        "C-k" #'kill-line
-        "C-l" #'my-comint-clear-buffer)
+        :i [up] #'comint-previous-matching-input-from-input
+        :i [down] #'comint-next-matching-input-from-input
+        :i "C-k" #'kill-line
+        :i "C-l" #'comint-clear-buffer)
 
   (setq comint-prompt-read-only t
         comint-scroll-to-bottom-on-output 'others
@@ -134,6 +129,13 @@
           (ess-fl-keyword:operators)
           (ess-fl-keyword:delimiters)
           (ess-fl-keyword:=)))
+
+  ;; fix buffer in ready only mode, see https://github.com/emacs-ess/ESS/issues/300
+  (add-hook 'inferior-ess-mode-hook
+            (lambda ()
+              (setq-local comint-use-prompt-regexp nil)
+              (setq-local inhibit-field-text-motion nil)))
+
 
   (map! :localleader
         :map ess-mode-map
