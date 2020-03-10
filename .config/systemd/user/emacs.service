@@ -3,8 +3,8 @@ Description=Emacs
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/emacs --fg-daemon
-ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+ExecStart=%h/bin/emacs --fg-daemon
+ExecStop=%h/bin/emacsclient --eval "(kill-emacs)"
 Environment="DISPLAY=:0" "SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh"
 Restart=on-failure
 
