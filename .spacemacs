@@ -42,7 +42,9 @@ This function should only modify configuration layer settings."
      auto-completion
      better-defaults
      emacs-lisp
+     ess
      git
+     haskell
      helm
      lsp
      markdown
