@@ -12,6 +12,8 @@
 ;; TODO my terminal mode - make it a private package
 ;; (xclip-mode -1)
 
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 (setq display-line-numbers-type t
       deft-directory (expand-file-name "~/Notes")
       deft-recursive t

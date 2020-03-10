@@ -186,4 +186,3 @@
        (default +bindings +smartparens))
 
 (setq evil-want-C-i-jump nil)
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
