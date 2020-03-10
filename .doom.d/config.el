@@ -15,8 +15,8 @@
 (setq display-line-numbers-type t
       deft-directory (expand-file-name "~/Notes")
       deft-recursive t
-      ;; doom-localleader-key ","
-      ;; doom-localleader-alt-key "M-,"
+      doom-localleader-key ","
+      doom-localleader-alt-key "C-M-,"
       doom-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 18)
       doom-big-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 24)
       doom-theme 'doom-one
