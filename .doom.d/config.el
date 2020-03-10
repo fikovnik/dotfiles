@@ -212,9 +212,11 @@
   (minibuffer-depth-indicate-mode 1))
 
 (after! lsp
-  ;; These take up a lot of space on my big font size
-  (setq lsp-ui-sideline-show-code-actions nil
-        lsp-ui-sideline-show-diagnostics nil
+  (setq lsp-enable-indentation nil
+        lsp-enable-on-type-formatting nil
+        lsp-enable-symbol-highlighting nil
+        lsp-enable-file-watchers nil
+        lsp-ui-sideline-enable nil
         lsp-signature-render-all nil))
 
 (after! magit
