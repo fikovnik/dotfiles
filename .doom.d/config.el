@@ -460,6 +460,35 @@ pastes from X-SECONDARY."
   (super-save-mode 1))
 
 ;; ----------------------------------------------------------------------------
+;; EMAIL
+;; ----------------------------------------------------------------------------
+(set-email-account! "krikava@gmail.com"
+                    '((mu4e-maildir           . "~/Mail/krikava@gmail.com")
+                      (mu4e-attachment-dir    . "~/Downloads")
+                      (mu4e-get-mail-command  . "mbsync gmail-inbox")
+                      (mu4e-sent-folder       . "/sent")
+                      (mu4e-drafts-folder     . "/drafts")
+                      (mu4e-trash-folder      . "/trash")
+                      (mu4e-refile-folder     . "/all")
+                      (mu4e-compose-signature . "/cheers\nFilip"))
+                    t)
+
+(after! mu4e
+  (setq message-kill-buffer-on-exit t
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        message-sendmail-f-is-evil t
+        mu4e-change-filenames-when-moving t
+        mu4e-compose-complete-only-personal t
+        mu4e-headers-skip-duplicates t
+        mu4e-headers-include-related t
+        mu4e-user-mail-address-list '("krikava@gmail.com" "filip.krikava@fit.cvut.cz")
+        mu4e-view-auto-mark-as-read nil))
+
+(after! org-mu4e
+  (setq org-mu4e-convert-to-html nil))
+
+;; ----------------------------------------------------------------------------
 ;; GLOBAL MAP
 ;; ----------------------------------------------------------------------------
 
