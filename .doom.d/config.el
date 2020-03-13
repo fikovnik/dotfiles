@@ -138,14 +138,15 @@
               (setq-local comint-use-prompt-regexp nil)
               (setq-local inhibit-field-text-motion nil)))
 
-
   (map! :localleader
         :map ess-mode-map
         "TAB"     #'ess-switch-to-inferior-or-script-buffer
         [backtab] #'ess-switch-process)
 
-  (map! :localleader
-        :map inferior-ess-mode-map
+  (map! :map inferior-ess-mode-map
+        :i [up] #'comint-previous-matching-input-from-input
+        :i [down] #'comint-next-matching-input-from-input
+        :localleader
         "TAB"     #'ess-switch-to-inferior-or-script-buffer))
 
 (after! evil
