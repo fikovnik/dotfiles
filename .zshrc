@@ -39,6 +39,30 @@ function kill-server {
   fi
 }
 
+function cdu {
+  local declare dirs=()
+  get_parent_dirs() {
+    if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+    if [[ "${1}" == '/' ]]; then
+      for _dir in "${dirs[@]}"; do echo $_dir; done
+    else
+      get_parent_dirs $(dirname "$1")
+    fi
+  }
+  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+  cd "$DIR"
+}
+
+z() {
+    [ $# -gt 0 ] && fasd_cd -d "$*" && return
+    local dir
+    dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+}
+
+fman() {
+    man -k . | fzf --prompt='> ' | awk '{print $1}' | xargs -r man
+}
+
 ################################################################################
 
 # Note: never put PATH adjustments, that goes to zshenv
@@ -58,6 +82,7 @@ alias e="emacsclient -t"
 alias vi=vim
 alias emacs='emacs -nw'
 alias magit='emacsclient -nw -e "(magit-status)"'
+alias j=z
 command -v exa >/dev/null 2>&1 && alias ls='exa --group-directories-first --color=auto'
 command -v bat >/dev/null 2>&1 && alias cat=bat
 
@@ -99,6 +124,10 @@ type azure >/dev/null 2>&1 && . <(azure --completion)
 [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='
+  --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
+  --color pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B
+'
 
 # fix keyboard in st
 bindkey '\e[1;3D' backward-word
