@@ -132,6 +132,11 @@
           (ess-fl-keyword:delimiters)
           (ess-fl-keyword:=)))
 
+  (defun my-run-ess-R-debug ()
+    (interactive)
+    (let ((inferior-R-program-name "~/Research/Projects/R/R/R-3.6.2-dbg/bin/R"))
+      (R)))
+
   ;; fix buffer in ready only mode, see https://github.com/emacs-ess/ESS/issues/300
   (add-hook 'inferior-ess-mode-hook
             (lambda ()
