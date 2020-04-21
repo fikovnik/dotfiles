@@ -341,7 +341,7 @@
         web-mode-auto-close-style 2))
 
 (after! which-key
-  (setq which-key-idle-delay .8))
+  (setq which-key-idle-delay .6))
 
 (after! winum
   (setq winum-scope 'frame-local))
