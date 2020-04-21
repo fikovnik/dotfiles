@@ -18,17 +18,13 @@
        ;;chinese
        ;;japanese
 
-       :checkers
-       syntax            ; tasing you for every semicolon you forget
-       (spell +aspell)   ; tasing you for misspelling mispelling
-
-
        :completion
        (company
         +childframe)     ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ivy               ; a search engine for love and life
+       (ivy              ; a search engine for love and life
+         +prescient)
 
        :ui
        deft              ; notational velocity for Emacs
@@ -81,7 +77,12 @@
        eshell            ; a consistent, cross-platform shell (WIP)
        shell             ; a terminal REPL for Emacs
        term              ; terminals in Emacs
-       ;;vterm             ; another terminals in Emacs
+       vterm             ; another terminals in Emacs
+
+       :checkers
+       syntax            ; tasing you for every semicolon you forget
+       (spell +aspell)   ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
 
        :tools
        ;;ansible
@@ -123,7 +124,7 @@
        ;;erlang            ; an elegant language for a more civilized age
        ess               ; emacs speaks statistics
        ;;faust             ; dsp, but you get to keep your soul
-       ;;fsharp           ; ML stands for Microsoft's Language
+       ;;fsharp            ; ML stands for Microsoft's Language
        go                ; the hipster dialect
        (haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
@@ -142,7 +143,7 @@
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
-        +dragndrop       ; drag & drop files/images into org buffers
+        ;;+dragndrop       ; drag & drop files/images into org buffers
         ;;+hugo            ; use Emacs for hugo blogging
         ;;+jupyter        ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
@@ -158,19 +159,21 @@
        ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
        ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        +lsp)
-       scala             ; java, but good
+       (rust             ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+         +lsp)
+       (scala
+         +lsp)             ; java, but good
        ;;scheme            ; a fully conniving family of lisps
        sh                ; she sells {ba,z,fi}sh shells on the C xor
+       sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
 
        :email
-       (mu4e +gmail)
-       ;;notmuch
+       ;;(mu4e +gmail)
+       notmuch
        ;;(wanderlust +gmail)
 
        :app
@@ -178,8 +181,6 @@
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
-       ;; write             ; emacs for writers (fiction, notes, papers, etc.)
-       regex
 
        :config
        ;;literate
