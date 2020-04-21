@@ -219,14 +219,6 @@
 
   (minibuffer-depth-indicate-mode 1))
 
-(after! lsp
-  (setq lsp-enable-indentation nil
-        lsp-enable-on-type-formatting nil
-        lsp-enable-symbol-highlighting nil
-        lsp-enable-file-watchers nil
-        lsp-ui-sideline-enable nil
-        lsp-signature-render-all nil))
-
 (after! magit
   (defconst my-dotfiles-git-dir (expand-file-name "~/.dotfiles"))
 
