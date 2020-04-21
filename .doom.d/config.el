@@ -320,7 +320,7 @@
   (mapc (lambda (x)
           (when (file-directory-p x)
             (add-to-list 'projectile-project-search-path x)))
-        '("~/Projects" "~/Research" "~/Sync/Projects" "~/Sync/Research")))
+        '("~/Projects" "~/Research")))
 
 (after! evil-org
   (map! :map evil-org-mode-map
