@@ -47,6 +47,17 @@
           "b" #'agda2-go-back
           "d" #'agda2-goto-definition-keyboard)))
 
+(after! tex
+  (setq TeX-save-query nil
+        TeX-PDF-mode t
+        TeX-show-compilation nil)
+  (map! :map TeX-mode-map
+        :in "C-c C-c" #'TeX-command-run-all
+        :in "C-c C-a" #'TeX-command-master
+        :localleader
+        "b" #'TeX-command-run-all
+        "m" #'TeX-command-master))
+
 (after! avy
   (setq avy-all-windows t))
 
