@@ -13,7 +13,7 @@ labelsheader = X-Keywords
 
 [Repository gmail-local]
 type = GmailMaildir
-localfolders = ~/Mail/krikava@gmail.com
+localfolders = ~/Mail2/krikava@gmail.com
 
 [Repository gmail-remote]
 type = Gmail
@@ -22,6 +22,7 @@ remoteuser = krikava@gmail.com
 remotepasseval = passwd("krikava@gmail.com-mbsync")
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 realdelete = no
-folderfilter = lambda folder: folder in ('[Gmail]/All Mail', '[Gmail]/Spam')
+folderfilter = lambda folder: folder in ('[Gmail]/All Mail')
+nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all', foldername)
 #folderfilter = lambda folder: folder.startswith('[Gmail]/') and folder[8:] in ['All Mail', 'Trash', 'Drafts', 'Spam'] 
 #trashfolder = [Gmail]/Trash

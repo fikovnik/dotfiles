@@ -1,11 +1,17 @@
 [Unit]
-Description=Mail synchronization
+ConditionPathExists=%h/bin/sync-email.sh
+Description=E-mail sync
 RefuseManualStart=no
 RefuseManualStop=no
-After=network.target network-online.target dbus.socket
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/krikava/bin/sync-email.sh
-StandardOutput=syslog
-StandardError=syslog
+ExecStart=%h/bin/sync-email.sh
+StandardOutput=journal
+StandardError=journal
+TimeoutStopSec=12
+
+[Install]
+WantedBy=mail.target

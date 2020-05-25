@@ -1,11 +1,11 @@
 [Unit]
-Description=Mailbox synchronization timer
+Description=E-mail sync timer
 RefuseManualStart=no
 RefuseManualStop=no
 
 [Timer]
-OnBootSec=5min
-OnUnitActiveSec=15min
+OnBootSec=3min
+OnUnitActiveSec=10min
 Persistent=false
 Unit=sync-email.service
 
