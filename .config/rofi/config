@@ -4,4 +4,4 @@ rofi.terminal: st
 rofi.matching: fuzzy
 rofi.location: 2
 rofi.width: 100
-rofi.theme: ~/.config/rofi/flat-orange.rasi
+rofi.theme: ~/.config/rofi/nord.rasi
