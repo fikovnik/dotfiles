@@ -257,6 +257,12 @@
   (map!
    :g "M-;" #'evilnc-comment-or-uncomment-lines))
 
+(after! ob-tmux
+  (setq org-babel-tmux-session-prefix "ob-"
+        org-babel-tmux-terminal "st"
+        org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
+  (add-to-list 'org-babel-load-languages '(tmux . t)))
+
 (after! org
   (setq org-agenda-files '("~/Notes/Journal")
         org-blank-before-new-entry '(((heading .  t) (plain-list-item . t)))

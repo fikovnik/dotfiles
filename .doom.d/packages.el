@@ -1,6 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
+(package! ob-tmux)
 (package! org-journal)
 (package! org-mru-clock)
 (package! super-save)
