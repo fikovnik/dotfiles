@@ -13,7 +13,7 @@ labelsheader = X-Keywords
 
 [Repository gmail-local]
 type = GmailMaildir
-localfolders = ~/Mail2/krikava@gmail.com
+localfolders = ~/Mail/krikava@gmail.com
 
 [Repository gmail-remote]
 type = Gmail
