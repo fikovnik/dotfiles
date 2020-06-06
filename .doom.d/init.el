@@ -24,7 +24,7 @@
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy              ; a search engine for love and life
-         +prescient)
+        +prescient)
 
        :ui
        deft              ; notational velocity for Emacs
@@ -42,10 +42,10 @@
        (popup            ; tame sudden yet inevitable temporary windows
          ;;+all            ; catch all popups that start with an asterix
          +defaults)      ; default popup rules
-       pretty-code       ; replace bits of code with pretty symbols
+       ;; pretty-code       ; replace bits of code with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
-       unicode           ; extended unicode support for various languages
+       ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        (window-select     ; visually switch windows
@@ -97,7 +97,8 @@
        (lookup           ; helps you navigate your code and documentation
         +dictionary        ; in dictionary
         +docsets)          ; in Dash docsets locally
-       lsp
+       (lsp
+        +eglot)
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        ;; make              ; run make tasks from Emacs
