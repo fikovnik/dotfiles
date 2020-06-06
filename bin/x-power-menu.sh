@@ -7,7 +7,8 @@ hibernate_command="systemctl hibernate"
 suspend_command="systemctl suspend"
 
 DMENU="rofi -dmenu -p system -i"
-SESSION="cinnamon-session-quit --force --no-prompt"
+SESSION="xfce4-session-logout"
+LOCK="xflock4"
 
 read -r -d '' OPTIONS << EOM
 Lock
@@ -22,13 +23,13 @@ option=$(echo "$OPTIONS" | $DMENU | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 
 case $option in
     lock)
-        cinnamon-screensaver-command --lock
+        $LOCK
         ;;
     reboot)
         $SESSION --reboot
         ;;
     power-off)
-        $SESSION --power-off
+        $SESSION --halt
         ;;
     logout)
         $SESSION --logout
