@@ -99,6 +99,7 @@
         +docsets)          ; in Dash docsets locally
        (lsp
         +eglot)
+       ;lsp
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        ;; make              ; run make tasks from Emacs
@@ -186,7 +187,8 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate
+       literate
        (default +bindings +smartparens))
 
-(setq evil-want-C-i-jump nil)
+(setq evil-want-C-i-jump nil
+      evil-respect-visual-line-mode t)

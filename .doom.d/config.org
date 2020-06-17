@@ -1,5 +1,23 @@
+#+BEGIN_SRC emacs-lisp
 ;; ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+#+END_SRC
 
+;; ;; Resources:
+;; ;; - https://github.com/hlissner/doom-emacs/blob/develop/modules
+;; ;; - https://github.com/zaiste/.doom.d/
+;; ;;   - the screencast guy
+;; ;; - https://github.com/rschmukler/doom.d
+;; ;; - https://github.com/ar1a/dotfiles/blob/master/emacs/.doom.d
+;; ;; - https://github.com/forrestchang/.doom.d
+;; ;; - and https://github.com/search?l=Emacs+Lisp&o=desc&q=%22.doom.d%22&s=stars&type=Repositories
+
+;; TODO my terminal mode - make it a private package
+;; (xclip-mode -1)
+
+* Variables
+
+
+#+BEGIN_SRC emacs-lisp
 (defvar my-keys nil
   "The list of keys to be mapped as pairs of keySym and ascii code")
 
@@ -8,9 +26,120 @@
 
 (defvar my-st-dir "~/Projects/st"
   "The location of st terminal sources")
+#+END_SRC
 
+* Terminal keys
+** ST terminal
+Treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_node/elisp/Terminal_002dSpecific.html)
+
+#+BEGIN_SRC emacs-lisp
 (add-to-list 'term-file-aliases (quote ("st" . "xterm")))
+#+END_SRC
 
+** Input map in terminal
+
+This section fixes key bindings in Emacs running in a terminal.
+
+*** Overview
+
+There are several problems in handling key events in the current terminals. For
+example:
+- it is not possible to use modifiers other than =C-= and =M-=,
+- the =C-= modifier encodes lower or upper-case letters identically,
+- special names for some ASCII characters collide with =C-= modified letters (e.g., a tab is =C-i=),
+- there is no reliable way to use multiple modifier keys, other than, =M-S-=,
+- some keys cannot be used with =C-= modifier, eg., =;=, =.=, =/=.
+
+The reason for all of this is that there is no standard for these _corner_
+cases. There has been a several proposals:
+- [[http://www.leonerd.org.uk/hacks/fixterms/][Paul Evan's fixterms]]
+- [[https://sw.kovidgoyal.net/kitty/protocol-extensions.html#extensions-to-the-xterm-protocol][Kitty extension to xterm protocol]]
+- [[https://github.com/CyberShadow/term-keys][term-keys package]]
+- XTerm's [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:formatOtherKeys][formatOtherKeys]] and [[https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:modifyOtherKeys][modifyOtherKeys]] classes
+
+I decided to use Paul's fixterm proposition (which is compatible with XTerm's
+solution given =formatOtherKeys= is set to 1). It works as follows: for each
+key combination that is not expressible in the current schema it will use the
+following escape sequence:
+
+#+BEGIN_SRC text :tangle no
+ESC[<key>;<mod>u
+#+END_SRC
+
+where
+- =key= is the ASCII decimal value of the key
+- =mod= is 1 + bitmask encoding of the modifiers
+  - =S-= = 1
+  - =M-= = 2
+  - =C-= = 4
+
+For example, =C-;= sends =\e[59;5u=.
+
+Xterm can do that as well with =formatOtherKeys:1=, which can be verified using:
+
+#+BEGIN_SRC sh :tangle no
+xterm -xrm '*modifyOtherKeys:1' -xrm '*formatOtherKeys:1' -e cat -v
+#+END_SRC
+
+- With =modifyOtherKeys:2= it can do even =C-m=, =C-j= and =C-i=:
+  - =C-m= -- =109;5u=
+  - =C-S-m= -- =77;6u=
+  - =C-i= -- =105;5u=
+  - =C-S-i= -- =73;6u=
+  - =C-j= -- =106;5u=
+  - =C-S-j= -- =74;5u=
+  - =C-`= -- =96;5u=
+  - =C-\= -- =92;5u=
+
+For this to work, two things need to be updated:
+1. the terminal emulator (st in my case)
+2. the emacs's =input-decode-map=
+
+**** Terminal - st
+
+In [[https://st.suckless.org/][st]] (my terminal of choice), one has to modify two places:
+1. =mappedkeys= variable in =config.h= which contains a list of
+   custom-mapped keys:
+
+   #+BEGIN_SRC c :tangle no
+   XK_semicolon
+   #+END_SRC
+
+2. =keys= variable in =config.h= containing the actual mapping:
+
+   #+BEGIN_SRC c :tangle no
+   {XK_semicolon, ControlMask, "\033[59;5u", 0, 0}
+   #+END_SRC
+
+**** Emacs
+
+In emacs we only need to add the corresponding binding into the
+=input-decode-map=:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(define-key input-decode-map "\e[59;5u" (kbd "C-;"))
+#+END_SRC
+
+**** Notes about upper/lower keys binding
+
+From Emacs _Key Sequence Input_:
+
+#+BEGIN_QUOTE
+If an input character is upper-case (or has the shift modifier) and has no
+key binding, but its lower-case equivalent has one, then read-key-sequence'
+converts the character to lower case. Note that lookup-key' does not perform
+case conversion in this way.
+#+END_QUOTE
+**** Notes about [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Sequences.html#Key-Sequences][Key Sequences]] in Emacs
+- The Emacs Lisp representation for a key sequence is a string or vector.
+- The =kbd= macro returns a representation of a key sequence using some sort of
+  translation.
+- It is also possible to bind keys using a vector like =[C-S-M]= which will
+  create a =<C-M>= binding, a different from =C-S-M=.
+*** Configuration
+**** Default keys
+
+#+BEGIN_SRC emacs-lisp
 (setq my-keys-debug nil
       my-keys '((?\; "XK_semicolon"    ("C" "C-M"))
                 (?:  "XK_colon"        ("C-S" "C-M-S"))
@@ -46,7 +175,16 @@
                 (?+  "XK_plus"         ("C-S" "C-M-S"))
                 (?-  "XK_minus"        ("C" "C-M"))
                 ))
+#+END_SRC
 
+- The =C-m=, =C-M-m, =C-i= and =C-M-i= can be bind using symbol =[C-m]=, etc.
+  They are not =C-m=, but =<C-m>= from Emacs perspective.
+- It would be possible to map as well =C-j= but that is handy for inserting the
+  new line literal (using =C-q=) for example for replace.
+
+**** =C-<number>= and =C-M-<number>= keys
+
+#+BEGIN_SRC emacs-lisp
 (let ((nums '(1 2 3 4 5 6 7 8 9)))
   (mapc (lambda (x)
           ;; DEC 48 is '0' in ASCII table
@@ -54,7 +192,11 @@
                  (e (list code (format "XK_%d" x) (list "C" "C-M"))))
             (setq my-keys (append my-keys (list e)))))
         nums))
+#+END_SRC
 
+**** Auxiliary functions
+
+#+BEGIN_SRC emacs-lisp
 (defun flatten (list-of-lists)
   (apply #'append list-of-lists))
 
@@ -73,7 +215,9 @@
 (defun filter (condp lst)
   (delq nil
         (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 (defconst my--my-keys-prefix "\033["
   "Escape code sequence prefix")
 
@@ -91,7 +235,9 @@
 
 (defun my--encode-key-mod (key-code mod-code)
   (format "%s%d;%d%s" my--my-keys-prefix key-code mod-code my--my-keys-suffix))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 (defun my--iterate-keys (fun)
   (mapcan
    (lambda (key)
@@ -107,7 +253,11 @@
             (funcall fun key-code key-sym mod mod-info key-emacs)))
         (zip mods keys-emacs))))
    my-keys))
+#+END_SRC
 
+**** Enabling my-keys in st
+
+#+BEGIN_SRC emacs-lisp
 (defun my--escape-string (s)
   (mapconcat
    (lambda (x)
@@ -143,7 +293,17 @@
   (with-temp-buffer
     (insert (concat (join ",\n" (my--st-encode-mapped-keys)) ",\n"))
     (write-region (point-min) (point-max) (expand-file-name "my-mapped-keys.h" my-st-dir))))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle no
+(my-st-sync-mapped-keys)
+#+END_SRC
+
+**** Enabling my-keys in Emacs
+
+Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html][input-decode-map]].
+
+#+BEGIN_SRC emacs-lisp
 (defun my-emacs-encode-keys ()
   (my--iterate-keys
    (lambda (key-code key-sym mod mod-info key-emacs)
@@ -163,7 +323,15 @@
   (eval-after-load "xterm" '(my-emacs-encode-keys)))
 ;;(unless (display-graphic-p)
 ;;  (my-emacs-encode-keys))
+#+END_SRC
 
+**** TODO should this go the the xterm-function-map instead?
+- try it in GUI to see what works better
+- try it in Xterm
+- try term keys
+* Config
+
+#+BEGIN_SRC emacs-lisp
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (setq display-line-numbers-type t
@@ -739,3 +907,4 @@ pastes from X-SECONDARY."
 ;; ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
 ;; ;; This will open documentation for it, including demos of how they are used.
 ;; ;;
+#+END_SRC
