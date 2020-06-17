@@ -9,4 +9,5 @@ fi
 name=$1
 shift
 
-$HOME/bin/x-terminal.sh -d -n $name tmux new-session -A -s $name "$@"
+$HOME/bin/x-terminal.sh -n $name tmux new-session -A -s $name "$@"
+tdrop -ma -w 50% -h 50% -y 25% -x 25% ~/bin/x-terminal-dropdown.sh
