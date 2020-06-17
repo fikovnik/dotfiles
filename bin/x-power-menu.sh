@@ -1,14 +1,14 @@
 #!/bin/bash
 
-poweroff_command="systemctl poweroff"
-reboot_command="systemctl reboot"
-logout_command="i3-msg exit"
-hibernate_command="systemctl hibernate"
-suspend_command="systemctl suspend"
+cmd_lock="xscreensaver --lock"
+cmd_logout="pkill xinit"
+cmd_suspend="systemctl suspend"
+cmd_hibernate="systemctl hibernate"
+cmd_reboot="systemctl reboot"
+cmd_poweroff="systemctl poweroff"
+cmd_restartwm="pkill dwm"
 
 DMENU="rofi -dmenu -p system -i"
-SESSION="xfce4-session-logout"
-LOCK="xflock4"
 
 read -r -d '' OPTIONS << EOM
 Lock
@@ -17,28 +17,33 @@ Suspend
 Hibernate
 Reboot
 Power off
+Restart WM
 EOM
 
 option=$(echo "$OPTIONS" | $DMENU | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 
 case $option in
     lock)
-        $LOCK
-        ;;
-    reboot)
-        $SESSION --reboot
-        ;;
-    power-off)
-        $SESSION --halt
+        $cmd_lock
         ;;
     logout)
-        $SESSION --logout
+        $cmd_logout
         ;;
     suspend)
-        systemctl suspend
+        $cmd_suspend
         ;;
     hibernate)
-        systemctl hibernate
+        $cmd_hibernate
+        ;;
+    reboot)
+        $cmd_reboot
+        ;;
+    power-off)
+        $cmd_poweroff
+        ;;
+    restart-wm)
+        $cmd_restartwm
+        notify-send "WM restarted"
         ;;
     *)
         ;;
