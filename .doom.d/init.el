@@ -97,9 +97,9 @@
        (lookup           ; helps you navigate your code and documentation
         +dictionary        ; in dictionary
         +docsets)          ; in Dash docsets locally
-       (lsp
-        +eglot)
-       ;lsp
+       ;;(lsp
+       ;; +eglot)
+       lsp
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        ;; make              ; run make tasks from Emacs
