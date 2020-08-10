@@ -229,7 +229,8 @@
         comint-scroll-to-bottom-on-input 'this))
 
 (after! company
-  (setq company-minimum-prefix-length 4
+  (setq company-box-doc-enable nil
+        company-minimum-prefix-length 4
         company-show-numbers t
         company-selection-wrap-around t))
 
