@@ -373,7 +373,8 @@
         "<right>" #'my--ivy-enter-directory-or-insert
         "TAB" #'my--ivy-enter-directory-or-insert)
 
-  (setq ivy-count-format "(%d/%d) "
+  (setq ivy-action-wrap t
+        ivy-count-format "(%d/%d) "
         ivy-use-virtual-buffers t)
 
   (mapc
