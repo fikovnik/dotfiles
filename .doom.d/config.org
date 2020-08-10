@@ -589,7 +589,7 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
 
 (after! org
   (setq org-agenda-files '("~/Notes/Journal")
-        org-blank-before-new-entry '(((heading .  t) (plain-list-item . t)))
+        org-blank-before-new-entry '((heading . nil) (plain-list-item . nil))
         org-capture-templates
         '(("t" "Todo"
            entry (file+headline "~/Notes/Journal/TODO.org" "INBOX")  "* TODO %?\ncaptured on: %U\nfrom: %a\n%i")
@@ -597,8 +597,9 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
            entry (file+headline "~/Notes/Journal/Notes.org" "Notes") "* %?\ncaptured on: %U\nfrom: %a\n%i"))
         org-catch-invisible-edits 'smart
         org-confirm-babel-evaluate nil
-        org-bullets-bullet-list '("⁖")
+        org-cycle-separator-lines 1
         org-ellipsis " ․․․"
+        org-hide-emphasis-markers t
         org-id-link-to-org-use-id 'create-if-interactive
         org-image-actual-width nil
         org-imenu-depth 8
@@ -618,12 +619,27 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
         org-startup-with-inline-images t
         org-startup-indented t
         org-special-ctrl-a/e t
-        org-todo-keywords '((sequence "TODO(t)" "WAIT(w)" "NEXT(n)" "|" "DONE(d!)" "CANCELED(c@)"))
-        org-show-context-detail
-        '((agenda . local)
-          (bookmark-jump . lineage)
-          (isearch . tree) ; I want to see more info when looking at tree
-          (default . ancestors)))
+        org-superstar-headline-bullets-list '("⁖")
+        org-show-context-detail '((agenda . local)
+                                  (bookmark-jump . lineage)
+                                  (isearch . tree) ; I want to see more info when looking at tree
+                                  (default . ancestors))
+        org-todo-keywords '((sequence "TODO(t)" "WAIT(w)" "NEXT(n)" "|" "DONE(d!)" "CANCELED(c@)")))
+
+  (defun my-org-show-current-heading-tidily ()
+    (interactive)
+    "Show next entry, keeping other entries closed."
+    (if (save-excursion (end-of-line) (outline-invisible-p))
+        (progn (org-show-entry) (show-children))
+      (outline-back-to-heading)
+      (unless (and (bolp) (org-on-heading-p))
+        (org-up-heading-safe)
+        (hide-subtree)
+        (error "Boundary reached"))
+      (org-overview)
+      (org-reveal t)
+      (org-show-entry)
+      (show-children)))
 
   (defun my-org-babel-remove-result-buffer ()
     "Remove results from every code block in buffer."
