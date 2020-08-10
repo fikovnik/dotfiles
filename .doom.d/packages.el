@@ -3,6 +3,7 @@
 
 (package! ob-tmux)
 (package! org-mru-clock)
+(package! org-ref)
 (package! super-save)
 
 ;; This is where you install packages, by declaring them with the `package!'
