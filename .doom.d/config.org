@@ -10,12 +10,11 @@
 ;; ;; - https://github.com/ar1a/dotfiles/blob/master/emacs/.doom.d
 ;; ;; - https://github.com/forrestchang/.doom.d
 ;; ;; - and https://github.com/search?l=Emacs+Lisp&o=desc&q=%22.doom.d%22&s=stars&type=Repositories
-
+;; ;; - https://tecosaur.github.io/emacs-config/config.html
 ;; TODO my terminal mode - make it a private package
 ;; (xclip-mode -1)
 
 * Variables
-
 
 #+BEGIN_SRC emacs-lisp
 (defvar my-keys nil
@@ -526,6 +525,11 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
        (find-file-other-window (expand-file-name file-name (ivy-state-directory ivy-last)))
        (selected-window))))
 
+  (defun my--ivy-dispatching-done ()
+    (interactive)
+    (let ((ivy-read-action-function 'ivy-read-action-ivy))
+      (ivy-dispatching-done)))
+
   ;; M-o show action list
   ;; C-' ivy-avy
   ;; C-M-m ivy-call - does the action, but does not exit ivy
@@ -533,7 +537,7 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
   ;; C-M-n/p cobines C-n/p and C-M-m
   (map! :map ivy-minibuffer-map
         "C-j" #'ivy-alt-done ; has to be explicit because of evil
-        "C-z" #'ivy-dispatching-done
+        "C-z" #'my--ivy-dispatching-done
         "C-w" #'ivy-yank-word
         "C-'" #'ivy-avy
         "<left>" #'counsel-up-directory
@@ -672,6 +676,140 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
           "s" #'org-schedule
           "t" #'org-time-stamp
           "T" #'org-time-stamp-inactive)))
+#+END_SRC
+
+#+RESULTS:
+
+** Configuring bibliography management
+
+#+BEGIN_SRC emacs-lisp
+(setq my-bibliography-files '("~/Sync/Papers/references.bib"))
+(setq my-bibliography-artifacts '("~/Sync/Papers/Artifacts"))
+(setq my-bibliography-notes "~/Sync/Notes/Journal/Bibliography.org")
+(setq my-bibliography-readling-list "~/Sync/Notes/Journal/Readings.org")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun my-find-file-external (fpath)
+  (call-process shell-file-name nil
+                nil nil
+                shell-command-switch
+                (format "%s %s"
+                        (if (eq system-type 'darwin)
+                            "open"
+                          "xdg-open")
+                        (shell-quote-argument fpath))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(after! ivy-bibtex
+
+  (setq bibtex-completion-pdf-open-function
+        (lambda (fpath)
+          (if (string= (file-name-extension fpath) "pdf")
+              (find-file fpath)
+            (my-find-file-external fpath))))
+
+  (defun my-bibtex-completion-open-pdf-external (keys &optional fallback-action)
+    (let ((bibtex-completion-pdf-open-function 'my-find-file-external))
+      (bibtex-completion-open-pdf keys fallback-action)))
+
+  ;; from: https://github.com/org-roam/org-roam-bibtex
+  (defun orb-process-file-field (citekey)
+    "Process the 'file' BibTeX field and resolve if there are multiples.
+     Search the disk for the document associated with this BibTeX
+     entry.  The disk matching is based on looking in the
+     `bibtex-completion-library-path' for a file with the
+     CITEKEY.
+     \(Mendeley, Zotero, normal paths) are all supported.  If there
+     are multiple files found the user is prompted to select which one
+     to enter"
+    (let* ((entry (bibtex-completion-get-entry citekey))
+           (paths (bibtex-completion-find-pdf entry)))
+      (if (= (length paths) 1)
+          (car paths)
+        (completing-read "File to use: " paths))))
+
+  (ivy-bibtex-ivify-action my-bibtex-completion-open-pdf-external my-ivy-bibtex-open-pdf-external)
+
+  (ivy-add-actions
+   'ivy-bibtex
+   '(("E" my-ivy-bibtex-open-pdf-external "Open file in external viewer")
+     ("c" ivy-bibtex-insert-citation "Insert citation")
+     ("r" ivy-bibtex-insert-reference "Insert reference")))
+
+  (setq bibtex-completion-bibliography my-bibliography-files
+        bibtex-completion-library-path my-bibliography-artifacts
+        bibtex-completion-notes-path my-bibliography-notes
+        bibtex-completion-notes-template-one-file (concat
+                                                   "\n"
+                                                   "* ${author-or-editor} (${year}): ${title}\n"
+                                                   "  :PROPERTIES:\n"
+                                                   "  :Custom_ID: ${=key=}\n"
+                                                   "  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+                                                   "  :URL: ${url}"
+                                                   "  :DOI: ${doi}\n"
+                                                   "  :END:\n\n"))
+(add-to-list 'ivy-height-alist `(ivy-bibtex . ,(length (plist-get ivy--actions-list 'ivy-bibtex)))))
+#+END_SRC
+
+#+RESULTS:
+: ((ivy-bibtex . 13) (counsel-evil-registers . 5) (counsel-yank-pop . 5) (counsel-git-log . 4))
+
+Other files than PDF have to specify the file in the =file= field of the bibtex
+entry.
+
+#+BEGIN_SRC emacs-lisp
+(after! org-noter
+  (setq org-noter-default-notes-file-names `(,my-bibliography-notes)))
+#+END_SRC
+
+Based on the draft of the [[https://github.com/hlissner/doom-emacs/blob/5bc10f8b75a8d08ad37eb3cff15347b46d0427e6/modules/tools/biblio/config.el][biblio doom module]]
+** TODO org-ref-cite-keymap
+#+BEGIN_SRC emacs-lisp
+(use-package! org-ref
+  :when (featurep! :lang org)
+  :after org
+  :preface
+  ;; This need to be set before the package is loaded, because org-ref will
+  ;; automatically `require' an associated package during its loading.
+  (setq org-ref-completion-library (cond ((featurep! :completion ivy)  #'org-ref-ivy-cite)
+                                         ((featurep! :completion helm) #'org-ref-helm-bibtex)
+                                         (t                            #'org-ref-reftex)))
+  :custom
+  (org-ref-bibliography-notes my-bibliography-notes)
+  (org-ref-bibliography-files my-bibliography-files)
+  (org-ref-default-bibliography my-bibliography-files)
+  (org-ref-pdf-directory (car my-bibliography-artifacts))
+  (reftex-default-bibliography org-ref-default-bibliography)
+  ;; Although the name is helm-bibtex, it is actually a bibtex-completion function
+  ;; it is the legacy naming of the project helm-bibtex that causes confusion.
+  (org-ref-open-pdf-function 'org-ref-get-pdf-filename-helm-bibtex)
+  (org-ref-notes-function #'org-ref-notes-function-one-file))
+#+END_SRC
+
+** Rest of the config
+#+BEGIN_SRC emacs-lisp
+(after! org-journal
+  ;; from https://github.com/bastibe/org-journal#journal-capture-template
+  (defun org-journal-find-location ()
+    ;; Open today's journal, but specify a non-nil prefix argument in order to
+    ;; inhibit inserting the heading; org-capture will insert the heading.
+    (org-journal-new-entry t)
+    ;; Position point on the journal's top-level heading so that org-capture
+    ;; will add the new entry as a child entry.
+    (goto-char (point-min)))
+  (setq org-journal-date-format "%A, %B %d %Y"
+        org-journal-file-format "Journal-%Y.org"
+        org-journal-dir "~/Sync/Notes/Journal/"
+        org-journal-file-type 'yearly)
+  (add-to-list 'org-capture-templates
+               '("j" "Journal" entry (function org-journal-find-location)
+                  "** %(format-time-string org-journal-time-format)%?")))
+
+(after! rustic
+    (setq lsp-rust-server 'rust-analyzer
+          rustic-lsp-server 'rust-analyzer))
 
 (after! projectile
   (mapc (lambda (x)
@@ -716,27 +854,9 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
   (:map flyspell-mode-map
     ("M-'" . flyspell-correct-wrapper)))
 
-(use-package! org-journal
-  :after org
-  :preface
-  ;; from https://github.com/bastibe/org-journal#journal-capture-template
-  (defun org-journal-find-location ()
-    ;; Open today's journal, but specify a non-nil prefix argument in order to
-    ;; inhibit inserting the heading; org-capture will insert the heading.
-    (org-journal-new-entry t)
-    ;; Position point on the journal's top-level heading so that org-capture
-    ;; will add the new entry as a child entry.
-    (goto-char (point-min)))
-  :commands (org-journal-new-entry org-journal-search-forever)
-  :custom
-  (org-journal-date-format "%A, %B %d %Y")
-  (org-journal-file-format "Journal-%Y.org")
-  (org-journal-dir "~/Sync/Notes/Journal/")
-  (org-journal-file-type 'yearly)
-  :init
-  (add-to-list 'org-capture-templates
-               '("j" "Journal" entry (function org-journal-find-location)
-                  "** %(format-time-string org-journal-time-format)%?")))
+;; -----------------------------------------------------------------------------
+;; My functions
+;; -----------------------------------------------------------------------------
 
 (defun my-save-buffer-and-switch-to-normal-mode ()
   (interactive)
@@ -898,6 +1018,9 @@ pastes from X-SECONDARY."
       :desc "Time clock" "T" #'org-mru-clock-in
       :desc "Recent clocks" "R" #'org-mru-clock-select-recent-task
       :desc "Journal entry" "J" #'org-journal-new-entry
+      (:prefix ("n" . "notes")
+        :desc "Org ref" "r" #'org-ref
+        :desc "Bibliography" "b" #'helm-bibtex)
       (:prefix ("w" . "window")
         ;; the following are mapped to moving to window function
         ;; these are no needed as they are already mapped to C-w h / leader h
