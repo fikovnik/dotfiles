@@ -928,3 +928,10 @@ pastes from X-SECONDARY."
 ;; ;; This will open documentation for it, including demos of how they are used.
 ;; ;;
 #+END_SRC
+
+** Setup printing
+
+#+BEGIN_SRC emacs-lisp
+(setq pdf-misc-print-programm "/usr/bin/lpr"
+      pdf-misc-print-programm-args '("-o media=A4" "-o sides=two-sided-long-edge"))
+#+END_SRC
