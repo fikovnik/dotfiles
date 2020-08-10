@@ -178,6 +178,7 @@
       evil-want-fine-undo t
       evil-cross-lines t
       org-directory (expand-file-name "~/Notes")    ; must be set before org is loaded
+      undo-limit (* 100 1024 1024)
       user-full-name "Filip Krikava"
       user-mail-address "krikava@gmail.com"
       visual-order-cursor-movement t)
