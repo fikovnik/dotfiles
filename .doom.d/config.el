@@ -173,6 +173,7 @@
       doom-localleader-alt-key "C-M-,"
       doom-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 18)
       doom-big-font (font-spec :family "DejaVu Sans Mono for Powerline" :size 24)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 24)
       doom-theme 'doom-one
       evil-want-fine-undo t
       evil-cross-lines t
