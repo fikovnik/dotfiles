@@ -191,4 +191,5 @@
        (default +bindings +smartparens))
 
 (setq evil-want-C-i-jump nil
+      evil-want-C-i-jump t
       evil-respect-visual-line-mode t)
