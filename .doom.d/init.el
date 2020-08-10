@@ -192,4 +192,5 @@
 
 (setq evil-want-C-i-jump nil
       evil-want-C-i-jump t
+      evil-want-C-u-scroll nil
       evil-respect-visual-line-mode t)
