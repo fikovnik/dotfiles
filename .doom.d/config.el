@@ -759,3 +759,6 @@ pastes from X-SECONDARY."
 ;; ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
 ;; ;; This will open documentation for it, including demos of how they are used.
 ;; ;;
+
+(setq pdf-misc-print-programm "/usr/bin/lpr"
+      pdf-misc-print-programm-args '("-o media=A4" "-o sides=two-sided-long-edge"))
