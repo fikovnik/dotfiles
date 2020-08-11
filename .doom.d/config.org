@@ -1058,3 +1058,21 @@ pastes from X-SECONDARY."
 (setq pdf-misc-print-programm "/usr/bin/lpr"
       pdf-misc-print-programm-args '("-o media=A4" "-o sides=two-sided-long-edge"))
 #+END_SRC
+** TMUX environment refresh
+
+#+BEGIN_SRC emacs-lisp
+(defun my-tmux-refresh-environment ()
+  (interactive)
+  (let ((tmux-update-envir (split-string-and-unquote (shell-command-to-string "tmux show-options -gv update-environment") "[\n]"))
+        (tmux-envir-string (split-string-and-unquote (shell-command-to-string "tmux show-environment") "[\n]"))
+        (tmux-envir (mapcar (lambda (x) (split-string x "[=]")) tmux-envir-string))
+        (update-vars (delq nil (mapcar (lambda (x) (when (not (null (member (car x) tmux-update-envir))) x)) tmux-envir))))
+    (mapc (lambda (x)
+            (let ((name (car x))
+                  (val (cadr x)))
+              (message "Setting %s to '%s'" name val)
+              (setenv name val)))
+          update-vars)))
+
+#+END_SRC
+
