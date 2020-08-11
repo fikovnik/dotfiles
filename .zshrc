@@ -53,6 +53,17 @@ function cdu {
   cd "$DIR"
 }
 
+function refresh-env {
+  local socket_path="$(tmux show-environment | sed -n 's/^SSH_AUTH_SOCK=//p')"
+
+  if ! [[ "$socket_path" ]]; then
+    echo 'no socket path' >&2
+    return 1
+  else
+    export SSH_AUTH_SOCK="$socket_path"
+  fi
+}
+
 z() {
     dir="$(fasd -Rdl "$*" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
