@@ -1061,11 +1061,16 @@ pastes from X-SECONDARY."
 ** TMUX environment refresh
 
 #+BEGIN_SRC emacs-lisp
-(defun my-tmux-refresh-environment ()
+(defun my-refresh-env ()
   (interactive)
-  (let ((tmux-update-envir (split-string-and-unquote (shell-command-to-string "tmux show-options -gv update-environment") "[\n]"))
-        (tmux-envir-string (split-string-and-unquote (shell-command-to-string "tmux show-environment") "[\n]"))
-        (tmux-envir (mapcar (lambda (x) (split-string x "[=]")) tmux-envir-string))
+  (let ((tmux-update-envir
+         (split-string-and-unquote
+          (shell-command-to-string "tmux show-options -gv update-environment") "[\n]"))
+        (tmux-envir-string
+         (split-string-and-unquote
+          (shell-command-to-string "tmux show-environment") "[\n]"))
+        (tmux-envir
+         (mapcar (lambda (x) (split-string x "[=]")) tmux-envir-string))
         (update-vars (delq nil (mapcar (lambda (x) (when (not (null (member (car x) tmux-update-envir))) x)) tmux-envir))))
     (mapc (lambda (x)
             (let ((name (car x))
