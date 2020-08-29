@@ -7,5 +7,6 @@ LAYOUT=$(find $DIR -type f | sed 's=.*/==;s=\.[^.]*$==' | rofi -dmenu -p "Screen
 [ -z "$LAYOUT" ] && exit
 
 $DIR/$LAYOUT.sh
+feh --bg-scale ~/Sync/Pictures/Wallpapers/dolomites.jpg
 
 exit
