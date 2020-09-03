@@ -50,11 +50,11 @@ function refresh-env {
   fi
 }
 
-z() {
+function z() {
     dir="$(fasd -Rdl "$*" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
 
-fman() {
+function fman() {
     man -k . | fzf --prompt='> ' | awk '{print $1}' | xargs -r man
 }
 
@@ -73,6 +73,7 @@ export DEFAULT_USER=krikava
 export LC_ALL=en_US.UTF-8
 
 # aliases
+alias o=~/bin/open.sh
 alias e="emacsclient -t"
 alias vi=vim
 alias emacs='emacs -nw'
