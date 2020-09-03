@@ -9,20 +9,6 @@ fi
 ## Functions
 ################################################################################
 
-function config_osx {
-    # iTerm2
-    [[ -e ${HOME}/.iterm2_shell_integration.zsh ]] && source ${HOME}/.iterm2_shell_integration.zsh
-
-    [[ -d /usr/local/share/zsh-completions ]] && fpath=(/usr/local/share/zsh-completions $fpath)
-
-    alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
-}
-
-function config_linux {
-  [[ -d /usr/lib/jvm/java ]] && export JAVA_HOME=/usr/lib/jvm/java
-  alias o=~/bin/open.sh
-}
-
 function kill-process {
   local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process]'" | awk '{print $2}')
 
@@ -150,11 +136,6 @@ if [ -z "$SSH_CONNECTION" ]; then
   export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 fi
 export GPG_TTY=$(tty)
-
-case $(uname) in
-    Darwin*) config_osx ;;
-    Linux*) config_linux ;;
-esac
 
 # should be done by zprezto
 # [[ -f ~/.dir_colors ]] && eval $(dircolors ~/.dir_colors)
