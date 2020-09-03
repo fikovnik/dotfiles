@@ -1,27 +1,8 @@
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-execute pathogen#infect()
-
 let mapleader = ","
-
-if $TERM_PROGRAM =~ "iTerm"
-  " terminal mapping
-
-  " true colors
-  set termguicolors
-
-  " bubble lines / selection up/down
-  nmap [1;9A [e   "<M-Up>
-  vmap [1;9A [egv "<M-Up>
-  nmap [1;9B ]e   "<M-Down>
-  vmap [1;9B ]egv "<M-Down>
-  " alt+backspace deletes a word - it comes from iTerm2 sending '\<C-W>'
-endif
 
 " colors
 syntax enable
 set background=dark
-"colorscheme solarized
-colorscheme solarized8_dark
 
 " custom colors
 hi SpellBad cterm=underline ctermfg=red
