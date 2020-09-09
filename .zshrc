@@ -67,11 +67,6 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-export DEFAULT_USER=krikava
-
-# language
-export LC_ALL=en_US.UTF-8
-
 # aliases
 alias o=~/bin/open.sh
 alias e="emacsclient -t"
@@ -107,15 +102,6 @@ else
     export VISUAL=$EDITOR
 fi
 
-# pyenv
-[[ -f /usr/local/bin/pyenv ]] && eval "$(pyenv init -)"
-
-# custom keys
-bindkey '^[z' undo
-
-# azure
-type azure >/dev/null 2>&1 && . <(azure --completion)
-
 # fzf
 [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
@@ -124,13 +110,6 @@ export FZF_DEFAULT_OPTS='
   --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
   --color pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B
 '
-
-# fix keyboard in st
-bindkey '\e[1;3D' backward-word
-bindkey '\e[1;3C' forward-word
-bindkey '\e\eOD' backward-word
-bindkey '\e\eOC' forward-word
-
 # this is here because I don't want to use the gpg
 # module from zprezto
 if [ -z "$SSH_CONNECTION" ]; then
@@ -153,4 +132,3 @@ export SDKMAN_DIR="/home/krikava/.sdkman"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-fpath+=~/.zfunc
