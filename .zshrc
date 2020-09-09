@@ -13,6 +13,9 @@ fi
 # dot files
 alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
+
+alias emacs='emacs -nw'
+
 HISTSIZE=50000
 SAVEHIST=50000
 
