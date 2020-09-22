@@ -446,7 +446,7 @@ Make Emacs aware of these new keys using the [[https://www.gnu.org/software/emac
 
 (after! ess
   (setq ess-default-style 'RStudio
-        ess-indent-level 4
+        ess-indent-level 2
         ess-nuke-trailing-whitespace-p t
         ess-tab-complete-in-script t
         ess-build-tags-command "system(\"~/bin/rtags.R '%s' '%s'\")"
