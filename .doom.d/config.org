@@ -34,7 +34,6 @@ Treat st terminal as xterm (cf. https://www.gnu.org/software/emacs/manual/html_n
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'term-file-aliases (quote ("st" . "xterm")))
 #+END_SRC
-
 ** Input map in terminal
 
 This section fixes key bindings in Emacs running in a terminal.
@@ -952,10 +951,9 @@ pastes from X-SECONDARY."
  :g "C-S-C" #'my-copy-to-xclipboard
  :i "C-d"   #'evil-delete-char
  :g "M-u"   #'universal-argument
- (:when (display-graphic-p)
-  ; The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
-  ; is better to use the terminal paste since it will be a [[https://cirw.in/blog/bracketed-paste][bracketed paste]].
-  :g "C-S-V" #'my-paste-from-xclipboard)
+ ;; The paste shortcut (=C-S-V=) we only want in GUI. When running in terminal it
+ ;; is better to use the terminal paste since it will be a [[https://cirw.in/blog/bracketed-paste][bracketed paste]].
+ (:when (display-graphic-p) :g "C-S-V" #'my-paste-from-xclipboard)
  :n "M-y"   #'counsel-yank-pop
  :g "M-1"   #'winum-select-window-1
  :g "M-2"   #'winum-select-window-2
