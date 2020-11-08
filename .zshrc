@@ -1,0 +1,1 @@
+/home/krikava/.zprezto/runcoms/zshrc
