@@ -85,6 +85,10 @@ XF86MonBrightnessUp
 XF86MonBrightnessDown
 	xbacklight -dec 10 && notify-send 'brightness down' || notify-send 'trouble invoking xbacklight'
 
+# Emacs anywhere
+super + e
+  ~/.emacs_anywhere/bin/run
+
 # #
 # # bspwm hotkeys
 # #
