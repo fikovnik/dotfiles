@@ -2,9 +2,12 @@
 ;;; $DOOMDIR/packages.el
 
 (package! ob-tmux)
-(package! org-mru-clock)
 (package! org-ref)
 (package! super-save)
+
+(package! mips-mode :pin "75152fc78b")
+(package! haxor-mode :pin "6fa25a8e6b")
+(package! nasm-mode :pin "65ca6546fc")
 
 ;; This is where you install packages, by declaring them with the `package!'
 ;; macro, then running 'doom refresh' on the command line. You'll need to

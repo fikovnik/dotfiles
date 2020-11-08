@@ -27,7 +27,7 @@
         +prescient)
 
        :ui
-       deft              ; notational velocity for Emacs
+       ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
@@ -44,7 +44,7 @@
          +defaults)      ; default popup rules
        ;; pretty-code       ; replace bits of code with pretty symbols
        ;;tabs              ; an tab bar for Emacs
-       ;;treemacs          ; a project drawer, like neotree but cooler
+       treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -55,7 +55,7 @@
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
-       file-templates    ; auto-snippets for empty files
+       ;;file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        format            ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
@@ -63,7 +63,7 @@
        multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
-       rotate-text       ; cycle region at point between text candidates
+       ;;rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
        word-wrap         ; soft wrapping with language-aware indent
 
@@ -75,14 +75,16 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell            ; a consistent, cross-platform shell (WIP)
+       ;;eshell            ; a consistent, cross-platform shell (WIP)
        shell             ; a terminal REPL for Emacs
        term              ; terminals in Emacs
        vterm             ; another terminals in Emacs
 
        :checkers
        syntax            ; tasing you for every semicolon you forget
-       (spell +aspell)   ; tasing you for misspelling mispelling
+       (spell            ; tasing you for misspelling mispelling
+         +aspell
+         +everywhere)
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -98,24 +100,20 @@
        (lookup           ; helps you navigate your code and documentation
         +dictionary        ; in dictionary
         +docsets)          ; in Dash docsets locally
-       ;;(lsp
-       ;; +eglot)
        lsp
-       ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
-       ;; make              ; run make tasks from Emacs
+       make              ; run make tasks from Emacs
        pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
        taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
-       tmux              ; an API for interacting with tmux
+       ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :lang
        (agda +local)       ; types of types of types of types...
-       ;;assembly          ; assembly for fun or debugging
        (cc +lsp)                ; C/C++/Obj-C madness
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
@@ -130,7 +128,7 @@
        ess               ; emacs speaks statistics
        ;;faust             ; dsp, but you get to keep your soul
        ;;fsharp            ; ML stands for Microsoft's Language
-       (go +lsp)           ; the hipster dialect
+       ;;(go +lsp)           ; the hipster dialect
        (haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        idris             ;
@@ -152,10 +150,10 @@
         ;;+hugo            ; use Emacs for hugo blogging
         +journal
         +noter
-        ;;+jupyter        ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
         ;;+pomodoro        ; be fruitful with the tomato technique
-        +present)        ; using org-mode for presentations
+        ;;+present)        ; using org-mode for presentations
+        )
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
@@ -177,10 +175,11 @@
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
+       yaml              ; JSON, but readable
 
        :email
        ;;(mu4e +gmail)
-       notmuch
+       ;;notmuch
        ;;(wanderlust +gmail)
 
        :app
@@ -193,7 +192,6 @@
        literate
        (default +bindings +smartparens))
 
-(setq evil-want-C-i-jump nil
-      evil-want-C-i-jump t
-      evil-want-C-u-scroll nil
+(setq evil-want-C-i-jump t
+      evil-want-C-u-scroll t
       evil-respect-visual-line-mode t)
