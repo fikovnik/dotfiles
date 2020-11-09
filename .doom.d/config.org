@@ -300,54 +300,41 @@ Split window predictably, prompting for buffer to open.
      (not (string= (ivy-state-current ivy-last) "./"))
      (not (null (ivy-expand-file-if-directory (ivy-state-current ivy-last))))))
 
-  (defun my--ivy-enter-directory-or-insert ()
+  (defun my--ivy-exit-directory-or-backward-char ()
     (interactive)
     (if (my--ivy-is-directory-p)
-        (counsel-down-directory)
-      (progn
-        (let ((last-input (ivy--input)))
-          (ivy-insert-current)
-          (when (string= last-input (ivy--input))
-            (ivy-call))))))
+        (counsel-up-directory)
+      (backward-char)))
 
-  (defun my--ivy-other-window-action (file-name)
-    "Opens the current candidate in another window."
-    (select-window
-     (with-ivy-window
-       (find-file-other-window (expand-file-name file-name (ivy-state-directory ivy-last)))
-       (selected-window))))
-
-  (defun my--ivy-dispatching-done ()
+  (defun my--ivy-enter-directory-or-insert ()
     (interactive)
-    (let ((ivy-read-action-function 'ivy-read-action-ivy))
-      (ivy-dispatching-done)))
+    (cond ((< (point) (length (thing-at-point 'line t))) (forward-char))
+          ((my--ivy-is-directory-p) (counsel-down-directory))
+          (t (let ((last-input (ivy--input)))
+               (ivy-insert-current)
+               (when (string= last-input (ivy--input))
+                 (ivy-call))))))
 
-  ;; M-o show action list
-  ;; C-' ivy-avy
-  ;; C-M-m ivy-call - does the action, but does not exit ivy
+  ;; M-o show some weird hydra
+  ;; C-o show action list
   ;; C-M-o like M-o but does not quit
+  ;; C-M-m ivy-call - does the action, but does not quit
   ;; C-M-n/p cobines C-n/p and C-M-m
+  ;; M-n/p recalls history
   (map! :map ivy-minibuffer-map
-        "C-j" #'ivy-alt-done ; has to be explicit because of evil
+        "C-j" #'ivy-immediate-done
         "C-z" #'my--ivy-dispatching-done
         "C-w" #'ivy-yank-word
         "C-'" #'ivy-avy
-        "<left>" #'counsel-up-directory
-        "<backtab>" #'counsel-up-directory
+        "<left>" #'my--ivy-exit-directory-or-backward-char
+;        "<backtab>" #'counsel-up-directory
         "<right>" #'my--ivy-enter-directory-or-insert
         "TAB" #'my--ivy-enter-directory-or-insert)
 
   (setq ivy-action-wrap t
         ivy-count-format "(%d/%d) "
-        ivy-read-action-function #'ivy-hydra-read-action
+        ivy-read-action-function 'ivy-hydra-read-action
         ivy-use-virtual-buffers t)
-
-  (mapc
-   (lambda (cmd)
-     (ivy-add-actions
-      cmd
-      '(("O" my--ivy-other-window-action "open in other window"))))
-   '(counsel-find-file counsel-recentf counsel-fzf counsel-dired doom/find-file-in-private-config))
 
   (minibuffer-depth-indicate-mode 1))
 #+END_SRC
