@@ -292,43 +292,45 @@ Split window predictably, prompting for buffer to open.
   (setq flycheck-lintr-linters "with_defaults(infix_spaces_linter=NULL, line_length_linter=NULL)"))
 #+END_SRC
 ** Ivy
+
+| Key     | Description                                   |
+|---------+-----------------------------------------------|
+| =C-o=     | Show possible actions                         |
+| =C-M-o=   | Like =C-o= but do not quit                      |
+| =M-j=     | Preview candidate                             |
+| =C-M-n/p= | Combines next (=C-n=) / previous (=C-p=) with =M-j= |
+| =M-n/p=   | Recalls history                               |
+| =C-j=     | Selects the typed-in input                    |
+| =C-w=     | Copies the content of kill-buffer             |
+| =C-'=     | Use avy to select candidates                  |
+| =right=   | Enters directory or move forward the cursor   |
+| =left=    | Exists directory or move backward the cursor  |
+| =M-o=     | Shows the transient state hydra               |
+
 #+BEGIN_SRC emacs-lisp
 (after! ivy
-  (defun my--ivy-is-directory-p ()
-    (and
-     (> ivy--length 0)
-     (not (string= (ivy-state-current ivy-last) "./"))
-     (not (null (ivy-expand-file-if-directory (ivy-state-current ivy-last))))))
-
   (defun my--ivy-exit-directory-or-backward-char ()
     (interactive)
-    (if (my--ivy-is-directory-p)
+    (if (and ivy--directory (= (minibuffer-prompt-end) (point)) (= (length (ivy--input)) 0))
         (counsel-up-directory)
       (backward-char)))
 
-  (defun my--ivy-enter-directory-or-insert ()
+  (defun my--ivy-enter-directory-or-forward-char ()
     (interactive)
-    (cond ((< (point) (length (thing-at-point 'line t))) (forward-char))
-          ((my--ivy-is-directory-p) (counsel-down-directory))
-          (t (let ((last-input (ivy--input)))
-               (ivy-insert-current)
-               (when (string= last-input (ivy--input))
-                 (ivy-call))))))
+    (letrec ((pos (point))
+             (input-size (length (ivy--input)))
+             (input-end (+ (minibuffer-prompt-end) input-size)))
+      (cond ((and (< (point) input-end) (> input-size 0)) (forward-char))
+            ((and ivy--directory (ivy--dirname-p (ivy-state-current ivy-last)))
+             (counsel-down-directory))
+            (t (ivy-partial-or-done)))))
 
-  ;; M-o show some weird hydra
-  ;; C-o show action list
-  ;; C-M-o like M-o but does not quit
-  ;; C-M-m ivy-call - does the action, but does not quit
-  ;; C-M-n/p cobines C-n/p and C-M-m
-  ;; M-n/p recalls history
   (map! :map ivy-minibuffer-map
         "C-j" #'ivy-immediate-done
-        "C-z" #'my--ivy-dispatching-done
         "C-w" #'ivy-yank-word
         "C-'" #'ivy-avy
         "<left>" #'my--ivy-exit-directory-or-backward-char
-;        "<backtab>" #'counsel-up-directory
-        "<right>" #'my--ivy-enter-directory-or-insert
+        "<right>" #'my--ivy-enter-directory-or-forward-char
         "TAB" #'my--ivy-enter-directory-or-insert)
 
   (setq ivy-action-wrap t
@@ -338,6 +340,7 @@ Split window predictably, prompting for buffer to open.
 
   (minibuffer-depth-indicate-mode 1))
 #+END_SRC
+
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (after! magit
