@@ -340,7 +340,15 @@ Split window predictably, prompting for buffer to open.
 
   (minibuffer-depth-indicate-mode 1))
 #+END_SRC
-
+** LSP
+#+begin_src emacs-lisp
+(after! lsp-mode
+  (setq lsp-enable-symbol-highlighting nil))
+#+end_src
+#+begin_src emacs-lisp
+(after! lsp-ui
+  (setq lsp-ui-sideline-enable nil))
+#+end_src
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (after! magit
@@ -504,6 +512,7 @@ Remap keys in insert mode. I just like the =C-k= too much.
 #+BEGIN_SRC emacs-lisp
 (after! rustic
     (setq lsp-rust-server 'rust-analyzer
+          lsp-rust-analyzer-server-display-inlay-hints t
           rustic-lsp-server 'rust-analyzer))
 #+END_SRC
 ** Super save
