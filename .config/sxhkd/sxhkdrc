@@ -26,6 +26,10 @@ super + c
 super + n
   networkmanager_dmenu
 
+# bluetooth menu
+super + b
+  rofi-bluetooth
+
 # password menu
 super + p
   ~/bin/x-pass-menu.sh
