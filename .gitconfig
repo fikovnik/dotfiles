@@ -6,7 +6,6 @@
   excludesfile = ~/.gitignore_global
   autocrlf = input
   ignorecase = false
-  pager = delta
 
 [color]
   ui = true
@@ -34,16 +33,9 @@
   default = simple
 
 [credential]
-# helper = cache --timeout=36000
-  helper = /usr/bin/pass-git-helper
+  helper = cache --timeout=36000
+; helper = /usr/bin/pass-git-helper
 
 [pull]
   rebase = true
 
-[delta]
-  plus-color = "#012800"
-  minus-color = "#340001"
-  syntax-theme = Monokai Extended
-
-[interactive]
-  diffFilter = delta --color-only
