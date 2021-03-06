@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh duckdns
+Wants=duckdns.timer
+
+[Service]
+Type=oneshot
+ExecStart=/home/krikava/bin/duckdns.sh
+
+[Install]
+WantedBy=multi-user.target
