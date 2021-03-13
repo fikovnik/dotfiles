@@ -8,5 +8,6 @@ LAYOUT=$(find $DIR -type f | sed 's=.*/==;s=\.[^.]*$==' | rofi -dmenu -p "Screen
 
 $DIR/$LAYOUT.sh
 feh --bg-scale ~/Sync/Pictures/Wallpapers/dolomites.jpg
+~/.config/polybar/launch.sh
 
 exit
