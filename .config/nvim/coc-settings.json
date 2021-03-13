@@ -1,0 +1,4 @@
+{
+   "rust-analyzer.server.path": "/usr/bin/rust-analyzer",
+   "suggest.enablePreview": true
+}
