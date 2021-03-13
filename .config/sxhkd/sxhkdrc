@@ -11,8 +11,11 @@ super + shift + Return
   ~/bin/x-terminal.sh
 
 # dropdown terminal
-#super + grave
-#  tdrop -ma -w 50% -h 50% -y 25% -x 25% ~/bin/x-terminal-dropdown.sh
+super + grave
+   ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t dropdown -g 142x42 tmux new-session -A -s dropdown
+
+super + backslash
+   ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t dropdown -g 142x42 tmux new-session -A -s notes nvim '+WikiFzfPages'
 
 # application menu
 super + d
