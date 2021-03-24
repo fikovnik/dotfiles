@@ -72,6 +72,8 @@ set timeoutlen=500
 set cursorline
 " spell
 set spell
+" use multiple languages at the same time
+set spelllang=en,cs,csa
 set thesaurus=$HOME/.config/nvim/spell/thesaurus.txt
 " line numbers
 set relativenumber
