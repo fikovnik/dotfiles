@@ -33,7 +33,7 @@ Plug 'antoinemadec/coc-fzf'
 " theme
 Plug 'joshdick/onedark.vim'
 " status line
-Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
 " keys
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!', 'WhichKeyVisual', 'WhichKeyVisual!'] }
 " surround
@@ -54,6 +54,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'rust-lang/rust.vim'
 " slime
 Plug 'jpalardy/vim-slime'
+" undo
+Plug 'mbbill/undotree'
 call plug#end()
 " }}}
 
@@ -76,7 +78,6 @@ set spell
 set spelllang=en,cs,csa
 set thesaurus=$HOME/.config/nvim/spell/thesaurus.txt
 " line numbers
-set relativenumber
 set number
 " don't pass messages to |ins-completion-menu|
 set shortmess+=c
@@ -92,8 +93,8 @@ set wildignore+=*.class
 set wildignore+=*.swp,~*
 set wildignore+=*.zip,*.tar
 " save undo
-set undofile
 set undodir=$HOME/.cache/vim/undo
+set undofile
 " do backup
 set backup
 set backupdir=$HOME/.cache/vim/backup
@@ -128,6 +129,12 @@ set path=$PWD/**
 set foldopen=insert,mark,percent,quickfix,search,tag,undo
 set title
 set wrap
+" break on word end
+set linebreak
+" move past new line ends
+set whichwrap+=<,>,h,l,[,]
+" do not add extra space when joining lines
+set nojoinspaces
 
 " aet leaders
 let g:mapleader = "\<Space>"
@@ -171,9 +178,21 @@ colorscheme onedark
 " }}}
 
 " STATUS LINE {{{
-let g:lightline = {
-  \ 'colorscheme': 'onedark',
-  \ }
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_detect_spelllang = 0
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.linenr = ''
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.spell = 'S'
+let g:airline_theme = 'onedark'
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline#extensions#hunks#non_zero_only = 1
 " }}}
 
 " plugin git-gutter {{{
@@ -300,8 +319,6 @@ augroup end
 " latex {{{ "
 augroup mylatex
   autocmd!
-  au FileType tex nmap <silent> <C-C><C-V> :<C-U>CocCommand latex.ForwardSearch<CR>
-  au FileType tex nmap <silent> <C-C><C-C> :<C-U>CocCommand latex.Build<CR>
   au FileType tex let b:coc_pairs = [["$", "$"]]
 augroup end
 " }}} latex "
@@ -319,7 +336,9 @@ nnoremap <silent> <leader>bd :<C-u>bd<CR>
 nnoremap <silent> <leader>bn :<C-u>bn<CR>
 nnoremap <silent> <leader>bp :<C-u>bp<CR>
 " }}} buffers
-" edit {{{ "
+" edit {{{
+" copy
+xnoremap <silent> <C-S-c> "+y
 " snippets
 nnoremap <silent> <leader>&& :<C-U>Snippets<CR>
 nnoremap <silent> <leader>&e :<C-U>UltiSnipsEdit<CR>
@@ -340,7 +359,7 @@ xmap <M-Right> <Plug>(textmanip-move-right)
 " insert empty line
 nnoremap <silent> [o  :<c-u>put!=repeat([''],v:count)<bar>']+1<cr>
 nnoremap <silent> ]o  :<c-u>put =repeat([''],v:count)<bar>'[-1<cr>
-" }}} edit "
+" }}}
 " emacs binding {{{
 noremap <C-g> <Esc>
 vnoremap <C-g> <Esc>
@@ -361,31 +380,26 @@ inoremap <C-\> <C-k>
 " list yanks
 inoremap <C-y> <C-o>:<C-u>CocFzfList yanks<CR>
 nnoremap <C-y> <C-o>:<C-u>CocFzfList yanks<CR>
+" format paragraph
+inoremap <M-q> <C-o>gwap
+nnoremap <M-q> gwap
+vnoremap <M-q> gw
 " }}} Emacs binding
 " files {{{
 nnoremap <silent> <leader>ff :<C-U>Files<CR>
-nnoremap <silent> <leader>fu :<C-U>History<CR>
+nnoremap <silent> <leader>fr :<C-U>History<CR>
 " }}} files
-" git {{{ "
+" git {{{
 nnoremap <silent> <leader>gg :<C-U>Gstatus<CR>
-" }}} git "
+nnoremap <silent> <leader>gL :<C-U>Commits<CR>
+nnoremap <silent> <leader>gl :<C-U>BCommits<CR>
+" }}}
 " global {{{
+command! MyFindFiles execute FugitiveIsGitDir(getcwd()) ? 'GFiles' : 'Files'
 
-" TODO: it would be better to use rooter
-function! s:grep_files()
-  let git_dir = system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
-  if git_dir != ''
-    execute 'Rg' git_dir
-  else
-    execute 'Rg' '.'
-  endif
-endfunction
-
-command! MyGrepFiles execute s:grep_files()
-
-nnoremap <silent> <leader>/ :<C-U>MyGrepFiles<CR>
-" TODO: it would be better to use rooter
-nnoremap <silent> <leader><space> :<C-U>execute system('git rev-parse --is-inside-work-tree') =~ 'true' ? 'GFiles' : 'Files'<CR>
+nnoremap <silent> <leader>/ :<C-U>Rg<space>
+nnoremap <silent> <leader>* :<C-U>Rg <C-R><C-W><CR>
+nnoremap <silent> <leader><space> :<C-U>MyFindFiles<CR>
 " }}} global
 " navigation {{{
 " this is an alternative to C-i/C-o because nvim currently cannot map
@@ -397,11 +411,6 @@ nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
 xnoremap <expr> j v:count ? 'j' : 'gj'
 xnoremap <expr> k v:count ? 'k' : 'gk'
-
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
 " }}} navigation
 " open {{{
 nnoremap <silent> <leader>oq :copen<CR>
@@ -417,14 +426,15 @@ nnoremap <C-w><C-w> <C-w>w
 nnoremap <leader>w- <C-w>s
 nnoremap <leader>w<bar> <C-w>v
 nnoremap <leader>w= <C-w>=
-nnoremap <leader>wd <C-w>c
+nnoremap <leader>wk <C-w>c
 nnoremap <leader>ww :<C-u>Windows<CR>
 " }}} windows
 " search {{{
-nnoremap <silent> <leader>ss :<C-U>MyGrepFiles<CR>
-nnoremap <silent> <leader>s/ :<C-U>History/<CR>
-nnoremap <silent> <leader>sl :<C-u>BLines<CR>
-nnoremap <silent> <leader>sL :<C-u>Lines<CR>
+nnoremap <silent> <leader>sw :<C-U>Rg <C-R><C-W><space>
+nnoremap <silent> <leader>ss :<C-U>Rg<space>
+nnoremap <silent> <leader>sh :<C-U>History/<CR>
+nnoremap <silent> <leader>sb :<C-u>BLines<CR>
+nnoremap <silent> <leader>sB :<C-u>Lines<CR>
 nnoremap <silent> <leader>sm :<C-u>Marks<CR>
 nnoremap <silent> <leader>st :<C-u>BTags<CR>
 nnoremap <silent> <leader>sT :<C-u>Tags<CR>
@@ -435,6 +445,7 @@ nnoremap <silent> <leader>th :<C-u>set hls!<CR>
 nnoremap <silent> <leader>tp :<C-u>setlocal paste!<CR>
 nnoremap <silent> <leader>ts :<C-u>setlocal spell!<CR>
 nnoremap <silent> <leader>tw :<C-u>setlocal wrap!<CR>
+nnoremap <silent> <leader>tu :<C-u>UndotreeToggle<CR>
 " }}} toggle "
 " vim {{{
 nnoremap <silent> <leader>ve :<C-u>edit ~/.config/nvim/init.vim<CR>
@@ -466,17 +477,27 @@ map gk <Plug>(easymotion-k)
 map gh <Plug>(easymotion-linebackward)
 " }}} easy-motion
 
-" easy-align {{{ "
+" plugin: easy-align {{{
 xmap <leader>ea <Plug>(EasyAlign)
 nmap <leader>ea <Plug>(EasyAlign)
-" }}} easy-align "
+" }}} easy-align
 
-" plugin: fugitive {{{ "
+" plugin: fugitive {{{
 augroup mygit
   au!
   au FileType fugitive nmap <TAB> =
 augroup end
-" }}} plugin: fugitive "
+
+function! MyDiffSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+
+nmap <silent> <leader>gds :call MyDiffSaved()<CR>
+" }}} plugin: fugitive
 
 " plugin: fzf {{{
 
@@ -492,33 +513,24 @@ endfunction
 
 nnoremap z= :call FzfSpell()<CR>
 " }}} fzf-spell "
-
-" change the command to pass the --exact
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   "rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview({ 'options': '--exact'}), <bang>0)
-
-function! s:rg_with_fzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang RG call s:rg_with_fzf(<q-args>, <bang>0)
-
 " style preview window
 let g:fzf_preview_window = ['up:50%', '?']
 " layout
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.7, 'yoffset': 1, 'xoffset': 0 } }
 " which keys will execute the command
 let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+let g:my_fzf_rg_prefix = 'rg --column --line-number --no-heading --color=always --smart-case'
 " copy settings into coc-fzf
 let g:coc_fzf_preview = g:fzf_preview_window[0]
 let g:coc_fzf_preview_toggle_key = g:fzf_preview_window[1]
 let g:coc_fzf_opts = []
+
+function! s:my_fzf_rg(query, dir, fullscreen)
+  call fzf#vim#grep(g:my_fzf_rg_prefix." ".a:query, 1, fzf#vim#with_preview({'dir': a:dir}), a:fullscreen)
+endfunction
+
+command! -bang -nargs=* RG call s:my_fzf_rg((<q-args>), getcwd(), <bang>0)
+command! -bang -nargs=* Rg call s:my_fzf_rg("-- ".shellescape(<q-args>), getcwd(), <bang>0)
 
 " insert mode completion
 imap <c-x><s-k> <plug>(fzf-complete-word)
@@ -553,15 +565,22 @@ nmap s <Nop>
 xmap s <Nop>
 " }}}
 
-" plugin: slime {{{ "
+" plugin: slime {{{
 let g:slime_target = "tmux"
 let g:slime_default_config = {"socket_name": "default", "target_pane": ":.2"}
-" }}} plugin: slime "
+" }}} plugin: slime
 
-" plugin: vimtex {{{ "
+" plugin: vimtex {{{
+" open quickfix on errors
+let g:vimtex_format_enabled = 1
+let g:vimtex_quickfix_mode = 2
 let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_ignore_filters = [
+  \ 'Overfull',
+  \ 'Underfull',
+  \ ]
 let g:vimtex_view_general_viewer = 'evince'
-" }}} plugin: vimtex "
+" }}} plugin: vimtex
 
 " plugin: which-key {{{
 
@@ -593,22 +612,26 @@ aug END
 
 let g:leader_map['<space>'] = 'open-files'
 " }}}
-
-" edit {{{ "
+" +global {{{
+let g:leader_map = {
+  \ '<space>': 'find-files',
+  \ '/': 'search',
+  \ '*': 'search-word'
+  \ }
+" }}}
+" +edit {{{
 let g:leader_map.e = {
   \ 'name' : '+edit',
   \ 't' : 'delete-trailing-space',
   \ }
-" }}} edit "
-
-" snippets {{{ "
+" }}}
+" +snippets {{{
 let g:leader_map['&'] = {
-  \ 'name' : 'snippets',
+  \ 'name' : '+snippets',
   \ '&' : 'snippets',
   \ 'e' : 'edit',
   \ }
-" }}} snippets "
-
+" }}}
 " +vim {{{
 let g:leader_map.v = {
   \ 'name' : '+vim',
@@ -617,19 +640,19 @@ let g:leader_map.v = {
   \ 'q' : 'quit-all',
   \ }
 " }}}
-
 " +git {{{
 let g:leader_map.g = {
   \ 'name' : '+git',
-  \ 's' : 'status',
+  \ 'g' : 'status',
+  \ 'l' : 'buffer-log',
+  \ 'L' : 'project-log',
   \ }
+let g:leader_map.g.d = { 'name' : '+diff', 's': 'diff-saved' }
 let g:leader_map.g.h = { 'name' : '+hunk' }
 " }}}
-
 " +files {{{
 let g:leader_map.f = { 'name' : '+files' }
 " }}}
-
 " +lsp {{{
 let g:leader_map.l = {
   \ 'name' : '+lsp',
@@ -656,7 +679,6 @@ let g:leader_map.l = {
   \ 'q' : 'quick-fix',
   \ }
 " }}}
-
 " +open {{{
 let g:leader_map.o = {
   \ 'name' : '+open',
@@ -664,7 +686,6 @@ let g:leader_map.o = {
   \ 'l' : 'open-locationlist',
   \ }
 " }}}}
-
 " +buffers {{{
 let g:leader_map.b = {
   \ 'name' : '+buffers',
@@ -674,18 +695,16 @@ let g:leader_map.b = {
   \ 'p' : 'previous-buffer',
   \ }
 " }}}
-
 " +windows {{{
 let g:leader_map.w = {
   \ 'name' : '+windows',
   \ 'w' : 'fzf-windows',
-  \ 'd' : ['<C-W>c',     'delete-window'],
-  \ '-' : ['<C-W>s',     'split-window-below'],
-  \ '|' : ['<C-W>v',     'split-window-right'],
-  \ '=' : ['<C-W>=',     'balance-window'],
+  \ 'k' : 'kill-window',
+  \ '-' : 'split-window-below',
+  \ '|' : 'split-window-right',
+  \ '=' : 'balance-window',
   \ }
 " }}}
-
 " +toggles {{{
 let g:leader_map.t = {
   \ 'name' : '+toggle',
@@ -697,7 +716,6 @@ let g:leader_map.t = {
   \ '(' : 'rainbow-parens',
   \ }
 " }}}
-
 " +notes {{{
 let g:leader_map.n = {
   \ 'name' : '+notes',
@@ -708,12 +726,11 @@ let g:leader_map.n = {
   \ 't' : 'tags',
   \ }
 " }}}
-
-" search {{{ "
+" +search {{{
 let g:leader_map.s = {
   \ 'name' : '+search',
   \ 's' : 'search-files',
-  \ '/' : 'history',
+  \ 'h' : 'history',
   \ 'l' : 'buffer-lines',
   \ 'L' : 'all-lines',
   \ 'm' : 'marks',
@@ -750,15 +767,23 @@ let g:wiki_export = {
   \ 'output': 'exported',
   \}
 
-" execute 'autocmd BufNewFile ' . g:wiki_root . '/journal/[0-9]*.md :read ' . g:wiki_root . '/../templates/weekly.md'
+command! -bang -nargs=* MyWikiFzfSearch
+  \ call fzf#vim#grep(
+  \   g:my_fzf_rg_prefix.' -g "!*.html" --smart-case '.shellescape(<q-args>)." | rg -v ':```.*$'",
+  \   1,
+  \   fzf#vim#with_preview({'dir':g:wiki_root, 'options': '--prompt "Notes>" --delimiter : --nth 4'}),
+  \   <bang>0
+  \ )
 
 nmap <silent> <leader>ni :<C-u>WikiIndex<CR>
 nmap <silent> <leader>nj :<C-u>WikiJournal<CR>
 nmap <silent> <leader>nn :<C-u>WikiFzfPages<CR>
 nmap <silent> <leader>nt :<C-u>WikiFzfTags<CR>
+nmap <silent> <leader>ns :<C-u>MyWikiFzfSearch<CR>
 
 let g:wiki_mappings_local = {
   \ '<plug>(wiki-page-delete)':          '<localleader>d',
+  \ '<plug>(wiki-page-rename)':          '<localleader>r',
   \ '<plug>(wiki-list-toggle)':          '<localleader>l',
   \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
   \ '<plug>(wiki-link-next)':            '<localleader>n',
@@ -777,3 +802,4 @@ let g:wiki_mappings_local = {
 " init.nvim
 """
 au FileType vim setlocal foldmethod=marker
+
