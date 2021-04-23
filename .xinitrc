@@ -30,6 +30,7 @@ dex /etc/xdg/autostart/blueman.desktop
 dex /etc/xdg/autostart/nm-applet.desktop
 dex /etc/xdg/autostart/print-applet.desktop
 dex /usr/share/applications/redshift-gtk.desktop
+dex /usr/share/applications/syncthingtray.desktop
 dex /usr/share/applications/polkit-gnome-authentication-agent-1.desktop
 
 # autostart user apps
