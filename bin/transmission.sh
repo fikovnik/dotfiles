@@ -31,8 +31,7 @@ function start {
            -e "OPENVPN_PASSWORD=$password" \
            -e "PUID=$(id -u)" \
            -e "PGID=$(id -g)" \
-           --dns 8.8.8.8 \
-           --dns 8.8.4.4 \
+           -e LOCAL_NETWORK=192.168.0.0/16 \
            --log-driver json-file \
            --log-opt max-size=10m \
            --name "$name" \
