@@ -29,6 +29,7 @@ xrdb -merge ~/.Xresources &&
 dex /etc/xdg/autostart/blueman.desktop
 dex /etc/xdg/autostart/nm-applet.desktop
 dex /etc/xdg/autostart/print-applet.desktop
+dex /etc/xdg/autostart/pasystray.desktop
 dex /usr/share/applications/redshift-gtk.desktop
 dex /usr/share/applications/syncthingtray.desktop
 dex /usr/share/applications/polkit-gnome-authentication-agent-1.desktop
@@ -44,13 +45,9 @@ dex -a -s ~/.config/autostart
 # - emacs
 
 # manually starting stuff
-# polybar nord &
 sxhkd &
 dunst &
-udiskie --no-automount --notify --tray &
-
-# enable compositor
-picom -bGC
+udiskie --no-automount --notify --smart-tray &
 
 _JAVA_AWT_WM_NONREPARENTING=1
 AWT_TOOLKIT=MToolkit
