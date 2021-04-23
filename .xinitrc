@@ -13,9 +13,9 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
     unset f
 fi
 
-# dispaly
+# display
 xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal
-feh --bg-scale ~/Sync/Pictures/Wallpapers/dolomites.jpg
+feh --bg-scale ~/Documents/Pictures/Wallpapers/dolomites.jpg
 
 # cursor
 xrdb -merge ~/.Xresources &&
