@@ -20,6 +20,9 @@ feh --bg-scale ~/Documents/Pictures/Wallpapers/dolomites.jpg
 # cursor
 xrdb -merge ~/.Xresources &&
 
+# panel
+~/.config/polybar/launch.sh
+
 # XDG autostart
 
 # cherry-pick autostats from system
