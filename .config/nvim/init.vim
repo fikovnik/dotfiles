@@ -56,6 +56,8 @@ Plug 'rust-lang/rust.vim'
 Plug 'jpalardy/vim-slime'
 " undo
 Plug 'mbbill/undotree'
+" tmux integration
+Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 " }}}
 
@@ -569,6 +571,11 @@ xmap s <Nop>
 let g:slime_target = "tmux"
 let g:slime_default_config = {"socket_name": "default", "target_pane": ":.2"}
 " }}} plugin: slime
+
+" tmux {{{
+let g:tmux_navigator_save_on_switch = 2
+let g:tmux_navigator_disable_when_zoomed = 1
+" }}}
 
 " plugin: vimtex {{{
 " open quickfix on errors
