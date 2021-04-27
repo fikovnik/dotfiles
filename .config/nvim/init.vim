@@ -580,6 +580,13 @@ let g:slime_default_config = {"socket_name": "default", "target_pane": ":.2"}
 " tmux {{{
 let g:tmux_navigator_save_on_switch = 2
 let g:tmux_navigator_disable_when_zoomed = 1
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <M-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <M-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <M-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <M-\> :TmuxNavigatePrevious<cr>
 " }}}
 
 " plugin: vimtex {{{
