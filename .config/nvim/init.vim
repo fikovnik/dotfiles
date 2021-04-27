@@ -65,6 +65,8 @@ call plug#end()
 
 " allow to switch buffers when there are unsaved changes
 set hidden
+" auto read changes if a buffer was modified outside of vim
+set autoread
 " auto write changes after certain commands
 set autowrite
 " give more space for displaying messages
@@ -154,6 +156,8 @@ if !isdirectory(&backupdir)
   call mkdir(&backupdir, 'p')
 endif
 
+" check for changes on focus gain
+au FocusGained,BufEnter * :checktime
 " }}}
 
 " UI {{{
