@@ -399,6 +399,7 @@ nnoremap <silent> <leader>fr :<C-U>History<CR>
 nnoremap <silent> <leader>gg :<C-U>Gstatus<CR>
 nnoremap <silent> <leader>gL :<C-U>Commits<CR>
 nnoremap <silent> <leader>gl :<C-U>BCommits<CR>
+nnoremap <silent> <leader>gdd :<C-U>G diff<CR>
 " }}}
 " global {{{
 command! MyFindFiles execute FugitiveIsGitDir(getcwd()) ? 'GFiles' : 'Files'
