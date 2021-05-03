@@ -53,7 +53,8 @@ Plug 'junegunn/vim-easy-align'
 " rust
 Plug 'rust-lang/rust.vim'
 " slime
-Plug 'jpalardy/vim-slime'
+" Plug 'jpalardy/vim-slime'
+Plug 'preservim/vimux'
 " undo
 Plug 'mbbill/undotree'
 " tmux integration
@@ -574,12 +575,30 @@ nmap s <Nop>
 xmap s <Nop>
 " }}}
 
-" plugin: slime {{{
-let g:slime_target = "tmux"
-let g:slime_default_config = {"socket_name": "default", "target_pane": ":.2"}
-" }}} plugin: slime
+" plugin: vimux {{{
+function! MyVimuxSlime()
+ call VimuxRunCommand(@v, 0)
+endfunction
+
+let g:VimuxCloseOnExit = 1
+let g:VimuxUseNearest = 1
 
 " tmux {{{
+
+nmap <leader>,o :VimuxPromptCommand<CR>
+nmap <leader>,, :VimuxInspectRunner<CR>
+nmap <leader>,c :VimuxCloseRunner<CR>
+nmap <leader>,x :VimuxInterruptRunner<CR>
+nmap <leader>,z :call VimuxZoomRunner()<CR>
+nmap <leader>,l :VimuxClearTerminalScreen<CR>
+nmap <leader>,s vip<leader>,s<CR>
+vmap <leader>,s "vy:call MyVimuxSlime()<CR>
+
+vmap <C-c><C-c> <leader>,s
+nmap <C-c><C-c> <leader>,s
+" }}}
+
+" plugin: tmux {{{
 let g:tmux_navigator_save_on_switch = 2
 let g:tmux_navigator_disable_when_zoomed = 1
 let g:tmux_navigator_no_mappings = 1
@@ -757,6 +776,17 @@ let g:leader_map.s = {
   \ 'T' : 'all-tags',
   \ }
 " }}} search "
+" {{{ +vimux
+let g:leader_map[","] = { 
+  \ 'name': '+vimux',
+  \ ',': 'inspect',
+  \ 'c': 'close',
+  \ 'l': 'clear',
+  \ 'o': 'open',
+  \ 's': 'send',
+  \ 'x': 'interrupt',
+  \ }
+" }}}  "
 
 " }}}
 
