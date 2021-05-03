@@ -615,8 +615,6 @@ endfunction
 let g:VimuxCloseOnExit = 1
 let g:VimuxUseNearest = 1
 
-" tmux {{{
-
 nmap <leader>,o :VimuxPromptCommand<CR>
 nmap <leader>,, :VimuxInspectRunner<CR>
 nmap <leader>,c :VimuxCloseRunner<CR>
