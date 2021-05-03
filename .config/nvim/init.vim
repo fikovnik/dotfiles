@@ -168,6 +168,14 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
+augroup mycolors
+  autocmd!
+  autocmd ColorScheme * hi clear htmlBold
+    \ | hi htmlBold cterm=bold gui=bold
+    \ | hi clear htmlItalic
+    \ | hi htmlItalic cterm=italic gui=italic
+augroup end
+
 " let g:nord_italic = 1
 " let g:nord_italic_comments = 1
 " let g:nord_underline = 1
