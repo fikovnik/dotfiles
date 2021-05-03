@@ -20,6 +20,9 @@ feh --bg-scale ~/Documents/Pictures/Wallpapers/dolomites.jpg
 # cursor
 xrdb -merge ~/.Xresources &&
 
+# keyboard
+command -v xcape >/dev/null 2>&1 && xcape -e 'Control_L=Escape'
+
 # panel
 ~/.config/polybar/launch.sh
 
