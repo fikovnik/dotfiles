@@ -762,6 +762,7 @@ let g:leader_map.s = {
 
 " plugin: wiki {{{
 let g:wiki_root = '~/Notes'
+let g:wiki_zotero_root = '~/Research/Resources/Zotero'
 let g:wiki_filetypes = ['md']
 let g:wiki_link_extension = '.md'
 let g:wiki_link_target_type = 'md'
