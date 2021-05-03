@@ -345,10 +345,12 @@ nnoremap <silent> <leader>bp :<C-u>bp<CR>
 " edit {{{
 " copy
 xnoremap <silent> <C-S-c> "+y
+" delete
+xnoremap <silent> <C-S-x> "+d
 " snippets
-nnoremap <silent> <leader>&& :<C-U>Snippets<CR>
-nnoremap <silent> <leader>&e :<C-U>UltiSnipsEdit<CR>
-nnoremap <silent> <leader>et :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+nnoremap <silent> <leader>ess :<C-U>Snippets<CR>
+nnoremap <silent> <leader>ese :<C-U>UltiSnipsEdit<CR>
+nnoremap <silent> <leader>est :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 " duplicate lines / regions
 xmap <M-S-Down> <Plug>(textmanip-duplicate-down)
@@ -643,11 +645,9 @@ let g:leader_map.e = {
   \ 'name' : '+edit',
   \ 't' : 'delete-trailing-space',
   \ }
-" }}}
-" +snippets {{{
-let g:leader_map['&'] = {
+let g:leader_map.e.s = {
   \ 'name' : '+snippets',
-  \ '&' : 'snippets',
+  \ 's' : 'snippets',
   \ 'e' : 'edit',
   \ }
 " }}}
