@@ -637,7 +637,7 @@ nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
 vnoremap <silent> <localleader> :<c-u>WhichKeyVisual ','<CR>
 
 " exit which key using C-G
-let g:which_key_exit = "\<C-G>"
+let g:which_key_exit = ["\<C-[>", "\<Esc>", "\<C-G>"]
 " it looks better when it is in a separate window
 let g:which_key_use_floating_win = 0
 " set directory for key mapping
