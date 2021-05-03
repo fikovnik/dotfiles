@@ -557,9 +557,33 @@ imap <c-x><s-l> <plug>(fzf-complete-line)
 " }}} fzf
 
 " plugin: markdown {{{
-let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_conceal = 1
+let g:vim_markdown_folding_level = 2
+
+autocmd FileType markdown set conceallevel=2
+
+vnoremap <silent> ic :<C-U>call <SID>MyMdCodeBlockTextObj('i')<CR>
+onoremap <silent> ic :<C-U>call <SID>MyMdCodeBlockTextObj('i')<CR>
+
+vnoremap <silent> ac :<C-U>call <SID>MyMdCodeBlockTextObj('a')<CR>
+onoremap <silent> ac :<C-U>call <SID>MyMdCodeBlockTextObj('a')<CR>
+
+function! s:MyMdCodeBlockTextObj(type) abort
+  let start_row = searchpos('\s*```', 'bn')[0]
+  let end_row = searchpos('\s*```', 'n')[0]
+
+  let buf_num = bufnr()
+  if a:type ==# 'i'
+    let start_row += 1
+    let end_row -= 1
+  endif
+
+  call setpos("'<", [buf_num, start_row, 1, 0])
+  call setpos("'>", [buf_num, end_row, 1, 0])
+  execute 'normal! `<V`>'
+endfunction
 " }}}
 
 " plugin: rooter {{{
