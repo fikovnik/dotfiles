@@ -60,6 +60,8 @@ Plug 'preservim/vimux'
 Plug 'mbbill/undotree'
 " tmux integration
 Plug 'christoomey/vim-tmux-navigator'
+" distraction free writing
+Plug 'junegunn/goyo.vim'
 call plug#end()
 " }}}
 
