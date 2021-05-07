@@ -627,7 +627,6 @@ nmap <leader>,s vip<leader>,s<CR>
 vmap <leader>,s "vy:call MyVimuxSlime()<CR>
 
 vmap <C-c><C-c> <leader>,s
-nmap <C-c><C-c> <leader>,s
 " }}}
 
 " plugin: tmux {{{
