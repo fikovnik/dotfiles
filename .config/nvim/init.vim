@@ -611,10 +611,10 @@ xmap s <Nop>
 
 " plugin: vimux {{{
 function! MyVimuxSlime()
- call VimuxRunCommand(@v, 0)
+ call VimuxRunCommand(@v, 1)
 endfunction
 
-let g:VimuxCloseOnExit = 1
+let g:VimuxCloseOnExit = 0
 let g:VimuxUseNearest = 1
 
 nmap <leader>,o :VimuxPromptCommand<CR>
