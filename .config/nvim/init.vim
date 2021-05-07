@@ -19,7 +19,8 @@ Plug 'tpope/vim-commentary'
 " more targets
 Plug 'wellle/targets.vim'
 " markdown editing support
-Plug 'plasticboy/vim-markdown'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 " notes support
 Plug 'lervag/wiki.vim'
 " latex
@@ -167,14 +168,6 @@ if exists('+termguicolors')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
-
-augroup mycolors
-  autocmd!
-  autocmd ColorScheme * hi clear htmlBold
-    \ | hi htmlBold cterm=bold gui=bold
-    \ | hi clear htmlItalic
-    \ | hi htmlItalic cterm=italic gui=italic
-augroup end
 
 " let g:nord_italic = 1
 " let g:nord_italic_comments = 1
@@ -557,20 +550,23 @@ imap <c-x><s-l> <plug>(fzf-complete-line)
 " }}} fzf
 
 " plugin: markdown {{{
-let g:vim_markdown_auto_insert_bullets = 0
-let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_conceal = 1
-let g:vim_markdown_folding_level = 2
+let g:pandoc#syntax#conceal#urls = 1
+let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh"]
+let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 
-autocmd FileType markdown set conceallevel=2
+augroup mymarkdown
+  au!
+  au FileType pandoc
+    \ setlocal conceallevel=2 |
+    \ setlocal foldlevel=1 |
+    \ vnoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
+    \ onoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
+    \ vnoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
+    \ onoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
+    \ nnoremap <buffer><silent> <C-c><C-c> :call MyMdCodeBlockTextObj('i')<CR><leader>,s
+augroup end
 
-vnoremap <silent> ic :<C-U>call <SID>MyMdCodeBlockTextObj('i')<CR>
-onoremap <silent> ic :<C-U>call <SID>MyMdCodeBlockTextObj('i')<CR>
-
-vnoremap <silent> ac :<C-U>call <SID>MyMdCodeBlockTextObj('a')<CR>
-onoremap <silent> ac :<C-U>call <SID>MyMdCodeBlockTextObj('a')<CR>
-
-function! s:MyMdCodeBlockTextObj(type) abort
+function! MyMdCodeBlockTextObj(type) abort
   let start_row = searchpos('\s*```', 'bn')[0]
   let end_row = searchpos('\s*```', 'n')[0]
 
