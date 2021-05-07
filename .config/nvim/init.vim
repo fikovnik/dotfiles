@@ -309,26 +309,29 @@ command! -nargs=0 OrganizeImports :call CocAction('runCommand', 'editor.action.o
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 augroup mylspgroup
-  autocmd!
+  au!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  au FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " switch alternative file in clangd
-  autocmd FileType c nmap <silent> <leader>ls :<C-u>CocCommand clangd.switchSourceHeader<CR>
-  autocmd FileType c let g:leader_map.l.s = 'switch-alternative'
+  au FileType c
+    \ nmap <silent> <leader>ls :<C-u>CocCommand clangd.switchSourceHeader<CR> |
+    \ let g:leader_map.l.s = 'switch-alternative'
   " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  au User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 augroup myrust
   au!
-  au FileType rust nmap <silent> <localleader>S :<C-U>CocCommand rust-analyzer.analyzerStatus<CR>
-  au FileType rust nmap <silent> <localleader>R :<C-U>CocCommand rust-analyzer.reload<CR>
-  au FileType rust nmap <silent> <localleader>W :<C-U>CocCommand rust-analyzer.reloadWorkspace<CR>
-  au FileType rust nmap <silent> <localleader>M :<C-U>CocCommand rust-analyzer.expandMacro<CR>
+  au FileType rust
+    \ nmap <silent> <localleader>S :<C-U>CocCommand rust-analyzer.analyzerStatus<CR> |
+    \ nmap <silent> <localleader>R :<C-U>CocCommand rust-analyzer.reload<CR> |
+    \ nmap <silent> <localleader>W :<C-U>CocCommand rust-analyzer.reloadWorkspace<CR> |
+    \ nmap <silent> <localleader>M :<C-U>CocCommand rust-analyzer.expandMacro<CR>
 augroup end
+
 " latex {{{ "
 augroup mylatex
-  autocmd!
+  au!
   au FileType tex let b:coc_pairs = [["$", "$"]]
 augroup end
 " }}} latex "
