@@ -878,8 +878,10 @@ let g:wiki_mappings_local = {
 
 " }}}
 
-"""
-" init.nvim
-"""
-au FileType vim setlocal foldmethod=marker
+" file-type: vim {{{ "
+augroup myvim
+  au!
+  au FileType vim setlocal foldmethod=marker
+augroup end
+" }}}
 
