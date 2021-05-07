@@ -403,8 +403,9 @@ nnoremap <silent> <leader>fr :<C-U>History<CR>
 " }}} files
 " git {{{
 nnoremap <silent> <leader>gg :<C-U>Gstatus<CR>
-nnoremap <silent> <leader>gL :<C-U>Commits<CR>
-nnoremap <silent> <leader>gl :<C-U>BCommits<CR>
+nnoremap <silent> <leader>glb :<C-U>BCommits<CR>
+nnoremap <silent> <leader>glp :<C-U>Commits<CR>
+nnoremap <silent> <leader>gll :<C-U>G log<CR>
 nnoremap <silent> <leader>gdd :<C-U>G diff<CR>
 " }}}
 " global {{{
@@ -710,10 +711,9 @@ let g:leader_map.v = {
 let g:leader_map.g = {
   \ 'name' : '+git',
   \ 'g' : 'status',
-  \ 'l' : 'buffer-log',
-  \ 'L' : 'project-log',
   \ }
 let g:leader_map.g.d = { 'name' : '+diff', 's': 'diff-saved' }
+let g:leader_map.g.l = { 'name' : '+log', 'l': 'log', 'p': 'project-fzf-log', 'b': 'buffer-fzf-log' }
 let g:leader_map.g.h = { 'name' : '+hunk' }
 " }}}
 " +files {{{
