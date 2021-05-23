@@ -578,7 +578,7 @@ augroup mymarkdown
     \ onoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
     \ vnoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
     \ onoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
-    \ nnoremap <buffer><silent> <C-c><C-c> :call MyMdCodeBlockTextObj('i')<CR><leader>,s
+    \ nmap <buffer><silent> <C-c><C-c> vib<leader>,s
 augroup end
 
 function! MyMdCodeBlockTextObj(type) abort
@@ -919,3 +919,6 @@ augroup debug
         \ let termdebug_wide=163
 augroup end
 " }}}
+
+
+let g:airline#extensions#cursormode#enabled = 1
