@@ -903,3 +903,12 @@ augroup myvim
 augroup end
 " }}}
 
+" Debugging {{{ "
+
+augroup debug
+  au!
+  au FileType c
+        \ packadd termdebug |
+        \ let termdebug_wide=163
+augroup end
+" }}}
