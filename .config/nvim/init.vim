@@ -806,10 +806,15 @@ let g:leader_map.t = {
 let g:leader_map.n = {
   \ 'name' : '+notes',
   \ 'i' : 'index',
-  \ 'j' : 'journal',
   \ 'n' : 'notes',
   \ 's' : 'search',
   \ 't' : 'tags',
+  \ }
+let g:leader_map.n.j = {
+  \ 'name' : '+journal',
+  \ 'j' : 'journal',
+  \ 'n' : 'next',
+  \ 'p' : 'previous',
   \ }
 " }}}
 " +search {{{
@@ -874,7 +879,9 @@ command! -bang -nargs=* MyWikiFzfSearch
   \ )
 
 nmap <silent> <leader>ni :<C-u>WikiIndex<CR>
-nmap <silent> <leader>nj :<C-u>WikiJournal<CR>
+nmap <silent> <leader>njj :<C-u>WikiJournal<CR>
+nmap <silent> <leader>njn :<C-u>WikiJournalNext<CR>
+nmap <silent> <leader>njp :<C-u>WikiJournalPrev<CR>
 nmap <silent> <leader>nn :<C-u>WikiFzfPages<CR>
 nmap <silent> <leader>nt :<C-u>WikiFzfTags<CR>
 nmap <silent> <leader>ns :<C-u>MyWikiFzfSearch<CR>
@@ -882,7 +889,7 @@ nmap <silent> <leader>ns :<C-u>MyWikiFzfSearch<CR>
 let g:wiki_mappings_local = {
   \ '<plug>(wiki-page-delete)':          '<localleader>d',
   \ '<plug>(wiki-page-rename)':          '<localleader>r',
-  \ '<plug>(wiki-list-toggle)':          '<localleader>l',
+  \ '<plug>(wiki-list-toggle)':          '<localleader>t',
   \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
   \ '<plug>(wiki-link-next)':            '<localleader>n',
   \ '<plug>(wiki-link-prev)':            '<localleader>p',
@@ -891,7 +898,7 @@ let g:wiki_mappings_local = {
   \ '<plug>(wiki-export)':               '<localleader>e',
   \ 'x_<plug>(wiki-export)':             '<localleader>e',
   \ '<plug>(wiki-fzf-toc)':              '<localleader>,',
-  \ '<plug>(wiki-page-toc)':             '<localleader>t',
+  \ '<plug>(wiki-page-toc)':             '<localleader>T',
   \ }
 
 " }}}
