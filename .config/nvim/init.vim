@@ -185,6 +185,11 @@ syntax on
 set background=dark
 " colorscheme nord
 colorscheme onedark
+
+hi SpellBad   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#E06C75
+hi SpellCap   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#D19A66
+hi SpellLocal cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#D19A66
+hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#D19A66
 " }}}
 
 " STATUS LINE {{{
