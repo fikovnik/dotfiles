@@ -473,6 +473,7 @@ nnoremap <silent> <leader>tu :<C-u>UndotreeToggle<CR>
 nnoremap <silent> <leader>ve :<C-u>edit ~/.config/nvim/init.vim<CR>
 nnoremap <silent> <leader>vs :<C-u>update!<CR>:<C-u>source ~/.config/nvim/init.vim<CR>:<C-u>echo "Sourced!"<CR>
 nnoremap <silent> <leader>vq :<C-u>quitall<CR>
+nnoremap <silent> <leader>vfs :<C-u>syntax sync fromstart<CR>
 " }}} vim
 " }}}
 
@@ -712,6 +713,10 @@ let g:leader_map.v = {
   \ 'e' : 'edit-vimrc',
   \ 's' : 'source-vimrc',
   \ 'q' : 'quit-all',
+  \ }
+let g:leader_map.v.f = {
+  \ 'name' : '+fix',
+  \ 's' : 'syntax',
   \ }
 " }}}
 " +git {{{
