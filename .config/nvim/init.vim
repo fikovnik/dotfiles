@@ -43,8 +43,6 @@ Plug 'machakann/vim-sandwich'
 Plug 'SirVer/ultisnips'
 " actual snippets
 Plug 'honza/vim-snippets'
-" moving around
-Plug 'easymotion/vim-easymotion'
 " find project roots
 Plug 'airblade/vim-rooter'
 " get rid of trailing whitespace
@@ -54,7 +52,6 @@ Plug 'junegunn/vim-easy-align'
 " rust
 Plug 'rust-lang/rust.vim'
 " slime
-" Plug 'jpalardy/vim-slime'
 Plug 'preservim/vimux'
 " undo
 Plug 'mbbill/undotree'
@@ -62,6 +59,10 @@ Plug 'mbbill/undotree'
 Plug 'christoomey/vim-tmux-navigator'
 " distraction free writing
 Plug 'junegunn/goyo.vim'
+" maximize windows
+Plug 'szw/vim-maximizer'
+" Plug 'vheon/vim-cursormode'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 call plug#end()
 " }}}
 
@@ -80,8 +81,6 @@ set nocompatible
 set updatetime=100
 set timeoutlen=500
 set cursorline
-" spell
-set spell
 " use multiple languages at the same time
 set spelllang=en,cs,csa
 set thesaurus=$HOME/.config/nvim/spell/thesaurus.txt
@@ -450,6 +449,7 @@ nnoremap <leader>w<bar> <C-w>v
 nnoremap <leader>w= <C-w>=
 nnoremap <leader>wk <C-w>c
 nnoremap <leader>ww :<C-u>Windows<CR>
+nnoremap <leader>wz :<C-u>MaximizerToggle<CR>
 " }}} windows
 " search {{{
 nnoremap <silent> <leader>sw :<C-U>Rg <C-R><C-W><space>
@@ -462,6 +462,7 @@ nnoremap <silent> <leader>st :<C-u>BTags<CR>
 nnoremap <silent> <leader>sT :<C-u>Tags<CR>
 " }}} search
 " toggle {{{
+nnoremap <silent> <leader>td :<C-u>call CocAction('diagnosticToggle')<CR>
 nnoremap <silent> <leader>tg :<C-u>GitGutterToggle<CR>
 nnoremap <silent> <leader>th :<C-u>set hls!<CR>
 nnoremap <silent> <leader>tp :<C-u>setlocal paste!<CR>
@@ -572,18 +573,20 @@ let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 augroup mymarkdown
   au!
   au FileType pandoc
+    \ setlocal spell |
     \ setlocal conceallevel=2 |
     \ setlocal foldlevel=1 |
     \ vnoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
     \ onoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
     \ vnoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
     \ onoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
-    \ nmap <buffer><silent> <C-c><C-c> vib<leader>,s
+    \ nmap <buffer><silent> <C-c><C-c> vib<leader>,s |
+    \ nmap <buffer><silent> <C-c><C-l> V<leader>,s
 augroup end
 
 function! MyMdCodeBlockTextObj(type) abort
-  let start_row = searchpos('\s*```', 'bn')[0]
-  let end_row = searchpos('\s*```', 'n')[0]
+  let start_row = searchpos('\s*```', 'bnW')[0]
+  let end_row = searchpos('\s*```', 'nW')[0]
 
   let buf_num = bufnr()
   if a:type ==# 'i'
@@ -591,14 +594,15 @@ function! MyMdCodeBlockTextObj(type) abort
     let end_row -= 1
   endif
 
-  call setpos("'<", [buf_num, start_row, 1, 0])
-  call setpos("'>", [buf_num, end_row, 1, 0])
-  execute 'normal! `<V`>'
+  let select_cmd = start_row . 'G1|V|' . end_row . 'G1|'
+  echo l:select_cmd
+  execute 'normal! ' select_cmd
 endfunction
 " }}}
 
 " plugin: rooter {{{
 let g:rooter_change_directory_for_non_project_files = 'current'
+let g:rooter_cd_cmd = 'lcd'
 " }}} rooter
 
 " plugin: ultisnips {{{
@@ -620,7 +624,7 @@ xmap s <Nop>
 
 " plugin: vimux {{{
 function! MyVimuxSlime()
- call VimuxRunCommand(@v, 1)
+ call VimuxRunCommand(@v)
 endfunction
 
 let g:VimuxCloseOnExit = 0
@@ -794,6 +798,7 @@ let g:leader_map.w = {
 " +toggles {{{
 let g:leader_map.t = {
   \ 'name' : '+toggle',
+  \ 'd' : 'diagnostics',
   \ 'g' : 'git-status-indicator',
   \ 'h' : 'highlight-search',
   \ 'p' : 'paste-mode',
@@ -911,7 +916,6 @@ augroup end
 " }}}
 
 " Debugging {{{ "
-
 augroup debug
   au!
   au FileType c
@@ -920,5 +924,16 @@ augroup debug
 augroup end
 " }}}
 
+	let g:airline#extensions#cursormode#enabled = 1
 
-let g:airline#extensions#cursormode#enabled = 1
+		" let g:cursormode_mode_func = 'mode'
+		" let g:cursormode_color_map = {
+		" 			\ "nlight": '#000000',
+		" 			\ "ndark": '#BBBBBB',
+		" 			\ "n": g:airline#themes#{g:airline_theme}#palette.normal.airline_a[1],
+		" 			\ "i": g:airline#themes#{g:airline_theme}#palette.insert.airline_a[1],
+		" 			\ "R": g:airline#themes#{g:airline_theme}#palette.replace.airline_a[1],
+		" 			\ "v": g:airline#themes#{g:airline_theme}#palette.visual.airline_a[1],
+		" 			\ "V": g:airline#themes#{g:airline_theme}#palette.visual.airline_a[1],
+		" 			\ "\<C-V>": g:airline#themes#{g:airline_theme}#palette.visual.airline_a[1]
+		" 			\ }
