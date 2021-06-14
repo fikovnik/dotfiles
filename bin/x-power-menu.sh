@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cmd_lock="xscreensaver --lock"
+cmd_lock="xflock4"
 cmd_logout="pkill xinit"
 cmd_suspend="systemctl suspend"
 cmd_hibernate="systemctl hibernate"
