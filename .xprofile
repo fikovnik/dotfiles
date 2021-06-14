@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# keyboard
+command -v xcape >/dev/null 2>&1 && xcape -e 'Control_L=Escape'
+
+[ -f /etc/X11/xinit/.Xresource ] && xrdb -merge /etc/X11/xinit/.Xresources
+[ -f ~/.Xresources ] && xrdb -merge ~/.Xresources
+
+export QT_STYLE_OVERRIDE=kvantum
+
+# vim: set ft=sh
