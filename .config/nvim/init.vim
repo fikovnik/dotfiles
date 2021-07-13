@@ -912,7 +912,7 @@ let g:wiki_mappings_local = {
 
 " }}}
 
-" file-type: vim {{{ "
+" file-type: vim {{{
 augroup myvim
   au!
   au FileType vim setlocal foldmethod=marker
