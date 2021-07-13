@@ -16,6 +16,8 @@ Plug 't9md/vim-textmanip'
 Plug 'andymass/vim-matchup'
 " simple code comment
 Plug 'tpope/vim-commentary'
+" automatically set 'shiftwidth' + 'expandtab' (indention) based on file type
+Plug 'tpope/vim-sleuth'
 " more targets
 Plug 'wellle/targets.vim'
 " markdown editing support
