@@ -63,6 +63,8 @@ Plug 'junegunn/goyo.vim'
 Plug 'szw/vim-maximizer'
 " Plug 'vheon/vim-cursormode'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+" markdown preview
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 call plug#end()
 " }}}
 
