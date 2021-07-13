@@ -65,6 +65,8 @@ Plug 'szw/vim-maximizer'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 " markdown preview
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+" dir diff
+Plug 'will133/vim-dirdiff'
 call plug#end()
 " }}}
 
