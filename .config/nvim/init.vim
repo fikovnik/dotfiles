@@ -46,7 +46,7 @@ Plug 'honza/vim-snippets'
 " find project roots
 Plug 'airblade/vim-rooter'
 " get rid of trailing whitespace
-Plug 'axelf4/vim-strip-trailing-whitespace'
+Plug 'ntpeters/vim-better-whitespace'
 " align text
 Plug 'junegunn/vim-easy-align'
 " rust
@@ -473,6 +473,7 @@ nnoremap <silent> <leader>tp :<C-u>setlocal paste!<CR>
 nnoremap <silent> <leader>ts :<C-u>setlocal spell!<CR>
 nnoremap <silent> <leader>tw :<C-u>setlocal wrap!<CR>
 nnoremap <silent> <leader>tu :<C-u>UndotreeToggle<CR>
+nnoremap <silent> <leader>tW :<C-u>ToggleWhitespace<CR>
 " }}} toggle "
 " vim {{{
 nnoremap <silent> <leader>ve :<C-u>edit ~/.config/nvim/init.vim<CR>
@@ -489,6 +490,13 @@ tnoremap jk <C-\><C-n>
 let g:auto_save = 1
 let g:auto_save_write_all_buffers = 1
 " }}}
+
+" plugin: better-whitespace {{{ "
+let g:better_whitespace_enabled = 0
+let g:strip_whitespace_on_save = 1
+let g:strip_only_modified_lines = 1
+let g:strip_whitespace_confirm = 0
+" }}} plugin: better-whitespace "
 
 " plugin: easy-motion {{{
 " Disable default mappings
@@ -839,7 +847,7 @@ let g:leader_map.s = {
   \ }
 " }}} search "
 " {{{ +vimux
-let g:leader_map[","] = { 
+let g:leader_map[","] = {
   \ 'name': '+vimux',
   \ ',': 'inspect',
   \ 'c': 'close',
