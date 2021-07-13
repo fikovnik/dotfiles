@@ -919,6 +919,16 @@ augroup myvim
 augroup end
 " }}}
 
+" R {{{
+augroup myR
+  au!
+  au FileType r
+    \ nmap <buffer><silent> <C-c><C-c> V}<leader>,s|
+    \ nmap <buffer><silent> <C-c><C-l> V<leader>,s
+augroup end
+
+" }}} R
+
 " Debugging {{{ "
 augroup debug
   au!
