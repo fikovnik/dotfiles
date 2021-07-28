@@ -28,6 +28,7 @@
 }
 
 window {
+   border: 1px;
 }
 
 mainbox {
