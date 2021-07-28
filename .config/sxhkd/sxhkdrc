@@ -17,6 +17,10 @@ super + grave
 super + backslash
    ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t dropdown -g 142x42 tmux new-session -A -s notes nvim '+WikiFzfPages'
 
+# files
+super + h
+  thunar
+
 # application menu
 super + d
   ~/bin/x-apps-menu.sh
