@@ -1,391 +1,125 @@
 " PLUGINS {{{
-"
-" note: make sure you use single quotes
-call plug#begin('~/.config/nvim/plugged')
-" completion of all sorts of things
-Plug 'junegunn/fzf.vim'
-" let other people worry about number tabs and spaces
-Plug 'editorconfig/editorconfig-vim'
-" allow plugins to bin to the repeat command
-Plug 'tpope/vim-repeat'
-" git
-Plug 'tpope/vim-fugitive'
-" move lines
-Plug 't9md/vim-textmanip'
-" better matching
-Plug 'andymass/vim-matchup'
-" simple code comment
-Plug 'tpope/vim-commentary'
-" automatically set 'shiftwidth' + 'expandtab' (indention) based on file type
-Plug 'tpope/vim-sleuth'
-" more targets
-Plug 'wellle/targets.vim'
-" markdown editing support
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-" notes support
-Plug 'lervag/wiki.vim'
-" latex
-Plug 'lervag/vimtex'
-" git info in the gutter
-Plug 'airblade/vim-gitgutter'
-" LSP support
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" FZF support fro COC
-Plug 'antoinemadec/coc-fzf'
-" theme
-Plug 'joshdick/onedark.vim'
-" status line
-Plug 'vim-airline/vim-airline'
-" keys
-Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!', 'WhichKeyVisual', 'WhichKeyVisual!'] }
-" surround
-Plug 'machakann/vim-sandwich'
-" snippets
-Plug 'SirVer/ultisnips'
-" actual snippets
-Plug 'honza/vim-snippets'
-" find project roots
-Plug 'airblade/vim-rooter'
-" get rid of trailing whitespace
-Plug 'ntpeters/vim-better-whitespace'
-" align text
-Plug 'junegunn/vim-easy-align'
-" rust
-Plug 'rust-lang/rust.vim'
-" slime
-Plug 'preservim/vimux'
-" undo
-Plug 'mbbill/undotree'
-" tmux integration
-Plug 'christoomey/vim-tmux-navigator'
-" distraction free writing
-Plug 'junegunn/goyo.vim'
-" maximize windows
-Plug 'szw/vim-maximizer'
-" Plug 'vheon/vim-cursormode'
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-" markdown preview
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-" dir diff
-Plug 'will133/vim-dirdiff'
+call plug#begin()
+
 call plug#end()
 " }}}
 
-" OPTIONS {{{
-
-" allow to switch buffers when there are unsaved changes
-set hidden
-" auto read changes if a buffer was modified outside of vim
-set autoread
-" auto write changes after certain commands
-set autowrite
-" give more space for displaying messages
-set cmdheight=2
-set nocompatible
-" faster update time (default is 4s)
-set updatetime=100
-set timeoutlen=500
-set cursorline
-" use multiple languages at the same time
-set spelllang=en,cs,csa
-set thesaurus=$HOME/.config/nvim/spell/thesaurus.txt
-" line numbers
-set number
-" don't pass messages to |ins-completion-menu|
-set shortmess+=c
-set signcolumn=yes
-" use rg for grepping
-set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-" do not update screen when running macros
-set lazyredraw
-" ignore more files
-set wildignore+=.git/*
-set wildignore+=*.o
-set wildignore+=*.class
-set wildignore+=*.swp,~*
-set wildignore+=*.zip,*.tar
-" save undo
-set undodir=$HOME/.cache/vim/undo
-set undofile
-" do backup
+" BASICS {{{
+" settings {{{
+set autoindent
+set autoread " auto read changes if a buffer was modified outside of vim
+set autowrite " auto write changes after certain commands
+set backspace=start,eol,indent " allow backspace to delete all
 set backup
 set backupdir=$HOME/.cache/vim/backup
-" no swap
-set noswapfile
-" use shiftwidth
-set softtabstop=-1
-set shiftwidth=2
-set tabstop=2
-" use spaces to insert a tab
-set expandtab
-" copy the structure of existing lines
-set copyindent
-" preserve the current file indent as much as possible
-set preserveindent
-" wrap lines continue visually indented
-set breakindent
-" smartcase
-set ignorecase
-set smartcase
-set infercase
-" briefly jump to the matching object
-set showmatch
-" match case when searching tags
-set tagcase=match
-" vsplit/split: swap order so the text does not move
-set splitbelow
-set splitright
-" find files in subdirectories
-set path=$PWD/**
-" only the following commands should open folds
+set breakindent " wrap lines continue visually indented
+set cmdheight=2 " give more space for displaying messages
+set copyindent " copy the previous indentation on autoindenting
+set cursorline
+set encoding=utf-8
+set expandtab " copy the structure of existing lines
+set exrc " allow per directory rc files
+set fileencoding=utf-8
+set fileencodings=utf-8
 set foldopen=insert,mark,percent,quickfix,search,tag,undo
+set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+set hidden " allow to switch buffers when there are unsaved changes
+set ignorecase " case insensitive search
+set inccommand=nosplit " show replacements inplace
+set infercase
+set lazyredraw " do not update screen when running macros
+set linebreak " break on word end
+set nocompatible
+set nojoinspaces " do not add extra space when joining lines
+set noswapfile
+set number
+set path+=** " find files in subdirectories
+set preserveindent " preserve the current file indent as much as possible
+set scrolloff=10 " leave 10 lines up and down when scrolling for context
+set secure " disable certain commands in exrc
+set shiftwidth=2
+set shortmess+=c " don't pass messages to |ins-completion-menu|
+set showcmd
+set showmatch " briefly jump to the matching object
+set signcolumn=yes
+set smartcase " override ignorecase if pattern contains capital letter
+set softtabstop=-1 " use shiftwidth instead
+set spelllang=en,cs,csa " use multiple languages at the same time
+set splitbelow " split: swap order so the text does not move
+set splitright " vsplit: swap order so the text does not move
+set tabstop=2
+set tagcase=match " match case when searching tags
+set thesaurus=$HOME/.config/nvim/spell/thesaurus.txt
 set title
+set undodir=$HOME/.cache/vim/undo
+set undofile
+set updatetime=100 " faster update time (default is 4s)
+set whichwrap+=<,>,h,l,[,] " move past new line ends
+set wildignore+=*.class
+set wildignore+=*.o
+set wildignore+=*.swp,~*
+set wildignore+=*.zip,*.tar
+set wildignore+=.git/*
 set wrap
-" break on word end
-set linebreak
-" move past new line ends
-set whichwrap+=<,>,h,l,[,]
-" do not add extra space when joining lines
-set nojoinspaces
+" }}}
 
-" aet leaders
-let g:mapleader = "\<Space>"
-let g:maplocalleader = ','
-
-" neovim specific options
-if has('nvim')
-  set inccommand=nosplit
-endif
-
+" create directories {{{
 if !isdirectory(&undodir)
   call mkdir(&undodir, 'p')
 endif
 if !isdirectory(&backupdir)
   call mkdir(&backupdir, 'p')
 endif
+" }}}
+
+" common {{{
+filetype plugin indent on
+syntax on
 
 " check for changes on focus gain
 au FocusGained,BufEnter * :checktime
-" }}}
 
-" UI {{{
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
+" remember cursor position
+augroup remember_cursor_position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe            "normal! g`\"" | endif
+augroup END
 
-" let g:nord_italic = 1
-" let g:nord_italic_comments = 1
-" let g:nord_underline = 1
-" let g:nord_uniform_status_lines = 1
-" let g:nord_uniform_diff_background = 1
-" let g:nord_cursor_line_number_background = 1
-
-let g:onedark_terminal_italics = 1
-let g:rainbow_active = 1
-
-syntax on
-set background=dark
-" colorscheme nord
-colorscheme onedark
-
-hi SpellBad   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#E06C75
-hi SpellCap   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#D19A66
-hi SpellLocal cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#D19A66
-hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#D19A66
-" }}}
-
-" STATUS LINE {{{
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_detect_spelllang = 0
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.linenr = ''
-let g:airline_symbols.maxlinenr = ''
-let g:airline_symbols.spell = 'S'
-let g:airline_theme = 'onedark'
-let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-let g:airline#extensions#hunks#non_zero_only = 1
-" }}}
-
-" plugin git-gutter {{{
-" do not set any mapping on its own
-let g:gitgutter_highlight_linenrs = 1
-
-nmap <leader>ghs <plug>(GitGutterStageHunk)
-nmap <leader>ghu <plug>(GitGutterUndoHunk)
-nmap <leader>ghp <plug>(GitGutterPreviewHunk)
-" }}}
-
-" LSP (COC) {{{
-let g:coc_global_extensions = [
-  \ 'coc-clangd',
-  \ 'coc-dictionary',
-  \ 'coc-json',
-  \ 'coc-pairs',
-  \ 'coc-r-lsp',
-  \ 'coc-rust-analyzer',
-  \ 'coc-tag',
-  \ 'coc-ultisnips',
-  \ 'coc-yank',
-  \ 'coc-vimtex',
-\]
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" leader-l mappings
-nmap <silent><nowait> <leader>lD :<C-u>CocFzfList diagnostics<cr>
-nmap <silent><nowait> <leader>lE :<C-u>CocFzfList extensions<cr>
-nmap <silent><nowait> <leader>lC :<C-u>CocFzfList commands<cr>
-nmap <silent><nowait> <leader>lO :<C-u>CocFzfList outline<cr>
-nmap <silent><nowait> <leader>lS :<C-u>CocFzfList symbols<cr>
-nmap <silent><nowait> <leader>lj :<C-u>CocNext<cr>
-nmap <silent><nowait> <leader>lk :<C-u>CocPrev<cr>
-nmap <silent><nowait> <leader>l' :<C-u>CocFzfListResume<cr>
-nmap <silent>         <leader>ld <Plug>(coc-definition)
-nmap <silent>         <leader>lt <Plug>(coc-type-definition)
-nmap <silent>         <leader>li <Plug>(coc-implementation)
-nmap <silent>         <leader>lr <Plug>(coc-references)
-nmap                  <leader>lR <Plug>(coc-rename)
-nmap <silent>         <leader>lo :<C-u>OrganizeImports<cr>
-nmap <silent>         <leader>lz :<C-u>Fold<cr>
-nmap <silent>         <leader>lf :<C-u>Format<cr>
-nmap                  <leader>lF <Plug>(coc-format-selected)
-xmap                  <leader>lf <Plug>(coc-format-selected)
-nmap <silent>         <leader>lh :<C-u>call CocAction('doHover')<cr>
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap                  <leader>lc  <Plug>(coc-codeaction-selected)
-nmap                  <leader>lc  <Plug>(coc-codeaction-selected)
-" Remap keys for applying codeAction to the current buffer.
-nmap                  <leader>la  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap                  <leader>lq  <Plug>(coc-fix-current)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" yank
-inoremap <silent> <M-y> <C-O>:<C-U>CocFzfList yank<CR>
-nnoremap <silent> <M-y> :<C-U>CocFzfList yank<CR>
-xnoremap <silent> <M-y> :<C-U>CocFzfList yank<CR>
-
-" Map function and class text objects
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-command! -nargs=0 Format :call CocAction('format')
-command! -nargs=? Fold :call CocAction('fold', <f-args>)
-command! -nargs=0 OrganizeImports :call CocAction('runCommand', 'editor.action.organizeImport')
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-augroup mylspgroup
+" highlight yank operations
+augroup highlight_yank
   au!
-  " Setup formatexpr specified filetype(s).
-  au FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " switch alternative file in clangd
-  au FileType c
-    \ nmap <silent> <leader>ls :<C-u>CocCommand clangd.switchSourceHeader<CR> |
-    \ let g:leader_map.l.s = 'switch-alternative'
-  " Update signature help on jump placeholder.
-  au User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+  au TextYankPost * lua vim.highlight.on_yank{ higroup="IncSearch", timeout=250 }
+augroup END
 
-augroup myrust
-  au!
-  au FileType rust
-    \ nmap <silent> <localleader>S :<C-U>CocCommand rust-analyzer.analyzerStatus<CR> |
-    \ nmap <silent> <localleader>R :<C-U>CocCommand rust-analyzer.reload<CR> |
-    \ nmap <silent> <localleader>W :<C-U>CocCommand rust-analyzer.reloadWorkspace<CR> |
-    \ nmap <silent> <localleader>M :<C-U>CocCommand rust-analyzer.expandMacro<CR>
-augroup end
-
-" latex {{{ "
-augroup mylatex
-  au!
-  au FileType tex let b:coc_pairs = [["$", "$"]]
-augroup end
-" }}} latex "
-" pairs {{{ "
-autocmd FileType markdown let b:coc_pairs_disabled = ['`', '<']
-autocmd FileType tex let b:coc_pairs_disabled = ['`', '<', '[']
-" }}} pairs "
-
+" set leaders
+let g:mapleader = "\<Space>"
+let g:maplocalleader = ','
+" }}}
 " }}}
 
-" KEY BINDINGS {{{
+" KEYS {{{
 " buffers {{{
-nnoremap <silent> <leader>bb :<C-u>Buffers<CR>
-nnoremap <silent> <leader>bd :<C-u>bd<CR>
-nnoremap <silent> <leader>bn :<C-u>bn<CR>
-nnoremap <silent> <leader>bp :<C-u>bp<CR>
-" }}} buffers
-" edit {{{
-" copy
-xnoremap <silent> <C-S-c> "+y
-" delete
-xnoremap <silent> <C-S-x> "+d
-" snippets
-nnoremap <silent> <leader>ess :<C-U>Snippets<CR>
-nnoremap <silent> <leader>ese :<C-U>UltiSnipsEdit<CR>
-nnoremap <silent> <leader>est :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
-
-" duplicate lines / regions
-xmap <M-S-Down> <Plug>(textmanip-duplicate-down)
-nmap <M-S-Down> <Plug>(textmanip-duplicate-down)
-xmap <M-S-Up> <Plug>(textmanip-duplicate-up)
-nmap <M-S-Up> <Plug>(textmanip-duplicate-up)
-
-" move lines / regions
-xmap <M-Down> <Plug>(textmanip-move-down)
-xmap <M-Up> <Plug>(textmanip-move-up)
-xmap <M-Left> <Plug>(textmanip-move-left)
-xmap <M-Right> <Plug>(textmanip-move-right)
-
-" insert empty line
-nnoremap <silent> [o  :<c-u>put!=repeat([''],v:count)<bar>']+1<cr>
-nnoremap <silent> ]o  :<c-u>put =repeat([''],v:count)<bar>'[-1<cr>
+nnoremap <silent> <leader>bd <cmd>bd<CR>
+nnoremap <silent> <leader>bn <cmd>bn<CR>
+nnoremap <silent> <leader>bp <cmd>bp<CR>
 " }}}
-" emacs binding {{{
+" edit {{{
+" copy to system clipboard (neovim does not support yet C-S-c)
+nnoremap <silent> <C-y> "+y
+nnoremap <silent> <C-y><C-y> "+yy
+xnoremap <silent> <C-y> "+y
+" xnoremap <silent> <C-S-c> "+y
+" insert new lines
+nnoremap <silent> [o  <cmd>put!=repeat([''],v:count)<bar>']+1<CR>
+nnoremap <silent> ]o  <cmd>put =repeat([''],v:count)<bar>'[-1<CR>
+" use C-\ to insert a digraph
+inoremap <C-\> <C-k>
+" format paragraph
+inoremap <M-q> <C-o>gwap
+nnoremap <M-q> gwap
+vnoremap <M-q> gw
+" }}}
+" emacs-style {{{
 noremap <C-g> <Esc>
 vnoremap <C-g> <Esc>
 cnoremap <C-g> <Esc>
@@ -394,56 +128,51 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-k> <C-\>estrpart(getcmdline(),0,getcmdpos()-1)<CR>
 snoremap <C-g> <Esc>
-nnoremap <silent> <M-x> :<C-u>Commands<CR>
 inoremap <C-g> <Esc>
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>^
 inoremap <C-BS> <C-W>
 inoremap <C-k> <C-o>d$
-" use C-\ to insert a digraph
-inoremap <C-\> <C-k>
-" list yanks
-inoremap <C-y> <C-o>:<C-u>CocFzfList yanks<CR>
-nnoremap <C-y> <C-o>:<C-u>CocFzfList yanks<CR>
-" format paragraph
-inoremap <M-q> <C-o>gwap
-nnoremap <M-q> gwap
-vnoremap <M-q> gw
-" }}} Emacs binding
-" files {{{
-nnoremap <silent> <leader>ff :<C-U>Files<CR>
-nnoremap <silent> <leader>fr :<C-U>History<CR>
-" }}} files
-" git {{{
-nnoremap <silent> <leader>gg :<C-U>Gstatus<CR>
-nnoremap <silent> <leader>glb :<C-U>BCommits<CR>
-nnoremap <silent> <leader>glp :<C-U>Commits<CR>
-nnoremap <silent> <leader>gll :<C-U>G log<CR>
-nnoremap <silent> <leader>gdd :<C-U>G diff<CR>
 " }}}
-" global {{{
-command! MyFindFiles execute FugitiveIsGitDir(getcwd()) ? 'GFiles' : 'Files'
-
-nnoremap <silent> <leader>/ :<C-U>Rg<space>
-nnoremap <silent> <leader>* :<C-U>Rg <C-R><C-W><CR>
-nnoremap <silent> <leader><space> :<C-U>MyFindFiles<CR>
-" }}} global
+" file {{{
+nmap <silent> <leader>fn <cmd>enew<CR>
+" }}}
 " navigation {{{
-" this is an alternative to C-i/C-o because nvim currently cannot map
+" an alternative to C-i/C-o because nvim currently cannot map
 " tab and C-i to different keys
-nnoremap <silent> <M-Left> :<C-U>execute "normal 1\<C-I>"<CR>
-nnoremap <silent> <M-Right> :<C-U>execute "normal 1\<C-O>"<CR>
-
+nnoremap <silent> <M-Right> <cmd>execute "normal 1\<C-I>"<CR>
+nnoremap <silent> <M-Left> <cmd>execute "normal 1\<C-O>"<CR>
+" move across line boundaries
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
 xnoremap <expr> j v:count ? 'j' : 'gj'
 xnoremap <expr> k v:count ? 'k' : 'gk'
-" }}} navigation
+" }}}
 " open {{{
-nnoremap <silent> <leader>oq :copen<CR>
-nnoremap <silent> <leader>ol :lopen<CR>
-nnoremap <silent> <leader>o- :Explore<CR>
-" }}} open
+nnoremap <silent> <leader>o- <cmd>Explore<CR>
+nnoremap <silent> <leader>ol <cmd>lopen<CR>
+nnoremap <silent> <leader>oq <cmd>copen<CR>
+" }}}
+" terminal {{{
+tnoremap jk <C-\><C-n>
+" }}}
+" toggle {{{
+nmap <silent> <leader>th <cmd>set hls!<CR>
+nmap <silent> <leader>tp <cmd>setlocal paste!<CR>
+nmap <silent> <leader>ts <cmd>setlocal spell!<CR>
+nmap <silent> <leader>tw <cmd>setlocal wrap!<CR>
+" }}}
+" vim {{{
+nmap <silent> <leader>ve <cmd>edit ~/.config/nvim/init.vim<CR>
+nmap <silent> <leader>vfs <cmd>syntax sync fromstart<CR>
+nmap <silent> <leader>vpU <cmd>PlugUpgrade<CR>
+nmap <silent> <leader>vpc <cmd>PlugClean<CR>
+nmap <silent> <leader>vpi <cmd>PlugInstall<CR>
+nmap <silent> <leader>vps <cmd>PlugStatus<CR>
+nmap <silent> <leader>vpu <cmd>PlugUpdate<CR>
+nmap <silent> <leader>vq <cmd>quitall<CR>
+nmap <silent> <leader>vs <cmd>update!<CR>:<C-u>source ~/.config/nvim/init.vim<CR>:<C-u>echo "Sourced!"<CR>
+" }}}
 " windows {{{
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -454,510 +183,16 @@ nnoremap <leader>w- <C-w>s
 nnoremap <leader>w<bar> <C-w>v
 nnoremap <leader>w= <C-w>=
 nnoremap <leader>wk <C-w>c
-nnoremap <leader>ww :<C-u>Windows<CR>
-nnoremap <leader>wz :<C-u>MaximizerToggle<CR>
-" }}} windows
-" search {{{
-nnoremap <silent> <leader>sw :<C-U>Rg <C-R><C-W><space>
-nnoremap <silent> <leader>ss :<C-U>Rg<space>
-nnoremap <silent> <leader>sh :<C-U>History/<CR>
-nnoremap <silent> <leader>sb :<C-u>BLines<CR>
-nnoremap <silent> <leader>sB :<C-u>Lines<CR>
-nnoremap <silent> <leader>sm :<C-u>Marks<CR>
-nnoremap <silent> <leader>st :<C-u>BTags<CR>
-nnoremap <silent> <leader>sT :<C-u>Tags<CR>
-" }}} search
-" toggle {{{
-nnoremap <silent> <leader>td :<C-u>call CocAction('diagnosticToggle')<CR>
-nnoremap <silent> <leader>tg :<C-u>GitGutterToggle<CR>
-nnoremap <silent> <leader>th :<C-u>set hls!<CR>
-nnoremap <silent> <leader>tp :<C-u>setlocal paste!<CR>
-nnoremap <silent> <leader>ts :<C-u>setlocal spell!<CR>
-nnoremap <silent> <leader>tw :<C-u>setlocal wrap!<CR>
-nnoremap <silent> <leader>tu :<C-u>UndotreeToggle<CR>
-nnoremap <silent> <leader>tW :<C-u>ToggleWhitespace<CR>
-" }}} toggle "
-" vim {{{
-nnoremap <silent> <leader>ve :<C-u>edit ~/.config/nvim/init.vim<CR>
-nnoremap <silent> <leader>vs :<C-u>update!<CR>:<C-u>source ~/.config/nvim/init.vim<CR>:<C-u>echo "Sourced!"<CR>
-nnoremap <silent> <leader>vq :<C-u>quitall<CR>
-nnoremap <silent> <leader>vfs :<C-u>syntax sync fromstart<CR>
-" }}} vim
-" terminal {{{
-tnoremap jk <C-\><C-n>
+nnoremap <leader>wH <C-w>H
+nnoremap <leader>wJ <C-w>J
+nnoremap <leader>wK <C-w>K
+nnoremap <leader>wL <C-w>L
 " }}}
-" }}}
-
-" plugin: autosave {{{
-let g:auto_save = 1
-let g:auto_save_write_all_buffers = 1
-" }}}
-
-" plugin: better-whitespace {{{ "
-let g:better_whitespace_enabled = 0
-let g:strip_whitespace_on_save = 1
-let g:strip_only_modified_lines = 1
-let g:strip_whitespace_confirm = 0
-" }}} plugin: better-whitespace "
-
-" plugin: easy-motion {{{
-" Disable default mappings
-let g:EasyMotion_do_mapping = 0
-" Turn on case-insensitive feature
-let g:EasyMotion_smartcase = 1
-
-nmap gF <Plug>(easymotion-overwin-f2)
-nmap gT <Plug>(easymotion-overwin-t2)
-nmap gf <Plug>(easymotion-overwin-f)
-nmap gt <Plug>(easymotion-overwin-t)
-
-" line motions: Line motions
-map gl <Plug>(easymotion-lineforward)
-map gj <Plug>(easymotion-j)
-map gk <Plug>(easymotion-k)
-map gh <Plug>(easymotion-linebackward)
-" }}} easy-motion
-
-" plugin: easy-align {{{
-xmap <leader>ea <Plug>(EasyAlign)
-nmap <leader>ea <Plug>(EasyAlign)
-" }}} easy-align
-
-" plugin: fugitive {{{
-augroup mygit
-  au!
-  au FileType fugitive nmap <TAB> =
-augroup end
-
-function! MyDiffSaved()
-  let filetype=&ft
-  diffthis
-  vnew | r # | normal! 1Gdd
-  diffthis
-  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
-endfunction
-
-nmap <silent> <leader>gds :call MyDiffSaved()<CR>
-" }}} plugin: fugitive
-
-" plugin: fzf {{{
-
-" fzf-spell {{{ "
-function! FzfSpellSink(word)
-  exe 'normal! "_ciw'.a:word
-endfunction
-
-function! FzfSpell()
-  let suggestions = spellsuggest(expand("<cword>"))
-  return fzf#run({'source': suggestions, 'sink': function("FzfSpellSink"), 'down': 10 })
-endfunction
-
-nnoremap z= :call FzfSpell()<CR>
-" }}} fzf-spell "
-" style preview window
-let g:fzf_preview_window = ['up:50%', '?']
-" layout
-let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.7, 'yoffset': 1, 'xoffset': 0 } }
-" which keys will execute the command
-let g:fzf_commands_expect = 'alt-enter,ctrl-x'
-let g:my_fzf_rg_prefix = 'rg --column --line-number --no-heading --color=always --smart-case'
-" copy settings into coc-fzf
-let g:coc_fzf_preview = g:fzf_preview_window[0]
-let g:coc_fzf_preview_toggle_key = g:fzf_preview_window[1]
-let g:coc_fzf_opts = []
-
-function! s:my_fzf_rg(query, dir, fullscreen)
-  call fzf#vim#grep(g:my_fzf_rg_prefix." ".a:query, 1, fzf#vim#with_preview({'dir': a:dir}), a:fullscreen)
-endfunction
-
-command! -bang -nargs=* RG call s:my_fzf_rg((<q-args>), getcwd(), <bang>0)
-command! -bang -nargs=* Rg call s:my_fzf_rg("-- ".shellescape(<q-args>), getcwd(), <bang>0)
-
-" insert mode completion
-imap <c-x><s-k> <plug>(fzf-complete-word)
-imap <c-x><s-f> <plug>(fzf-complete-path)
-imap <c-x><s-l> <plug>(fzf-complete-line)
-" }}} fzf
-
-" plugin: markdown {{{
-let g:pandoc#syntax#conceal#urls = 1
-let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh"]
-let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
-
-augroup mymarkdown
-  au!
-  au FileType pandoc
-    \ setlocal spell |
-    \ setlocal conceallevel=2 |
-    \ setlocal foldlevel=1 |
-    \ vnoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
-    \ onoremap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR> |
-    \ vnoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
-    \ onoremap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR> |
-    \ nmap <buffer><silent> <C-c><C-c> vib<leader>,s |
-    \ nmap <buffer><silent> <C-c><C-l> V<leader>,s
-augroup end
-
-function! MyMdCodeBlockTextObj(type) abort
-  let start_row = searchpos('\s*```', 'bnW')[0]
-  let end_row = searchpos('\s*```', 'nW')[0]
-
-  let buf_num = bufnr()
-  if a:type ==# 'i'
-    let start_row += 1
-    let end_row -= 1
-  endif
-
-  let select_cmd = start_row . 'G1|V|' . end_row . 'G1|'
-  echo l:select_cmd
-  execute 'normal! ' select_cmd
-endfunction
-" }}}
-
-" plugin: rooter {{{
-let g:rooter_change_directory_for_non_project_files = 'current'
-let g:rooter_cd_cmd = 'lcd'
-" }}} rooter
-
-" plugin: ultisnips {{{
-
-let g:UltiSnipsEditSplit = 'context'
-let g:UltiSnipsEnableSnipMate = 0
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'my-snippets']
-
-" }}} ultisnips
-
-" plugin: sandwich {{{
-" prevent s jumping in
-nmap s <Nop>
-xmap s <Nop>
-" }}}
-
-" plugin: vimux {{{
-function! MyVimuxSlime()
- call VimuxRunCommand(@v)
-endfunction
-
-let g:VimuxCloseOnExit = 0
-let g:VimuxUseNearest = 1
-
-nmap <leader>,o :VimuxPromptCommand<CR>
-nmap <leader>,, :VimuxInspectRunner<CR>
-nmap <leader>,c :VimuxCloseRunner<CR>
-nmap <leader>,x :VimuxInterruptRunner<CR>
-nmap <leader>,z :call VimuxZoomRunner()<CR>
-nmap <leader>,l :VimuxClearTerminalScreen<CR>
-nmap <leader>,s vip<leader>,s<CR>
-vmap <leader>,s "vy:call MyVimuxSlime()<CR>
-
-vmap <C-c><C-c> <leader>,s
-" }}}
-
-" plugin: tmux {{{
-let g:tmux_navigator_save_on_switch = 2
-let g:tmux_navigator_disable_when_zoomed = 1
-let g:tmux_navigator_no_mappings = 1
-
-tnoremap <silent> <M-h> <C-\><C-n>:TmuxNavigateLeft<cr>
-tnoremap <silent> <M-j> <C-\><C-n>:TmuxNavigateDown<cr>
-tnoremap <silent> <M-k> <C-\><C-n>:TmuxNavigateUp<cr>
-tnoremap <silent> <M-l> <C-\><C-n>:TmuxNavigateRight<cr>
-tnoremap <silent> <M-\> <C-\><C-n>:TmuxNavigatePrevious<cr>
-nnoremap <silent> <M-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <M-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <M-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <M-\> :TmuxNavigatePrevious<cr>
-" }}}
-
-" plugin: vimtex {{{
-" open quickfix on errors
-let g:vimtex_format_enabled = 1
-let g:vimtex_quickfix_mode = 2
-let g:vimtex_quickfix_open_on_warning = 0
-let g:vimtex_quickfix_ignore_filters = [
-  \ 'Overfull',
-  \ 'Underfull',
-  \ ]
-let g:vimtex_view_general_viewer = 'evince'
-" }}} plugin: vimtex
-
-" plugin: which-key {{{
-
-" config {{{
-" hide status line when entering which key
-autocmd  FileType which_key set laststatus=0 noshowmode noruler
-\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-" disable spell in which key
-autocmd FileType which_key setlocal nospell
-
-nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
-vnoremap <silent> <leader>      :<c-u>WhichKeyVisual '<Space>'<CR>
-nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
-vnoremap <silent> <localleader> :<c-u>WhichKeyVisual ','<CR>
-
-" exit which key using C-G
-let g:which_key_exit = ["\<C-[>", "\<Esc>", "\<C-G>"]
-" it looks better when it is in a separate window
-let g:which_key_use_floating_win = 0
-" set directory for key mapping
-let g:leader_map =  {}
-let g:localleader_map =  {}
-
-aug which_key
-  au!
-  au User vim-which-key call which_key#register('<Space>', 'g:leader_map')
-  au User vim-which-key call which_key#register(',', 'g:localleader_map')
-aug END
-
-let g:leader_map['<space>'] = 'open-files'
-" }}}
-" +global {{{
-let g:leader_map = {
-  \ '<space>': 'find-files',
-  \ '/': 'search',
-  \ '*': 'search-word'
-  \ }
-" }}}
-" +edit {{{
-let g:leader_map.e = {
-  \ 'name' : '+edit',
-  \ 't' : 'delete-trailing-space',
-  \ }
-let g:leader_map.e.s = {
-  \ 'name' : '+snippets',
-  \ 's' : 'snippets',
-  \ 'e' : 'edit',
-  \ }
-" }}}
-" +vim {{{
-let g:leader_map.v = {
-  \ 'name' : '+vim',
-  \ 'e' : 'edit-vimrc',
-  \ 's' : 'source-vimrc',
-  \ 'q' : 'quit-all',
-  \ }
-let g:leader_map.v.f = {
-  \ 'name' : '+fix',
-  \ 's' : 'syntax',
-  \ }
-" }}}
-" +git {{{
-let g:leader_map.g = {
-  \ 'name' : '+git',
-  \ 'g' : 'status',
-  \ }
-let g:leader_map.g.d = { 'name' : '+diff', 's': 'diff-saved' }
-let g:leader_map.g.l = { 'name' : '+log', 'l': 'log', 'p': 'project-fzf-log', 'b': 'buffer-fzf-log' }
-let g:leader_map.g.h = { 'name' : '+hunk' }
-" }}}
-" +files {{{
-let g:leader_map.f = { 'name' : '+files' }
-" }}}
-" +lsp {{{
-let g:leader_map.l = {
-  \ 'name' : '+lsp',
-  \ 'D' : 'diagnostics',
-  \ 'E' : 'extensions',
-  \ 'C' : 'commands',
-  \ 'O' : 'outline',
-  \ 'S' : 'symbols',
-  \ 'j' : 'next',
-  \ 'k' : 'previous',
-  \ '''': 'last-list',
-  \ 'd' : 'definition',
-  \ 't' : 'type-definition',
-  \ 'i' : 'implementation',
-  \ 'r' : 'references',
-  \ 'R' : 'rename',
-  \ 'o' : 'organize-imports',
-  \ 'z' : 'fold',
-  \ 'F' : 'format-selected',
-  \ 'f' : 'format',
-  \ 'h' : 'hover',
-  \ 'a' : 'action',
-  \ 'c' : 'action-selected',
-  \ 'q' : 'quick-fix',
-  \ }
-" }}}
-" +open {{{
-let g:leader_map.o = {
-  \ 'name' : '+open',
-  \ 'q' : 'open-quickfix'    ,
-  \ 'l' : 'open-locationlist',
-  \ }
-" }}}}
-" +buffers {{{
-let g:leader_map.b = {
-  \ 'name' : '+buffers',
-  \ 'b' : 'buffers',
-  \ 'd' : 'delete',
-  \ 'n' : 'next-buffer',
-  \ 'p' : 'previous-buffer',
-  \ }
-" }}}
-" +windows {{{
-let g:leader_map.w = {
-  \ 'name' : '+windows',
-  \ 'w' : 'fzf-windows',
-  \ 'k' : 'kill-window',
-  \ '-' : 'split-window-below',
-  \ '|' : 'split-window-right',
-  \ '=' : 'balance-window',
-  \ }
-" }}}
-" +toggles {{{
-let g:leader_map.t = {
-  \ 'name' : '+toggle',
-  \ 'd' : 'diagnostics',
-  \ 'g' : 'git-status-indicator',
-  \ 'h' : 'highlight-search',
-  \ 'p' : 'paste-mode',
-  \ 's' : 'spell',
-  \ 'w' : 'wrap',
-  \ '(' : 'rainbow-parens',
-  \ }
-" }}}
-" +notes {{{
-let g:leader_map.n = {
-  \ 'name' : '+notes',
-  \ 'i' : 'index',
-  \ 'n' : 'notes',
-  \ 's' : 'search',
-  \ 't' : 'tags',
-  \ }
-let g:leader_map.n.j = {
-  \ 'name' : '+journal',
-  \ 'j' : 'journal',
-  \ 'n' : 'next',
-  \ 'p' : 'previous',
-  \ }
-" }}}
-" +search {{{
-let g:leader_map.s = {
-  \ 'name' : '+search',
-  \ 's' : 'search-files',
-  \ 'h' : 'history',
-  \ 'l' : 'buffer-lines',
-  \ 'L' : 'all-lines',
-  \ 'm' : 'marks',
-  \ 't' : 'buffer-tags',
-  \ 'T' : 'all-tags',
-  \ }
-" }}} search "
-" {{{ +vimux
-let g:leader_map[","] = {
-  \ 'name': '+vimux',
-  \ ',': 'inspect',
-  \ 'c': 'close',
-  \ 'l': 'clear',
-  \ 'o': 'open',
-  \ 's': 'send',
-  \ 'x': 'interrupt',
-  \ }
-" }}}  "
-
-" }}}
-
-" plugin: wiki {{{
-let g:wiki_root = '~/Notes'
-let g:wiki_zotero_root = '~/Research/Resources/Zotero'
-let g:wiki_filetypes = ['md']
-let g:wiki_link_extension = '.md'
-let g:wiki_link_target_type = 'md'
-let g:wiki_journal = {
-  \ 'name': 'journal',
-  \ 'frequency': 'weekly',
-  \ 'date_format': {
-  \   'daily' : '%Y-%m-%d',
-  \   'weekly' : '%Y-w%V',
-  \   'monthly' : '%Y-w%m',
-  \ },
-\}
-let g:wiki_mappings_use_defaults = 'none'
-let g:wiki_list_todos = ['TODO', 'DONE', 'WAIT']
-let g:wiki_template_title_week = '# Week %(week) in %(year)'
-let g:wiki_export = {
-  \ 'args' : '--self-contained --template github',
-  \ 'from_format' : 'markdown',
-  \ 'ext' : 'html',
-  \ 'link_ext_replace': v:false,
-  \ 'view' : v:true,
-  \ 'output': 'exported',
-  \}
-
-command! -bang -nargs=* MyWikiFzfSearch
-  \ call fzf#vim#grep(
-  \   g:my_fzf_rg_prefix.' -g "!*.html" --smart-case '.shellescape(<q-args>)." | rg -v ':```.*$'",
-  \   1,
-  \   fzf#vim#with_preview({'dir':g:wiki_root, 'options': '--prompt "Notes>" --delimiter : --nth 4'}),
-  \   <bang>0
-  \ )
-
-nmap <silent> <leader>ni :<C-u>WikiIndex<CR>
-nmap <silent> <leader>njj :<C-u>WikiJournal<CR>
-nmap <silent> <leader>njn :<C-u>WikiJournalNext<CR>
-nmap <silent> <leader>njp :<C-u>WikiJournalPrev<CR>
-nmap <silent> <leader>nn :<C-u>WikiFzfPages<CR>
-nmap <silent> <leader>nt :<C-u>WikiFzfTags<CR>
-nmap <silent> <leader>ns :<C-u>MyWikiFzfSearch<CR>
-
-let g:wiki_mappings_local = {
-  \ '<plug>(wiki-page-delete)':          '<localleader>d',
-  \ '<plug>(wiki-page-rename)':          '<localleader>r',
-  \ '<plug>(wiki-list-toggle)':          '<localleader>t',
-  \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
-  \ '<plug>(wiki-link-next)':            '<localleader>n',
-  \ '<plug>(wiki-link-prev)':            '<localleader>p',
-  \ '<plug>(wiki-link-return)':          '<localleader>b',
-  \ '<plug>(wiki-link-open)':            '<localleader>o',
-  \ '<plug>(wiki-export)':               '<localleader>e',
-  \ 'x_<plug>(wiki-export)':             '<localleader>e',
-  \ '<plug>(wiki-fzf-toc)':              '<localleader>,',
-  \ '<plug>(wiki-page-toc)':             '<localleader>T',
-  \ }
-
 " }}}
 
 " file-type: vim {{{
-augroup myvim
+augroup my-vim
   au!
   au FileType vim setlocal foldmethod=marker
 augroup end
 " }}}
-
-" R {{{
-augroup myR
-  au!
-  au FileType r
-    \ nmap <buffer><silent> <C-c><C-c> V}<leader>,s|
-    \ nmap <buffer><silent> <C-c><C-l> V<leader>,s
-augroup end
-
-" }}} R
-
-" Debugging {{{ "
-augroup debug
-  au!
-  au FileType c
-        \ packadd termdebug |
-        \ let termdebug_wide=163
-augroup end
-" }}}
-
-	let g:airline#extensions#cursormode#enabled = 1
-
-		" let g:cursormode_mode_func = 'mode'
-		" let g:cursormode_color_map = {
-		" 			\ "nlight": '#000000',
-		" 			\ "ndark": '#BBBBBB',
-		" 			\ "n": g:airline#themes#{g:airline_theme}#palette.normal.airline_a[1],
-		" 			\ "i": g:airline#themes#{g:airline_theme}#palette.insert.airline_a[1],
-		" 			\ "R": g:airline#themes#{g:airline_theme}#palette.replace.airline_a[1],
-		" 			\ "v": g:airline#themes#{g:airline_theme}#palette.visual.airline_a[1],
-		" 			\ "V": g:airline#themes#{g:airline_theme}#palette.visual.airline_a[1],
-		" 			\ "\<C-V>": g:airline#themes#{g:airline_theme}#palette.visual.airline_a[1]
-		" 			\ }
