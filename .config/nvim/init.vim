@@ -1,6 +1,9 @@
 " PLUGINS {{{
 call plug#begin()
-
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 call plug#end()
 " }}}
 
@@ -99,6 +102,7 @@ let g:maplocalleader = ','
 
 " KEYS {{{
 " buffers {{{
+nmap <silent> <leader>bb <cmd>TS buffers<CR>
 nnoremap <silent> <leader>bd <cmd>bd<CR>
 nnoremap <silent> <leader>bn <cmd>bn<CR>
 nnoremap <silent> <leader>bp <cmd>bp<CR>
@@ -118,6 +122,7 @@ inoremap <C-\> <C-k>
 inoremap <M-q> <C-o>gwap
 nnoremap <M-q> gwap
 vnoremap <M-q> gw
+vnoremap <silent> <leader>es :sort<CR>
 " }}}
 " emacs-style {{{
 noremap <C-g> <Esc>
@@ -136,6 +141,30 @@ inoremap <C-k> <C-o>d$
 " }}}
 " file {{{
 nmap <silent> <leader>fn <cmd>enew<CR>
+nmap <silent> <leader>ff <cmd>TS file_browser<CR>
+nmap <silent> <leader>fr <cmd>TS oldfiles<CR>
+" }}}
+" git {{{
+nmap <silent> <leader>gC <cmd>TS git_commits<CR>
+nmap <silent> <leader>gb <cmd>TS git_branches<CR>
+nmap <silent> <leader>gc <cmd>TS git_bcommits<CR>
+nmap <silent> <leader>gf <cmd>TS git_files<CR>
+nmap <silent> <leader>gs <cmd>TS git_stash<CR>
+" }}}
+" global {{{
+nmap <silent> <leader>' <cmd>TS search_history<CR>
+nmap <silent> <leader>* <cmd>TS grep_string<CR>
+nmap <silent> <leader>, <cmd>TS buffers<CR>
+nmap <silent> <leader>. <cmd>TS file_browser<CR>
+nmap <silent> <leader>/ <cmd>TS live_grep<CR>
+nmap <silent> <leader><space> <cmd>TS find_files<CR>
+" }}}
+" help {{{
+nmap <silent> <leader>hH <cmd>TS highlights<CR>
+nmap <silent> <leader>hc <cmd>TS commands<CR>
+nmap <silent> <leader>hh <cmd>TS help_tags<CR>
+nmap <silent> <leader>hk <cmd>TS keymaps<CR>
+nmap <silent> <leader>hm <cmd>TS man_pages<CR>
 " }}}
 " navigation {{{
 " an alternative to C-i/C-o because nvim currently cannot map
@@ -153,6 +182,19 @@ nnoremap <silent> <leader>o- <cmd>Explore<CR>
 nnoremap <silent> <leader>ol <cmd>lopen<CR>
 nnoremap <silent> <leader>oq <cmd>copen<CR>
 " }}}
+" search {{{
+nmap <silent> <leader>s: <cmd>TS command_history<CR>
+nmap <silent> <leader>sT <cmd>TS tags<CR>
+nmap <silent> <leader>sl <cmd>TS loclist<CR>
+nmap <silent> <leader>sm <cmd>TS marks<CR>
+nmap <silent> <leader>sq <cmd>TS quickfix<CR>
+nmap <silent> <leader>sr <cmd>TS registers<CR>
+nmap <silent> <leader>ss <cmd>TS current_buffer_fuzzy_find<CR>
+nmap <silent> <leader>st <cmd>TS current_buffer_tags<CR>
+" }}}
+" spell {{{
+nnoremap z= <cmd> TS spell_suggest<CR>
+" }}}
 " terminal {{{
 tnoremap jk <C-\><C-n>
 " }}}
@@ -165,6 +207,7 @@ nmap <silent> <leader>tw <cmd>setlocal wrap!<CR>
 " vim {{{
 nmap <silent> <leader>ve <cmd>edit ~/.config/nvim/init.vim<CR>
 nmap <silent> <leader>vfs <cmd>syntax sync fromstart<CR>
+nmap <silent> <leader>vo <cmd>TS vim_options<CR>
 nmap <silent> <leader>vpU <cmd>PlugUpgrade<CR>
 nmap <silent> <leader>vpc <cmd>PlugClean<CR>
 nmap <silent> <leader>vpi <cmd>PlugInstall<CR>
@@ -188,6 +231,25 @@ nnoremap <leader>wJ <C-w>J
 nnoremap <leader>wK <C-w>K
 nnoremap <leader>wL <C-w>L
 " }}}
+" }}}
+
+" plugin: telescope {{{
+lua <<EOF
+local ts = require('telescope')
+
+ts.setup {
+  extensions = {
+    fzy_native = {
+      override_generic_sorter = false,
+      override_file_sorter = true,
+    }
+  }
+}
+
+ts.load_extension('fzy_native')
+EOF
+
+command -nargs=1 TS Telescope <args> theme=get_ivy
 " }}}
 
 " file-type: vim {{{
