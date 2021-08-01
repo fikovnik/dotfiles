@@ -4,6 +4,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 call plug#end()
 " }}}
@@ -252,6 +253,27 @@ ts.load_extension('fzy_native')
 EOF
 
 command -nargs=1 TS Telescope <args> theme=get_ivy
+" }}}
+
+" plugin: treesitter {{{
+lua <<EOF
+require('nvim-treesitter.configs').setup {
+  ensure_installed = "maintained",
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<M-=>",
+      node_incremental = "<M-=>",
+      scope_incremental = "<M-+>",
+      node_decremental = "<M-->",
+    },
+  },
+}
+EOF
 " }}}
 
 " plugin: which-key {{{
