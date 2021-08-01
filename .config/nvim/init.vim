@@ -4,6 +4,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'folke/which-key.nvim'
 call plug#end()
 " }}}
 
@@ -53,6 +54,7 @@ set splitright " vsplit: swap order so the text does not move
 set tabstop=2
 set tagcase=match " match case when searching tags
 set thesaurus=$HOME/.config/nvim/spell/thesaurus.txt
+set timeoutlen=500 " timeout for which-key
 set title
 set undodir=$HOME/.cache/vim/undo
 set undofile
@@ -250,6 +252,117 @@ ts.load_extension('fzy_native')
 EOF
 
 command -nargs=1 TS Telescope <args> theme=get_ivy
+" }}}
+
+" plugin: which-key {{{
+
+lua << EOF
+local wk = require("which-key")
+wk.setup {
+  key_labels = {
+    ["<space>"] = "SPC",
+    ["<CR>"] = "RET",
+    ["<tab>"] = "TAB",
+  }
+}
+
+wk.register({
+  ["<leader>"] = {
+   ["<space>"] = "Find file in project",
+   ["/"] = "Search in project",
+   ["."] = "Find file",
+   [","] = "Switch buffer",
+   ["*"] = "Search symbol in project",
+   ["'"] = "Search history",
+  },
+  ["<leader>b"] = {
+    name = "buffers",
+    b = "Buffer list",
+    n = "Next buffer",
+    p = "Previous buffer",
+    d = "Delete buffer",
+  },
+  ["<leader>e"] = {
+    name = "edit",
+    s = "Sort lines"
+  },
+  ["<leader>f"] = {
+    name = "files",
+    f = "Find file",
+    n = "New file",
+    r = "Recent file",
+  }, 
+  ["<leader>g"] = {
+    name = "git",
+    C = "Commits",
+    b = "Branches",
+    c = "Buffer commits",
+    f = "Files",
+    s = "Stashes",
+  },
+  ["<leader>h"] = {
+    name = "help",
+    H = "Highlights",
+    c = "Commands",
+    h = "Help tags",
+    k = "Keymaps",
+    m = "Man pages",
+  },
+  ["<leader>o"] = {
+    name = "open",
+    q = "Quickfix",
+    l = "Locations",
+    ["-"] = "Directory",
+  },
+  ["<leader>s"] = {
+    name = "search",
+    [":"] = "Command history",
+    T = "Tags",
+    l = "Locations",
+    m = "Marks",
+    q = "Quickfix",
+    r = "Registers",
+    s = "Current buffer",
+    t = "Current buffer tags",
+  },
+  ["<leader>t"] = {
+    name = "toggle",
+    h = "Highlight",
+    p = "Paste",
+    s = "Spell",
+    w = "Wrap"
+  },
+  ["<leader>v"] = {
+    name = "vim",
+    e = "Edit init.vim",
+    s = "Source init.vim",
+    f = {
+      name = "fix",
+      s = "Syntax",
+    },
+    o = "Options",
+    p = {
+      name = "plugins",
+      c = "Clean",
+      i = "Install",
+      s = "Status",
+      u = "Update",
+      U = "Upgrade",
+    },
+  },
+  ["<leader>w"] = {
+    name = "windows",
+    ["-"] = "Split horizontaly",
+    ["|"] = "Split vertically",
+    ["="] = "Balance windows",
+    ["H"] = "Move window to the left",
+    ["J"] = "Move window to the bottom",
+    ["K"] = "Move window to the top",
+    ["L"] = "Move window to the right",
+    ["c"] = "Close window",
+  }
+})
+EOF
 " }}}
 
 " file-type: vim {{{
