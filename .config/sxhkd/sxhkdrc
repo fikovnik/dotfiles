@@ -68,6 +68,16 @@ super + Escape
   pkill -USR1 -x sxhkd
 
 # media keys
+super + F11
+  playerctl play-pause
+
+super + F10
+  playerctl next
+
+super + F9
+  playerctl previous
+
+# media keys
 XF86AudioPlay
   playerctl play-pause
 
