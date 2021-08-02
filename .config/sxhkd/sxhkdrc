@@ -57,9 +57,6 @@ super + colon
 super + m
   ~/bin/x-display-menu.sh
 
-# TODO audio menu
-# TODO emacs
-# TODO htop
 # TODO list of shortcuts
 
 # power menu
@@ -93,12 +90,9 @@ XF86AudioMute
 # Screen brightness controls
 XF86MonBrightnessUp
 	xbacklight -inc 10 && notify-send 'brightness up' || notify-send 'trouble invoking xbacklight'
+
 XF86MonBrightnessDown
 	xbacklight -dec 10 && notify-send 'brightness down' || notify-send 'trouble invoking xbacklight'
-
-# Emacs anywhere
-super + e
-  ~/.emacs_anywhere/bin/run
 
 # #
 # # bspwm hotkeys
