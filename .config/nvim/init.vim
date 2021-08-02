@@ -326,7 +326,7 @@ ts.setup {
 ts.load_extension('fzy_native')
 EOF
 
-command -nargs=1 TS Telescope <args> theme=get_ivy
+command -nargs=* TS Telescope <args> theme=get_ivy
 " }}}
 
 " plugin: treesitter {{{
