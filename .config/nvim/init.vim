@@ -15,6 +15,9 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'fhill2/telescope-ultisnips.nvim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 call plug#end()
 " }}}
 
@@ -141,6 +144,9 @@ inoremap <M-q> <C-o>gwap
 nnoremap <M-q> gwap
 vnoremap <M-q> gw
 vnoremap <silent> <leader>es :sort<CR>
+" snippets
+nmap <silent> <leader>eSs <cmd>TS ultisnips<CR>
+nmap <silent> <leader>eSe <cmd>UltiSnipsEdit<CR>
 " }}}
 " emacs-style {{{
 noremap <C-g> <Esc>
@@ -330,6 +336,7 @@ require'compe'.setup {
     buffer = true,
     calc = true,
     nvim_lsp = true,
+    ultisnips = true,
   },
 }
 EOF
@@ -349,6 +356,7 @@ ts.setup {
 }
 
 ts.load_extension('fzy_native')
+ts.load_extension('ultisnips')
 EOF
 
 command -nargs=* TS Telescope <args> theme=get_ivy
@@ -373,6 +381,14 @@ require('nvim-treesitter.configs').setup {
   },
 }
 EOF
+" }}}
+
+" plugin: ultisnips {{{
+let g:UltiSnipsEditSplit = 'context'
+let g:UltiSnipsEnableSnipMate = 0
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
 " }}}
 
 " plugin: vim-tmux-navigator {{{
@@ -422,7 +438,12 @@ wk.register({
   },
   ["<leader>e"] = {
     name = "edit",
-    s = "Sort lines"
+    s = "Sort lines",
+    S = {
+      name = "snippets",
+      s = "Snippets list",
+      e = "Edit snippets",
+    }
   },
   ["<leader>f"] = {
     name = "files",
