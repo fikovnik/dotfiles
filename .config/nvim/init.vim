@@ -265,6 +265,12 @@ colorscheme onedark
 
 hi Visual guibg=#264f78
 hi MatchParen guifg=#e86671
+
+" curly underline of misspelled words
+hi SpellBad   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e86671
+hi SpellCap   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
+hi SpellLocal cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
+hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
 " }}}
 
 " plugin: hop {{{
