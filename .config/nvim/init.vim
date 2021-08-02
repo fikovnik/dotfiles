@@ -10,6 +10,7 @@ Plug 'hrsh7th/nvim-compe'
 Plug 'windwp/nvim-autopairs'
 Plug 'phaazon/hop.nvim'
 Plug 'tpope/vim-commentary'
+Plug 'TimUntersberger/neogit'
 call plug#end()
 " }}}
 
@@ -162,6 +163,7 @@ nmap <silent> <leader>gC <cmd>TS git_commits<CR>
 nmap <silent> <leader>gb <cmd>TS git_branches<CR>
 nmap <silent> <leader>gc <cmd>TS git_bcommits<CR>
 nmap <silent> <leader>gf <cmd>TS git_files<CR>
+nmap <silent> <leader>gg <cmd>Neogit<CR>
 nmap <silent> <leader>gs <cmd>TS git_stash<CR>
 " }}}
 " global {{{
@@ -250,6 +252,7 @@ nnoremap <leader>wK <C-w>K
 nnoremap <leader>wL <C-w>L
 " }}}
 " }}}
+
 
 " plugin: hop {{{
 lua << EOF
@@ -365,6 +368,7 @@ wk.register({
     b = "Branches",
     c = "Buffer commits",
     f = "Files",
+    g = "Status",
     s = "Stashes",
   },
   ["<leader>h"] = {
