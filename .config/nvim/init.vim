@@ -6,6 +6,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
+Plug 'hrsh7th/nvim-compe'
 call plug#end()
 " }}}
 
@@ -19,6 +20,7 @@ set backup
 set backupdir=$HOME/.cache/vim/backup
 set breakindent " wrap lines continue visually indented
 set cmdheight=2 " give more space for displaying messages
+set completeopt=menuone,noselect " nvim-compe requirement
 set copyindent " copy the previous indentation on autoindenting
 set cursorline
 set encoding=utf-8
@@ -109,6 +111,11 @@ nmap <silent> <leader>bb <cmd>TS buffers<CR>
 nnoremap <silent> <leader>bd <cmd>bd<CR>
 nnoremap <silent> <leader>bn <cmd>bn<CR>
 nnoremap <silent> <leader>bp <cmd>bp<CR>
+" }}}
+" completion {{{
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-g>     compe#close('<C-g>')
 " }}}
 " edit {{{
 " copy to system clipboard (neovim does not support yet C-S-c)
@@ -234,6 +241,22 @@ nnoremap <leader>wJ <C-w>J
 nnoremap <leader>wK <C-w>K
 nnoremap <leader>wL <C-w>L
 " }}}
+" }}}
+
+" plugin: nvim-compe {{{
+lua << EOF
+require'compe'.setup {
+  enabled = true,
+  autocomplete = true,
+  min_length = 2,
+  source = {
+    path = true,
+    buffer = true,
+    calc = true,
+    nvim_lsp = true,
+  },
+}
+EOF
 " }}}
 
 " plugin: telescope {{{
