@@ -13,6 +13,7 @@ Plug 'navarasu/onedark.nvim'
 Plug 'TimUntersberger/neogit'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 call plug#end()
 " }}}
 
