@@ -7,7 +7,6 @@ Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'hrsh7th/nvim-compe'
-Plug 'windwp/nvim-autopairs'
 Plug 'phaazon/hop.nvim'
 Plug 'tpope/vim-commentary'
 Plug 'navarasu/onedark.nvim'
@@ -121,7 +120,7 @@ nnoremap <silent> <leader>bp <cmd>bp<CR>
 " }}}
 " completion {{{
 inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-g>     compe#close('<C-g>')
 " }}}
 " edit {{{
@@ -292,14 +291,6 @@ EOF
 " plugin: neogit {{{
 lua << EOF
 require('neogit').setup()
-EOF
-" }}}
-
-" plugin: nvim-autopairs {{{
-lua << EOF
-require('nvim-autopairs').setup {
-  enable_check_bracket_line = false
-}
 EOF
 " }}}
 
