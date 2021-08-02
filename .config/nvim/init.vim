@@ -10,6 +10,7 @@ Plug 'hrsh7th/nvim-compe'
 Plug 'windwp/nvim-autopairs'
 Plug 'phaazon/hop.nvim'
 Plug 'tpope/vim-commentary'
+Plug 'navarasu/onedark.nvim'
 Plug 'TimUntersberger/neogit'
 call plug#end()
 " }}}
@@ -253,10 +254,28 @@ nnoremap <leader>wL <C-w>L
 " }}}
 " }}}
 
+" UI {{{
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+colorscheme onedark
+
+hi Visual guibg=#264f78
+hi MatchParen guifg=#e86671
+" }}}
 
 " plugin: hop {{{
 lua << EOF
 require('hop').setup()
+EOF
+" }}}
+
+" plugin: neogit {{{
+lua << EOF
+require('neogit').setup()
 EOF
 " }}}
 
