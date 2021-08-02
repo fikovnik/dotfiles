@@ -13,6 +13,7 @@ Plug 'tpope/vim-commentary'
 Plug 'navarasu/onedark.nvim'
 Plug 'TimUntersberger/neogit'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'lervag/wiki.vim'
 call plug#end()
 " }}}
 
@@ -198,6 +199,14 @@ nmap <silent> gy <cmd>HopWord<CR>
 nmap <silent> gl <cmd>HopLine<CR>
 nmap <silent> gs <cmd>HopChar1<CR>
 nmap <silent> gS <cmd>HopChar2<CR>
+" }}}
+" notes {{{
+nmap <silent> <leader>ni <cmd>WikiIndex<CR>
+nmap <silent> <leader>njj <cmd>WikiJournal<CR>
+nmap <silent> <leader>njn <cmd>WikiJournalNext<CR>
+nmap <silent> <leader>njp <cmd>WikiJournalPrev<CR>
+nmap <silent> <leader>nn <cmd>execute 'cd' fnameescape(g:wiki_root)<CR><cmd>TS find_files<CR>
+nmap <silent> <leader>ns <cmd>execute 'TS' 'live_grep' 'search_dirs=' . fnameescape(g:wiki_root)<CR>
 " }}}
 " open {{{
 nnoremap <silent> <leader>o- <cmd>Explore<CR>
@@ -484,6 +493,49 @@ wk.register({
   },
 })
 EOF
+" }}}
+
+" plugin: wiki {{{
+let g:wiki_root = '~/Notes'
+let g:wiki_zotero_root = '~/Research/Resources/Zotero'
+let g:wiki_filetypes = ['md']
+let g:wiki_link_extension = '.md'
+let g:wiki_link_target_type = 'md'
+let g:wiki_journal = {
+  \ 'name': 'journal',
+  \ 'frequency': 'weekly',
+  \ 'date_format': {
+  \   'daily' : '%Y-%m-%d',
+  \   'weekly' : '%Y-w%V',
+  \   'monthly' : '%Y-w%m',
+  \ },
+\}
+let g:wiki_mappings_use_defaults = 'none'
+let g:wiki_list_todos = ['TODO', 'DONE', 'WAIT']
+let g:wiki_template_title_week = '# Week %(week) in %(year)'
+let g:wiki_export = {
+  \ 'args' : '--self-contained --template github',
+  \ 'from_format' : 'markdown',
+  \ 'ext' : 'html',
+  \ 'link_ext_replace': v:false,
+  \ 'view' : v:true,
+  \ 'output': 'exported',
+  \}
+
+let g:wiki_mappings_local = {
+  \ '<plug>(wiki-page-delete)':          '<localleader>d',
+  \ '<plug>(wiki-page-rename)':          '<localleader>r',
+  \ '<plug>(wiki-list-toggle)':          '<localleader>t',
+  \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
+  \ '<plug>(wiki-link-next)':            '<localleader>n',
+  \ '<plug>(wiki-link-prev)':            '<localleader>p',
+  \ '<plug>(wiki-link-return)':          '<localleader>b',
+  \ '<plug>(wiki-link-open)':            '<localleader>o',
+  \ '<plug>(wiki-export)':               '<localleader>e',
+  \ 'x_<plug>(wiki-export)':             '<localleader>e',
+  \ '<plug>(wiki-fzf-toc)':              '<localleader>,',
+  \ '<plug>(wiki-page-toc)':             '<localleader>T',
+  \ }
 " }}}
 
 " file-type: vim {{{
