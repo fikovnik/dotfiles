@@ -8,6 +8,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'windwp/nvim-autopairs'
+Plug 'phaazon/hop.nvim'
 call plug#end()
 " }}}
 
@@ -187,6 +188,11 @@ nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
 xnoremap <expr> j v:count ? 'j' : 'gj'
 xnoremap <expr> k v:count ? 'k' : 'gk'
+" hopping
+nmap <silent> gy <cmd>HopWord<CR>
+nmap <silent> gl <cmd>HopLine<CR>
+nmap <silent> gs <cmd>HopChar1<CR>
+nmap <silent> gS <cmd>HopChar2<CR>
 " }}}
 " open {{{
 nnoremap <silent> <leader>o- <cmd>Explore<CR>
@@ -242,6 +248,12 @@ nnoremap <leader>wJ <C-w>J
 nnoremap <leader>wK <C-w>K
 nnoremap <leader>wL <C-w>L
 " }}}
+" }}}
+
+" plugin: hop {{{
+lua << EOF
+require('hop').setup()
+EOF
 " }}}
 
 " plugin: nvim-autopairs {{{
@@ -414,7 +426,13 @@ wk.register({
     ["K"] = "Move window to the top",
     ["L"] = "Move window to the right",
     ["c"] = "Close window",
-  }
+  },
+  ["g"] = {
+    l = "Hop line",
+    s = "Hop 1 character",
+    S = "Hop 2 characters",
+    w = "Hop word",
+  },
 })
 EOF
 " }}}
