@@ -14,6 +14,7 @@ Plug 'TimUntersberger/neogit'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+Plug 'lewis6991/gitsigns.nvim'
 call plug#end()
 " }}}
 
@@ -167,7 +168,15 @@ nmap <silent> <leader>gb <cmd>TS git_branches<CR>
 nmap <silent> <leader>gc <cmd>TS git_bcommits<CR>
 nmap <silent> <leader>gf <cmd>TS git_files<CR>
 nmap <silent> <leader>gg <cmd>Neogit<CR>
+nmap <silent> <leader>ghp <cmd>lua require"gitsigns".preview_hunk()<CR>
+nmap <silent> <leader>ghr <cmd>lua require"gitsigns".reset_hunk()<CR>
+nmap <silent> <leader>ghs <cmd>lua require"gitsigns".stage_hunk()<CR>
+nmap <silent> <leader>ghu <cmd>lua require"gitsigns".undo_stage_hunk()<CR>
+nmap <silent> <leader>gl <cmd>lua require"gitsigns".blame_line(true)<CR>
+nmap <silent> <leader>gr <cmd>lua require"gitsigns".reset_buffer()<CR>
 nmap <silent> <leader>gs <cmd>TS git_stash<CR>
+vmap <silent> <leader>ghr <cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>
+vmap <silent> <leader>ghs <cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>
 " }}}
 " global {{{
 nmap <silent> <leader>' <cmd>TS search_history<CR>
@@ -230,6 +239,8 @@ nnoremap z= <cmd> TS spell_suggest<CR>
 tnoremap jk <C-\><C-n>
 " }}}
 " toggle {{{
+nmap <silent> <leader>tb <cmd>Gitsigns toggle_current_line_blame<CR>
+nmap <silent> <leader>tg <cmd>Gitsigns toggle_signs<CR>
 nmap <silent> <leader>th <cmd>set hls!<CR>
 nmap <silent> <leader>tp <cmd>setlocal paste!<CR>
 nmap <silent> <leader>ts <cmd>setlocal spell!<CR>
@@ -286,6 +297,19 @@ hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07
 " plugin: hop {{{
 lua << EOF
 require('hop').setup()
+EOF
+" }}}
+
+" plugin: gitsigns {{{
+lua << EOF
+require('gitsigns').setup {
+  keymaps = {
+    ['n ]c'] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'"},
+    ['n [c'] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'"},
+    ['o ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
+    ['x ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>'
+  }
+}
 EOF
 " }}}
 
@@ -413,6 +437,15 @@ wk.register({
     c = "Buffer commits",
     f = "Files",
     g = "Status",
+    h = {
+      name = "hunk",
+      p = "Preview hunk",
+      r = "Reset hunk",
+      s = "Stage hunk",
+      u = "Undo hunk stage",
+    },
+    l = "Blame line",
+    r = "Reset buffer",
     s = "Stashes",
   },
   ["<leader>h"] = {
@@ -442,6 +475,8 @@ wk.register({
   },
   ["<leader>t"] = {
     name = "toggle",
+    b = "Blame current line",
+    g = "Git signs",
     h = "Highlight",
     p = "Paste",
     s = "Spell",
