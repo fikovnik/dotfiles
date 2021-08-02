@@ -18,6 +18,7 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'fhill2/telescope-ultisnips.nvim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'lervag/vimtex'
 call plug#end()
 " }}}
 
@@ -337,6 +338,9 @@ require'compe'.setup {
     calc = true,
     nvim_lsp = true,
     ultisnips = true,
+    omni = {
+      filetypes = {'tex'},
+    },
   },
 }
 EOF
@@ -366,6 +370,7 @@ command -nargs=* TS Telescope <args> theme=get_ivy
 lua <<EOF
 require('nvim-treesitter.configs').setup {
   ensure_installed = "maintained",
+  ignore_install = { "latex" },
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
@@ -406,6 +411,22 @@ nnoremap <silent> <M-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <M-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <M-\> :TmuxNavigatePrevious<cr>
+" }}}
+
+" plugin: vimtex {{{
+let g:vimtex_format_enabled = 1
+let g:vimtex_quickfix_mode = 0
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_ignore_filters = [
+  \ 'Overfull',
+  \ 'Underfull',
+  \ ]
+let g:vimtex_view_general_viewer = 'okular'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+let g:vimtex_view_general_options_latexmk = '--unique'
+
+nmap <silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
+vmap <silent> <localleader>lf :!latexindent -m -l -<CR>
 " }}}
 
 " plugin: which-key {{{
