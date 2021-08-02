@@ -9,6 +9,7 @@ Plug 'folke/which-key.nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'windwp/nvim-autopairs'
 Plug 'phaazon/hop.nvim'
+Plug 'tpope/vim-commentary'
 call plug#end()
 " }}}
 
@@ -428,6 +429,7 @@ wk.register({
     ["c"] = "Close window",
   },
   ["g"] = {
+    c = "Comment",
     l = "Hop line",
     s = "Hop 1 character",
     S = "Hop 2 characters",
