@@ -8,4 +8,7 @@ command -v xcape >/dev/null 2>&1 && xcape -e 'Control_L=Escape'
 
 export QT_STYLE_OVERRIDE=kvantum
 
+# auto-switch sound sink-source on connect
+pactl load-module module-switch-on-connect
+
 # vim: set ft=sh
