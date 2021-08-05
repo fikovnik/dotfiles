@@ -19,6 +19,7 @@ Plug 'fhill2/telescope-ultisnips.nvim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'lervag/vimtex'
+Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
 call plug#end()
 " }}}
 
@@ -119,6 +120,8 @@ let g:maplocalleader = ','
 
 " KEYS {{{
 " buffers {{{
+nmap <silent> <leader>bR <cmd>SudaRead<CR>
+nmap <silent> <leader>bW <cmd>SudaWrite<CR>
 nmap <silent> <leader>bb <cmd>TS buffers<CR>
 nnoremap <silent> <leader>bd <cmd>bd<CR>
 nnoremap <silent> <leader>bn <cmd>bn<CR>
@@ -456,6 +459,8 @@ wk.register({
     n = "Next buffer",
     p = "Previous buffer",
     d = "Delete buffer",
+    R = "Read as sudo",
+    W = "Write as sudo",
   },
   ["<leader>e"] = {
     name = "edit",
