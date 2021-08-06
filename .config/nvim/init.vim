@@ -647,6 +647,37 @@ let g:wiki_mappings_local = {
   \ }
 " }}}
 
+" file-type: markdown {{{
+augroup my-markdown
+  au!
+  au FileType markdown call MySetupMarkdown()
+augroup end
+
+function! MyMdCodeBlockTextObj(type) abort
+  let start_row = searchpos('\s*```', 'bnW')[0]
+  let end_row = searchpos('\s*```', 'nW')[0]
+
+  let buf_num = bufnr()
+  if a:type ==# 'i'
+    let start_row += 1
+    let end_row -= 1
+  endif
+
+  execute 'normal! ' start_row . 'G|V|' . end_row . 'G'
+endfunction
+
+function! MySetupMarkdown()
+  setlocal spell
+  setlocal conceallevel=2
+  setlocal foldlevel=1
+  vmap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR>
+  omap <buffer><silent> ib :normal vib<CR>
+  vmap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR>
+  omap <buffer><silent> ab :normal vab<CR>
+  nmap <buffer><silent> <C-c><C-c> vib<leader>cs
+endfunction
+" }}}
+
 " file-type: vim {{{
 augroup my-vim
   au!
