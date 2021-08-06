@@ -20,6 +20,7 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'lervag/vimtex'
 Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
+Plug 'preservim/vimux'
 call plug#end()
 " }}}
 
@@ -268,6 +269,20 @@ nmap <silent> <leader>vpu <cmd>PlugUpdate<CR>
 nmap <silent> <leader>vq <cmd>quitall<CR>
 nmap <silent> <leader>vs <cmd>update!<CR>:<C-u>source ~/.config/nvim/init.vim<CR>:<C-u>echo "Sourced!"<CR>
 " }}}
+" vimux {{{
+nmap <C-c><C-c> vip<leader>cs
+nmap <C-c><C-l> V<leader>cs
+nmap <leader>cS V<leader>cs<CR>
+nmap <leader>cd <cmd>VimuxCloseRunner<CR>
+nmap <leader>ci <cmd>VimuxInspectRunner<CR>
+nmap <leader>cl <cmd>VimuxClearTerminalScreen<CR>
+nmap <leader>co <cmd>VimuxPromptCommand<CR>
+nmap <leader>cs vip<leader>cs<CR>
+nmap <leader>cx <cmd>VimuxInterruptRunner<CR>
+nmap <leader>cz <cmd>call VimuxZoomRunner()<CR>
+vmap <C-c><C-c> <leader>cs
+vmap <leader>cs "vy:call MyVimuxSlime()<CR>
+" }}}
 " windows {{{
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -432,6 +447,15 @@ nmap <silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
 vmap <silent> <localleader>lf :!latexindent -m -l -<CR>
 " }}}
 
+" plugin: vimux {{{
+function! MyVimuxSlime()
+ call VimuxRunCommand(@v)
+endfunction
+
+let g:VimuxCloseOnExit = 0
+let g:VimuxUseNearest = 1
+" }}}
+
 " plugin: which-key {{{
 
 lua << EOF
@@ -461,6 +485,17 @@ wk.register({
     d = "Delete buffer",
     R = "Read as sudo",
     W = "Write as sudo",
+  },
+  ["<leader>c"] = {
+    name = "console",
+    S = "Send line",
+    i = "Inspect",
+    d = "Delete",
+    l = "Clear",
+    o = "Open",
+    s = "Send paragraph",
+    x = "Interrupt",
+    z = "Zoom console",
   },
   ["<leader>e"] = {
     name = "edit",
