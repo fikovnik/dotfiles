@@ -8,9 +8,15 @@ function error {
 }
 
 usage="
-Usage: vimgdb [options] [program [arguments]]
+Usage: vimgdb [options] [target]
 
-Start vim with :Termdebug
+Starts vim with Termdebug
+
+Target can be one of the following:
+
+- path/to/program [arguments]
+- core file
+- PID to attach to
 
 Options:
   -h, --help            Print short help message and exit
@@ -34,7 +40,6 @@ while [[ $# -gt 0 ]]; do
     *)
       if [[ -z $program ]]; then
           program="$1"
-          [[ -x $program ]] || error "$1: is not executable"
       else
           args="$args $1"
       fi
