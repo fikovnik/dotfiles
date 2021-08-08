@@ -4,7 +4,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'phaazon/hop.nvim'
@@ -21,6 +21,7 @@ Plug 'honza/vim-snippets'
 Plug 'lervag/vimtex'
 Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
 Plug 'preservim/vimux'
+Plug 'neovim/nvim-lspconfig'
 call plug#end()
 " }}}
 
@@ -307,6 +308,7 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
+let g:disable_toggle_style = 1 " disable the <leade>cs shortcut
 colorscheme onedark
 
 hi Visual guibg=#264f78
@@ -317,6 +319,17 @@ hi SpellBad   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e8667
 hi SpellCap   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
 hi SpellLocal cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
 hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
+" }}}
+
+" LSP {{{
+lua << EOF
+local util = require('lspconfig/util')
+
+require('lspconfig').r_language_server.setup { 
+  filetypes = { "R", "r", "Rmd" },
+  root_dir = util.root_pattern(".git") or cwd
+}
+EOF
 " }}}
 
 " plugin: hop {{{
