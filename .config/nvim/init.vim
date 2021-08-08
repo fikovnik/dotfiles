@@ -279,11 +279,11 @@ nmap <leader>ci <cmd>VimuxInspectRunner<CR>
 nmap <leader>cl <cmd>VimuxClearTerminalScreen<CR>
 nmap <leader>co <cmd>VimuxPromptCommand<CR>
 nmap <silent> <leader>cs :set opfunc=MyVimuxSlimeMotion<CR>g@
+nmap <silent> ; :set opfunc=MyVimuxSlimeMotion<CR>g@
 nmap <leader>cx <cmd>VimuxInterruptRunner<CR>
 nmap <leader>cz <cmd>call VimuxZoomRunner()<CR>
 vmap <C-c><C-c> <leader>cs
 vmap <leader>cs "vy:call MyVimuxSlime()<CR>
-
 " }}}
 " windows {{{
 nnoremap <C-h> <C-w>h
