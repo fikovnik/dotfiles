@@ -278,11 +278,12 @@ nmap <leader>cd <cmd>VimuxCloseRunner<CR>
 nmap <leader>ci <cmd>VimuxInspectRunner<CR>
 nmap <leader>cl <cmd>VimuxClearTerminalScreen<CR>
 nmap <leader>co <cmd>VimuxPromptCommand<CR>
-nmap <leader>cs vip<leader>cs<CR>
+nmap <silent> <leader>cs :set opfunc=MyVimuxSlimeMotion<CR>g@
 nmap <leader>cx <cmd>VimuxInterruptRunner<CR>
 nmap <leader>cz <cmd>call VimuxZoomRunner()<CR>
 vmap <C-c><C-c> <leader>cs
 vmap <leader>cs "vy:call MyVimuxSlime()<CR>
+
 " }}}
 " windows {{{
 nnoremap <C-h> <C-w>h
@@ -463,6 +464,11 @@ vmap <silent> <localleader>lf :!latexindent -m -l -<CR>
 " plugin: vimux {{{
 function! MyVimuxSlime()
  call VimuxRunCommand(@v)
+endfunction
+
+function! MyVimuxSlimeMotion(type)
+    silent execute 'normal! `[v`]"vy'    
+    call MyVimuxSlime()
 endfunction
 
 let g:VimuxCloseOnExit = 0
