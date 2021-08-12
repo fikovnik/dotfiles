@@ -22,6 +22,7 @@ Plug 'lervag/vimtex'
 Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
 Plug 'preservim/vimux'
 Plug 'neovim/nvim-lspconfig'
+Plug 'szw/vim-maximizer'
 call plug#end()
 " }}}
 
@@ -294,11 +295,13 @@ nnoremap <C-w><C-w> <C-w>w
 nnoremap <leader>w- <C-w>s
 nnoremap <leader>w<bar> <C-w>v
 nnoremap <leader>w= <C-w>=
-nnoremap <leader>wk <C-w>c
 nnoremap <leader>wH <C-w>H
 nnoremap <leader>wJ <C-w>J
 nnoremap <leader>wK <C-w>K
 nnoremap <leader>wL <C-w>L
+nnoremap <leader>wk <C-w>c
+nnoremap <silent> <leader>wm <cmd>MaximizerToggle<CR>
+vnoremap <silent> <leader>wm <cmd>MaximizerToggle<CR>gv
 " }}}
 " }}}
 
