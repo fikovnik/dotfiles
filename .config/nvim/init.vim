@@ -154,6 +154,10 @@ vnoremap <silent> <leader>es :sort<CR>
 " snippets
 nmap <silent> <leader>eSs <cmd>TS ultisnips<CR>
 nmap <silent> <leader>eSe <cmd>UltiSnipsEdit<CR>
+" TODO allow line-wise movement
+" - the following breaks the code completion in insert mode
+" inoremap <down> <c-\><c-o>gj
+" inoremap <up> <c-\><c-o>gk
 
 function! MyFormatParagraph()
   let pos = getcurpos()
