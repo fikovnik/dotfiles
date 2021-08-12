@@ -147,13 +147,19 @@ nnoremap <silent> ]o  <cmd>put =repeat([''],v:count)<bar>'[-1<CR>
 " use C-\ to insert a digraph
 inoremap <C-\> <C-k>
 " format paragraph
-inoremap <M-q> <C-o>gwap
-nnoremap <M-q> gwap
-vnoremap <M-q> gw
+imap <M-q> <C-o><M-q>
+nmap <M-q> <cmd>call MyFormatParagraph()<CR>
+vnoremap <M-q> gq
 vnoremap <silent> <leader>es :sort<CR>
 " snippets
 nmap <silent> <leader>eSs <cmd>TS ultisnips<CR>
 nmap <silent> <leader>eSe <cmd>UltiSnipsEdit<CR>
+
+function! MyFormatParagraph()
+  let pos = getcurpos()
+  silent execute 'normal! gqap'
+  call setpos('.', pos)
+endfunction
 " }}}
 " emacs-style {{{
 noremap <C-g> <Esc>
