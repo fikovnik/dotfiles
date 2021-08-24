@@ -3,7 +3,6 @@
   email = krikava@gmail.com
 
 [core]
-  excludesfile = ~/.gitignore_global
   autocrlf = input
   ignorecase = false
 
@@ -12,19 +11,19 @@
   diff = true
 
 [alias]
-  lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-  lg = !"git lg1"
+  lg = log --graph --all --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ah)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
   vim = !"vim '+Neogit' '+only'"
 
 [merge]
-  tool = p4merge
+  tool = vimdiff
+
+[mergetool]
+  keepBackup = false
 
 [mergetool "p4merge"]
   cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
   keepTemporaries = false
   trustExitCode = false
-  keepBackup = false
 
 [difftool "p4merge"]
   cmd = p4merge \"$LOCAL\" \"$REMOTE\"
@@ -35,7 +34,6 @@
 
 [credential]
   helper = cache --timeout=36000
-; helper = /usr/bin/pass-git-helper
 
 [pull]
   rebase = true
