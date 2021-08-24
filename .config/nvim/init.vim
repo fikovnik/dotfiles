@@ -24,6 +24,7 @@ Plug 'preservim/vimux'
 Plug 'neovim/nvim-lspconfig'
 Plug 'szw/vim-maximizer'
 Plug 'AckslD/nvim-neoclip.lua'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 " }}}
 
