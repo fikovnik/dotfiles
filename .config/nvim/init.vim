@@ -23,6 +23,7 @@ Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.
 Plug 'preservim/vimux'
 Plug 'neovim/nvim-lspconfig'
 Plug 'szw/vim-maximizer'
+Plug 'AckslD/nvim-neoclip.lua'
 call plug#end()
 " }}}
 
@@ -148,6 +149,10 @@ inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-g>     compe#close('<C-g>')
 " }}}
 " edit {{{
+" list yanks
+nnoremap <silent> <M-y> <cmd>TS neoclip<CR>
+inoremap <silent> <M-y> <cmd>TS neoclip<CR>
+xnoremap <silent> <M-y> <cmd>TS neoclip<CR>
 " copy to system clipboard (neovim does not support yet C-S-c)
 nnoremap <silent> <C-y> "+y
 nnoremap <silent> <C-y><C-y> "+yy
@@ -377,6 +382,15 @@ require('gitsigns').setup {
 EOF
 " }}}
 
+" plugin: neoclip {{{
+lua << EOF
+require('neoclip').setup({
+  content_spec_colunm = true,
+  preview = false,
+})
+EOF
+" }}}
+
 " plugin: neogit {{{
 lua << EOF
 require('neogit').setup()
@@ -413,11 +427,13 @@ ts.setup {
       override_generic_sorter = false,
       override_file_sorter = true,
     }
-  }
+  },
+  dynamic_preview_title = true,
 }
 
 ts.load_extension('fzy_native')
 ts.load_extension('ultisnips')
+ts.load_extension('neoclip')
 EOF
 
 command -nargs=* TS Telescope <args> theme=get_ivy
