@@ -25,6 +25,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'szw/vim-maximizer'
 Plug 'AckslD/nvim-neoclip.lua'
 Plug 'tpope/vim-fugitive'
+Plug 'dyng/ctrlsf.vim'
 call plug#end()
 " }}}
 
@@ -265,11 +266,13 @@ nnoremap <silent> <leader>oq <cmd>copen<CR>
 " }}}
 " search {{{
 nmap <silent> <leader>s: <cmd>TS command_history<CR>
+nmap <silent> <leader>sR <cmd>TS registers<CR>
 nmap <silent> <leader>sT <cmd>TS tags<CR>
 nmap <silent> <leader>sl <cmd>TS loclist<CR>
 nmap <silent> <leader>sm <cmd>TS marks<CR>
 nmap <silent> <leader>sq <cmd>TS quickfix<CR>
-nmap <silent> <leader>sr <cmd>TS registers<CR>
+nmap <silent> <leader>sr <Plug>CtrlSFPrompt
+vmap <silent> <leader>sr <Plug>CtrlSFVwordPath
 nmap <silent> <leader>ss <cmd>TS current_buffer_fuzzy_find<CR>
 nmap <silent> <leader>st <cmd>TS current_buffer_tags<CR>
 " }}}
@@ -362,6 +365,20 @@ require('lspconfig').r_language_server.setup {
   root_dir = util.root_pattern(".git") or cwd
 }
 EOF
+" }}}
+
+" plugin: ctrlsf {{{
+let g:ctrlsf_auto_close = {
+    \ "normal" : 0,
+    \ "compact": 0
+    \}
+let g:ctrlsf_auto_focus = {
+    \ "at": "start"
+    \ }
+let g:ctrlsf_mapping = {
+    \ "next": "n",
+    \ "prev": "N",
+    \ }
 " }}}
 
 " plugin: hop {{{
@@ -609,11 +626,12 @@ wk.register({
   ["<leader>s"] = {
     name = "search",
     [":"] = "Command history",
+    R = "Registers",
     T = "Tags",
     l = "Locations",
     m = "Marks",
     q = "Quickfix",
-    r = "Registers",
+    r = "Replace in project",
     s = "Current buffer",
     t = "Current buffer tags",
   },
