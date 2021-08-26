@@ -26,7 +26,7 @@
   trustExitCode = false
 
 [mergetool "vimdiff"]
-  cmd = nvim -f -c "Gvdiffsplit!" "$MERGED"
+  cmd = vim '+Gvdiffsplit!' "$MERGED"
 
 [difftool "p4merge"]
   cmd = p4merge "$LOCAL" "$REMOTE"
