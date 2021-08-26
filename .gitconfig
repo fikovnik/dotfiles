@@ -29,7 +29,7 @@
   cmd = nvim -f -c "Gvdiffsplit!" "$MERGED"
 
 [difftool "p4merge"]
-  cmd = p4merge \"$LOCAL\" \"$REMOTE\"
+  cmd = p4merge "$LOCAL" "$REMOTE"
   path =
 
 [push]
