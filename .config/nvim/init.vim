@@ -129,6 +129,18 @@ nmap <silent> <leader>bb <cmd>TS buffers<CR>
 nnoremap <silent> <leader>bd <cmd>bd<CR>
 nnoremap <silent> <leader>bn <cmd>bn<CR>
 nnoremap <silent> <leader>bp <cmd>bp<CR>
+
+function! MyDiffBufferFile()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+
+command! MyDiffBufferFile :call MyDiffBufferFile()
+
+nmap <silent> <leader>bD <cmd>MyDiffBufferFile<CR>
 " }}}
 " completion {{{
 inoremap <silent><expr> <C-Space> compe#complete()
@@ -515,6 +527,7 @@ wk.register({
     n = "Next buffer",
     p = "Previous buffer",
     d = "Delete buffer",
+    D = "Diff with file on disk",
     R = "Read as sudo",
     W = "Write as sudo",
   },
