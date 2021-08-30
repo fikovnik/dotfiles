@@ -710,7 +710,7 @@ let g:wiki_mappings_use_defaults = 'none'
 let g:wiki_list_todos = ['TODO', 'DONE', 'WAIT']
 let g:wiki_template_title_week = '# Week %(week) in %(year)'
 let g:wiki_export = {
-  \ 'args' : '--self-contained',
+  \ 'args' : '--self-contained --template github',
   \ 'from_format' : 'markdown',
   \ 'ext' : 'html',
   \ 'link_ext_replace': v:false,
