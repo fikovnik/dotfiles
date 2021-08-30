@@ -715,7 +715,7 @@ let g:wiki_export = {
   \ 'ext' : 'html',
   \ 'link_ext_replace': v:false,
   \ 'view' : v:true,
-  \ 'output': 'exported',
+  \ 'output': 'Exported',
   \}
 
 let g:wiki_mappings_local = {
