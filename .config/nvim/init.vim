@@ -26,6 +26,8 @@ Plug 'szw/vim-maximizer'
 Plug 'AckslD/nvim-neoclip.lua'
 Plug 'tpope/vim-fugitive'
 Plug 'dyng/ctrlsf.vim'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 call plug#end()
 " }}}
 
@@ -435,6 +437,12 @@ require'compe'.setup {
 EOF
 " }}}
 
+" plugin: pandoc {{{ 
+let g:pandoc#syntax#conceal#urls = 1
+let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh"]
+let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
+" }}}
+
 " plugin: telescope {{{
 lua <<EOF
 local ts = require('telescope')
@@ -731,6 +739,7 @@ let g:wiki_mappings_local = {
 augroup my-markdown
   au!
   au FileType markdown call MySetupMarkdown()
+  au FileType pandoc call MySetupMarkdown()
 augroup end
 
 function! MyMdCodeBlockTextObj(type) abort
