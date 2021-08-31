@@ -3,7 +3,6 @@ call plug#begin()
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'hrsh7th/nvim-compe'
@@ -447,16 +446,9 @@ lua <<EOF
 local ts = require('telescope')
 
 ts.setup {
-  extensions = {
-    fzy_native = {
-      override_generic_sorter = false,
-      override_file_sorter = true,
-    }
-  },
   dynamic_preview_title = true,
 }
 
-ts.load_extension('fzy_native')
 ts.load_extension('ultisnips')
 ts.load_extension('neoclip')
 EOF
