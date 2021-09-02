@@ -364,6 +364,7 @@ require('lspconfig').r_language_server.setup {
   filetypes = { "R", "r", "Rmd" },
   root_dir = util.root_pattern(".git") or cwd
 }
+require('lspconfig').clangd.setup {}
 EOF
 " }}}
 
