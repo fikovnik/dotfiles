@@ -27,6 +27,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'dyng/ctrlsf.vim'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 call plug#end()
 " }}}
 
@@ -756,6 +757,7 @@ function! MySetupMarkdown()
   vmap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR>
   omap <buffer><silent> ab :normal vab<CR>
   nmap <buffer><silent> <C-c><C-c> vib<leader>cs
+  nmap <buffer><silent> <leader>tP <Plug>MarkdownPreviewToggle
 endfunction
 " }}}
 
