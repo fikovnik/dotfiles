@@ -1,0 +1,11 @@
+configuration {
+  font: "JetBrains Mono 12";
+  lines: 15;
+  location: 2;
+  matching: "fuzzy";
+  sort: false;
+  sorting-method: "fzf";
+  terminal: "st";
+  theme: "~/.config/rofi/nord.rasi";
+  width: "100%";
+}
