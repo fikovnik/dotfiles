@@ -238,6 +238,20 @@ nmap <silent> <leader>hh <cmd>TS help_tags<CR>
 nmap <silent> <leader>hk <cmd>TS keymaps<CR>
 nmap <silent> <leader>hm <cmd>TS man_pages<CR>
 " }}}
+" lsp {{{
+nnoremap <silent> <leader>lE <cmd>TS lsp_workspace_diagnostics<CR>
+nnoremap <silent> <leader>lL <cmd>TS lsp_dynamic_workspace_symbols<CR>
+nnoremap <silent> <leader>la <cmd>TS lsp_code_actions<CR>
+nnoremap <silent> <leader>ld <cmd>TS lsp_definitions<CR>
+nnoremap <silent> <leader>le <cmd>TS lsp_document_diagnostics<CR>
+nnoremap <silent> <leader>lh <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <leader>li <cmd>TS lsp_implementations<CR>
+nnoremap <silent> <leader>ll <cmd>TS lsp_document_symbols<CR>
+nnoremap <silent> <leader>lr <cmd>TS lsp_references<CR>
+nnoremap <silent> <leader>ls <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
+vnoremap <silent> <leader>la <cmd>TS lsp_range_code_actions<CR>
+" }}}
 " navigation {{{
 " an alternative to C-i/C-o because nvim currently cannot map
 " tab and C-i to different keys
@@ -361,12 +375,14 @@ hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07
 " LSP {{{
 lua << EOF
 local util = require('lspconfig/util')
+local lsp = require('lspconfig')
 
-require('lspconfig').r_language_server.setup { 
+lsp.r_language_server.setup { 
   filetypes = { "R", "r", "Rmd" },
   root_dir = util.root_pattern(".git") or cwd
 }
-require('lspconfig').clangd.setup {}
+
+lsp.clangd.setup {}
 EOF
 " }}}
 
@@ -618,6 +634,20 @@ wk.register({
     h = "Help tags",
     k = "Keymaps",
     m = "Man pages",
+  },
+  ["<leader>l"] = {
+    name = "help",
+    E = "Errors in workspace",
+    L = "Symbols in workspace",
+    t = "Type definition",
+    a = "Actions",
+    d = "Definitions",
+    e = "Errors in buffer",
+    h = "Hover",
+    i = "Implementations",
+    l = "Symbols in buffer",
+    r = "References",
+    s = "Signature help",
   },
   ["<leader>o"] = {
     name = "open",
