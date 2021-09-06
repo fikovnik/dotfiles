@@ -28,6 +28,7 @@ Plug 'dyng/ctrlsf.vim'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'tpope/vim-sleuth'
 call plug#end()
 " }}}
 
