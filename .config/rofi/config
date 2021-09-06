@@ -1,7 +1,0 @@
-rofi.lines: 15
-rofi.font: JetBrains Mono 12
-rofi.terminal: st
-rofi.matching: fuzzy
-rofi.location: 2
-rofi.width: 100
-rofi.theme: ~/.config/rofi/nord.rasi

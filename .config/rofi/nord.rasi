@@ -29,6 +29,7 @@
 
 window {
    border: 1px;
+   width: 100%;
 }
 
 mainbox {
@@ -55,33 +56,16 @@ element {
    padding: 5px 15px;
 }
 
-element normal.normal {
+element normal normal {
    padding: 0px 15px;
 }
 
-element normal.urgent {
-}
-
-element normal.active {
-}
-
-element selected.normal {
+element selected normal {
     background-color: @select-background-color;
 }
 
-element selected.urgent {
-}
-
-element selected.active {
-}
-
-element alternate.normal {
-}
-
-element alternate.urgent {
-}
-
-element alternate.active {
+element-text selected {
+    background-color: @select-background-color;
 }
 
 scrollbar {
