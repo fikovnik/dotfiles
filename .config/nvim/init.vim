@@ -29,6 +29,7 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'tpope/vim-sleuth'
+Plug 'junegunn/vim-easy-align'
 call plug#end()
 " }}}
 
@@ -180,6 +181,10 @@ nmap <silent> <leader>eSe <cmd>UltiSnipsEdit<CR>
 " - the following breaks the code completion in insert mode
 " inoremap <down> <c-\><c-o>gj
 " inoremap <up> <c-\><c-o>gk
+
+" align
+xmap <leader>ea <Plug>(EasyAlign)
+nmap <leader>ea <Plug>(EasyAlign)
 
 function! MyFormatParagraph()
   let pos = getcurpos()
@@ -596,6 +601,7 @@ wk.register({
   },
   ["<leader>e"] = {
     name = "edit",
+    a = "Align",
     s = "Sort lines",
     S = {
       name = "snippets",
