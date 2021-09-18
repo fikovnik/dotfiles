@@ -278,7 +278,7 @@ nmap <silent> <leader>ni <cmd>WikiIndex<CR>
 nmap <silent> <leader>njj <cmd>WikiJournal<CR>
 nmap <silent> <leader>njn <cmd>WikiJournalNext<CR>
 nmap <silent> <leader>njp <cmd>WikiJournalPrev<CR>
-nmap <silent> <leader>nn <cmd>execute 'cd' fnameescape(g:wiki_root)<CR><cmd>TS find_files<CR>
+nmap <silent> <leader>nn <cmd>WikiFzfPages<CR>
 nmap <silent> <leader>ns <cmd>execute 'TS' 'live_grep' 'search_dirs=' . fnameescape(g:wiki_root)<CR>
 " }}}
 " open {{{
@@ -460,6 +460,7 @@ EOF
 " }}}
 
 " plugin: pandoc {{{ 
+let g:pandoc#keyboard#use_default_mappings = 0
 let g:pandoc#syntax#conceal#urls = 1
 let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh"]
 let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
@@ -535,9 +536,9 @@ let g:vimtex_quickfix_ignore_filters = [
   \ 'Overfull',
   \ 'Underfull',
   \ ]
-let g:vimtex_view_general_viewer = 'okular'
-let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
-let g:vimtex_view_general_options_latexmk = '--unique'
+let g:vimtex_view_general_viewer = '/usr/bin/sioyek' 
+let g:vimtex_view_general_options = '--inverse-search "nvr --remote-expr \"vimtex#view#reverse_goto(%2, ''%1'')\"" --reuse-instance --forward-search-file @tex --forward-search-line @line @pdf' 
+let g:vimtex_view_general_options_latexmk = '--reuse-instance'
 
 nmap <silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
 vmap <silent> <localleader>lf :!latexindent -m -l -<CR>
@@ -750,18 +751,17 @@ let g:wiki_export = {
   \}
 
 let g:wiki_mappings_local = {
-  \ '<plug>(wiki-page-delete)':          '<localleader>d',
-  \ '<plug>(wiki-page-rename)':          '<localleader>r',
-  \ '<plug>(wiki-list-toggle)':          '<localleader>t',
-  \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
+  \ '<plug>(wiki-export)':               '<localleader>E',
+  \ '<plug>(wiki-fzf-toc)':              '<localleader>,',
+  \ '<plug>(wiki-link-follow)':          '<localleader>o',
   \ '<plug>(wiki-link-next)':            '<localleader>n',
   \ '<plug>(wiki-link-prev)':            '<localleader>p',
   \ '<plug>(wiki-link-return)':          '<localleader>b',
-  \ '<plug>(wiki-link-open)':            '<localleader>o',
-  \ '<plug>(wiki-export)':               '<localleader>e',
-  \ 'x_<plug>(wiki-export)':             '<localleader>e',
-  \ '<plug>(wiki-fzf-toc)':              '<localleader>,',
-  \ '<plug>(wiki-page-toc)':             '<localleader>T',
+  \ '<plug>(wiki-list-toggle)':          '<localleader>l',
+  \ '<plug>(wiki-page-delete)':          '<localleader>D',
+  \ '<plug>(wiki-page-rename)':          '<localleader>R',
+  \ 'x_<plug>(wiki-export)':             '<localleader>E',
+  \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
   \ }
 " }}}
 
@@ -789,12 +789,14 @@ function! MySetupMarkdown()
   setlocal spell
   setlocal conceallevel=2
   setlocal foldlevel=1
+  setlocal tabstop=4
   vmap <buffer><silent> ib :<C-U>call MyMdCodeBlockTextObj('i')<CR>
   omap <buffer><silent> ib :normal vib<CR>
   vmap <buffer><silent> ab :<C-U>call MyMdCodeBlockTextObj('a')<CR>
   omap <buffer><silent> ab :normal vab<CR>
   nmap <buffer><silent> <C-c><C-c> vib<leader>cs
   nmap <buffer><silent> <leader>tP <Plug>MarkdownPreviewToggle
+  nmap <buffer><silent> <localleader>tf <leader>eaip*\|
 endfunction
 " }}}
 
