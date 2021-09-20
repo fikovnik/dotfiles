@@ -1,0 +1,6 @@
+{
+  "lambda": {
+    "prefix": ["\\l", "\\lambda"],
+    "body": "λ"
+  }
+}
