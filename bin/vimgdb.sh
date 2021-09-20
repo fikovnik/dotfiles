@@ -49,6 +49,6 @@ else
   cmd="+'Termdebug $program'"
 fi
 
-vim --cmd "let g:rooter_manual_only=1" \
+vim \
   +'packadd termdebug' \
   +"cd $(pwd)" +"TermdebugCommand $program $args"
