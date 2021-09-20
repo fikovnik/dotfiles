@@ -151,6 +151,8 @@ nmap <silent> <leader>bD <cmd>MyDiffBufferFile<CR>
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-g>     compe#close('<C-g>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 " }}}
 " edit {{{
 " list yanks
