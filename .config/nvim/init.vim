@@ -14,9 +14,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'fhill2/telescope-ultisnips.nvim'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'hrsh7th/vim-vsnip'
 Plug 'lervag/vimtex'
 Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
 Plug 'preservim/vimux'
@@ -381,13 +379,25 @@ hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07
 lua << EOF
 local util = require('lspconfig/util')
 local lsp = require('lspconfig')
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  }
+}
 
 lsp.r_language_server.setup { 
   filetypes = { "R", "r", "Rmd" },
-  root_dir = util.root_pattern(".git") or cwd
+  root_dir = util.root_pattern(".git") or cwd,
+  capabilities = capabilities,
 }
 
-lsp.clangd.setup {}
+lsp.clangd.setup {
+  capabilities = capabilities,
+}
 EOF
 " }}}
 
@@ -441,16 +451,15 @@ EOF
 
 " plugin: nvim-compe {{{
 lua << EOF
-require'compe'.setup {
+require('compe').setup {
   enabled = true,
   autocomplete = true,
   min_length = 2,
   source = {
     path = true,
     buffer = true,
-    calc = true,
     nvim_lsp = true,
-    ultisnips = true,
+    vsnip = true,
     omni = {
       filetypes = {'tex'},
     },
@@ -474,7 +483,6 @@ ts.setup {
   dynamic_preview_title = true,
 }
 
-ts.load_extension('ultisnips')
 ts.load_extension('neoclip')
 EOF
 
@@ -501,14 +509,6 @@ require('nvim-treesitter.configs').setup {
   },
 }
 EOF
-" }}}
-
-" plugin: ultisnips {{{
-let g:UltiSnipsEditSplit = 'context'
-let g:UltiSnipsEnableSnipMate = 0
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
 " }}}
 
 " plugin: vim-tmux-navigator {{{
@@ -556,6 +556,15 @@ endfunction
 
 let g:VimuxCloseOnExit = 0
 let g:VimuxUseNearest = 1
+" }}}
+
+" plugin: vim-vsnip {{{
+let g:vsnip_snippet_dir = expand('~/.config/nvim/snippets/')
+
+imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
+smap <expr> <Tab>   vsnip#jumpable(1)  ? "<Plug>(vsnip-jump-next)" : "<Tab>"
+smap <expr> <S-Tab> vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<S-Tab>"
+xmap <Tab> <Plug>(vsnip-cut-text)
 " }}}
 
 " plugin: which-key {{{

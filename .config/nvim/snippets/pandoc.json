@@ -1,0 +1,11 @@
+{
+  "code block": {
+    "prefix": ["cb", "<s"],
+    "body": [
+      "```$1",
+      "${2:$TM_SELECTED_TEXT}",
+      "```",
+      "$0"
+    ]
+  }
+}
