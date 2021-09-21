@@ -28,15 +28,13 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'tpope/vim-sleuth'
 Plug 'junegunn/vim-easy-align'
-<<<<<<< HEAD
 Plug 'mfussenegger/nvim-dap'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'scalameta/nvim-metals'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
-=======
 Plug 'mhinz/vim-sayonara'
->>>>>>> ca2df73 (nvim: add sayonara)
+Plug 'mbbill/undotree'
 call plug#end()
 " }}}
 
@@ -217,6 +215,8 @@ nmap <silent> <leader>eSe <cmd>UltiSnipsEdit<CR>
 " align
 xmap <leader>ea <Plug>(EasyAlign)
 nmap <leader>ea <Plug>(EasyAlign)
+
+nnoremap <silent><leader>eu <cmd>UndotreeToggle<CR>
 
 function! MyFormatParagraph()
   let pos = getcurpos()
@@ -682,6 +682,24 @@ require('nvim-treesitter.configs').setup {
 EOF
 " }}}
 
+" undotree {{{
+if has("persistent_undo")
+   let target_path = expand('~/.undodir')
+
+    " create the directory and any parent directories
+    " if the location does not exist.
+    if !isdirectory(target_path)
+        call mkdir(target_path, "p", 0700)
+    endif
+
+    let &undodir=target_path
+    set undofile
+endif
+
+let g:undotree_WindowLayout = 2
+let g:undotree_HelpLine = 1
+" }}}
+
 " plugin: vim-tmux-navigator {{{
 let g:tmux_navigator_save_on_switch = 2
 let g:tmux_navigator_disable_when_zoomed = 1
@@ -785,7 +803,8 @@ wk.register({
       name = "snippets",
       s = "Snippets list",
       e = "Edit snippets",
-    }
+    },
+    u = "Undo tree",
   },
   ["<leader>f"] = {
     name = "files",
