@@ -41,6 +41,7 @@ call plug#end()
 set autoindent
 set autoread " auto read changes if a buffer was modified outside of vim
 set autowrite " auto write changes after certain commands
+set autochdir
 set backspace=start,eol,indent " allow backspace to delete all
 set backup
 set backupdir=$HOME/.cache/vim/backup
@@ -124,6 +125,28 @@ augroup highlight_yank
   au!
   au TextYankPost * lua vim.highlight.on_yank{ higroup="IncSearch", timeout=250 }
 augroup END
+
+" create directries if they do not exist
+augroup auto_mkdir
+  autocmd!
+  autocmd BufWritePre * call MyMkdir()
+augroup END
+
+function! MyMkdir()
+  let new_dir = expand("<afile>:p:h")
+  if !isdirectory(new_dir)
+    let confirmation=confirm("Create '" . new_dir . "' directory?", "&Yes\n&No")
+    if confirmation == 1
+      call mkdir(new_dir, "p")
+      lcd %:p:h
+      saveas %:t
+      echom "Created a new directory:" new_dir
+      let buf_del = bufnr("$")
+      exe "bd" . buf_del
+    endif
+    redraw
+  endif
+endfunction
 
 " set leaders
 let g:mapleader = "\<Space>"
