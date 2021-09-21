@@ -28,11 +28,15 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'tpope/vim-sleuth'
 Plug 'junegunn/vim-easy-align'
+<<<<<<< HEAD
 Plug 'mfussenegger/nvim-dap'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'scalameta/nvim-metals'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
+=======
+Plug 'mhinz/vim-sayonara'
+>>>>>>> ca2df73 (nvim: add sayonara)
 call plug#end()
 " }}}
 
@@ -159,7 +163,7 @@ let g:maplocalleader = ','
 nmap <silent> <leader>bR <cmd>SudaRead<CR>
 nmap <silent> <leader>bW <cmd>SudaWrite<CR>
 nmap <silent> <leader>bb <cmd>TS buffers<CR>
-nnoremap <silent> <leader>bd <cmd>bd<CR>
+nnoremap <silent> <leader>bd <cmd>Sayonara<CR>
 nnoremap <silent> <leader>bn <cmd>bn<CR>
 nnoremap <silent> <leader>bp <cmd>bp<CR>
 
@@ -372,7 +376,7 @@ nnoremap <leader>wH <C-w>H
 nnoremap <leader>wJ <C-w>J
 nnoremap <leader>wK <C-w>K
 nnoremap <leader>wL <C-w>L
-nnoremap <leader>wk <C-w>c
+nnoremap <leader>wd <cmd>Sayonara<CR>
 nnoremap <silent> <leader>wm <cmd>MaximizerToggle<CR>
 vnoremap <silent> <leader>wm <cmd>MaximizerToggle<CR>gv
 " }}}
@@ -894,7 +898,7 @@ wk.register({
     ["J"] = "Move window to the bottom",
     ["K"] = "Move window to the top",
     ["L"] = "Move window to the right",
-    ["c"] = "Close window",
+    ["d"] = "Close window",
   },
   ["g"] = {
     c = "Comment",
