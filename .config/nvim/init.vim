@@ -205,8 +205,7 @@ nmap <M-q> <cmd>call MyFormatParagraph()<CR>
 vnoremap <M-q> gq
 vnoremap <silent> <leader>es :sort<CR>
 " snippets
-nmap <silent> <leader>eSs <cmd>TS ultisnips<CR>
-nmap <silent> <leader>eSe <cmd>UltiSnipsEdit<CR>
+nmap <silent> <leader>eS <cmd>VsnipOpen<CR>
 " TODO allow line-wise movement
 " - the following breaks the code completion in insert mode
 " inoremap <down> <c-\><c-o>gj
@@ -799,11 +798,7 @@ wk.register({
     name = "edit",
     a = "Align",
     s = "Sort lines",
-    S = {
-      name = "snippets",
-      s = "Snippets list",
-      e = "Edit snippets",
-    },
+    S = "Edit snippets",
     u = "Undo tree",
   },
   ["<leader>f"] = {
