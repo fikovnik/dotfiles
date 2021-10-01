@@ -244,18 +244,11 @@ nmap <silent> <leader>hk <cmd>TS keymaps<CR>
 nmap <silent> <leader>hm <cmd>TS man_pages<CR>
 " }}}
 " lsp {{{
-nnoremap <silent> <leader>lE <cmd>TS lsp_workspace_diagnostics<CR>
-nnoremap <silent> <leader>lL <cmd>TS lsp_dynamic_workspace_symbols<CR>
-nnoremap <silent> <leader>la <cmd>TS lsp_code_actions<CR>
-nnoremap <silent> <leader>ld <cmd>TS lsp_definitions<CR>
-nnoremap <silent> <leader>le <cmd>TS lsp_document_diagnostics<CR>
-nnoremap <silent> <leader>lh <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> <leader>li <cmd>TS lsp_implementations<CR>
-nnoremap <silent> <leader>ll <cmd>TS lsp_document_symbols<CR>
-nnoremap <silent> <leader>lr <cmd>TS lsp_references<CR>
-nnoremap <silent> <leader>ls <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
-vnoremap <silent> <leader>la <cmd>TS lsp_range_code_actions<CR>
+nmap <silent> <leader>lSi <cmd>LspInfo<CR>
+nmap <silent> <leader>lSr <cmd>LspRestart<CR>
+nmap <silent> <leader>lSs <cmd>LspStart<CR>
+nmap <silent> <leader>lSk <cmd>LspStop<CR>
+" other keys are set using onattach in LSP
 " }}}
 " navigation {{{
 " an alternative to C-i/C-o because nvim currently cannot map
@@ -391,14 +384,50 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  local opts = { noremap=true, silent=true }
+
+  buf_set_keymap('n', '<leader>lE', '<cmd>TS lsp_workspace_diagnostics<CR>', opts)
+  buf_set_keymap('n', '<leader>lL', '<cmd>TS lsp_dynamic_workspace_symbols<CR>', opts)
+  buf_set_keymap('n', '<leader>la', '<cmd>TS lsp_code_actions<CR>', opts)
+  buf_set_keymap('n', '<leader>ld', '<cmd>TS lsp_definitions<CR>', opts)
+  buf_set_keymap('n', '<leader>le', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '<leader>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  buf_set_keymap('n', '<leader>lh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<leader>li', '<cmd>TS lsp_implementations<CR>', opts)
+  buf_set_keymap('n', '<leader>ll', '<cmd>TS lsp_document_symbols<CR>', opts)
+  buf_set_keymap('n', '<leader>lr', '<cmd>TS lsp_references<CR>', opts)
+  buf_set_keymap('n', '<leader>ls', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<leader>lt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<leader>lwl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<leader>lwr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('v', '<leader>la', '<cmd>TS lsp_range_code_actions<CR>', opts)
+end
+
 lsp.r_language_server.setup { 
   filetypes = { "R", "r", "Rmd" },
   root_dir = util.root_pattern(".git") or cwd,
   capabilities = capabilities,
+  on_attach = on_attach,
 }
 
 lsp.clangd.setup {
   capabilities = capabilities,
+  on_attach = on_attach,
+}
+
+lsp.hls.setup {
+  on_attach = on_attach,
 }
 EOF
 " }}}
@@ -657,15 +686,24 @@ wk.register({
     name = "help",
     E = "Errors in workspace",
     L = "Symbols in workspace",
-    t = "Type definition",
+    S = {
+      name = "server",
+      i = "Info",
+      k = "Stop",
+      r = "Restart",
+      s = "Start",
+    },
     a = "Actions",
     d = "Definitions",
     e = "Errors in buffer",
+    f = "Format",
     h = "Hover",
     i = "Implementations",
     l = "Symbols in buffer",
     r = "References",
     s = "Signature help",
+    t = "Type definition",
+    w = "Workspace folders",
   },
   ["<leader>o"] = {
     name = "open",
