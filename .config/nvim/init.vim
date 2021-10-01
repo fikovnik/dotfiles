@@ -30,6 +30,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'junegunn/vim-easy-align'
 Plug 'mfussenegger/nvim-dap'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'scalameta/nvim-metals'
 call plug#end()
 " }}}
 
@@ -548,6 +549,27 @@ function! MySetupRust()
   nmap <buffer><silent> <localleader>t <cmd>RustHoverRange<CR>
   nmap <buffer><silent> <localleader>th <cmd>RustToggleInlayHints<CR>
 endfunction
+" }}}
+
+" plugin: scala-metals {{{
+lua << EOF
+
+metals = require("metals")
+metals_config = metals.bare_config
+metals_config.settings = {
+  showImplicitArguments = true,
+  showInferredType = true,
+}
+metals_config.capabilities = capabilities
+metals_config.on_attach = on_attach
+metals_config.init_options.statusBarProvider = "on"
+
+vim.cmd([[augroup my-scala]])
+vim.cmd([[autocmd!]])
+vim.cmd([[autocmd FileType scala,sbt lua metals.initialize_or_attach(metals_config)]])
+vim.cmd([[augroup end]])
+
+EOF
 " }}}
 
 " plugin: telescope {{{
