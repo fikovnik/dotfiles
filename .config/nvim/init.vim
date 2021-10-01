@@ -376,7 +376,7 @@ hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07
 lua << EOF
 local util = require('lspconfig/util')
 local lsp = require('lspconfig')
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.resolveSupport = {
   properties = {
@@ -386,7 +386,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
-local on_attach = function(client, bufnr)
+on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -430,20 +430,6 @@ lsp.clangd.setup {
 
 lsp.hls.setup {
   on_attach = on_attach,
-}
-
-require('rust-tools').setup {
-  server = {
-    capabilities = capabilities,
-    on_attach = on_attach,
-    settings = {
-      ["rust-analyzer"] = {
-        checkOnSave = {
-          command = "clippy"
-        },
-      },
-    },
-  },
 }
 EOF
 " }}}
@@ -523,6 +509,24 @@ let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 " }}}
 
 " plugin: rust-tools {{{
+lua << EOF
+
+require('rust-tools').setup {
+  server = {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      ["rust-analyzer"] = {
+        checkOnSave = {
+          command = "clippy"
+        },
+      },
+    },
+  },
+}
+
+EOF
+
 augroup my-rust
   au!
   au FileType rust call MySetupRust()
@@ -720,7 +724,7 @@ wk.register({
     m = "Man pages",
   },
   ["<leader>l"] = {
-    name = "help",
+    name = "lsp",
     E = "Errors in workspace",
     L = "Symbols in workspace",
     S = {
