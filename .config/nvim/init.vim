@@ -28,6 +28,8 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'tpope/vim-sleuth'
 Plug 'junegunn/vim-easy-align'
+Plug 'mfussenegger/nvim-dap'
+Plug 'simrat39/rust-tools.nvim'
 call plug#end()
 " }}}
 
@@ -429,6 +431,20 @@ lsp.clangd.setup {
 lsp.hls.setup {
   on_attach = on_attach,
 }
+
+require('rust-tools').setup {
+  server = {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      ["rust-analyzer"] = {
+        checkOnSave = {
+          command = "clippy"
+        },
+      },
+    },
+  },
+}
 EOF
 " }}}
 
@@ -504,6 +520,30 @@ let g:pandoc#keyboard#use_default_mappings = 0
 let g:pandoc#syntax#conceal#urls = 1
 let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh"]
 let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
+" }}}
+
+" plugin: rust-tools {{{
+augroup my-rust
+  au!
+  au FileType rust call MySetupRust()
+augroup end
+
+function! MySetupRust() 
+  nmap <buffer><silent> <localleader>D <cmd>RustDebuggables<CR>
+  nmap <buffer><silent> <localleader>J <cmd>RustJoinLines<CR>
+  nmap <buffer><silent> <localleader>R <cmd>RustRunnables<CR>
+  nmap <buffer><silent> <localleader>co <cmd>RustOpenCargo<CR>
+  nmap <buffer><silent> <localleader>cr <cmd>CargoReload<CR>
+  nmap <buffer><silent> <localleader>cr <cmd>CargoReload<CR>
+  nmap <buffer><silent> <localleader>e <cmd>RustExpandMacro<CR>
+  nmap <buffer><silent> <localleader>h <cmd>RustHoverActions<CR>
+  nmap <buffer><silent> <localleader>j <cmd>RustMoveItemDown<CR>
+  nmap <buffer><silent> <localleader>k <cmd>RustMoveItemUp<CR>
+  nmap <buffer><silent> <localleader>p <cmd>RustParentModule<CR>
+  nmap <buffer><silent> <localleader>r <cmd>RustRun<CR>
+  nmap <buffer><silent> <localleader>t <cmd>RustHoverRange<CR>
+  nmap <buffer><silent> <localleader>th <cmd>RustToggleInlayHints<CR>
+endfunction
 " }}}
 
 " plugin: telescope {{{
