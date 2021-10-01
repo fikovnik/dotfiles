@@ -610,9 +610,6 @@ let g:vimtex_quickfix_ignore_filters = [
 let g:vimtex_view_general_viewer = '/usr/bin/sioyek' 
 let g:vimtex_view_general_options = '--inverse-search "nvr --remote-expr \"vimtex#view#reverse_goto(%2, ''%1'')\"" --reuse-instance --forward-search-file @tex --forward-search-line @line @pdf' 
 let g:vimtex_view_general_options_latexmk = '--reuse-instance'
-
-nmap <silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
-vmap <silent> <localleader>lf :!latexindent -m -l -<CR>
 " }}}
 
 " plugin: vimux {{{
@@ -852,6 +849,14 @@ let g:wiki_mappings_local = {
   \ 'x_<plug>(wiki-export)':             '<localleader>E',
   \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
   \ }
+" }}}
+
+" file-type: latex {{{
+augroup my-latex
+  au!
+  au FileType latex nmap <buffer><silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
+  au FileType latex vmap <buffer><silent> <localleader>lf :!latexindent -m -l -<CR>
+augroup end
 " }}}
 
 " file-type: markdown {{{
