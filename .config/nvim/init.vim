@@ -31,6 +31,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'mfussenegger/nvim-dap'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'scalameta/nvim-metals'
+Plug 'hoob3rt/lualine.nvim'
+Plug 'nvim-lua/lsp-status.nvim'
 call plug#end()
 " }}}
 
@@ -388,6 +390,8 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 }
 
 on_attach = function(client, bufnr)
+  require('lsp-status').on_attach(client)
+
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -452,6 +456,39 @@ let g:ctrlsf_mapping = {
 " plugin: hop {{{
 lua << EOF
 require('hop').setup()
+EOF
+" }}}
+
+" plugin: lsp-status {{{
+lua << EOF
+lsp_status = require('lsp-status')
+lsp_status.register_progress()   
+lsp_status.config {
+  current_function = true,
+  status_symbol = 'λ',
+  indictor_errors = 'e:',
+  indicator_warnings = 'w:',
+  indicator_info = 'i:',
+  indicator_hint = 'h:',
+}
+EOF
+" }}}
+
+" plugin: lualine {{{
+lua << EOF
+require('lualine').setup {
+  options = {
+    theme = 'onedark',
+  },
+  sections = {
+    lualine_b = { 'branch', 'diff' },
+    lualine_c = { 
+      'filename', 
+      'g:metals_status',
+      lsp_status.status,
+    }
+  }
+}
 EOF
 " }}}
 
