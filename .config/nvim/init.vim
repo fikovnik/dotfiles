@@ -849,6 +849,7 @@ wk.register({
       u = "Update",
       U = "Upgrade",
     },
+    q = "Quit",
   },
   ["<leader>w"] = {
     name = "windows",
