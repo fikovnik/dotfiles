@@ -7,5 +7,14 @@
       "\" }}}",
       "$0"
     ]
+  },
+  "lua block": {
+    "prefix": ["lua", "<lua"],
+    "body": [
+      "lua << EOF",
+      "${1:$TM_SELECTED_TEXT}",
+      "EOF",
+      "$0"
+    ]
   }
 }
