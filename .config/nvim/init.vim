@@ -423,7 +423,9 @@ end
 
 lsp.r_language_server.setup { 
   filetypes = { "R", "r", "Rmd" },
-  root_dir = util.root_pattern(".git") or cwd,
+  root_dir = function(fname) 
+    return util.root_pattern(".git", "DESCRIPTION", "NAMESPACE")(fname) or util.path.dirname(fname)
+  end,
   capabilities = capabilities,
   on_attach = on_attach,
 }
