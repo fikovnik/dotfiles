@@ -402,6 +402,7 @@ on_attach = function(client, bufnr)
 
   buf_set_keymap('n', '<leader>lE', '<cmd>TS lsp_workspace_diagnostics<CR>', opts)
   buf_set_keymap('n', '<leader>lL', '<cmd>TS lsp_dynamic_workspace_symbols<CR>', opts)
+  buf_set_keymap('n', '<leader>lR',  '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<leader>la', '<cmd>TS lsp_code_actions<CR>', opts)
   buf_set_keymap('n', '<leader>ld', '<cmd>TS lsp_definitions<CR>', opts)
   buf_set_keymap('n', '<leader>le', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
@@ -788,6 +789,7 @@ wk.register({
     name = "lsp",
     E = "Errors in workspace",
     L = "Symbols in workspace",
+    R = "Rename",
     S = {
       name = "server",
       i = "Info",
