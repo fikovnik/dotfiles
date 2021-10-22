@@ -555,6 +555,11 @@ let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 lua << EOF
 
 require('rust-tools').setup {
+  tools = {
+    inlay_hints = {
+      show_parameter_hints = false,
+    },
+  },
   server = {
     capabilities = capabilities,
     on_attach = on_attach,
