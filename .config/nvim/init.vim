@@ -449,6 +449,7 @@ on_attach = function(client, bufnr)
   buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('v', '<leader>la', '<cmd>TS lsp_range_code_actions<CR>', opts)
+  buf_set_keymap('v', "<leader>lf", '<cmd>lua vim.lsp.buf.range_formatting()<CR>', opts)
 end
 
 lsp.r_language_server.setup { 
