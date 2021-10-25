@@ -7,7 +7,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdat
 Plug 'folke/which-key.nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'phaazon/hop.nvim'
-Plug 'tpope/vim-commentary'
+Plug 'numToStr/Comment.nvim'
 Plug 'navarasu/onedark.nvim'
 Plug 'TimUntersberger/neogit'
 Plug 'christoomey/vim-tmux-navigator'
@@ -470,6 +470,12 @@ lsp.clangd.setup {
 lsp.hls.setup {
   on_attach = on_attach,
 }
+EOF
+" }}}
+
+" plugin: comment {{{
+lua << EOF
+require('Comment').setup()
 EOF
 " }}}
 
