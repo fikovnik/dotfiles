@@ -464,7 +464,13 @@ lsp.r_language_server.setup {
 lsp.clangd.setup {
   capabilities = capabilities,
   on_attach = on_attach,
-  cmd = { "clangd", "--background-index", "-header-insertion=never" },
+  cmd = { 
+    "clangd", 
+    "--background-index", 
+    "--header-insertion=never",
+    "--query-driver=/home/krikava/.platformio/packages/toolchain-xtensa/bin/xtensa-lx106-elf-g++",
+    "--compile-commands-dir=.",
+  },
 }
 
 lsp.hls.setup {
