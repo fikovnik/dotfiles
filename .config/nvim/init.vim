@@ -416,40 +416,42 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
+function buf_set_keymap(bufnr, mode, lhs, rhs) 
+  vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, { noremap=true, silent=true }) 
+end
+
 on_attach = function(client, bufnr)
   require('lsp-status').on_attach(client)
 
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  local function set_keymap(...) buf_set_keymap(bufnr, ...) end
+  local function set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
   -- Enable completion triggered by <c-x><c-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  local opts = { noremap=true, silent=true }
-
-  buf_set_keymap('n', '<leader>lE', '<cmd>TS lsp_workspace_diagnostics<CR>', opts)
-  buf_set_keymap('n', '<leader>lL', '<cmd>TS lsp_dynamic_workspace_symbols<CR>', opts)
-  buf_set_keymap('n', '<leader>lR',  '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>la', '<cmd>TS lsp_code_actions<CR>', opts)
-  buf_set_keymap('n', '<M-CR>', '<cmd>TS lsp_code_actions<CR>', opts)
-  buf_set_keymap('i', '<M-CR>', '<C-O><cmd>TS lsp_code_actions<CR>', opts)
-  buf_set_keymap('n', '<leader>ld', '<cmd>TS lsp_definitions<CR>', opts)
-  buf_set_keymap('n', '<leader>le', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '<leader>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-  buf_set_keymap('n', '<leader>lh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', '<leader>li', '<cmd>TS lsp_implementations<CR>', opts)
-  buf_set_keymap('n', '<leader>ll', '<cmd>TS lsp_document_symbols<CR>', opts)
-  buf_set_keymap('n', '<leader>lr', '<cmd>TS lsp_references<CR>', opts)
-  buf_set_keymap('n', '<leader>ls', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<leader>lt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<leader>lwl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<leader>lwr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('v', '<leader>la', '<cmd>TS lsp_range_code_actions<CR>', opts)
-  buf_set_keymap('v', "<leader>lf", '<cmd>lua vim.lsp.buf.range_formatting()<CR>', opts)
+  set_keymap('n', '<leader>lE',  '<cmd>TS lsp_workspace_diagnostics<CR>')
+  set_keymap('n', '<leader>lL',  '<cmd>TS lsp_dynamic_workspace_symbols<CR')
+  set_keymap('n', '<leader>lR',  '<cmd>lua vim.lsp.buf.rename()<R>')
+  set_keymap('n', '<leader>la',  '<cmd>TS lsp_code_actions<CR>')
+  set_keymap('n', '<M-CR>',      '<cmd>TS lsp_code_actions<CR')
+  set_keymap('i', '<M-CR>',      '<C-O><cmd>TS lsp_code_actions<R>')
+  set_keymap('n', '<leader>ld',  '<cmd>TS lsp_definition<CR>')
+  set_keymap('n', '<leader>le',  '<cmd>lua vim.lsp.diagnostic.show_line_diagnostic()<CR>')
+  set_keymap('n', '<leader>lf',  '<cmd>lua vim.lsp.buf.formattng()<CR>')
+  set_keymap('n', '<leader>lh',  '<cmd>lua vim.lsp.buf.over()<CR>')
+  set_keymap('n', '<leader>li',  '<cmd>TS lsp_implemntations<CR>')
+  set_keymap('n', '<leader>ll',  '<cmd>TS lsp_documnt_symbols<CR>')
+  set_keymap('n', '<leader>lr',  '<cmd>TS lp_references<CR>')
+  set_keymap('n', '<leader>ls',  '<cmd>lua vim.lsp.buf.sgnature_help()<CR>')
+  set_keymap('n', '<leader>lt',  '<cmd>lua vim.lsp.buf.ype_definition()<CR>')
+  set_keymap('n', '<leader>lwa', '<cmd>lua vim.lsp.buf.addworkspace_folder()<CR>')
+  set_keymap('n', '<leader>lwl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_orkspace_folders()))<CR>')
+  set_keymap('n', '<leader>lwr', '<cmd>lua vim.lsp.buf.reove_workspace_folder()<CR>')
+  set_keymap('n', 'K',           '<cm>lua vim.lsp.buf.hover()<CR>')
+  set_keymap('n', '[e',          '<cmd>lua vimlsp.diagnostic.goto_prev()<CR>')
+  set_keymap('n', ']e',          '<cmd>lua vm.lsp.diagnostic.goto_next()<CR>')
+  set_keymap('v', '<leader>la',  '<cmd>TS lsp_range_code_actions<CR>')
+  set_keymap('v', "<leader>lf",  '<cmd>lua vim.lsp.buf.range_formatting()<CR>')
 end
 
 lsp.r_language_server.setup { 
@@ -463,7 +465,11 @@ lsp.r_language_server.setup {
 
 lsp.clangd.setup {
   capabilities = capabilities,
-  on_attach = on_attach,
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+
+    buf_set_keymap(bufnr, 'n', '<leader>lH', '<cmd>ClangdSwitchSourceHeader<CR>')
+  end,
   cmd = { 
     "clangd", 
     "--background-index", 
