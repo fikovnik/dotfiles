@@ -516,6 +516,15 @@ EOF
 
 " plugin: lualine {{{
 lua << EOF
+
+function get_lsp_status(self, is_active)
+  if #vim.lsp.buf_get_clients() < 1 or not is_active then
+    return ""
+  else 
+    return require("lsp-status").status()
+  end
+end
+
 require('lualine').setup {
   options = {
     theme = 'onedark',
@@ -523,9 +532,9 @@ require('lualine').setup {
   sections = {
     lualine_b = { 'branch', 'diff' },
     lualine_c = { 
-      'filename', 
+      {'filename', file_status = true, path = 1}, 
       'g:metals_status',
-      lsp_status.status,
+      get_lsp_status,
     }
   }
 }
