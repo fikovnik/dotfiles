@@ -15,7 +15,10 @@ super + grave
    ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t dropdown -g 142x42 tmux new-session -A -s dropdown
 
 super + backslash
-   ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t dropdown -g 142x42 tmux new-session -A -s notes nvim '+WikiFzfPages'
+   ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t notes -g 142x42 tmux new-session -A -s notes nvim '+WikiFzfPages'
+
+super + bar
+   ~/Projects/mde/dropdown/target/debug/dropdown /usr/local/bin/st -t journal -g 142x42 tmux new-session -A -s journal nvim '+WikiJournal'
 
 # files
 super + h
