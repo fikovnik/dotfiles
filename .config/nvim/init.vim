@@ -688,6 +688,17 @@ local ts = require('telescope')
 
 ts.setup {
   dynamic_preview_title = true,
+  pickers = {
+    buffers = {
+      show_all_buffers = true,
+      sort_lastused = true,
+      mappings = {
+        n = {
+          ["dd"] = "delete_buffer",
+        }
+      }
+    }
+  }
 }
 
 ts.load_extension('neoclip')
