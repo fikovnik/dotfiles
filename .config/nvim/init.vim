@@ -324,6 +324,7 @@ nmap <silent> <leader>sr <Plug>CtrlSFPrompt
 vmap <silent> <leader>sr <Plug>CtrlSFVwordPath
 nmap <silent> <leader>ss <cmd>TS current_buffer_fuzzy_find<CR>
 nmap <silent> <leader>st <cmd>TS current_buffer_tags<CR>
+nmap <silent> <leader>sS <cmd>TS live_grep grep_open_files=true<CR>
 " }}}
 " spell {{{
 nnoremap z= <cmd> TS spell_suggest<CR>
@@ -909,6 +910,7 @@ wk.register({
     q = "Quickfix",
     r = "Replace in project",
     s = "Current buffer",
+    S = "All buffers",
     t = "Current buffer tags",
   },
   ["<leader>t"] = {
