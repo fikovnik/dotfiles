@@ -165,6 +165,8 @@ nmap <silent> <leader>bb <cmd>TS buffers<CR>
 nnoremap <silent> <leader>bd <cmd>Sayonara<CR>
 nnoremap <silent> <leader>bn <cmd>bn<CR>
 nnoremap <silent> <leader>bp <cmd>bp<CR>
+nnoremap <silent> b] <cmd>bn<CR>
+nnoremap <silent> b[ <cmd>bp<CR>
 
 function! MyDiffBufferFile()
   let filetype=&ft
