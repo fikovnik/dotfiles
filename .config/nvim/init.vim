@@ -277,13 +277,6 @@ nmap <silent> <leader>hh <cmd>TS help_tags<CR>
 nmap <silent> <leader>hk <cmd>TS keymaps<CR>
 nmap <silent> <leader>hm <cmd>TS man_pages<CR>
 " }}}
-" lsp {{{
-nmap <silent> <leader>lSi <cmd>LspInfo<CR>
-nmap <silent> <leader>lSr <cmd>LspRestart<CR>
-nmap <silent> <leader>lSs <cmd>LspStart<CR>
-nmap <silent> <leader>lSk <cmd>LspStop<CR>
-" other keys are set using onattach in LSP
-" }}}
 " navigation {{{
 " an alternative to C-i/C-o because nvim currently cannot map
 " tab and C-i to different keys
@@ -343,6 +336,10 @@ nmap <silent> <leader>tw <cmd>setlocal wrap!<CR>
 " vim {{{
 nmap <silent> <leader>ve <cmd>edit ~/.config/nvim/init.vim<CR>
 nmap <silent> <leader>vfs <cmd>syntax sync fromstart<CR>
+nmap <silent> <leader>vli <cmd>LspInfo<CR>
+nmap <silent> <leader>vlr <cmd>LspRestart<CR>
+nmap <silent> <leader>vls <cmd>LspStart<CR>
+nmap <silent> <leader>vlk <cmd>LspStop<CR>
 nmap <silent> <leader>vo <cmd>TS vim_options<CR>
 nmap <silent> <leader>vpU <cmd>PlugUpgrade<CR>
 nmap <silent> <leader>vpc <cmd>PlugClean<CR>
@@ -419,42 +416,74 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
-function buf_set_keymap(bufnr, mode, lhs, rhs) 
-  vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, { noremap=true, silent=true }) 
+function my_map(maps, opts)
+  if opts == nil then opts = {} end
+  require('which-key').register(maps, vim.tbl_extend("keep", opts, { mode="n", silent=true }))
+end
+
+function my_imap(maps, opts) 
+  if opts == nil then opts = {} end
+  my_map(maps, vim.tbl_extend("keep", opts, { mode="i" }))
+end
+
+function my_xmap(maps, opts) 
+  if opts == nil then opts = {} end
+  my_map(maps, vim.tbl_extend("keep", opts, { mode="x" }))
+end
+
+function my_map_local(maps, opts)
+  if opts == nil then opts = {} end
+  my_map(maps, vim.tbl_extend("keep", opts, { prefix="<localleader>", buffer=0 }))
 end
 
 on_attach = function(client, bufnr)
   require('lsp-status').on_attach(client)
 
-  local function set_keymap(...) buf_set_keymap(bufnr, ...) end
+  local function map_local(maps) my_map_local(maps, { buffer=bufnr }) end
   local function set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
   -- Enable completion triggered by <c-x><c-o>
   set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  set_keymap('n', '<leader>lE',  '<cmd>TS lsp_workspace_diagnostics<CR>')
-  set_keymap('n', '<leader>lL',  '<cmd>TS lsp_dynamic_workspace_symbols<CR')
-  set_keymap('n', '<leader>lR',  '<cmd>lua vim.lsp.buf.rename()<R>')
-  set_keymap('n', '<leader>la',  '<cmd>TS lsp_code_actions<CR>')
-  set_keymap('n', '<M-CR>',      '<cmd>TS lsp_code_actions<CR')
-  set_keymap('i', '<M-CR>',      '<C-O><cmd>TS lsp_code_actions<R>')
-  set_keymap('n', '<leader>ld',  '<cmd>TS lsp_definition<CR>')
-  set_keymap('n', '<leader>le',  '<cmd>lua vim.lsp.diagnostic.show_line_diagnostic()<CR>')
-  set_keymap('n', '<leader>lf',  '<cmd>lua vim.lsp.buf.formattng()<CR>')
-  set_keymap('n', '<leader>lh',  '<cmd>lua vim.lsp.buf.over()<CR>')
-  set_keymap('n', '<leader>li',  '<cmd>TS lsp_implemntations<CR>')
-  set_keymap('n', '<leader>ll',  '<cmd>TS lsp_documnt_symbols<CR>')
-  set_keymap('n', '<leader>lr',  '<cmd>TS lp_references<CR>')
-  set_keymap('n', '<leader>ls',  '<cmd>lua vim.lsp.buf.sgnature_help()<CR>')
-  set_keymap('n', '<leader>lt',  '<cmd>lua vim.lsp.buf.ype_definition()<CR>')
-  set_keymap('n', '<leader>lwa', '<cmd>lua vim.lsp.buf.addworkspace_folder()<CR>')
-  set_keymap('n', '<leader>lwl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_orkspace_folders()))<CR>')
-  set_keymap('n', '<leader>lwr', '<cmd>lua vim.lsp.buf.reove_workspace_folder()<CR>')
-  set_keymap('n', 'K',           '<cm>lua vim.lsp.buf.hover()<CR>')
-  set_keymap('n', '[e',          '<cmd>lua vimlsp.diagnostic.goto_prev()<CR>')
-  set_keymap('n', ']e',          '<cmd>lua vm.lsp.diagnostic.goto_next()<CR>')
-  set_keymap('v', '<leader>la',  '<cmd>TS lsp_range_code_actions<CR>')
-  set_keymap('v', "<leader>lf",  '<cmd>lua vim.lsp.buf.range_formatting()<CR>')
+  map_local {
+    E = { '<cmd>TS lsp_workspace_diagnostics<CR>', 'All errors' },
+    [','] = { '<cmd>TS lsp_dynamic_workspace_symbols<CR>', 'All symbols' },
+    R = { '<cmd>lua vim.lsp.buf.rename()<CR>', 'Rename' },
+    a = { '<cmd>TS lsp_code_actions<CR>', 'Actions' },
+    d = { '<cmd>TS lsp_definition<CR>', 'Definitions' },
+    e = { '<cmd>lua vim.lsp.diagnostic.show_line_diagnostic()<CR>', 'Errors' },
+    f = { '<cmd>lua vim.lsp.buf.formatting()<CR>', 'Format' },
+    h = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'Hover' },
+    i = { '<cmd>TS lsp_implementations<CR>', 'Implementations' },
+    l = { '<cmd>TS lsp_document_symbols<CR>', 'Symbols' },
+    r = { '<cmd>TS lsp_references<CR>', 'References' },
+    s = { '<cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
+    t = { '<cmd>lua vim.lsp.buf.type_definition()<CR>', 'Type' },
+    w = {
+      name = 'workspace',
+      a = { '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', 'Add' },
+      l = { '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', 'List' },
+      r = { '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', 'Remove' },
+    },
+  }
+
+  my_map {
+    ['<M-CR>'] = { '<cmd>TS lsp_code_actions<CR>', 'LSP actions' },
+    ['[e'] = { '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', 'LSP previous error' },
+    [']e'] = { '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', 'LSP next error' },
+    K = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'LSP hover' },
+  }
+
+  my_imap {
+    ['<M-CR>'] = { '<C-O><cmd>TS lsp_code_actions<CR>', 'LSP actions' },
+  }
+
+  my_map_local({
+    a = { '<cmd>TS lsp_range_code_actions<CR>', 'Range actions' },
+    f = { '<cmd>lua vim.lsp.buf.range_formatting()<CR>', 'Range format' },
+    }, 
+    { mode = "v" }
+  )
 end
 
 lsp.r_language_server.setup { 
@@ -471,7 +500,9 @@ lsp.clangd.setup {
   on_attach = function(client, bufnr)
     on_attach(client, bufnr)
 
-    buf_set_keymap(bufnr, 'n', '<leader>lH', '<cmd>ClangdSwitchSourceHeader<CR>')
+    my_map_local { 
+      H = { '<cmd>ClangdSwitchSourceHeader<CR>', 'Go to Header' }
+    }
   end,
   cmd = { 
     "clangd", 
@@ -880,30 +911,6 @@ wk.register({
     h = "Help tags",
     k = "Keymaps",
     m = "Man pages",
-  },
-  ["<leader>l"] = {
-    name = "lsp",
-    E = "Errors in workspace",
-    L = "Symbols in workspace",
-    R = "Rename",
-    S = {
-      name = "server",
-      i = "Info",
-      k = "Stop",
-      r = "Restart",
-      s = "Start",
-    },
-    a = "Actions",
-    d = "Definitions",
-    e = "Errors in buffer",
-    f = "Format",
-    h = "Hover",
-    i = "Implementations",
-    l = "Symbols in buffer",
-    r = "References",
-    s = "Signature help",
-    t = "Type definition",
-    w = "Workspace folders",
   },
   ["<leader>o"] = {
     name = "open",
