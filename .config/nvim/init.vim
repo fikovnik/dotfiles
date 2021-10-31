@@ -268,7 +268,7 @@ nmap <silent> <leader>* <cmd>TS grep_string<CR>
 nmap <silent> <leader>, <cmd>TS buffers<CR>
 nmap <silent> <leader>. <cmd>TS file_browser<CR>
 nmap <silent> <leader>/ <cmd>TS live_grep<CR>
-nmap <silent> <leader><space> <cmd>TS find_files<CR>
+nmap <silent> <leader><space> <cmd>lua project_files()<CR>
 " }}}
 " help {{{
 nmap <silent> <leader>hH <cmd>TS highlights<CR>
@@ -716,6 +716,12 @@ EOF
 " plugin: telescope {{{
 lua <<EOF
 local ts = require('telescope')
+-- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
+function project_files()
+  local opts = require('telescope.themes').get_ivy()
+  local ok = pcall(require('telescope.builtin').git_files, opts)
+  if not ok then require('telescope.builtin').find_files(opts) end
+end
 
 ts.setup {
   dynamic_preview_title = true,
