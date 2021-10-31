@@ -715,7 +715,6 @@ EOF
 
 " plugin: telescope {{{
 lua <<EOF
-local ts = require('telescope')
 -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
 function project_files()
   local opts = require('telescope.themes').get_ivy()
@@ -723,7 +722,33 @@ function project_files()
   if not ok then require('telescope.builtin').find_files(opts) end
 end
 
+-- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#dont-preview-binaries
+local previewers = require('telescope.previewers')
+local Job = require('plenary.job')
+local new_maker = function(filepath, bufnr, opts)
+  filepath = vim.fn.expand(filepath)
+  Job:new({
+    command = 'file',
+    args = { '--mime-type', '-b', filepath },
+    on_exit = function(j)
+      local mime_type = j:result()[1]
+      local mime_type_1 = vim.split(mime_type, '/')[1]
+      if mime_type_1 == "text" or mime_type_1 == "inode" then
+        previewers.buffer_previewer_maker(filepath, bufnr, opts)
+      else
+        vim.schedule(
+          function() vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { 'Not supported: ' .. mime_type }) end
+        )
+      end
+    end
+  }):sync()
+end
+
+local ts = require('telescope')
 ts.setup {
+  defaults = {
+    buffer_previewer_maker = new_maker,
+  },
   dynamic_preview_title = true,
   pickers = {
     buffers = {
