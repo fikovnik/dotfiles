@@ -642,7 +642,7 @@ let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 " }}}
 
 " plugin: rooter {{{
-let g:rooter_patterns = ['.git', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'DESCRIPTION']
+let g:rooter_patterns = ['.git', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'DESCRIPTION', '.project']
 " }}}
 
 " plugin: rust-tools {{{
