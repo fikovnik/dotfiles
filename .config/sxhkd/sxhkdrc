@@ -22,7 +22,7 @@ super + bar
 
 # files
 super + h
-  thunar
+  nautilus
 
 # application menu
 super + d
