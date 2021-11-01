@@ -7,5 +7,15 @@
       "```",
       "$0"
     ]
+  },
+  "journal report title": {
+    "prefix": ["report"],
+    "body": [
+      "---",
+      "title: Report - Week $1",
+      "---",
+      "",
+      "$0"
+    ]
   }
 }
