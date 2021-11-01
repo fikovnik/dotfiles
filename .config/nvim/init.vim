@@ -35,7 +35,7 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'mhinz/vim-sayonara'
 Plug 'mbbill/undotree'
-Plug 'airblade/vim-rooter'
+Plug 'ahmedkhalf/project.nvim'
 call plug#end()
 " }}}
 
@@ -641,8 +641,13 @@ let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskel
 let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 " }}}
 
-" plugin: rooter {{{
-let g:rooter_patterns = ['.git', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'DESCRIPTION', '.project']
+" plugin: project.nvim {{{
+lua << EOF
+require("project_nvim").setup {
+  patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "DESCRIPTION", ".project" },
+  silent_chdir = false,
+}
+EOF
 " }}}
 
 " plugin: rust-tools {{{
