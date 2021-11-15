@@ -219,6 +219,8 @@ xmap <leader>ea <Plug>(EasyAlign)
 nmap <leader>ea <Plug>(EasyAlign)
 
 nnoremap <silent><leader>eu <cmd>UndotreeToggle<CR>
+" in neovim 0.6+ Y is mapped to y$, but I like the old behavior
+" unmap Y
 
 function! MyFormatParagraph()
   let pos = getcurpos()
