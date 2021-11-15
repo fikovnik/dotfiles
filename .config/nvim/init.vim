@@ -36,6 +36,7 @@ Plug 'nvim-lua/lsp-status.nvim'
 Plug 'mhinz/vim-sayonara'
 Plug 'mbbill/undotree'
 Plug 'ahmedkhalf/project.nvim'
+" Plug 'github/copilot.vim'
 call plug#end()
 " }}}
 
