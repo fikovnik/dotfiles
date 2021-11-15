@@ -637,7 +637,7 @@ EOF
 " plugin: pandoc {{{ 
 let g:pandoc#keyboard#use_default_mappings = 0
 let g:pandoc#syntax#conceal#urls = 1
-let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh", "cpp", "c"]
+let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh", "cpp", "c", "r", "rust"]
 let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 " }}}
 
