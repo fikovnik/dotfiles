@@ -2,5 +2,9 @@
   "lambda": {
     "prefix": ["\\l", "\\lambda"],
     "body": "λ"
+  },
+  "micro": {
+    "prefix": ["\\mu", "\\micro"],
+    "body": "µ"
   }
 }
