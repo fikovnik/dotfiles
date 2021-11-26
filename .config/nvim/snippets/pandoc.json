@@ -8,6 +8,15 @@
       "$0"
     ]
   },
+  "scala code block": {
+    "prefix": ["cbs", "<scala"],
+    "body": [
+      "```scala",
+      "${1:$TM_SELECTED_TEXT}",
+      "```",
+      "$0"
+    ]
+  },
   "journal report title": {
     "prefix": ["report"],
     "body": [
