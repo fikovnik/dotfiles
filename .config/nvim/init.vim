@@ -653,7 +653,7 @@ let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
 lua << EOF
 require("project_nvim").setup {
   patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "DESCRIPTION", ".project" },
-  silent_chdir = false,
+  silent_chdir = true,
 }
 EOF
 " }}}
