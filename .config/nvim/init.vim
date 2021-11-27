@@ -27,7 +27,6 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'tpope/vim-sleuth'
 Plug 'junegunn/vim-easy-align'
-Plug 'mfussenegger/nvim-dap'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'scalameta/nvim-metals'
 Plug 'nvim-lualine/lualine.nvim'
