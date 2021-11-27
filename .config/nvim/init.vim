@@ -45,6 +45,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'dcampos/nvim-snippy'
 Plug 'dcampos/cmp-snippy'
 Plug 'honza/vim-snippets'
+Plug 'kdheepak/cmp-latex-symbols'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -651,6 +652,7 @@ cmp.setup {
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'snippy' }, 
+    { name = "latex_symbols" },
   }, {
     { name = 'buffer' },
   }),
