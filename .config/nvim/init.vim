@@ -13,7 +13,6 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'lervag/vimtex'
 Plug 'lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
 Plug 'preservim/vimux'
@@ -43,6 +42,9 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-omni'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'dcampos/nvim-snippy'
+Plug 'dcampos/cmp-snippy'
+Plug 'honza/vim-snippets'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -209,11 +211,18 @@ nmap <M-q> <cmd>call MyFormatParagraph()<CR>
 vnoremap <M-q> gq
 vnoremap <silent> <leader>es :sort<CR>
 " snippets
-nmap <silent> <leader>eS <cmd>VsnipOpen<CR>
+nmap <silent> <leader>eS <cmd>e ~/.config/nvim/snippets<CR>
 " TODO allow line-wise movement
 " - the following breaks the code completion in insert mode
 " inoremap <down> <c-\><c-o>gj
 " inoremap <up> <c-\><c-o>gk
+
+" snippets
+imap <expr> <Tab> snippy#can_expand_or_advance() ? '<Plug>(snippy-expand-or-next)' : '<Tab>'
+imap <expr> <S-Tab> snippy#can_jump(-1) ? '<Plug>(snippy-previous)' : '<Tab>'
+smap <expr> <Tab> snippy#can_jump(1) ? '<Plug>(snippy-next)' : '<Tab>'
+smap <expr> <S-Tab> snippy#can_jump(-1) ? '<Plug>(snippy-previous)' : '<Tab>'
+xmap <Tab> <Plug>(snippy-cut-text)
 
 " align
 xmap <leader>ea <Plug>(EasyAlign)
@@ -629,9 +638,7 @@ local cmp = require('cmp')
 
 cmp.setup {
   snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
+    expand = function(args) require'snippy'.expand_snippet(args.body) end,
   },
   mapping = {
     ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
@@ -643,7 +650,7 @@ cmp.setup {
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'vsnip' }, 
+    { name = 'snippy' }, 
   }, {
     { name = 'buffer' },
   }),
@@ -894,15 +901,6 @@ endfunction
 
 let g:VimuxCloseOnExit = 0
 let g:VimuxUseNearest = 1
-" }}}
-
-" plugin: vim-vsnip {{{
-let g:vsnip_snippet_dir = expand('~/.config/nvim/snippets/')
-
-imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
-smap <expr> <Tab>   vsnip#jumpable(1)  ? "<Plug>(vsnip-jump-next)" : "<Tab>"
-smap <expr> <S-Tab> vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<S-Tab>"
-xmap <Tab> <Plug>(vsnip-cut-text)
 " }}}
 
 " plugin: which-key {{{
