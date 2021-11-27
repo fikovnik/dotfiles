@@ -37,6 +37,7 @@ Plug 'mhinz/vim-sayonara'
 Plug 'mbbill/undotree'
 Plug 'ahmedkhalf/project.nvim'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'jiangmiao/auto-pairs'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
