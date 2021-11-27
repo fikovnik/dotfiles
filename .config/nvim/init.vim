@@ -36,6 +36,7 @@ Plug 'nvim-lua/lsp-status.nvim'
 Plug 'mhinz/vim-sayonara'
 Plug 'mbbill/undotree'
 Plug 'ahmedkhalf/project.nvim'
+Plug 'editorconfig/editorconfig-vim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -520,6 +521,10 @@ lsp.hls.setup {
   on_attach = on_attach,
 }
 EOF
+" }}}
+
+" plugin: editorconfig {{{
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 " }}}
 
 " plugin: comment {{{
