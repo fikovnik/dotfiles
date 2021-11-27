@@ -655,6 +655,7 @@ cmp.setup {
     { name = "latex_symbols" },
   }, {
     { name = 'buffer' },
+    { name = 'path' }
   }),
   documentation = {
     border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
@@ -1116,6 +1117,7 @@ augroup my-latex
   \     { name = 'vsnip' }, 
   \     { name = 'buffer' },
   \     { name = 'omni' },
+  \     { name = 'path' },
   \   },
   \ }  
 augroup end
