@@ -5,7 +5,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
-Plug 'hrsh7th/nvim-compe'
 Plug 'phaazon/hop.nvim'
 Plug 'numToStr/Comment.nvim'
 Plug 'navarasu/onedark.nvim'
@@ -38,6 +37,13 @@ Plug 'mbbill/undotree'
 Plug 'ahmedkhalf/project.nvim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-omni'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/nvim-cmp'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -53,7 +59,7 @@ set backup
 set backupdir=$HOME/.cache/vim/backup
 set breakindent " wrap lines continue visually indented
 set cmdheight=2 " give more space for displaying messages
-set completeopt=menuone,noselect " nvim-compe requirement
+set completeopt=menu,menuone,noselect " nvim-cmp requirement
 set copyindent " copy the previous indentation on autoindenting
 set cursorline
 set encoding=utf-8
@@ -183,22 +189,15 @@ command! MyDiffBufferFile :call MyDiffBufferFile()
 
 nmap <silent> <leader>bD <cmd>MyDiffBufferFile<CR>
 " }}}
-" completion {{{
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-g>     compe#close('<C-g>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-" }}}
 " edit {{{
 " list yanks
 nnoremap <silent> <M-y> <cmd>TS neoclip<CR>
 inoremap <silent> <M-y> <cmd>TS neoclip<CR>
 xnoremap <silent> <M-y> <cmd>TS neoclip<CR>
 " copy to system clipboard (neovim does not support yet C-S-c)
-nnoremap <silent> <C-y> "+y
-nnoremap <silent> <C-y><C-y> "+yy
-xnoremap <silent> <C-y> "+y
+nnoremap <silent> <M-w> "+y
+nnoremap <silent> <M-w><M-w> "+yy
+xnoremap <silent> <M-w> "+y
 " xnoremap <silent> <C-S-c> "+y
 " insert new lines
 nnoremap <silent> [o  <cmd>put!=repeat([''],v:count)<bar>']+1<CR>
@@ -412,6 +411,7 @@ lua << EOF
 local util = require('lspconfig/util')
 local lsp = require('lspconfig')
 capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.resolveSupport = {
   properties = {
@@ -624,22 +624,52 @@ require('neogit').setup()
 EOF
 " }}}
 
-" plugin: nvim-compe {{{
+" plugin: nvim-cmp {{{
 lua << EOF
-require('compe').setup {
-  enabled = true,
-  autocomplete = true,
-  min_length = 2,
-  source = {
-    path = true,
-    buffer = true,
-    nvim_lsp = true,
-    vsnip = true,
-    omni = {
-      filetypes = {'tex'},
-    },
+local cmp = require('cmp')
+
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
   },
+  mapping = {
+    ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+    ['<Tab>'] = cmp.config.disable,
+    ['<C-g>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+    ['<CR>'] = cmp.mapping.confirm { select = true },
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' }, 
+  }, {
+    { name = 'buffer' },
+  }),
+  documentation = {
+    border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+  },
+  completion = { keyword_length = 2 },
 }
+
+cmp.setup.cmdline('/', {
+  sources = {
+    { name = 'buffer' }
+  },
+  completion = { keyword_length = 3 },
+})
+
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' },
+  },{
+    { name = 'cmdline' }
+  }),
+  completion = { keyword_length = 3 },
+})
+
 EOF
 " }}}
 
@@ -1081,6 +1111,14 @@ augroup my-latex
   au!
   au FileType latex nmap <buffer><silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
   au FileType latex vmap <buffer><silent> <localleader>lf :!latexindent -m -l -<CR>
+  au FileType lua lua require'cmp'.setup.buffer {
+  \   sources = {
+  \     { name = 'nvim_lsp' },
+  \     { name = 'vsnip' }, 
+  \     { name = 'buffer' },
+  \     { name = 'omni' },
+  \   },
+  \ }  
 augroup end
 " }}}
 
