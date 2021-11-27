@@ -15,7 +15,7 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'lervag/vimtex'
-Plug 'https://github.com/lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
+Plug 'lambdalisue/suda.vim/' " workaround for https://github.com/neovim/neovim/issues/1716
 Plug 'preservim/vimux'
 Plug 'neovim/nvim-lspconfig'
 Plug 'szw/vim-maximizer'
@@ -834,7 +834,7 @@ require('nvim-treesitter.configs').setup {
 EOF
 " }}}
 
-" undotree {{{
+" plugin: undotree {{{
 if has("persistent_undo")
    let target_path = expand('~/.undodir')
 
