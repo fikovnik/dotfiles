@@ -166,6 +166,14 @@ endfunction
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
 " }}}
+
+" folds {{{
+function! MyFoldFormat()
+    return printf(' ▶ %4d ⋯ %s', v:foldend - v:foldstart + 1, getline(v:foldstart))
+endfunction
+set foldtext=MyFoldFormat()
+set fillchars=fold:\ 
+" }}}
 " }}}
 
 " KEYS {{{
