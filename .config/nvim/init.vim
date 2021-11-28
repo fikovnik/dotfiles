@@ -421,6 +421,13 @@ hi SpellBad   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e8667
 hi SpellCap   cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
 hi SpellLocal cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
 hi SpellRare  cterm=undercurl gui=undercurl ctermfg=NONE guifg=NONE guisp=#e5c07b
+
+" popup menu
+hi! Pmenu guibg=#21252B
+
+" nvim-cmp colors
+hi! CmpItemAbbrMatch guibg=NONE guifg=#FFFFFF gui=bold
+hi! CmpItemAbbrMatchFuzzy guibg=NONE guifg=#FFFFFF gui=bold
 " }}}
 
 " LSP {{{
