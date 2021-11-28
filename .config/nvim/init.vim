@@ -673,18 +673,18 @@ cmp.setup {
     { name = 'path' }
   }),
   documentation = {
-    border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
   },
   completion = { keyword_length = 2 },
   formatting = {
     format = function(entry, vim_item)
       vim_item.menu = ({
-        buffer = "[Buffer]",
-        nvim_lsp = "[LSP]",
-        snippy = "[Snippy]",
-        latex_symbols = "[LaTeX]",
-        path = "[Path]",
-        cmdline = "[CMD]",
+        buffer = "「Buffer」 ",
+        nvim_lsp = "「LSP」 ",
+        snippy = "「Snip」 ",
+        latex_symbols = "「Latex」 ",
+        path = "「Path」 ",
+        cmdline = "「CMD」 ",
       })[entry.source.name]
       return vim_item
     end
