@@ -34,7 +34,6 @@ Plug 'mhinz/vim-sayonara'
 Plug 'mbbill/undotree'
 Plug 'ahmedkhalf/project.nvim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'jiangmiao/auto-pairs'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -46,6 +45,7 @@ Plug 'dcampos/nvim-snippy'
 Plug 'dcampos/cmp-snippy'
 Plug 'honza/vim-snippets'
 Plug 'kdheepak/cmp-latex-symbols'
+Plug 'windwp/nvim-autopairs'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -692,6 +692,12 @@ cmp.setup.cmdline(':', {
   completion = { keyword_length = 3 },
 })
 
+EOF
+" }}}
+
+" nvim-autopairs {{{
+lua << EOF
+require("nvim-autopairs").setup {}
 EOF
 " }}}
 
