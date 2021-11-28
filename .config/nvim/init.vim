@@ -799,6 +799,14 @@ vim.cmd([[augroup end]])
 EOF
 " }}}
 
+" plugin: snippy {{{
+fun! SnippetsFilename(...)
+  let filename = expand('%:t:r')
+  if filename == '' | return a:0 == 2 ? a:2 : '' | endif
+  return !a:0 || a:1 == '' ? filename : substitute(a:1, '$1', filename, 'g')
+endf
+" }}}
+
 " plugin: telescope {{{
 lua <<EOF
 -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
