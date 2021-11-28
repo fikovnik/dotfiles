@@ -227,10 +227,6 @@ nmap <silent> <leader>eS <cmd>e ~/.config/nvim/snippets<CR>
 " inoremap <up> <c-\><c-o>gk
 
 " snippets
-imap <expr> <Tab> snippy#can_expand_or_advance() ? '<Plug>(snippy-expand-or-next)' : '<Tab>'
-imap <expr> <S-Tab> snippy#can_jump(-1) ? '<Plug>(snippy-previous)' : '<Tab>'
-smap <expr> <Tab> snippy#can_jump(1) ? '<Plug>(snippy-next)' : '<Tab>'
-smap <expr> <S-Tab> snippy#can_jump(-1) ? '<Plug>(snippy-previous)' : '<Tab>'
 xmap <Tab> <Plug>(snippy-cut-text)
 
 " align
@@ -649,7 +645,13 @@ EOF
 
 " plugin: nvim-cmp {{{
 lua << EOF
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 local cmp = require('cmp')
+local snippy = require("snippy")
 
 cmp.setup {
   snippet = {
@@ -661,7 +663,28 @@ cmp.setup {
     ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
     ['<Tab>'] = cmp.config.disable,
     ['<C-g>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
-    ['<CR>'] = cmp.mapping.confirm { select = true },
+    ['<CR>'] = cmp.mapping.confirm { select = false },
+    ['<M-CR>'] = cmp.mapping.confirm { select = true },
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif snippy.can_expand_or_advance() then
+        snippy.expand_or_advance()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif snippy.can_jump(-1) then
+        snippy.previous()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
