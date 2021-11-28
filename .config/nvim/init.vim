@@ -636,8 +636,7 @@ EOF
 " plugin: neoclip {{{
 lua << EOF
 require('neoclip').setup({
-  content_spec_colunm = true,
-  preview = false,
+  preview = true,
 })
 EOF
 " }}}
