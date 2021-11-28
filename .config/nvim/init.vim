@@ -45,6 +45,7 @@ Plug 'dcampos/nvim-snippy'
 Plug 'dcampos/cmp-snippy'
 Plug 'kdheepak/cmp-latex-symbols'
 Plug 'windwp/nvim-autopairs'
+Plug 'machakann/vim-sandwich'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
