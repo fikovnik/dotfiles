@@ -6,6 +6,7 @@ configuration {
   sort: false;
   sorting-method: "fzf";
   terminal: "st";
-  theme: "~/.config/rofi/nord.rasi";
   width: "100%";
 }
+
+@theme "nord"
