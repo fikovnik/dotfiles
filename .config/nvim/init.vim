@@ -690,7 +690,6 @@ cmp.setup {
   documentation = {
     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
   },
-  completion = { keyword_length = 2 },
   formatting = {
     format = function(entry, vim_item)
       vim_item.menu = ({
@@ -705,13 +704,6 @@ cmp.setup {
     end
   },
 }
-
-cmp.setup.cmdline('/', {
-  sources = {
-    { name = 'buffer' }
-  },
-  completion = { keyword_length = 3 },
-})
 
 cmp.setup.cmdline(':', {
   sources = cmp.config.sources({
