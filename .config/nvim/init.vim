@@ -8,7 +8,6 @@ Plug 'folke/which-key.nvim'
 Plug 'phaazon/hop.nvim'
 Plug 'numToStr/Comment.nvim'
 Plug 'navarasu/onedark.nvim'
-Plug 'TimUntersberger/neogit'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -268,7 +267,7 @@ nmap <silent> <leader>gC <cmd>TS git_commits<CR>
 nmap <silent> <leader>gb <cmd>TS git_branches<CR>
 nmap <silent> <leader>gc <cmd>TS git_bcommits<CR>
 nmap <silent> <leader>gf <cmd>TS git_files<CR>
-nmap <silent> <leader>gg <cmd>Neogit<CR>
+nmap <silent> <leader>gg <cmd>tab Git<CR>
 nmap <silent> <leader>ghp <cmd>lua require"gitsigns".preview_hunk()<CR>
 nmap <silent> <leader>ghr <cmd>lua require"gitsigns".reset_hunk()<CR>
 nmap <silent> <leader>ghs <cmd>lua require"gitsigns".stage_hunk()<CR>
@@ -634,12 +633,6 @@ lua << EOF
 require('neoclip').setup({
   preview = true,
 })
-EOF
-" }}}
-
-" plugin: neogit {{{
-lua << EOF
-require('neogit').setup()
 EOF
 " }}}
 
@@ -1160,6 +1153,13 @@ let g:wiki_mappings_local = {
   \ 'x_<plug>(wiki-export)':             '<localleader>E',
   \ 'x_<plug>(wiki-link-toggle-visual)': '<localleader><cr>',
   \ }
+" }}}
+
+" file-type: fugitive {{{
+augroup my-fugitive
+  au!
+  au FileType fugitive nmap <buffer><silent> q <cmd>q<CR>
+augroup end
 " }}}
 
 " file-type help {{{
