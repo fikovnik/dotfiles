@@ -45,6 +45,7 @@ Plug 'dcampos/cmp-snippy'
 Plug 'kdheepak/cmp-latex-symbols'
 Plug 'windwp/nvim-autopairs'
 Plug 'machakann/vim-sandwich'
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -877,6 +878,34 @@ require('nvim-treesitter.configs').setup {
       node_incremental = "<M-=>",
       scope_incremental = "<M-+>",
       node_decremental = "<M-->",
+    },
+  },
+}
+EOF
+" }}}
+
+" plugin: treesitter-textobjects {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+      },
+    },
+    swap = {
+      enable = true,
+      swap_next = {
+        ["<localleader>>"] = "@parameter.inner",
+      },
+      swap_previous = {
+        ["<localleader><"] = "@parameter.inner",
+      },
     },
   },
 }
