@@ -3,7 +3,7 @@ call plug#begin()
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'phaazon/hop.nvim'
 Plug 'numToStr/Comment.nvim'
@@ -72,12 +72,10 @@ set foldopen=insert,mark,percent,quickfix,search,tag,undo
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 set hidden " allow to switch buffers when there are unsaved changes
 set ignorecase " case insensitive search
-set inccommand=nosplit " show replacements inplace
 set infercase
 set lazyredraw " do not update screen when running macros
 set linebreak " break on word end
 set nocompatible
-set nojoinspaces " do not add extra space when joining lines
 set noswapfile
 set number
 set path+=** " find files in subdirectories
@@ -114,9 +112,6 @@ set wrap
 " create directories {{{
 if !isdirectory(&undodir)
   call mkdir(&undodir, 'p')
-endif
-if !isdirectory(&backupdir)
-  call mkdir(&backupdir, 'p')
 endif
 " }}}
 
@@ -233,8 +228,7 @@ xmap <leader>ea <Plug>(EasyAlign)
 nmap <leader>ea <Plug>(EasyAlign)
 
 nnoremap <silent><leader>eu <cmd>UndotreeToggle<CR>
-" in neovim 0.6+ Y is mapped to y$, but I like the old behavior
-" unmap Y
+unmap Y
 
 function! MyFormatParagraph()
   let pos = getcurpos()
@@ -380,10 +374,6 @@ vmap <C-c><C-c> <leader>cs
 vmap <leader>cs "vy:call MyVimuxSlime()<CR>
 " }}}
 " windows {{{
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
 nnoremap <C-w><C-w> <C-w>w
 nnoremap <leader>w- <C-w>s
 nnoremap <leader>w<bar> <C-w>v
@@ -475,7 +465,7 @@ on_attach = function(client, bufnr)
     R = { '<cmd>lua vim.lsp.buf.rename()<CR>', 'Rename' },
     a = { '<cmd>TS lsp_code_actions<CR>', 'Actions' },
     d = { '<cmd>TS lsp_definitions<CR>', 'Definitions' },
-    e = { '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', 'Errors' },
+    e = { '<cmd>lua vim.diagnostic.open_float(nil, {source = \'always\'})<CR>', 'Errors' },
     f = { '<cmd>lua vim.lsp.buf.formatting()<CR>', 'Format' },
     h = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'Hover' },
     i = { '<cmd>TS lsp_implementations<CR>', 'Implementations' },
@@ -493,8 +483,8 @@ on_attach = function(client, bufnr)
 
   my_map {
     ['<M-CR>'] = { '<cmd>TS lsp_code_actions<CR>', 'LSP actions' },
-    ['[e'] = { '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', 'LSP previous error' },
-    [']e'] = { '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', 'LSP next error' },
+    ['[e'] = { '<cmd>lua vim.diagnostic.goto_prev()<CR>', 'LSP previous error' },
+    [']e'] = { '<cmd>lua vim.diagnostic.goto_next()<CR>', 'LSP next error' },
     K = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'LSP hover' },
   }
 
