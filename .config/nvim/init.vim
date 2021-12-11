@@ -1160,6 +1160,11 @@ augroup my-help
 augroup end
 " }}}
 
+" file-type: qf {{{
+augroup qf
+  au!
+  au FileType qf nmap <buffer><silent> q <cmd>q<CR>
+augroup end
 " }}}
 
 " file-type: latex {{{
