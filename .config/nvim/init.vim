@@ -1158,6 +1158,7 @@ augroup my-help
   au!
   au FileType help nmap <buffer><silent> q <cmd>q<CR>
 augroup end
+" }}}
 
 " }}}
 
