@@ -1140,11 +1140,20 @@ let g:wiki_mappings_local = {
 " file-type: fugitive {{{
 augroup my-fugitive
   au!
-  au FileType fugitive nmap <buffer><silent> q <cmd>q<CR>
+  au FileType fugitive nnoremap <buffer><silent> q <cmd>q<CR> | 
+     \ nmap <buffer><silent> <TAB> =
+  au FileType git nnoremap <buffer><silent> q <cmd>q<CR>
 augroup end
 " }}}
 
-" file-type help {{{
+" file-type: gitcommit {{{
+augroup my-gitcommit
+  au!
+  au FileType gitcommit set spell
+augroup end
+" }}}
+
+" file-type: help {{{
 augroup my-help
   au!
   au FileType help nmap <buffer><silent> q <cmd>q<CR>
