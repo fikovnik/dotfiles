@@ -5,7 +5,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
-Plug 'phaazon/hop.nvim'
 Plug 'numToStr/Comment.nvim'
 Plug 'navarasu/onedark.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -44,8 +43,8 @@ Plug 'dcampos/nvim-snippy'
 Plug 'dcampos/cmp-snippy'
 Plug 'kdheepak/cmp-latex-symbols'
 Plug 'windwp/nvim-autopairs'
-Plug 'machakann/vim-sandwich'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'ggandor/lightspeed.nvim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -298,11 +297,6 @@ nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
 xnoremap <expr> j v:count ? 'j' : 'gj'
 xnoremap <expr> k v:count ? 'k' : 'gk'
-" hopping
-nmap <silent> gy <cmd>HopWord<CR>
-nmap <silent> gl <cmd>HopLine<CR>
-nmap <silent> gs <cmd>HopChar1<CR>
-nmap <silent> gS <cmd>HopChar2<CR>
 " }}}
 " notes {{{
 nmap <silent> <leader>ni <cmd>WikiIndex<CR>
@@ -556,12 +550,6 @@ let g:ctrlsf_mapping = {
     \ "next": "n",
     \ "prev": "N",
     \ }
-" }}}
-
-" plugin: hop {{{
-lua << EOF
-require('hop').setup()
-EOF
 " }}}
 
 " plugin: lsp-status {{{
