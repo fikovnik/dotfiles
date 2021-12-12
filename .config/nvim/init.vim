@@ -159,7 +159,7 @@ endfunction
 
 " set leaders
 let g:mapleader = "\<Space>"
-let g:maplocalleader = ','
+let g:maplocalleader = 'm'
 " }}}
 
 " folds {{{
