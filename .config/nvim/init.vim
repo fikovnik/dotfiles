@@ -249,7 +249,6 @@ inoremap <C-g> <Esc>
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>^
 inoremap <C-BS> <C-W>
-inoremap <C-k> <C-o>d$
 " }}}
 " file {{{
 nmap <silent> <leader>fn <cmd>enew<CR>
@@ -481,10 +480,12 @@ on_attach = function(client, bufnr)
     ['[e'] = { '<cmd>lua vim.diagnostic.goto_prev()<CR>', 'LSP previous error' },
     [']e'] = { '<cmd>lua vim.diagnostic.goto_next()<CR>', 'LSP next error' },
     K = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'LSP hover' },
+    ['<C-k>'] = { '<cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
   }
 
   my_imap {
     ['<M-CR>'] = { '<C-O><cmd>TS lsp_code_actions<CR>', 'LSP actions' },
+    ['<C-k>'] = { '<C-O><cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
   }
 
   my_map_local({
