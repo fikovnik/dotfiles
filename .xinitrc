@@ -17,11 +17,11 @@ fi
 [ -f ~/.xprofile ] && . ~/.xprofile
 
 # display
-xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal
-feh --bg-scale ~/Documents/Pictures/Wallpapers/dolomites.jpg
+#xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal
+#feh --bg-scale ~/Documents/Pictures/Wallpapers/dolomites.jpg
 
 # panel
-~/.config/polybar/launch.sh
+# ~/.config/polybar/run.sh
 
 # XDG autostart
 
@@ -57,7 +57,7 @@ export AWT_TOOLKIT
 
 # the errors will be appended into ~/.xsesion-errors
 while :; do
-  openbox
+  berry
   # ~/Sync/Projects/dwm/dwm
 #  ~/Sync/Projects/cwm/cwm
 done
