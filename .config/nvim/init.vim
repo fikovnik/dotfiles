@@ -1185,22 +1185,7 @@ augroup qf
 augroup end
 " }}}
 
-" file-type: latex {{{
-augroup my-latex
-  au!
-  au FileType latex nmap <buffer><silent> <localleader>lt <cmd>call vimtex#fzf#run()<CR>
-  au FileType latex vmap <buffer><silent> <localleader>lf :!latexindent -m -l -<CR>
-  au FileType lua lua require'cmp'.setup.buffer {
-  \   sources = {
-  \     { name = 'nvim_lsp' },
-  \     { name = 'vsnip' }, 
-  \     { name = 'buffer' },
-  \     { name = 'omni' },
-  \     { name = 'path' },
-  \   },
-  \ }  
-augroup end
-" }}}
+" latex: ./after/ftplugin/tex.lua
 
 " file-type: markdown {{{
 augroup my-markdown
