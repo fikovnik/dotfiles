@@ -1,74 +1,22 @@
 IMAPAccount gmail
 Host imap.gmail.com
 User krikava@gmail.com
-PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.password-store/mail/krikava@gmail.com-mbsync.gpg"
+PassCmd "pass show mail/krikava@gmail.com-getmail"
 SSLType IMAPS
 
 IMAPStore gmail-remote
 Account gmail
 
-MaildirStore gmail-local
-# The trailing "/" is important
-Path ~/Mail/krikava@gmail.com/
-Inbox ~/Mail/krikava@gmail.com/INBOX
+MaildirStore gmail-old
+Path ~/Mail/old/krikava@gmail.com/
+Inbox ~/Mail/old/krikava@gmail.com/INBOX
 SubFolders Verbatim
 
-Channel gmail-inbox
-Master :gmail-remote:
-Slave :gmail-local:
-Patterns "INBOX"
-Create Both
-Expunge Both
+Channel gmail-old
+Far :gmail-remote:Old
+Near :gmail-old:Old
+Create Near
+Remove None
+Expunge None
+Sync Pull
 SyncState *
-
-Channel gmail-labels
-Master :gmail-remote:
-Slave :gmail-local:
-Patterns  * !INBOX ![Gmail]* !all !trash !sent !drafts !spam
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmail-all
-Master :gmail-remote:"[Gmail]/All Mail"
-Slave :gmail-local:all
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmail-trash
-Master :gmail-remote:"[Gmail]/Trash"
-Slave :gmail-local:trash
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmail-sent
-Master :gmail-remote:"[Gmail]/Sent Mail"
-Slave :gmail-local:sent
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmail-drafts
-Master :gmail-remote:"[Gmail]/Drafts"
-Slave :gmail-local:drafts
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmail-spam
-Master :gmail-remote:"[Gmail]/Spam"
-Slave :gmail-local:spam
-Create Both
-Expunge Both
-SyncState *
-
-Group gmail
-Channel gmail-inbox
-Channel gmail-all
-Channel gmail-sent
-Channel gmail-trash
-Channel gmail-drafts
-Channel gmail-spam
-Channel gmail-labels

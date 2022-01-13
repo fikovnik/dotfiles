@@ -1,0 +1,18 @@
+[retriever]
+type = SimpleIMAPSSLRetriever
+server = imap.gmail.com
+username = krikava
+password_command = ("/usr/bin/pass", "show", "mail/krikava@gmail.com-getmail")
+#mailboxes = ("[Gmail]/All Mail", )
+mailboxes = ("Old", )
+
+[destination]
+type = Maildir
+path = ~/Mail/getmail/krikava@gmail.com/old/
+
+[options]
+verbose = 2
+read_all = False
+delete = False
+received = False
+message_log = ~/.getmail/log

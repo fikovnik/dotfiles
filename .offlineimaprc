@@ -13,13 +13,13 @@ labelsheader = X-Keywords
 
 [Repository gmail-local]
 type = GmailMaildir
-localfolders = ~/Mail/krikava@gmail.com
+localfolders = ~/Mail/offlineimap/krikava@gmail.com
 
 [Repository gmail-remote]
 type = Gmail
 auth_mechanisms = LOGIN
 remoteuser = krikava@gmail.com
-remotepasseval = passwd("krikava@gmail.com-mbsync")
+remotepasseval = passwd("krikava@gmail.com-getmail")
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 realdelete = no
 folderfilter = lambda folder: folder in ('[Gmail]/All Mail')
