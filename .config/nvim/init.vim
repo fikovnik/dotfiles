@@ -526,6 +526,11 @@ lsp.clangd.setup {
 lsp.hls.setup {
   on_attach = on_attach,
 }
+
+lsp.pyright.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+}
 EOF
 " }}}
 
