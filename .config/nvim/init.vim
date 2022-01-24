@@ -45,6 +45,7 @@ Plug 'kdheepak/cmp-latex-symbols'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'ggandor/lightspeed.nvim'
+Plug 'nvim-telescope/telescope-file-browser.nvim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -851,6 +852,7 @@ ts.setup {
 }
 
 ts.load_extension('neoclip')
+ts.load_extension('file_browser')
 EOF
 
 command -nargs=* TS Telescope <args> theme=get_ivy
