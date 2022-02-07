@@ -46,6 +46,7 @@ Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'ggandor/lightspeed.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'j-hui/fidget.nvim'
+Plug 'Pocco81/AutoSave.nvim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -532,6 +533,14 @@ lsp.pyright.setup {
 }
 EOF
 " }}}
+
+" plugin: autosave {{{
+lua << EOF
+require("autosave").setup()
+EOF
+" }}}
+
+
 
 " plugin: editorconfig {{{
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
