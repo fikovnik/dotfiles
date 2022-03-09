@@ -3,7 +3,7 @@
   email = krikava@gmail.com
 
 [core]
-  autocrlf = input
+	autocrlf = input
   ignorecase = false
 
 [color]
@@ -12,7 +12,12 @@
 
 [alias]
   lg = log --graph --all --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ah)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-  vim = !"vim '+Git' '+only'"
+  vim = !"nvim '+Git' '+only'"
+  stash-untracked = "!f() {  \
+    git stash;               \
+    git stash -u;            \
+    git stash pop stash@{1}; \
+  }; f"
 
 [merge]
   tool = vimdiff
@@ -26,7 +31,7 @@
   trustExitCode = false
 
 [mergetool "vimdiff"]
-  cmd = vim '+Gvdiffsplit!' "$MERGED"
+  cmd = nvim '+Gvdiffsplit!' "$MERGED"
 
 [difftool "p4merge"]
   cmd = p4merge "$LOCAL" "$REMOTE"
