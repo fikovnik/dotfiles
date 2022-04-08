@@ -47,6 +47,7 @@ Plug 'ggandor/lightspeed.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'Pocco81/AutoSave.nvim'
+Plug 'peterbjorgensen/sved'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -946,8 +947,8 @@ let g:vimtex_quickfix_ignore_filters = [
   \ 'Overfull',
   \ 'Underfull',
   \ ]
-let g:vimtex_view_general_viewer = '/usr/bin/sioyek' 
-let g:vimtex_view_general_options = '--inverse-search "nvr --remote-expr \"vimtex#view#reverse_goto(%2, ''%1'')\"" --reuse-instance --forward-search-file @tex --forward-search-line @line @pdf' 
+" let g:vimtex_view_method = 'sioyek'
+let g:vimtex_view_general_viewer = 'evince'
 " }}}
 
 " plugin: vimux {{{

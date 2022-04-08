@@ -21,3 +21,5 @@ require('cmp').setup.buffer {
 vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>lt', '<cmd>call vimtex#fzf#run()<CR>', { silent = true })
 
 vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>lf', '<cmd>!latexindent -m -l -<CR>', { silent = true })
+
+vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>lv', '<cmd>:call SVED_Sync()<CR>', { silent = true })
