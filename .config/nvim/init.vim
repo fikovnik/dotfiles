@@ -49,6 +49,7 @@ Plug 'j-hui/fidget.nvim'
 Plug 'Pocco81/AutoSave.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'peterbjorgensen/sved'
+Plug 'ray-x/lsp_signature.nvim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -454,6 +455,16 @@ on_attach = function(client, bufnr)
 
   -- Enable completion triggered by <c-x><c-o>
   set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- lsp_signature
+  require('lsp_signature').on_attach({
+    doc_lines = 0,
+    hint_prefix = " ",
+    hi_parameter = "Search",
+    handler_opts = {
+      border = "single", -- double, single, shadow, none
+    },
+  })
 
   map_local {
     E = { '<cmd>TS lsp_workspace_diagnostics<CR>', 'All errors' },
