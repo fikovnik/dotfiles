@@ -89,6 +89,7 @@ set scrolloff=10 " leave 10 lines up and down when scrolling for context
 set secure " disable certain commands in exrc
 set shiftwidth=2
 set shortmess+=c " don't pass messages to |ins-completion-menu|
+set shortmess-=F " give the fileinfo when editing a file
 set showcmd
 set showmatch " briefly jump to the matching object
 set signcolumn=yes
@@ -553,8 +554,6 @@ require("autosave").setup()
 EOF
 " }}}
 
-
-
 " plugin: editorconfig {{{
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 " }}}
@@ -677,6 +676,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'snippy' }, 
     { name = "latex_symbols" },
+    { name = 'omni' },
   }, {
     { name = 'buffer' },
     { name = 'path' }
@@ -711,7 +711,7 @@ cmp.setup.cmdline(':', {
 EOF
 " }}}
 
-" nvim-autopairs {{{
+" plugin: nvim-autopairs {{{
 lua << EOF
 require("nvim-autopairs").setup {}
 EOF
