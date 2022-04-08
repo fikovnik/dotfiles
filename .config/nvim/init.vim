@@ -47,6 +47,7 @@ Plug 'ggandor/lightspeed.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'Pocco81/AutoSave.nvim'
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'peterbjorgensen/sved'
 " Plug 'github/copilot.vim'
 call plug#end()
@@ -702,6 +703,13 @@ EOF
 " nvim-autopairs {{{
 lua << EOF
 require("nvim-autopairs").setup {}
+EOF
+" }}}
+
+" plugin: nvim-tree {{{
+lua << EOF
+require'nvim-tree'.setup {
+}
 EOF
 " }}}
 
