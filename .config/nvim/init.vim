@@ -85,7 +85,7 @@ set noswapfile
 set number
 set path+=** " find files in subdirectories
 set preserveindent " preserve the current file indent as much as possible
-set scrolloff=10 " leave 10 lines up and down when scrolling for context
+set scrolloff=5 " leave 10 lines up and down when scrolling for context
 set secure " disable certain commands in exrc
 set shiftwidth=2
 set shortmess+=c " don't pass messages to |ins-completion-menu|
