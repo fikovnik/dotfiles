@@ -6,7 +6,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'numToStr/Comment.nvim'
-Plug 'navarasu/onedark.nvim'
+Plug 'mjlbach/onedark.nvim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -395,7 +395,6 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
-let g:disable_toggle_style = 1 " disable the <leade>cs shortcut
 colorscheme onedark
 
 hi Visual guibg=#264f78
