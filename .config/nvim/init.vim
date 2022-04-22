@@ -468,17 +468,19 @@ on_attach = function(client, bufnr)
   })
 
   map_local {
-    E = { '<cmd>TS lsp_workspace_diagnostics<CR>', 'All errors' },
-    [','] = { '<cmd>TS lsp_dynamic_workspace_symbols<CR>', 'All symbols' },
+    E = { '<cmd>Telescope diagnostics<CR>', 'All errors' },
+    ['<M-E>'] = { '<cmd>lua vim.diagnostic.setloclist()<CR>', 'All errors (QF)' },
+    l = { '<cmd>Telescope lsp_dynamic_workspace_symbols<CR>', 'All symbols' },
     R = { '<cmd>lua vim.lsp.buf.rename()<CR>', 'Rename' },
-    a = { '<cmd>TS lsp_code_actions<CR>', 'Actions' },
-    d = { '<cmd>TS lsp_definitions<CR>', 'Definitions' },
+    a = { '<cmd>Telescope lsp_code_actions<CR>', 'Actions' },
+    d = { '<cmd>Telescope lsp_definitions<CR>', 'Definitions' },
+    D = { '<cmd>lua vim.lsp.buf.declaration()<CR>', 'Declaration' },
     e = { '<cmd>lua vim.diagnostic.open_float(nil, {source = \'always\'})<CR>', 'Errors' },
     f = { '<cmd>lua vim.lsp.buf.formatting()<CR>', 'Format' },
     h = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'Hover' },
-    i = { '<cmd>TS lsp_implementations<CR>', 'Implementations' },
-    l = { '<cmd>TS lsp_document_symbols<CR>', 'Symbols' },
-    r = { '<cmd>TS lsp_references<CR>', 'References' },
+    i = { '<cmd>Telescope lsp_implementations<CR>', 'Implementations' },
+    m = { '<cmd>Telescope lsp_document_symbols<CR>', 'Symbols' },
+    r = { '<cmd>Telescope lsp_references<CR>', 'References' },
     s = { '<cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
     t = { '<cmd>lua vim.lsp.buf.type_definition()<CR>', 'Type' },
     w = {
@@ -490,20 +492,20 @@ on_attach = function(client, bufnr)
   }
 
   my_map {
-    ['<M-CR>'] = { '<cmd>TS lsp_code_actions<CR>', 'LSP actions' },
-    ['[e'] = { '<cmd>lua vim.diagnostic.goto_prev()<CR>', 'LSP previous error' },
-    [']e'] = { '<cmd>lua vim.diagnostic.goto_next()<CR>', 'LSP next error' },
+    ['<M-CR>'] = { '<cmd>Telescope lsp_code_actions<CR>', 'LSP actions' },
+    ['[d'] = { '<cmd>lua vim.diagnostic.goto_prev()<CR>', 'LSP previous error' },
+    [']d'] = { '<cmd>lua vim.diagnostic.goto_next()<CR>', 'LSP next error' },
     K = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'LSP hover' },
     ['<C-k>'] = { '<cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
   }
 
   my_imap {
-    ['<M-CR>'] = { '<C-O><cmd>TS lsp_code_actions<CR>', 'LSP actions' },
+    ['<M-CR>'] = { '<C-O><cmd>Telescope lsp_code_actions<CR>', 'LSP actions' },
     ['<C-k>'] = { '<C-O><cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
   }
 
   my_map_local({
-    a = { '<cmd>TS lsp_range_code_actions<CR>', 'Range actions' },
+    a = { '<cmd>Telescope lsp_range_code_actions<CR>', 'Range actions' },
     f = { '<cmd>lua vim.lsp.buf.range_formatting()<CR>', 'Range format' },
     }, 
     { mode = "v" }
@@ -643,11 +645,10 @@ cmp.setup {
   snippet = {
     expand = function(args) require'snippy'.expand_snippet(args.body) end,
   },
-  mapping = {
-    ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-    ['<Tab>'] = cmp.config.disable,
+  mapping = cmp.mapping.preset.insert {
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-g>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
     ['<CR>'] = cmp.mapping.confirm { select = false },
     ['<M-CR>'] = cmp.mapping.confirm { select = true },
@@ -674,15 +675,18 @@ cmp.setup {
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
+    { name = 'omni' },
+  }, 
+  {
     { name = 'snippy' }, 
     { name = "latex_symbols" },
-    { name = 'omni' },
-  }, {
+  },
+  {
     { name = 'buffer' },
     { name = 'path' }
   }),
-  documentation = {
-    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+  window = {
+    documentation = cmp.config.window.bordered(),
   },
   formatting = {
     format = function(entry, vim_item)
@@ -700,9 +704,10 @@ cmp.setup {
 }
 
 cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
-    { name = 'path' },
-  },{
+    { name = 'path' }
+  }, {
     { name = 'cmdline' }
   }),
   completion = { keyword_length = 3 },
@@ -876,7 +881,6 @@ command -nargs=* TS Telescope <args> theme=get_ivy
 " plugin: treesitter {{{
 lua <<EOF
 require('nvim-treesitter.configs').setup {
-  ensure_installed = "maintained",
   ignore_install = { "latex" },
   highlight = {
     enable = true,
