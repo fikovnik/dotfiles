@@ -6,7 +6,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'folke/which-key.nvim'
 Plug 'numToStr/Comment.nvim'
-Plug 'mjlbach/onedark.nvim'
+Plug 'rmehri01/onenord.nvim', { 'branch': 'main' }
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'lervag/wiki.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -395,7 +395,9 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
-colorscheme onedark
+lua << EOF
+require('onenord').setup()
+EOF
 
 hi Visual guibg=#264f78
 hi MatchParen guifg=#e86671
@@ -592,7 +594,7 @@ lua << EOF
 
 require('lualine').setup {
   options = {
-    theme = 'onedark',
+    theme = 'onenord',
   },
   sections = {
     lualine_b = { 'branch', 'diff' },
