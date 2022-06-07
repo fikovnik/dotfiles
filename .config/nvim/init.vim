@@ -47,7 +47,8 @@ Plug 'ggandor/lightspeed.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'Pocco81/AutoSave.nvim'
-Plug 'kyazdani42/nvim-tree.lua'
+Plug 'nvim-neo-tree/neo-tree.nvim'
+Plug 'MunifTanjim/nui.nvim'
 Plug 'peterbjorgensen/sved'
 Plug 'ray-x/lsp_signature.nvim'
 " Plug 'github/copilot.vim'
@@ -725,7 +726,30 @@ EOF
 
 " plugin: nvim-tree {{{
 lua << EOF
-require'nvim-tree'.setup {
+require("neo-tree").setup {
+  window = {
+    position = "left",
+    width = 40,
+    mappings = {
+      ["<tab>"] = "toggle_node",
+      ["<cr>"] = "open",
+      ["<C-x>"] = "open_split",
+      ["<C-v>"] = "open_vsplit",
+      ["<C-t>"] = "open_tabnew",
+      ["C"] = "close_node",
+      ["a"] = "add",
+      ["A"] = "add_directory",
+      ["d"] = "delete",
+      ["r"] = "rename",
+      ["y"] = "copy_to_clipboard",
+      ["x"] = "cut_to_clipboard",
+      ["p"] = "paste_from_clipboard",
+      ["c"] = "copy", -- takes text input for destination
+      ["m"] = "move", -- takes text input for destination
+      ["q"] = "close_window",
+      ["R"] = "refresh",
+    },
+  },
 }
 EOF
 " }}}
