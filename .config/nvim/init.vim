@@ -51,6 +51,8 @@ Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'peterbjorgensen/sved'
 Plug 'ray-x/lsp_signature.nvim'
+Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-telescope/telescope-dap.nvim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -827,7 +829,10 @@ metals_config.settings = {
   showInferredType = true,
 }
 metals_config.capabilities = capabilities
-metals_config.on_attach = on_attach
+metals_config.on_attach = function(client, bufnr)
+  on_attach(client, bufnr)
+  require("metals").setup_dap()
+end
 metals_config.init_options.statusBarProvider = "on"
 
 vim.cmd([[augroup my-scala]])
@@ -898,6 +903,7 @@ ts.setup {
 
 ts.load_extension('neoclip')
 ts.load_extension('file_browser')
+ts.load_extension('dap')
 EOF
 
 command -nargs=* TS Telescope <args> theme=get_ivy
