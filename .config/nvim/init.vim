@@ -724,6 +724,23 @@ cmp.setup.cmdline(':', {
 EOF
 " }}}
 
+" plugin: nvim-dap {{{
+lua << EOF
+local repl = require('dap.repl')
+repl.commands = vim.tbl_extend('force', repl.commands, {
+  help = {'.help', '.h'},
+  exit = {'.exit', '.e', '.quit', '.q'},
+})
+EOF
+
+nnoremap <silent> <F5> <Cmd>lua require('dap').continue()<CR>
+nnoremap <silent> <F10> <Cmd>lua require('dap').step_over()<CR>
+nnoremap <silent> <F11> <Cmd>lua require('dap').step_into()<CR>
+nnoremap <silent> <F12> <Cmd>lua require('dap').step_out()<CR>
+nnoremap <silent> <F32> <Cmd>lua require('dap').toggle_breakpoint()<CR>
+nnoremap <silent> <F6> <Cmd>lua require('dap').repl.open()<CR>
+" }}}
+
 " plugin: nvim-autopairs {{{
 lua << EOF
 require("nvim-autopairs").setup {}
@@ -778,8 +795,14 @@ EOF
 
 " plugin: rust-tools {{{
 lua << EOF
+local extension_path = vim.env.HOME .. '/.config/nvim/tools/codelldb/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
 
 require('rust-tools').setup {
+  dap = {
+    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
+  },
   tools = {
     inlay_hints = {
       show_parameter_hints = false,
@@ -797,7 +820,6 @@ require('rust-tools').setup {
     },
   },
 }
-
 EOF
 
 augroup my-rust
