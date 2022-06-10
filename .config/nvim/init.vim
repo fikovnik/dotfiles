@@ -53,6 +53,8 @@ Plug 'peterbjorgensen/sved'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-telescope/telescope-dap.nvim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
