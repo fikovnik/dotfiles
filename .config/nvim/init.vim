@@ -287,6 +287,10 @@ nmap <silent> <leader>, <cmd>TS buffers<CR>
 nmap <silent> <leader>. <cmd>TS file_browser<CR>
 nmap <silent> <leader>/ <cmd>TS live_grep<CR>
 nmap <silent> <leader><space> <cmd>lua project_files()<CR>
+
+" Move by line
+nnoremap j gj
+nnoremap k gk
 " }}}
 " help {{{
 nmap <silent> <leader>hH <cmd>TS highlights<CR>
