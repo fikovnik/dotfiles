@@ -600,20 +600,46 @@ EOF
 
 " plugin: lualine {{{
 lua << EOF
+local colors = require("onenord.colors").load()
+local lualine_theme = require("lualine.themes.onenord")
+for m in pairs(lualine_theme) do
+  for k in pairs(lualine_theme[m]) do
+    lualine_theme[m][k].bg = colors.highlight_dark
+    lualine_theme[m][k].fg = colors.fg
+  end
+end
+
+lualine_theme.inactive = {
+  a = { fg = colors.light_gray, bg = colors.floating, gui = "bold" },
+  b = { fg = colors.light_gray, bg = colors.floating },
+  c = { fg = colors.light_gray, bg = colors.active },
+}
 
 require('lualine').setup {
   options = {
-    theme = 'onenord',
+    icons_enabled = false,
+    theme = lualine_theme,
+    component_separators = { left = "", right = "" },
+    section_separators = { left = "", right = "" },
   },
   sections = {
-    lualine_b = { 'branch', 'diff' },
-    lualine_c = { 
+    lualine_a = { 
+      'mode',
+      { 'branch', icons_enabled = true, icon = "" } 
+    },
+    lualine_b = { 
       {'filename', file_status = true, path = 1}, 
+    },
+    lualine_c = { 
       'g:metals_status',
       { 
         'diagnostics',
-        symbols = {error = 'e: ', warn = 'w: ', info = 'i: ', hint = 'h: '}
-      }
+        sections = { "error", "warn" },
+        colored = false,
+        always_visible = true,
+        symbols = { error = ' ', warn = ' ' }
+      },
+      { 'diff', colored = false, symbols = { added = "+", modified = "•", removed = "-" } } 
     }
   }
 }
