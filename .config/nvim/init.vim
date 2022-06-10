@@ -985,18 +985,15 @@ require('nvim-treesitter.configs').setup {
       node_decremental = "<M-->",
     },
   },
-}
-EOF
-" }}}
-
-" plugin: treesitter-textobjects {{{
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
   textobjects = {
     select = {
       enable = true,
       lookahead = true,
       keymaps = {
+        ["ab"] = "@block.outer",
+        ["ib"] = "@block.inner",
+        ["ac"] = "@call.outer",
+        ["ic"] = "@call.inner",
         ["af"] = "@function.outer",
         ["if"] = "@function.inner",
         ["aa"] = "@parameter.outer",
@@ -1006,10 +1003,10 @@ require'nvim-treesitter.configs'.setup {
     swap = {
       enable = true,
       swap_next = {
-        ["<localleader>>"] = "@parameter.inner",
+        ["<M->>"] = "@parameter.inner",
       },
       swap_previous = {
-        ["<localleader><"] = "@parameter.inner",
+        ["<M-<>"] = "@parameter.inner",
       },
     },
   },
