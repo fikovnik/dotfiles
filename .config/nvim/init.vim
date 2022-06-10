@@ -43,7 +43,7 @@ Plug 'dcampos/cmp-snippy'
 Plug 'kdheepak/cmp-latex-symbols'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-Plug 'ggandor/lightspeed.nvim'
+Plug 'rlane/pounce.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'Pocco81/AutoSave.nvim'
@@ -782,6 +782,13 @@ let g:pandoc#keyboard#use_default_mappings = 0
 let g:pandoc#syntax#conceal#urls = 1
 let g:pandoc#syntax#codeblocks#embeds#langs = ["scala", "literatehaskell=lhaskell", "bash=sh", "cpp", "c", "r", "rust"]
 let g:pandoc#syntax#conceal#blacklist = [ "atx", "list" ]
+" }}}
+
+" plugin: pounce {{{
+nmap s <cmd>Pounce<CR>
+nmap S <cmd>PounceRepeat<CR>
+vmap s <cmd>Pounce<CR>
+omap z <cmd>Pounce<CR>
 " }}}
 
 " plugin: project.nvim {{{
