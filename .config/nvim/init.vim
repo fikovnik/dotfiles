@@ -712,14 +712,12 @@ cmp.setup {
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'omni' },
-  }, 
-  {
     { name = 'snippy' }, 
     { name = "latex_symbols" },
   },
   {
     { name = 'buffer' },
-    { name = 'path' }
+    { name = 'path' },
   }),
   window = {
     documentation = cmp.config.window.bordered(),
