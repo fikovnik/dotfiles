@@ -480,9 +480,9 @@ on_attach = function(client, bufnr)
   map_local {
     E = { '<cmd>Telescope diagnostics<CR>', 'All errors' },
     ['<M-E>'] = { '<cmd>lua vim.diagnostic.setloclist()<CR>', 'All errors (QF)' },
-    l = { '<cmd>Telescope lsp_dynamic_workspace_symbols<CR>', 'All symbols' },
+    l = { '<cmd>Telescope lsp_workspace_symbols<CR>', 'All symbols' },
     R = { '<cmd>lua vim.lsp.buf.rename()<CR>', 'Rename' },
-    a = { '<cmd>Telescope lsp_code_actions<CR>', 'Actions' },
+    a = { '<cmd>lua vim.lsp.buf.code_action()<CR>', 'Actions' },
     d = { '<cmd>Telescope lsp_definitions<CR>', 'Definitions' },
     D = { '<cmd>lua vim.lsp.buf.declaration()<CR>', 'Declaration' },
     e = { '<cmd>lua vim.diagnostic.open_float(nil, {source = \'always\'})<CR>', 'Errors' },
@@ -492,7 +492,7 @@ on_attach = function(client, bufnr)
     m = { '<cmd>Telescope lsp_document_symbols<CR>', 'Symbols' },
     r = { '<cmd>Telescope lsp_references<CR>', 'References' },
     s = { '<cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
-    t = { '<cmd>lua vim.lsp.buf.type_definition()<CR>', 'Type' },
+    t = { '<cmd>Telescope lsp_type_definitions<CR>', 'Type' },
     w = {
       name = 'workspace',
       a = { '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', 'Add' },
@@ -502,7 +502,7 @@ on_attach = function(client, bufnr)
   }
 
   my_map {
-    ['<M-CR>'] = { '<cmd>Telescope lsp_code_actions<CR>', 'LSP actions' },
+    ['<M-CR>'] = { '<cmd>lua vim.lsp.buf.code_action()<CR>', 'LSP actions' },
     ['[d'] = { '<cmd>lua vim.diagnostic.goto_prev()<CR>', 'LSP previous error' },
     [']d'] = { '<cmd>lua vim.diagnostic.goto_next()<CR>', 'LSP next error' },
     K = { '<cmd>lua vim.lsp.buf.hover()<CR>', 'LSP hover' },
@@ -510,12 +510,12 @@ on_attach = function(client, bufnr)
   }
 
   my_imap {
-    ['<M-CR>'] = { '<C-O><cmd>Telescope lsp_code_actions<CR>', 'LSP actions' },
+    ['<M-CR>'] = { '<C-O><cmd>lua vim.lsp.buf.code_action()<CR>', 'LSP actions' },
     ['<C-k>'] = { '<C-O><cmd>lua vim.lsp.buf.signature_help()<CR>', 'Signature' },
   }
 
   my_map_local({
-    a = { '<cmd>Telescope lsp_range_code_actions<CR>', 'Range actions' },
+    a = { '<cmd>lua vim.lsp.buf.code_action()<CR>', 'Range actions' },
     f = { '<cmd>lua vim.lsp.buf.range_formatting()<CR>', 'Range format' },
     }, 
     { mode = "v" }
