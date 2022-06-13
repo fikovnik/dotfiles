@@ -55,6 +55,7 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-telescope/telescope-dap.nvim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'nvim-telescope/telescope-ui-select.nvim'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -947,6 +948,15 @@ ts.setup {
   defaults = {
     buffer_previewer_maker = new_maker,
   },
+  extensions = {
+    ["ui-select"] = {
+      require("telescope.themes").get_ivy {
+        layout_config = {
+          height = 10,
+        },
+      },
+    },
+  },
   dynamic_preview_title = true,
   pickers = {
     buffers = {
@@ -964,6 +974,7 @@ ts.setup {
 ts.load_extension('neoclip')
 ts.load_extension('file_browser')
 ts.load_extension('dap')
+ts.load_extension("ui-select")
 EOF
 
 command -nargs=* TS Telescope <args> theme=get_ivy
