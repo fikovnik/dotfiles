@@ -863,18 +863,19 @@ augroup end
 function! MySetupRust() 
   nmap <buffer><silent> <localleader>D <cmd>RustDebuggables<CR>
   nmap <buffer><silent> <localleader>J <cmd>RustJoinLines<CR>
-  nmap <buffer><silent> <localleader>R <cmd>RustRunnables<CR>
+  nmap <buffer><silent> <localleader>X <cmd>RustRunnables<CR>
   nmap <buffer><silent> <localleader>co <cmd>RustOpenCargo<CR>
   nmap <buffer><silent> <localleader>cr <cmd>CargoReload<CR>
-  nmap <buffer><silent> <localleader>cr <cmd>CargoReload<CR>
+  nmap <buffer><silent> <localleader>cR <cmd>RustReloadWorkspace<CR>
+  nmap <buffer><silent> <localleader>cd <cmd>RustOpenExternalDocs<CR>
+  nmap <buffer><silent> <localleader>cg <cmd>RustViewCrateGraph<CR>
   nmap <buffer><silent> <localleader>e <cmd>RustExpandMacro<CR>
   nmap <buffer><silent> <localleader>h <cmd>RustHoverActions<CR>
   nmap <buffer><silent> <localleader>j <cmd>RustMoveItemDown<CR>
   nmap <buffer><silent> <localleader>k <cmd>RustMoveItemUp<CR>
   nmap <buffer><silent> <localleader>p <cmd>RustParentModule<CR>
-  nmap <buffer><silent> <localleader>r <cmd>RustRun<CR>
   nmap <buffer><silent> <localleader>t <cmd>RustHoverRange<CR>
-  nmap <buffer><silent> <localleader>th <cmd>RustToggleInlayHints<CR>
+  nmap <buffer><silent> <leader>th <cmd>RustToggleInlayHints<CR>
 endfunction
 " }}}
 
