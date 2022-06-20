@@ -46,7 +46,7 @@ Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'rlane/pounce.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'j-hui/fidget.nvim'
-Plug 'Pocco81/AutoSave.nvim'
+" Plug 'Pocco81/AutoSave.nvim'
 Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'peterbjorgensen/sved'
@@ -562,9 +562,9 @@ EOF
 " }}}
 
 " plugin: autosave {{{
-lua << EOF
-require("autosave").setup()
-EOF
+" lua << EOF
+" require("autosave").setup()
+" EOF
 " }}}
 
 " plugin: editorconfig {{{
