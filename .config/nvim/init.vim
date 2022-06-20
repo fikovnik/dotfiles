@@ -56,6 +56,7 @@ Plug 'nvim-telescope/telescope-dap.nvim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -975,6 +976,7 @@ ts.load_extension('neoclip')
 ts.load_extension('file_browser')
 ts.load_extension('dap')
 ts.load_extension("ui-select")
+ts.load_extension('fzf')
 EOF
 
 command -nargs=* TS Telescope <args> theme=get_ivy
