@@ -251,18 +251,16 @@ function! MyFormatParagraph()
 endfunction
 " }}}
 " emacs-style {{{
-noremap <C-g> <Esc>
-vnoremap <C-g> <Esc>
-cnoremap <C-g> <Esc>
 cnoremap <C-BS> <C-W>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-k> <C-\>estrpart(getcmdline(),0,getcmdpos()-1)<CR>
-snoremap <C-g> <Esc>
-inoremap <C-g> <Esc>
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>^
 inoremap <C-BS> <C-W>
+inoremap <M-f> <C-o>w
+inoremap <M-b> <C-o>b
+inoremap <M-d> <C-o>dw
 " }}}
 " file {{{
 nmap <silent> <leader>fn <cmd>enew<CR>
@@ -286,12 +284,12 @@ vmap <silent> <leader>ghr <cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."
 vmap <silent> <leader>ghs <cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>
 " }}}
 " global {{{
-nmap <silent> <leader>' <cmd>TS search_history<CR>
+nmap <silent> <leader>' <cmd>TS resume<CR>
 nmap <silent> <leader>* <cmd>TS grep_string<CR>
 nmap <silent> <leader>, <cmd>TS buffers<CR>
 nmap <silent> <leader>. <cmd>TS file_browser<CR>
 nmap <silent> <leader>/ <cmd>TS live_grep<CR>
-nmap <silent> <leader><space> <cmd>lua project_files()<CR>
+nmap <silent> <leader><space> <cmd>TS find_files<CR>
 
 " Move by line
 nnoremap j gj
@@ -335,6 +333,7 @@ nmap <silent> <leader>sT <cmd>TS tags<CR>
 nmap <silent> <leader>sl <cmd>TS loclist<CR>
 nmap <silent> <leader>sm <cmd>TS marks<CR>
 nmap <silent> <leader>sq <cmd>TS quickfix<CR>
+nmap <silent> <leader>sQ <cmd>TS quickfixhistory<CR>
 nmap <silent> <leader>sr <Plug>CtrlSFPrompt
 vmap <silent> <leader>sr <Plug>CtrlSFVwordPath
 nmap <silent> <leader>ss <cmd>TS current_buffer_fuzzy_find<CR>
@@ -924,13 +923,6 @@ endf
 
 " plugin: telescope {{{
 lua <<EOF
--- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
-function project_files()
-  local opts = require('telescope.themes').get_ivy()
-  local ok = pcall(require('telescope.builtin').git_files, opts)
-  if not ok then require('telescope.builtin').find_files(opts) end
-end
-
 -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#dont-preview-binaries
 local previewers = require('telescope.previewers')
 local Job = require('plenary.job')
@@ -954,9 +946,15 @@ local new_maker = function(filepath, bufnr, opts)
 end
 
 local ts = require('telescope')
+local ts_actions_layout = require('telescope.actions.layout')
 ts.setup {
   defaults = {
     buffer_previewer_maker = new_maker,
+    mappings = {
+      i = {
+	["<M-p>"] = ts_actions_layout.toggle_preview,
+      },
+    },
   },
   extensions = {
     ["ui-select"] = {
@@ -973,11 +971,14 @@ ts.setup {
       show_all_buffers = true,
       sort_lastused = true,
       mappings = {
-        n = {
-          ["dd"] = "delete_buffer",
+        i = {
+          ["<C-d>"] = "delete_buffer",
         }
       }
-    }
+    },
+    find_files = {
+      find_command = { "fd", "--type", "f", "--strip-cwd-prefix" }
+    },
   }
 }
 
@@ -988,7 +989,7 @@ ts.load_extension("ui-select")
 ts.load_extension('fzf')
 EOF
 
-command -nargs=* TS Telescope <args> theme=get_ivy
+command -nargs=* TS Telescope <args> theme=dropdown
 " }}}
 
 " plugin: treesitter {{{
