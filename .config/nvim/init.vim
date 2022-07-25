@@ -407,7 +407,12 @@ if exists('+termguicolors')
 endif
 
 lua << EOF
-require('onenord').setup()
+require('onenord').setup {
+  styles = {
+    comments = "italic",
+    diagnostics = "undercurl",
+  },
+}
 EOF
 
 hi Visual guibg=#264f78
