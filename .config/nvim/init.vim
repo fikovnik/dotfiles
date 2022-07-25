@@ -58,6 +58,7 @@ Plug 'tpope/vim-repeat'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'sakhnik/nvim-gdb'
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -808,6 +809,11 @@ require("neo-tree").setup {
   },
 }
 EOF
+" }}}
+
+" plugin: nvim-gdb {{{
+let g:nvimgdb_use_cmake_to_find_executables = 0
+let g:nvimgdb_use_find_executables = 0
 " }}}
 
 " plugin: pandoc {{{ 
