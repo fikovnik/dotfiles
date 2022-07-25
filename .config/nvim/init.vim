@@ -848,9 +848,17 @@ require('rust-tools').setup {
     capabilities = capabilities,
     on_attach = on_attach,
     settings = {
+      -- https://github.com/rust-lang/rust-analyzer/blob/master/crates/rust-analyzer/src/config.rs
       ["rust-analyzer"] = {
-        checkOnSave = {
-          command = "clippy"
+        cargo = {
+          allFeatures = true,
+        },
+        workspace = {
+          symbol = {
+            search = {
+              scope = "workspace_and_dependencies"
+            },
+          },
         },
       },
     },
