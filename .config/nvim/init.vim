@@ -59,6 +59,8 @@ Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'sakhnik/nvim-gdb'
+Plug 'axelf4/vim-strip-trailing-whitespace'
+
 " Plug 'github/copilot.vim'
 call plug#end()
 " }}}
@@ -244,6 +246,9 @@ nmap <leader>ea <Plug>(EasyAlign)
 
 nnoremap <silent><leader>eu <cmd>UndotreeToggle<CR>
 unmap Y
+
+nnoremap <silent><leader>es <cmd>StripTrailingWhitespace<CR>
+vnoremap <silent><leader>es <cmd>StripTrailingWhitespace<CR>
 
 function! MyFormatParagraph()
   let pos = getcurpos()
