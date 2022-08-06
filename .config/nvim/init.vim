@@ -908,11 +908,11 @@ endfunction
 " plugin: scala-metals {{{
 lua << EOF
 
-metals = require("metals")
-metals_config = metals.bare_config()
+metals_config = require("metals").bare_config()
 metals_config.settings = {
   showImplicitArguments = true,
   showInferredType = true,
+  fallbackScalaVersion = "3.0.2",
 }
 metals_config.capabilities = capabilities
 metals_config.on_attach = function(client, bufnr)
@@ -921,10 +921,14 @@ metals_config.on_attach = function(client, bufnr)
 end
 metals_config.init_options.statusBarProvider = "on"
 
-vim.cmd([[augroup my-scala]])
-vim.cmd([[autocmd!]])
-vim.cmd([[autocmd FileType scala,sbt lua metals.initialize_or_attach(metals_config)]])
-vim.cmd([[augroup end]])
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "scala", "sbt" },
+  callback = function()
+    require("metals").initialize_or_attach(metals_config)
+  end,
+  group = nvim_metals_group,
+})
 
 EOF
 " }}}
