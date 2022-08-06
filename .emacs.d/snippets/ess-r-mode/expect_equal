@@ -1,4 +1,0 @@
-# key: ee
-# name: expect_equal
-# --
-expect_equal($1, $2)$0

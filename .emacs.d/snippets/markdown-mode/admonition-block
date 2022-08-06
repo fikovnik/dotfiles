@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: admonition-block
-# key: <block
-# --
-<div class="admonition-block $1"> <p> $0 </p> </div>

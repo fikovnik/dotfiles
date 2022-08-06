@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: test_that
-# key: tt
-# --
-test_that("$1", {
-    $0
-})
