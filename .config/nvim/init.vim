@@ -473,7 +473,7 @@ function my_map_local(maps, opts)
   my_map(maps, vim.tbl_extend("keep", opts, { prefix="<localleader>", buffer=0 }))
 end
 
-on_attach = function(client, bufnr)
+function my_on_attach(client, bufnr)
   local function map_local(maps) my_map_local(maps, { buffer=bufnr }) end
   local function set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -541,13 +541,13 @@ lsp.r_language_server.setup {
     return util.root_pattern(".git", "DESCRIPTION", "NAMESPACE")(fname) or util.path.dirname(fname)
   end,
   capabilities = capabilities,
-  on_attach = on_attach,
+  on_attach = my_on_attach,
 }
 
 lsp.clangd.setup {
   capabilities = capabilities,
   on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
+    my_on_attach(client, bufnr)
 
     my_map_local { 
       H = { '<cmd>ClangdSwitchSourceHeader<CR>', 'Go to Header' }
@@ -563,12 +563,12 @@ lsp.clangd.setup {
 }
 
 lsp.hls.setup {
-  on_attach = on_attach,
+  on_attach = my_on_attach,
 }
 
 lsp.pyright.setup {
   capabilities = capabilities,
-  on_attach = on_attach,
+  on_attach = my_on_attach,
 }
 EOF
 " }}}
@@ -692,13 +692,13 @@ local snippy = require("snippy")
 
 cmp.setup {
   snippet = {
-    expand = function(args) require'snippy'.expand_snippet(args.body) end,
+    expand = function(args) require('snippy').expand_snippet(args.body) end,
   },
   mapping = cmp.mapping.preset.insert {
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-g>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+    ['<C-g>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm { select = false },
     ['<M-CR>'] = cmp.mapping.confirm { select = true },
     ["<Tab>"] = cmp.mapping(function(fallback)
@@ -861,7 +861,7 @@ require('rust-tools').setup {
   },
   server = {
     capabilities = capabilities,
-    on_attach = on_attach,
+    on_attach = my_on_attach,
     settings = {
       -- https://github.com/rust-lang/rust-analyzer/blob/master/crates/rust-analyzer/src/config.rs
       ["rust-analyzer"] = {
@@ -886,6 +886,7 @@ augroup my-rust
   au FileType rust call MySetupRust()
 augroup end
 
+" TODO: move to on attach
 function! MySetupRust() 
   nmap <buffer><silent> <localleader>D <cmd>RustDebuggables<CR>
   nmap <buffer><silent> <localleader>J <cmd>RustJoinLines<CR>
@@ -900,7 +901,7 @@ function! MySetupRust()
   nmap <buffer><silent> <localleader>j <cmd>RustMoveItemDown<CR>
   nmap <buffer><silent> <localleader>k <cmd>RustMoveItemUp<CR>
   nmap <buffer><silent> <localleader>p <cmd>RustParentModule<CR>
-  nmap <buffer><silent> <localleader>t <cmd>RustHoverRange<CR>
+  vmap <buffer><silent> <localleader>t <cmd>RustHoverRange<CR>
   nmap <buffer><silent> <leader>th <cmd>RustToggleInlayHints<CR>
 endfunction
 " }}}
@@ -1015,9 +1016,9 @@ command -nargs=* TS Telescope <args> theme=dropdown
 " plugin: treesitter {{{
 lua <<EOF
 require('nvim-treesitter.configs').setup {
-  ignore_install = { "latex" },
   highlight = {
     enable = true,
+    disable = { "latex", "markdown" },
     additional_vim_regex_highlighting = false,
   },
   incremental_selection = {
@@ -1257,13 +1258,6 @@ wk.register({
     ["K"] = "Move window to the top",
     ["L"] = "Move window to the right",
     ["d"] = "Close window",
-  },
-  ["g"] = {
-    c = "Comment",
-    l = "Hop line",
-    s = "Hop 1 character",
-    S = "Hop 2 characters",
-    w = "Hop word",
   },
 })
 EOF
