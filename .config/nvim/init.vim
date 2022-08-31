@@ -879,6 +879,12 @@ require('rust-tools').setup {
     },
   },
 }
+
+vim.api.nvim_create_autocmd('BufWritePost', {
+  callback = function(opts) vim.lsp.buf.formatting_sync() end,
+  group = my_rust,
+  pattern = { '*.rs' }
+})
 EOF
 
 augroup my-rust
@@ -903,6 +909,7 @@ function! MySetupRust()
   nmap <buffer><silent> <localleader>p <cmd>RustParentModule<CR>
   vmap <buffer><silent> <localleader>t <cmd>RustHoverRange<CR>
   nmap <buffer><silent> <leader>th <cmd>RustToggleInlayHints<CR>
+  compiler cargo
 endfunction
 " }}}
 
