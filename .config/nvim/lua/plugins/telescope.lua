@@ -50,7 +50,11 @@ local options = {
     -- Developer configurations: Not meant for general override
     buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
     mappings = {
-      n = { ['q'] = require('telescope.actions').close },
+      n = {
+        ['q'] = require('telescope.actions').close,
+        ["<C-CR>"] = require('trouble').open_with_trouble,
+      },
+      i = { ["<C-CR>"] = require('trouble').open_with_trouble },
     },
   },
   extensions = {
@@ -75,3 +79,8 @@ local options = {
 }
 
 telescope.setup(options)
+
+local actions = require("telescope.actions")
+local trouble = require("trouble.providers.telescope")
+
+local telescope = require("telescope")

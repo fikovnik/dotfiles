@@ -29,58 +29,57 @@ local function lsp_progress()
 end
 
 local function lsp_server_name()
-    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-    local clients = vim.lsp.get_active_clients()
-    if next(clients) == nil then
-      return ''
-    end
-    for _, client in ipairs(clients) do
-      local filetypes = client.config.filetypes
-      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-        return '(' .. client.name .. ')'
-      end
-    end
+  local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+  local clients = vim.lsp.get_active_clients()
+  if next(clients) == nil then
     return ''
+  end
+  for _, client in ipairs(clients) do
+    local filetypes = client.config.filetypes
+    if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+      return '(' .. client.name .. ')'
+    end
+  end
+  return ''
 end
 
 require('lualine').setup({
-    options = {
-        theme = lualine_theme,
-        component_separators = '',
-        section_separators = '',
-        icons_enabled = true,
-        globalstatus = true,
+  options = {
+    theme = lualine_theme,
+    component_separators = '',
+    section_separators = '',
+    icons_enabled = false,
+    globalstatus = true,
+  },
+  sections = {
+    lualine_a = {
+      'mode',
+      { 'branch', icons_enabled = true, icon = "" },
     },
-    sections = {
-        lualine_a = {
-            'mode',
-            { 'branch', icons_enabled = true, icon = "" },
-        },
-        lualine_b = {
-            { 'filename', file_status = true, path = 1 },
-        },
-        lualine_c = {
-            { 
-              'diagnostics',
-              sections = { "error", "warn" },
-              colored = false,
-              always_visible = true,
-              symbols = { error = ' ', warn = ' ' }
-            },
-            { 'diff', colored = false, symbols = { added = "+", modified = "•", removed = "-" } },
---            lsp_progress,
-        },
-        lualine_x = { 'filetype', lsp_server_name, 'encoding', 'fileformat' },
-        lualine_y = { 'progress' },
-        lualine_z = { 
-          { 
-            'location', 
-            color = { gui = 'bold' } 
-          },
-        },
+    lualine_b = {
+      { 'filename', file_status = true, path = 1 },
     },
-    extensions = { 'quickfix', 'nvim-tree' },
+    lualine_c = {
+      {
+        'diagnostics',
+        sections = { "error", "warn" },
+        colored = false,
+        always_visible = true,
+        symbols = { error = ' ', warn = ' ' }
+      },
+      { 'diff', colored = false, symbols = { added = "+", modified = "•", removed = "-" } },
+      --            lsp_progress,
+    },
+    lualine_x = { 'filetype', lsp_server_name, 'encoding', 'fileformat' },
+    lualine_y = { 'progress' },
+    lualine_z = {
+      {
+        'location',
+        color = { gui = 'bold' }
+      },
+    },
+  },
+  extensions = { 'quickfix', 'nvim-tree' },
 })
 
 -- vim.cmd([[autocmd User LspProgressUpdate let &ro = &ro]])
-

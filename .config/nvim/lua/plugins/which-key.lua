@@ -15,6 +15,7 @@ wk.setup {
 wk.register {
   ['<leader>'] = {
     b = { name = 'buffers' },
+    d = { name = 'debug' },
     e = { name = 'edit' },
     f = { name = 'files' },
     g = { name = 'git' },

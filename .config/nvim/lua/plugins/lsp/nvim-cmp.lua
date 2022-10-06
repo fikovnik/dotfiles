@@ -1,5 +1,6 @@
 local cmp = require('cmp')
 local snippy = require('snippy')
+local lspkind = require('lspkind')
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -54,16 +55,15 @@ cmp.setup {
     expand = function(args) require('snippy').expand_snippet(args.body) end,
   },
   formatting = {
-    format = function(entry, vim_item)
-      vim_item.menu = ({
-        buffer = "「Buffer」 ",
-        nvim_lsp = "「LSP」 ",
-        snippy = "「Snip」 ",
-        latex_symbols = "「Latex」 ",
-        path = "「Path」 ",
-        cmdline = "「CMD」 ",
-      })[entry.source.name]
-      return vim_item
-    end
+    format = lspkind.cmp_format({
+      mode = 'symbol_text',
+      maxwidth = 50,
+      ellipsis_char = '...',
+    })
+  },
+  window = {
+    documentation = {
+      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    },
   },
 }

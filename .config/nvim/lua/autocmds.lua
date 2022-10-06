@@ -13,7 +13,7 @@ autocmd('TextYankPost', {
 
 -- automatically run :PackerCompile whenever plugins.lua is updated
 autocmd('BufWritePost', {
-  command = 'source <afile> | PackerSync',
+  command = 'source <afile> | PackerCompile',
   group = vim.api.nvim_create_augroup('PACKER', { clear = true }),
   pattern = 'plugins.lua',
 })
@@ -38,5 +38,26 @@ autocmd("FileType", {
   callback = function()
     vim.opt_local.spell = true
   end,
-  pattern = { "gitcommit", "NeogitCommitMessage" }
+  pattern = { "gitcommit" }
+})
+
+-- use TAB for = in fugitive
+autocmd('FileType', {
+  group = 'MyAutoGroup',
+  callback = function() vim.keymap.set('n', '<TAB>', '=', { buffer = true, silent = true, remap = true }) end,
+  pattern = 'fugitive',
+})
+
+-- quit using `q`
+autocmd('FileType', {
+  group = 'MyAutoGroup',
+  callback = function() vim.keymap.set('n', 'q', '<cmd>q<CR>', { buffer = true }) end,
+  pattern = { 'fugitive', 'git', 'qf', 'help' }
+})
+
+-- set compiler to cargo for rust
+autocmd('FileType', {
+  group = 'MyAutoGroup',
+  callback = function() vim.opt_local.makeprg = 'cargo' end,
+  pattern = 'rust'
 })

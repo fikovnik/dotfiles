@@ -13,16 +13,16 @@ opt.smartindent = true
 opt.tabstop = 2
 opt.softtabstop = -1 -- use shiftwidth
 
-opt.fillchars = { eob = " ", diff = "/" }
+opt.fillchars = { eob = ' ', diff = '/', fold = ' ', foldopen = '', foldsep = '│', foldclose = '' }
 opt.ignorecase = true
 opt.smartcase = true
 
 -- because of nvim-cmp
-opt.completeopt = "menuone,noselect"
+opt.completeopt = 'menuone,noselect'
 
 -- numbers
 opt.number = true
-opt.numberwidth = 3
+opt.numberwidth = 4
 opt.ruler = false
 
 -- disable nvim intro
@@ -30,11 +30,13 @@ opt.shortmess:append('sI')
 opt.shortmess:remove('F')
 
 opt.signcolumn = "yes"
-opt.splitbelow = true
-opt.splitright = true
 opt.termguicolors = true
 opt.timeoutlen = 400
 opt.undofile = true
+
+-- better buffer splitting
+opt.splitbelow = true
+opt.splitright = true
 
 -- interval for writing swap file to disk, also used by gitsigns
 opt.updatetime = 250
@@ -43,7 +45,6 @@ opt.updatetime = 250
 -- when cursor reaches end/beginning of line
 opt.whichwrap:append("<>[]hl")
 
-opt.hlsearch = false
 opt.mouse = ''
 opt.background = 'dark'
 opt.scrolloff = 5
@@ -51,10 +52,13 @@ opt.signcolumn = 'yes:2'
 opt.cursorline = true
 opt.listchars = { eol = '↲', tab = '▸ ', trail = '·' }
 -- vim.o.list = true
--- vim.o.jumpoptions = 'view'
+vim.o.jumpoptions = 'view'
 
 opt.path:append('**')
 opt.wildmenu = true
+
+-- folds are opened
+opt.foldenable = false
 
 g.mapleader = ' '
 g.maplocalleader = 'm'

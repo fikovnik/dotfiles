@@ -1,4 +1,11 @@
-require('rust-tools').setup {
+local extension_path = vim.env.HOME .. '/.vscode-server/extensions/vadimcn.vscode-lldb-1.7.4/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+
+local opts = {
+  dap = {
+    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
+  },
   tools = {
     inlay_hints = {
       show_parameter_hints = false,
@@ -24,3 +31,5 @@ require('rust-tools').setup {
     },
   },
 }
+
+require('rust-tools').setup(opts)
