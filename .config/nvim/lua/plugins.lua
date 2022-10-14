@@ -19,7 +19,8 @@ return require('packer').startup({
     }
 
     use { 'neovim/nvim-lspconfig',
-      event = "BufReadPre",
+      -- event = { 'BufReadPre', 'BufNewFile' },
+      -- event = 'BufReadPre',
       config = function()
         require('plugins.lsp.config')
       end,
@@ -201,6 +202,7 @@ return require('packer').startup({
 
     use { 'simrat39/rust-tools.nvim',
       ft = 'rust',
+      after = 'nvim-lspconfig',
       config = function()
         require('plugins.lsp.rust')
       end,
@@ -231,7 +233,6 @@ return require('packer').startup({
     }
 
     use { 'mfussenegger/nvim-dap',
-      event = 'CursorHold',
       config = function()
         require('plugins.dap')
       end,
@@ -242,13 +243,11 @@ return require('packer').startup({
     }
 
     use { 'stevearc/aerial.nvim',
-      cmd = { "AerialToggle", "AerialOpen", "AerialInfo" },
-      after = { 'nvim-treesitter', 'nvim-lspconfig' },
       config = function() require('plugins.aerial') end,
     }
 
     use { 'folke/trouble.nvim',
-      cmd = { 'Trouble', 'TroubleToggle', 'TroubleClose', 'TroubleRefresh' },
+      after = 'telescope.nvim',
       config = function() require('trouble').setup {
           icons = false,
           use_diagnostic_signs = true,
@@ -266,5 +265,13 @@ return require('packer').startup({
         require('todo-comments').setup {}
       end,
     }
+
+    use({
+      'lukas-reineke/indent-blankline.nvim',
+      event = 'BufRead',
+      config = function()
+        require('plugins.indentline')
+      end,
+    })
   end
 })

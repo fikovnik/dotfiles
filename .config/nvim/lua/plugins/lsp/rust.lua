@@ -2,6 +2,15 @@ local extension_path = vim.env.HOME .. '/.vscode-server/extensions/vadimcn.vscod
 local codelldb_path = extension_path .. 'adapter/codelldb'
 local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
 
+-- {
+--  executable = {
+--    args = { "--liblldb", "/home/krikava/.vscode-server/extensions/vadimcn.vscode-lldb-1.7.4/lldb/lib/liblldb.so", "--port", "${port}" },
+--    command = "/home/krikava/.vscode-server/extensions/vadimcn.vscode-lldb-1.7.4/adapter/codelldb"
+--  },
+--  host = "127.0.0.1",
+--  port = "${port}",
+--  type = "server"
+--}
 local opts = {
   dap = {
     adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)

@@ -122,7 +122,8 @@ map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous error' })
 map('n', ']d', vim.diagnostic.goto_next, { desc = 'Next error' })
 map('n', '[o', "<cmd>put!=repeat([''],v:count)<bar>']+1<CR>", { desc = "Open below", silent = true })
 map('n', ']o', "<cmd>put =repeat([''],v:count)<bar>'[-1<CR>", { desc = "Open above", silent = true })
--- TODO: tab
+map('n', '[t', '<cmd>tprevious<CR>', { desc = 'Previous tab' })
+map('n', ']t', '<cmd>tnext<CR>', { desc = 'Next tab' })
 
 -- other window
 map('n', '<C-w><C-w>', '<C-w>w', { silent = true })
