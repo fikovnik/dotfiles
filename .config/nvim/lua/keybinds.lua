@@ -72,6 +72,10 @@ map('n', '<leader>sd', '<cmd>TodoTelescope<CR>', { silent = true, desc = 'Todo' 
 -- Toggle
 map('n', '<leader>tt', '<cmd>Telescope themes<CR>', { silent = true, desc = 'Themes' })
 map('n', '<leader>tW', '<cmd>StripWhitespace<CR>', { silent = true, desc = 'Whitespace' })
+map('n', '<Leader>tL', function()
+  require('lsp_lines').toggle()
+  vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }
+end, { desc = 'Lsp lines' })
 
 -- Vim
 -- TODO: open telescope with ~/.config/nvim
@@ -84,6 +88,7 @@ map('n', '<leader>wH', '<C-w>H', { silent = true, desc = "Move to left" })
 map('n', '<leader>wJ', '<C-w>J', { silent = true, desc = "Move to bottom" })
 map('n', '<leader>wK', '<C-w>K', { silent = true, desc = "Move to top" })
 map('n', '<leader>wL', '<C-w>L', { silent = true, desc = "Move to right" })
+map('n', '<leader>wt', '<cmd>tab split<CR>', { silent = true, desc = "Open in a new tab" })
 -- TODO: maximize
 
 --
@@ -122,8 +127,8 @@ map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous error' })
 map('n', ']d', vim.diagnostic.goto_next, { desc = 'Next error' })
 map('n', '[o', "<cmd>put!=repeat([''],v:count)<bar>']+1<CR>", { desc = "Open below", silent = true })
 map('n', ']o', "<cmd>put =repeat([''],v:count)<bar>'[-1<CR>", { desc = "Open above", silent = true })
-map('n', '[t', '<cmd>tprevious<CR>', { desc = 'Previous tab' })
-map('n', ']t', '<cmd>tnext<CR>', { desc = 'Next tab' })
+map('n', '[t', '<cmd>tabprevious<CR>', { desc = 'Previous tab' })
+map('n', ']t', '<cmd>tabnext<CR>', { desc = 'Next tab' })
 
 -- other window
 map('n', '<C-w><C-w>', '<C-w>w', { silent = true })

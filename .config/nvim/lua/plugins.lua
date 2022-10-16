@@ -265,12 +265,39 @@ return require('packer').startup({
       end,
     }
 
-    use({
+    use {
       'lukas-reineke/indent-blankline.nvim',
       event = 'BufRead',
       config = function()
         require('plugins.indentline')
       end,
-    })
+    }
+
+    use {
+      'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
+      config = function()
+        vim.diagnostic.config {
+          virtual_text = false,
+        }
+        require('lsp_lines').setup()
+      end,
+    }
+
+    use {
+      'anuvyklack/windows.nvim',
+      -- cmd = { 'WindowsMaximize', 'WindowsMaximizeVertically', 'WindowsMaximizeHorizontally', 'WindowsEqualize' },
+      requires = 'anuvyklack/middleclass',
+      config = function()
+        require("windows").setup {
+          autowidth = {
+            enable = true,
+          },
+          animation = {
+            enable = false,
+          }
+        }
+      end
+    }
+
   end
 })
