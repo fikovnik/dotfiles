@@ -274,6 +274,13 @@ return require('packer').startup({
     }
 
     use {
+      'lervag/vimtex',
+      ft = 'tex'
+    }
+
+    use { 'peterbjorgensen/sved', after = 'vimtex' }
+
+    use {
       'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
       config = function()
         vim.diagnostic.config {
