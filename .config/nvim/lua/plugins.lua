@@ -30,7 +30,6 @@ return require('packer').startup({
     }
 
     use { 'hrsh7th/nvim-cmp',
-      event = 'InsertEnter',
       config = function()
         require('plugins.lsp.nvim-cmp')
       end,

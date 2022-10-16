@@ -5,7 +5,7 @@ local utils = require('plugins.lsp.utils')
 M = {}
 
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
-require('cmp_nvim_lsp').update_capabilities(M.capabilities)
+require('cmp_nvim_lsp').default_capabilities(M.capabilities)
 
 M.on_attach = function(client, buf)
   local navic = require('nvim-navic')
