@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 name=transmission
 country="cz"
@@ -20,23 +20,26 @@ function status {
 }
 
 function start {
-    local password=$(pass show internet/nordvpn.com | head -1)
-    local username=$(pass show internet/nordvpn.com | tail -1 | sed 's/username: //g')
+    local password=$(pass show internet/proton-openvpn | head -1)
+    local username=$(pass show internet/proton-openvpn | tail -1 | sed 's/username: //g')
 
     docker run --cap-add=NET_ADMIN --device=/dev/net/tun -d \
            -v $HOME/NoBackup/transmission/:/data \
            -v /etc/localtime:/etc/localtime:ro \
-           -e "OPENVPN_PROVIDER=NORDVPN" \
+           -e "OPENVPN_PROVIDER=PROTONVPN" \
            -e "OPENVPN_USERNAME=$username" \
            -e "OPENVPN_PASSWORD=$password" \
+           -e "OPENVPN_CONFIG=nl-free-18.protonvpn.net.tcp" \
            -e "PUID=$(id -u)" \
            -e "PGID=$(id -g)" \
-           -e LOCAL_NETWORK=192.168.0.0/16 \
+           -e LOCAL_NETWORK=192.168.0.0/24 \
            --log-driver json-file \
            --log-opt max-size=10m \
            --name "$name" \
            -p 9091:9091 \
            haugene/transmission-openvpn
+    sleep 1
+    xdg-open http://localhost:9091 &
 }
 
 case "$1" in
