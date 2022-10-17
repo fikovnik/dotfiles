@@ -283,27 +283,12 @@ return require('packer').startup({
     use {
       'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
       config = function()
+        require('lsp_lines').setup()
         vim.diagnostic.config {
           virtual_text = false,
+          virtual_lines = { only_current_line = true },
         }
-        require('lsp_lines').setup()
       end,
-    }
-
-    use {
-      'anuvyklack/windows.nvim',
-      -- cmd = { 'WindowsMaximize', 'WindowsMaximizeVertically', 'WindowsMaximizeHorizontally', 'WindowsEqualize' },
-      requires = 'anuvyklack/middleclass',
-      config = function()
-        require("windows").setup {
-          autowidth = {
-            enable = true,
-          },
-          animation = {
-            enable = false,
-          }
-        }
-      end
     }
 
   end

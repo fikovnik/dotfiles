@@ -2,10 +2,19 @@ local lsp = require('lspconfig')
 local keybinds = require('keybinds')
 local utils = require('plugins.lsp.utils')
 
+local float_style = {
+  focusable = true,
+  style = 'minimal',
+  border = 'single',
+}
+
 M = {}
 
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
 require('cmp_nvim_lsp').default_capabilities(M.capabilities)
+
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, float_style)
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, float_style)
 
 M.on_attach = function(client, buf)
   local navic = require('nvim-navic')
@@ -30,11 +39,12 @@ local flags = {
 }
 
 vim.diagnostic.config({
+  severity_sort = true,
   virtual_text = {
-    source = 'always',
+    source = 'if_many',
   },
   float = {
-    source = 'always',
+    source = 'if_many',
   },
 })
 

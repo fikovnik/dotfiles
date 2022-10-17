@@ -203,10 +203,11 @@ M.set_lsp_integration = function(buf)
   lmap('n', '<localleader>m', [[<cmd>Telescope lsp_document_symbols<CR>]], 'Symbols')
   lmap('n', '<localleader>M', [[<cmd>Telescope lsp_dynamic_workspace_symbols<CR>]], 'All symbols')
   lmap('n', '<localleader>o', [[<cmd>AerialToggle<CR>]], 'Outline')
+  lmap('n', '<localleader>s', vim.lsp.buf.signature_help, 'Signature')
 
   lmap('v', '<localleader>f', vim.lsp.buf.range_formatting, 'Format')
 
-  lmap('i', '<C-S-?>', vim.lsp.buf.signature_help, 'Signature')
+  lmap('i', '<C-p>', vim.lsp.buf.signature_help, 'Signature')
   --
   -- map('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   -- map('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
