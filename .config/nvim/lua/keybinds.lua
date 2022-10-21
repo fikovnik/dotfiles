@@ -56,6 +56,7 @@ map('n', '<leader>gC', '<cmd>Telescope git_commits<CR>', { silent = true, desc =
 map('n', '<leader>ol', '<cmd>TroubleToggle loclist<CR>', { silent = true, desc = 'Loclist' })
 map('n', '<leader>oq', '<cmd>TroubleToggle quickfix<CR>', { silent = true, desc = 'Quickfix' })
 map('n', '<leader>od', '<cmd>TodoTrouble<CR>', { silent = true, desc = 'Todo' })
+map('n', '<leader>oo', '<cmd>Neotree<CR>', { silent = true, desc = 'Tree' })
 
 -- Search
 map('n', '<leader>s:', '<cmd>Telescope command_history<CR>', { silent = true, desc = 'Commands' })
@@ -72,10 +73,6 @@ map('n', '<leader>sd', '<cmd>TodoTelescope<CR>', { silent = true, desc = 'Todo' 
 -- Toggle
 map('n', '<leader>tt', '<cmd>Telescope themes<CR>', { silent = true, desc = 'Themes' })
 map('n', '<leader>tW', '<cmd>StripWhitespace<CR>', { silent = true, desc = 'Whitespace' })
-map('n', '<Leader>tL', function()
-  require('lsp_lines').toggle()
-  vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }
-end, { desc = 'Lsp lines' })
 
 -- Vim
 -- TODO: open telescope with ~/.config/nvim
@@ -197,7 +194,7 @@ M.set_lsp_integration = function(buf)
   lmap('n', '<localleader>d', [[<cmd>TroubleToggle lsp_definitions<cr>]], 'Definition')
   lmap('n', '<localleader>i', [[<cmd>TroubleToggle lsp_implementations<CR>]], 'Implementation')
   lmap('n', '<localleader>r', [[<cmd>TroubleToggle lsp_references<CR>]], 'References')
-  lmap('n', '<localleader>t', [[<cmd>TroubleToggle lsp_type_definition<CR>]], 'Type')
+  lmap('n', '<localleader>t', [[<cmd>TroubleToggle lsp_type_definitions<CR>]], 'Type')
   lmap('n', '<localleader>R', vim.lsp.buf.rename, 'Rename')
   lmap('n', '<localleader>f', function() vim.lsp.buf.format { async = true } end, 'Format')
   lmap('n', '<localleader>m', [[<cmd>Telescope lsp_document_symbols<CR>]], 'Symbols')

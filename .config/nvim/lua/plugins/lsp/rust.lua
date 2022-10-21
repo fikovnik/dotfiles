@@ -1,20 +1,4 @@
-local extension_path = vim.env.HOME .. '/.vscode-server/extensions/vadimcn.vscode-lldb-1.7.4/'
-local codelldb_path = extension_path .. 'adapter/codelldb'
-local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
-
--- {
---  executable = {
---    args = { "--liblldb", "/home/krikava/.vscode-server/extensions/vadimcn.vscode-lldb-1.7.4/lldb/lib/liblldb.so", "--port", "${port}" },
---    command = "/home/krikava/.vscode-server/extensions/vadimcn.vscode-lldb-1.7.4/adapter/codelldb"
---  },
---  host = "127.0.0.1",
---  port = "${port}",
---  type = "server"
---}
 local opts = {
-  dap = {
-    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
-  },
   tools = {
     inlay_hints = {
       show_parameter_hints = false,
@@ -25,14 +9,14 @@ local opts = {
     on_attach = require('plugins.lsp.config').on_attach,
     settings = {
       -- https://github.com/rust-lang/rust-analyzer/blob/master/crates/rust-analyzer/src/config.rs
-      ["rust-analyzer"] = {
+      ['rust-analyzer'] = {
         cargo = {
           allFeatures = true,
         },
         workspace = {
           symbol = {
             search = {
-              scope = "workspace_and_dependencies"
+              scope = 'workspace_and_dependencies'
             },
           },
         },

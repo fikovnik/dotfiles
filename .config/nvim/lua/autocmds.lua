@@ -54,10 +54,3 @@ autocmd('FileType', {
   callback = function() vim.keymap.set('n', 'q', '<cmd>q<CR>', { buffer = true }) end,
   pattern = { 'fugitive', 'git', 'qf', 'help' }
 })
-
--- set compiler to cargo for rust
-autocmd('FileType', {
-  group = 'MyAutoGroup',
-  callback = function() vim.opt_local.makeprg = 'cargo' end,
-  pattern = 'rust'
-})

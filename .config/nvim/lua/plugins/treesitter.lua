@@ -1,4 +1,4 @@
-local present, treesitter = pcall(require, "nvim-treesitter.configs")
+local present, treesitter = pcall(require, 'nvim-treesitter.configs')
 if not present then return end
 
 treesitter.setup {
@@ -12,10 +12,10 @@ treesitter.setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = "<M-=>",
-      node_incremental = "<M-=>",
-      scope_incremental = "<M-+>",
-      node_decremental = "<M-->",
+      init_selection = '<M-=>',
+      node_incremental = '<M-=>',
+      scope_incremental = '<M-+>',
+      node_decremental = '<M-->',
     },
   },
   indent = {
@@ -26,23 +26,23 @@ treesitter.setup {
       enable = true,
       lookahead = true,
       keymaps = {
-        ["ab"] = "@block.outer",
-        ["ib"] = "@block.inner",
-        ["ac"] = "@call.outer",
-        ["ic"] = "@call.inner",
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["aa"] = "@parameter.outer",
-        ["ia"] = "@parameter.inner",
+        ['ab'] = '@block.outer',
+        ['ib'] = '@block.inner',
+        ['ac'] = '@call.outer',
+        ['ic'] = '@call.inner',
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['aa'] = '@parameter.outer',
+        ['ia'] = '@parameter.inner',
       },
     },
     swap = {
       enable = true,
       swap_next = {
-        ["<M->>"] = "@parameter.inner",
+        ['<M->>'] = '@parameter.inner',
       },
       swap_previous = {
-        ["<M-<>"] = "@parameter.inner",
+        ['<M-<>'] = '@parameter.inner',
       },
     },
   },

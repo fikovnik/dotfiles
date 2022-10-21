@@ -184,7 +184,7 @@ return require('packer').startup({
 
     use { 'sindrets/diffview.nvim',
       config = function()
-        require("diffview").setup()
+        require('diffview').setup()
       end,
       cmd = {
         'DiffviewOpen',
@@ -281,14 +281,16 @@ return require('packer').startup({
     use { 'peterbjorgensen/sved', after = 'vimtex' }
 
     use {
-      'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
-      config = function()
-        require('lsp_lines').setup()
-        vim.diagnostic.config {
-          virtual_text = false,
-          virtual_lines = { only_current_line = true },
-        }
-      end,
+      'preservim/vimux',
+      config = function() require('plugins.vimux') end,
+    }
+
+    use { 'nvim-neo-tree/neo-tree.nvim',
+      branch = 'v2.x',
+      -- cmd = 'Neotree',
+      requires = { 'MunifTanjim/nui.nvim' },
+      setup = function() vim.g.neo_tree_remove_legacy_commands = true end,
+      config = function() require('plugins.neo-tree') end,
     }
 
   end
