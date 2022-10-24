@@ -2,9 +2,9 @@ local present, treesitter = pcall(require, 'nvim-treesitter.configs')
 if not present then return end
 
 treesitter.setup {
-  ensure_installed = 'all',
+  ensure_installed = vim.g.my.treesitter.installed,
   sync_install = false,
-  ignore_install = { 'latex', 'help' },
+  ignore_install = vim.g.my.treesitter.ignored,
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
