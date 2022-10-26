@@ -26,11 +26,6 @@ M.on_attach = function(client, buf)
 
   utils.fmt_on_save(client, buf)
   keybinds.set_lsp_integration(buf)
-
-  local aerial_avail, aerial = pcall(require, 'aerial')
-  if aerial_avail then
-    aerial.on_attach(client, buf)
-  end
 end
 
 local flags = {

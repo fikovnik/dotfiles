@@ -4,9 +4,12 @@ M = {}
 
 vim.cmd [[unmap Y]]
 
+-- TODO: create a cmd command
+
 -- Local mode
 map('n', '<localleader>e', vim.diagnostic.open_float, { desc = 'Errors' })
 map('n', '<localleader>E', '<cmd>TroubleToggle workspace_diagnostics<CR>', { desc = 'All errors' })
+map('n', '<localleader>o', '<cmd>AerialToggle<CR>', { desc = 'Outline' })
 
 -- Commmand mode
 map('c', '<C-BS>', '<C-W>')
@@ -61,21 +64,22 @@ map('n', '<leader>oo', '<cmd>Neotree<CR>', { silent = true, desc = 'Tree' })
 -- Search
 map('n', '<leader>s:', '<cmd>Telescope command_history<CR>', { silent = true, desc = 'Commands' })
 map('n', '<leader>sr', '<cmd>Telescope registers<CR>', { silent = true, desc = 'Registers' })
-map('n', '<leader>sT', '<cmd>Telescope tags<CR>', { silent = true, desc = 'All tags' })
 map('n', '<leader>sl', '<cmd>Telescope loclist<CR>', { silent = true, desc = 'Loclist' })
-map('n', '<leader>sl', '<cmd>Telescope marks<CR>', { silent = true, desc = 'Marks' })
+map('n', '<leader>sm', '<cmd>Telescope marks<CR>', { silent = true, desc = 'Marks' })
+map('n', '<leader>sj', '<cmd>Telescope jumplist<CR>', { silent = true, desc = 'Jumps' })
 map('n', '<leader>sq', '<cmd>Telescope quickfix<CR>', { silent = true, desc = 'Quicfix' })
 map('n', '<leader>ss', '<cmd>Telescope current_buffer_fuzzy_find<CR>', { silent = true, desc = 'Buffer' })
-map('n', '<leader>st', '<cmd>Telescope current_buffer_tags<CR>', { silent = true, desc = 'Tags' })
+map('n', '<leader>st', '<cmd>Telescope tagstack<CR>', { silent = true, desc = 'Tagstack' })
 map('n', '<leader>sS', '<cmd>Telescope live_grep grep_open_files=true<CR>', { silent = true, desc = 'All buffers' })
 map('n', '<leader>sd', '<cmd>TodoTelescope<CR>', { silent = true, desc = 'Todo' })
 
 -- Toggle
 map('n', '<leader>tt', '<cmd>Telescope themes<CR>', { silent = true, desc = 'Themes' })
 map('n', '<leader>tW', '<cmd>StripWhitespace<CR>', { silent = true, desc = 'Whitespace' })
+map('n', '<leader>tw', '<cmd>set wrap!<CR>', { silent = true, desc = 'Wrap' })
 
 -- Vim
--- TODO: open telescope with ~/.config/nvim
+map('n', '<leader>vc', '<cmd>Telescope fd cwd=~/.config/nvim follow=true<CR>', { silent = true, desc = 'Config files' })
 
 -- Windows
 map('n', '<leader>w-', '<C-w>s', { silent = true, desc = "Split" })
@@ -137,7 +141,8 @@ map('n', 'z=', '<cmd>Telescope spell_suggest', { silent = true })
 map('t', 'jk', '<C-\\><C-n>', { silent = true })
 
 -- quickly move around
-map({ 'n', 'v', 'o' }, 's', '<cmd>Pounce<CR>')
+map({ 'n', 'v', }, 's', '<cmd>Pounce<CR>')
+map('o', 'z', '<cmd>Pounce<CR>')
 map('n', 'S', '<cmd>PounceRepeat<CR>')
 
 -- Make `q:` do nothing instead of opening command-line-window, because it is
@@ -199,7 +204,6 @@ M.set_lsp_integration = function(buf)
   lmap('n', '<localleader>f', function() vim.lsp.buf.format { async = true } end, 'Format')
   lmap('n', '<localleader>m', [[<cmd>Telescope lsp_document_symbols<CR>]], 'Symbols')
   lmap('n', '<localleader>M', [[<cmd>Telescope lsp_dynamic_workspace_symbols<CR>]], 'All symbols')
-  lmap('n', '<localleader>o', [[<cmd>AerialToggle<CR>]], 'Outline')
   lmap('n', '<localleader>s', vim.lsp.buf.signature_help, 'Signature')
 
   lmap('v', '<localleader>f', vim.lsp.buf.range_formatting, 'Format')
