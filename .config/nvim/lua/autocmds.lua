@@ -45,7 +45,11 @@ autocmd('FileType', {
 -- use TAB for = in fugitive
 autocmd('FileType', {
   group = 'MYAUTOGROUP',
-  callback = function() vim.keymap.set('n', '<TAB>', '=', { buffer = true, silent = true, remap = true }) end,
+  callback = function()
+    vim.keymap.set('n', '<TAB>', '=', { buffer = true, silent = true, remap = true })
+    vim.keymap.set('n', 'q', '<cmd>q<CR>', { buffer = true })
+    vim.opt.buflisted = false
+  end,
   pattern = 'fugitive',
 })
 
@@ -56,7 +60,7 @@ autocmd('FileType', {
     vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = true })
     vim.opt.buflisted = false
   end,
-  pattern = { 'fugitive', 'git', 'qf', 'help' }
+  pattern = { 'gitcommit', 'git', 'qf', 'help' }
 })
 
 autocmd('BufEnter', {
