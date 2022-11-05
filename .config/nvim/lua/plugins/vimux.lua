@@ -8,7 +8,7 @@ function! MyVimuxSlimeMotion(type)
     call MyVimuxSlime()
 endfunction
 
-nmap <C-c><C-c> vip<leader>cs
+nmap <C-c><C-c> vib<leader>cs
 nmap <C-c><C-l> V<leader>cs
 nmap <leader>cS V<leader>cs<CR>
 nmap <leader>cd <cmd>VimuxCloseRunner<CR>

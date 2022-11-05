@@ -8,7 +8,7 @@ vim.cmd [[unmap Y]]
 
 -- Local mode
 map('n', '<localleader>e', vim.diagnostic.open_float, { desc = 'Errors' })
-map('n', '<localleader>E', '<cmd>TroubleToggle workspace_diagnostics<CR>', { desc = 'All errors' })
+map('n', '<localleader>E', vim.diagnostic.setqflist, { desc = 'All errors' })
 map('n', '<localleader>o', '<cmd>AerialToggle<CR>', { desc = 'Outline' })
 
 -- Commmand mode
@@ -24,11 +24,13 @@ map('i', '<C-BS>', '<C-W>', { silent = true })
 map('i', '<M-f>', '<C-o>w', { silent = true })
 map('i', '<M-b>', '<C-o>b', { silent = true })
 map('i', '<M-d>', '<C-o>dw', { silent = true })
+map('i', '<M-q>', '<C-o>gqap', { silent = true })
 
 -- Edit
 map({ 'n', 'v' }, '<leader>es', ':sort<CR>', { desc = 'Sort lines' })
 map({ 'n', 'v' }, '<leader>e<space>', ':StripWhitespace<CR>', { desc = 'Strip whitespace' })
-map('n', '<leader>a', ':keepjumps normal! ggVG<cr>', { desc = 'Select all' })
+map('n', '<leader>ea', ':keepjumps normal! ggVG<cr>', { desc = 'Select all' })
+map('n', '<leader>eu', '<cmd>UndotreeToggle<CR>', { desc = 'Undo tree' })
 
 -- Global
 map('n', '<leader><space>', '<cmd>Telescope fd<CR>', { silent = true, desc = 'Files' })
@@ -55,9 +57,13 @@ map('n', '<leader>gf', '<cmd>Telescope git_files<CR>', { silent = true, desc = '
 map('n', '<leader>gB', '<cmd>Telescope git_branches<CR>', { silent = true, desc = 'Branches' })
 map('n', '<leader>gC', '<cmd>Telescope git_commits<CR>', { silent = true, desc = 'Commits' })
 
+-- Notes
+map('n', '<leader>nn', '<cmd>Telescope fd cwd=~/Notes<CR>', { silent = true, desc = 'Notes' })
+map('n', '<leader>ns', '<cmd>Telescope live_grep cwd=~/Notes<CR>', { silent = true, desc = 'Grep' })
+
 -- Open
-map('n', '<leader>ol', '<cmd>TroubleToggle loclist<CR>', { silent = true, desc = 'Loclist' })
-map('n', '<leader>oq', '<cmd>TroubleToggle quickfix<CR>', { silent = true, desc = 'Quickfix' })
+map('n', '<leader>ol', '<cmd>lopen<CR>', { silent = true, desc = 'Loclist' })
+map('n', '<leader>oq', '<cmd>copen<CR>', { silent = true, desc = 'Quickfix' })
 map('n', '<leader>od', '<cmd>TodoTrouble<CR>', { silent = true, desc = 'Todo' })
 map('n', '<leader>oo', '<cmd>Neotree<CR>', { silent = true, desc = 'Tree' })
 
@@ -75,8 +81,8 @@ map('n', '<leader>sd', '<cmd>TodoTelescope<CR>', { silent = true, desc = 'Todo' 
 
 -- Toggle
 map('n', '<leader>tt', '<cmd>Telescope themes<CR>', { silent = true, desc = 'Themes' })
-map('n', '<leader>tW', '<cmd>StripWhitespace<CR>', { silent = true, desc = 'Whitespace' })
 map('n', '<leader>tw', '<cmd>set wrap!<CR>', { silent = true, desc = 'Wrap' })
+map('n', '<leader>ti', '<cmd>IndentBlanklineToggle<CR>', { silent = true, desc = 'Indent' })
 
 -- Vim
 map('n', '<leader>vc', '<cmd>Telescope fd cwd=~/.config/nvim follow=true<CR>', { silent = true, desc = 'Config files' })
@@ -195,12 +201,12 @@ M.set_lsp_integration = function(buf)
   -- lmap('n', 'K', vim.lsp.buf.hover, 'Hover', { remap = false })
   lmap({ 'n', 'v' }, '<M-CR>', vim.lsp.buf.code_action, 'Actions')
 
-  lmap('n', '<localleader>D', vim.lsp.buf.declaration, 'Declaration')
-  lmap('n', '<localleader>d', [[<cmd>TroubleToggle lsp_definitions<cr>]], 'Definition')
-  lmap('n', '<localleader>i', [[<cmd>TroubleToggle lsp_implementations<CR>]], 'Implementation')
-  lmap('n', '<localleader>r', [[<cmd>TroubleToggle lsp_references<CR>]], 'References')
-  lmap('n', '<localleader>t', [[<cmd>TroubleToggle lsp_type_definitions<CR>]], 'Type')
-  lmap('n', '<localleader>R', vim.lsp.buf.rename, 'Rename')
+  lmap('n', '<localleader>D', function() vim.cmd [[vsplit]]; vim.lsp.buf.definition() end, 'Definition (vsplit)')
+  lmap('n', '<localleader>d', function() vim.lsp.buf.definition { reuse_win = true } end, 'Definition')
+  lmap('n', '<localleader>i', vim.lsp.buf.implementation, 'Implementation')
+  lmap('n', '<localleader>r', vim.lsp.buf.references, 'References')
+  lmap('n', '<localleader>t', vim.lsp.buf.type_definition, 'Type')
+  lmap('n', '<localleader>R', function() vim.lsp.buf.rename { reuse_win = true } end, 'Rename')
   lmap('n', '<localleader>f', function() vim.lsp.buf.format { async = true } end, 'Format')
   lmap('n', '<localleader>m', [[<cmd>Telescope lsp_document_symbols<CR>]], 'Symbols')
   lmap('n', '<localleader>M', [[<cmd>Telescope lsp_dynamic_workspace_symbols<CR>]], 'All symbols')

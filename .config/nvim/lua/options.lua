@@ -22,7 +22,7 @@ opt.completeopt = 'menuone,noselect'
 
 -- numbers
 opt.number = true
-opt.numberwidth = 4
+opt.numberwidth = 3
 opt.ruler = false
 
 -- disable nvim intro
@@ -39,7 +39,7 @@ opt.splitbelow = true
 opt.splitright = true
 
 -- interval for writing swap file to disk, also used by gitsigns
-opt.updatetime = 250
+opt.updatetime = 150
 
 -- go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
@@ -59,6 +59,7 @@ opt.wildmenu = true
 
 -- folds are opened
 opt.foldenable = false
+opt.foldcolumn = '0'
 
 g.mapleader = ' '
 g.maplocalleader = 'm'

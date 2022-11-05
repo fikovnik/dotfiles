@@ -13,21 +13,6 @@ lualine_theme.inactive = {
   c = { fg = colors.light_gray, bg = colors.active },
 }
 
-local function lsp_progress()
-  local messages = vim.lsp.util.get_progress_messages()
-  if #messages == 0 then
-    return ''
-  end
-  local status = {}
-  for _, msg in pairs(messages) do
-    table.insert(status, (msg.percentage or 0) .. '%% ' .. (msg.title or ''))
-  end
-  local spinners = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' }
-  local ms = vim.loop.hrtime() / 1000000
-  local frame = math.floor(ms / 120) % #spinners
-  return table.concat(status, ' | ') .. ' ' .. spinners[frame + 1]
-end
-
 local function lsp_server_name()
   local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
   local clients = vim.lsp.get_active_clients()
@@ -37,7 +22,7 @@ local function lsp_server_name()
   for _, client in ipairs(clients) do
     local filetypes = client.config.filetypes
     if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-      return '(' .. client.name .. ')'
+      return ''
     end
   end
   return ''
@@ -79,7 +64,7 @@ require('lualine').setup({
       },
     },
   },
-  extensions = { 'quickfix', 'nvim-tree' },
+  extensions = { 'quickfix', 'neo-tree', 'aerial', 'fugitive', 'nvim-dap-ui' },
 })
 
 -- vim.cmd([[autocmd User LspProgressUpdate let &ro = &ro]])

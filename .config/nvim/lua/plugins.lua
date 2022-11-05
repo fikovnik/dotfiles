@@ -220,12 +220,7 @@ return require('packer').startup(function(use)
 
   use { 'SmiteshP/nvim-navic',
     after = 'nvim-lspconfig',
-  }
-
-  use { 'https://gitlab.com/yorickpeterse/nvim-pqf',
-    config = function()
-      require('pqf').setup()
-    end,
+    config = function() require('plugins.navic') end,
   }
 
   --
@@ -297,20 +292,23 @@ return require('packer').startup(function(use)
     config = function() require('plugins.neo-tree') end,
   }
 
-  use({
+  use {
     'kylechui/nvim-surround',
     tag = '*',
     config = function() require('nvim-surround').setup() end
-  })
+  }
 
-  use({
+  use {
     'scalameta/nvim-metals',
     requires = {
       'nvim-lua/plenary.nvim',
       'mfussenegger/nvim-dap',
     },
-    config = function() require('plugins.metals') end
-  })
+    config = function() require('plugins.metals') end,
+    ft = { 'scala', 'sbt' }
+  }
+
+  use { 'mbbill/undotree' }
 
   if packer_bootstrap then
     require('packer').sync()

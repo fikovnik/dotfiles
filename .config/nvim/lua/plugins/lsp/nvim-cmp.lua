@@ -7,6 +7,19 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
 end
 
+local function border(hl_name)
+  return {
+    { "╭", hl_name },
+    { "─", hl_name },
+    { "╮", hl_name },
+    { "│", hl_name },
+    { "╯", hl_name },
+    { "─", hl_name },
+    { "╰", hl_name },
+    { "│", hl_name },
+  }
+end
+
 cmp.setup {
   mapping = cmp.mapping.preset.insert {
     ["<C-p>"] = cmp.mapping.select_prev_item(),
@@ -62,8 +75,11 @@ cmp.setup {
     })
   },
   window = {
+    completion = {
+      border = border('CmpBorder'),
+    },
     documentation = {
-      border = 'single',
+      border = border('CmpBorder'),
     },
   },
 }

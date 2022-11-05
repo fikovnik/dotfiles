@@ -19,10 +19,10 @@ autocmd('BufWritePost', {
 })
 
 -- dont list quickfix buffers
-autocmd("FileType", {
+autocmd('FileType', {
   group = 'MYAUTOGROUP',
   callback = function() vim.opt_local.buflisted = false end,
-  pattern = "qf",
+  pattern = 'qf',
 })
 
 -- create missing directories
@@ -32,13 +32,14 @@ autocmd('BufWritePre', {
   callback = require('utils').mkdir_for_current_file,
 })
 
--- set spell in git
-autocmd("FileType", {
+-- set spell and wrap
+autocmd('FileType', {
   group = 'MYAUTOGROUP',
   callback = function()
     vim.opt_local.spell = true
+    vim.opt_local.wrap = true
   end,
-  pattern = { "gitcommit" }
+  pattern = { 'gitcommit', 'markdown' }
 })
 
 -- use TAB for = in fugitive
@@ -51,6 +52,14 @@ autocmd('FileType', {
 -- quit using `q`
 autocmd('FileType', {
   group = 'MYAUTOGROUP',
-  callback = function() vim.keymap.set('n', 'q', '<cmd>q<CR>', { buffer = true }) end,
+  callback = function()
+    vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = true })
+    vim.opt.buflisted = false
+  end,
   pattern = { 'fugitive', 'git', 'qf', 'help' }
+})
+
+autocmd('BufEnter', {
+  pattern = { 'term://*' },
+  callback = function() vim.cmd 'startinsert!' end,
 })
