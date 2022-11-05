@@ -60,7 +60,7 @@ autocmd('FileType', {
     vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = true })
     vim.opt.buflisted = false
   end,
-  pattern = { 'gitcommit', 'git', 'qf', 'help' }
+  pattern = { 'git', 'qf', 'help' }
 })
 
 autocmd('BufEnter', {
