@@ -17,7 +17,8 @@ local opts = {
         workspace = {
           symbol = {
             search = {
-              scope = 'workspace_and_dependencies'
+              -- scope = 'workspace_and_dependencies',
+              scope = 'workspace',
             },
           },
         },
