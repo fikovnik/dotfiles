@@ -18,6 +18,7 @@
     git stash -u;            \
     git stash pop stash@{1}; \
   }; f"
+  stash-staged = !"git stash push --include-untracked -- $(git diff --staged --diff-filter=d --name-only)"
 
 [merge]
   tool = vimdiff
