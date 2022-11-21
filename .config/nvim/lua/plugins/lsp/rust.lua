@@ -22,6 +22,9 @@ local opts = {
             },
           },
         },
+        checkOnSave = {
+          command = "clippy"
+        }
       },
     },
   },
