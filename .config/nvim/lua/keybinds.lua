@@ -10,6 +10,7 @@ vim.cmd [[unmap Y]]
 map('n', '<localleader>e', vim.diagnostic.open_float, { desc = 'Errors' })
 map('n', '<localleader>E', vim.diagnostic.setqflist, { desc = 'All errors' })
 map('n', '<localleader>o', '<cmd>AerialToggle<CR>', { desc = 'Outline' })
+map('n', '<TAB>', '<cmd>AerialToggle<CR>', { desc = 'Outline' })
 
 -- Commmand mode
 map('c', '<C-BS>', '<C-W>')
@@ -33,6 +34,7 @@ map('n', '<leader>ea', ':keepjumps normal! ggVG<cr>', { desc = 'Select all' })
 map('n', '<leader>eu', '<cmd>UndotreeToggle<CR>', { desc = 'Undo tree' })
 
 -- Global
+map('n', '<M-SPACE>', [[<cmd>Telescope<CR>]], { silent = true, desc = 'Telescope' })
 map('n', '<leader><space>', '<cmd>Telescope fd<CR>', { silent = true, desc = 'Files' })
 map('n', '<leader>*', '<cmd>Telescope grep_string<CR>', { silent = true, desc = 'Symbol' })
 map('n', '<leader>,', '<cmd>Telescope buffers<CR>', { silent = true, desc = 'Buffers' })
@@ -55,6 +57,7 @@ map('n', '<leader>fb', '<cmd>Telescope file_browser<CR>', { silent = true, desc 
 map('n', '<leader>gg', '<cmd>tab Git<CR>', { silent = true, desc = 'Status' })
 map('n', '<leader>gf', '<cmd>Telescope git_files<CR>', { silent = true, desc = 'Files' })
 map('n', '<leader>gB', '<cmd>Telescope git_branches<CR>', { silent = true, desc = 'Branches' })
+map('n', '<leader>gb', '<cmd>G blame<CR>', { silent = true, desc = 'Blame' })
 map('n', '<leader>gC', '<cmd>Telescope git_commits<CR>', { silent = true, desc = 'Commits' })
 
 -- Notes
@@ -64,7 +67,7 @@ map('n', '<leader>ns', '<cmd>Telescope live_grep cwd=~/Notes<CR>', { silent = tr
 -- Open
 map('n', '<leader>ol', '<cmd>lopen<CR>', { silent = true, desc = 'Loclist' })
 map('n', '<leader>oq', '<cmd>copen<CR>', { silent = true, desc = 'Quickfix' })
-map('n', '<leader>od', '<cmd>TodoTrouble<CR>', { silent = true, desc = 'Todo' })
+map('n', '<leader>ot', '<cmd>TodoTrouble<CR>', { silent = true, desc = 'Todo' })
 map('n', '<leader>oo', '<cmd>Neotree<CR>', { silent = true, desc = 'Tree' })
 
 -- Search
@@ -82,7 +85,8 @@ map('n', '<leader>sd', '<cmd>TodoTelescope<CR>', { silent = true, desc = 'Todo' 
 -- Toggle
 map('n', '<leader>tt', '<cmd>Telescope themes<CR>', { silent = true, desc = 'Themes' })
 map('n', '<leader>tw', '<cmd>set wrap!<CR>', { silent = true, desc = 'Wrap' })
-map('n', '<leader>ti', '<cmd>IndentBlanklineToggle<CR>', { silent = true, desc = 'Indent' })
+map('n', '<leader>tW', '<cmd>set list!<CR>', { silent = true, desc = 'Whitespaces' })
+map('n', '<leader>ti', '<cmd>IndentBlanklineToggle<CR>', { silent = true, desc = 'Indent line' })
 
 -- Vim
 map('n', '<leader>vc', '<cmd>Telescope fd cwd=~/.config/nvim follow=true<CR>', { silent = true, desc = 'Config files' })
@@ -141,7 +145,7 @@ map('n', ']t', '<cmd>tabnext<CR>', { desc = 'Next tab' })
 map('n', '<C-w><C-w>', '<C-w>w', { silent = true })
 
 -- spelling suggestions
-map('n', 'z=', '<cmd>Telescope spell_suggest', { silent = true })
+map('n', 'z=', '<cmd>Telescope spell_suggest<CR>', { silent = true })
 
 -- exit term insert mode
 map('t', 'jk', '<C-\\><C-n>', { silent = true })
@@ -205,20 +209,27 @@ M.set_lsp_integration = function(buf)
   lmap('n', '<localleader>d', function() vim.lsp.buf.definition { reuse_win = true } end, 'Definition')
   lmap('n', '<localleader>i', vim.lsp.buf.implementation, 'Implementation')
   lmap('n', '<localleader>r', vim.lsp.buf.references, 'References')
-  lmap('n', '<localleader>t', vim.lsp.buf.type_definition, 'Type')
-  lmap('n', '<localleader>R', function() vim.lsp.buf.rename { reuse_win = true } end, 'Rename')
+  lmap('n', '<localleader>t', function() vim.lsp.buf.type_definition { reuse_win = true } end, 'Type')
+  lmap('n', '<localleader>R', vim.lsp.buf.rename, 'Rename')
   lmap('n', '<localleader>f', function() vim.lsp.buf.format { async = true } end, 'Format')
   lmap('n', '<localleader>m', [[<cmd>Telescope lsp_document_symbols<CR>]], 'Symbols')
-  lmap('n', '<localleader>M', [[<cmd>Telescope lsp_dynamic_workspace_symbols<CR>]], 'All symbols')
-  lmap('n', '<localleader>s', vim.lsp.buf.signature_help, 'Signature')
+  lmap('n', '<localleader>l', [[<cmd>Telescope lsp_workspace_symbols<CR>]], 'All symbols')
+  lmap('n', '<localleader>/', [[<cmd>Telescope lsp_dynamic_workspace_symbols<CR>]], 'Search symbols')
+  lmap({ 'n', 'i' }, '<M-s>', vim.lsp.buf.signature_help, 'Signature')
+  lmap('n', '<localleader>ci', vim.lsp.buf.incoming_calls, 'Incoming calls')
+  lmap('n', '<localleader>co', vim.lsp.buf.outgoing_calls, 'Outgoing calls')
 
   lmap('v', '<localleader>f', vim.lsp.buf.range_formatting, 'Format')
 
-  lmap('i', '<C-p>', vim.lsp.buf.signature_help, 'Signature')
-  --
-  -- map('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  -- map('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  -- map('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  local wk = require('which-key')
+  lmap('n', '<localleader>wA', vim.lsp.buf.add_workspace_folder, 'Add folder')
+  lmap('n', '<localleader>wR', vim.lsp.buf.remove_workspace_folder, 'Remove folder')
+  lmap('n', '<localleader>wL', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List folders')
+
+  wk.register {
+    ['<localleader>c'] = { name = "calls" },
+    ['<localleader>w'] = { name = "workspace" }
+  }
 end
 
 M.bind_ufo_keys = function()
