@@ -1,7 +1,23 @@
 snippet from
-				impl From<$1> for $2 {
-            fn from(item: $1) -> Self {
-								${0}
-            }
+    impl From<${1:FROM}> for ${2:TO} {
+        fn from(item: $1) -> Self {
+            ${0:todo!()}
         }
+    }
+
+snippet drop
+    impl Drop for ${1:TYPE} {
+        fn drop(&mut self) {
+            ${0:todo!()}
+        }
+    }
+
+snippet tryfrom
+    impl TryFrom<${1:FROM}> for ${2:TO} {
+      type Error = ${3:anyhow::Error};
+
+      fn try_from(value: $1) -> Result<Self, Self::Error> {
+          ${0:todo!()}
+      }
+    }
 
