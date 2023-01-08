@@ -42,8 +42,32 @@ neotree.setup {
   },
   filesystem = {
     follow_current_file = true,
-    hijack_netrw_behavior = 'open_current',
+    hijack_netrw_behavior = 'disabled',
     use_libuv_file_watcher = true,
+    window = {
+      mappings = {
+        ["o"] = "system_open",
+        ["e"] = "edit",
+        ["i"] = "run_command",
+      },
+    },
+    commands = {
+      edit = function(state)
+        local node = state.tree:get_node()
+        local path = node:get_id()
+        vim.api.nvim_command("e " .. path)
+      end,
+      run_command = function(state)
+        local node = state.tree:get_node()
+        local path = node:get_id()
+        vim.api.nvim_input(": " .. path .. "<Home>")
+      end,
+      system_open = function(state)
+        local node = state.tree:get_node()
+        local path = node:get_id()
+        vim.api.nvim_command("silent !xdg-open '" .. path .. "'")
+      end,
+    },
   },
   event_handlers = {
     { event = 'neo_tree_buffer_enter', handler = function(_) vim.opt_local.signcolumn = 'auto' end },

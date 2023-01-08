@@ -286,7 +286,7 @@ return require('packer').startup(function(use)
 
   use { 'nvim-neo-tree/neo-tree.nvim',
     branch = 'v2.x',
-    -- cmd = 'Neotree',
+    cmd = 'Neotree',
     requires = { 'MunifTanjim/nui.nvim' },
     setup = function() vim.g.neo_tree_remove_legacy_commands = true end,
     config = function() require('plugins.neo-tree') end,
@@ -311,6 +311,8 @@ return require('packer').startup(function(use)
   use { 'mbbill/undotree' }
 
   use { 'nvim-treesitter/playground' }
+
+  use { 'elihunter173/dirbuf.nvim' }
 
   if packer_bootstrap then
     require('packer').sync()

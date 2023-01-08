@@ -57,10 +57,10 @@ autocmd('FileType', {
 autocmd('FileType', {
   group = 'MYAUTOGROUP',
   callback = function()
-    vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = true })
+    vim.keymap.set('n', 'q', '<cmd>quit<CR>', { buffer = true })
     vim.opt.buflisted = false
   end,
-  pattern = { 'git', 'qf', 'help' }
+  pattern = { 'git', 'qf', 'help', 'dirbuf' }
 })
 
 autocmd('BufEnter', {
