@@ -69,3 +69,6 @@
   hunk-header-style = file line-number syntax
 [pull]
 	rebase = false
+
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
