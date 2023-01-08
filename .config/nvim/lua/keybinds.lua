@@ -85,7 +85,6 @@ map('n', '<leader>sd', '<cmd>TodoTelescope<CR>', { silent = true, desc = 'Todo' 
 map('n', '<leader>tt', '<cmd>Telescope themes<CR>', { silent = true, desc = 'Themes' })
 map('n', '<leader>tw', '<cmd>set wrap!<CR>', { silent = true, desc = 'Wrap' })
 map('n', '<leader>tW', '<cmd>set list!<CR>', { silent = true, desc = 'Whitespaces' })
-map('n', '<leader>ti', '<cmd>IndentBlanklineToggle<CR>', { silent = true, desc = 'Indent line' })
 
 -- Vim
 map('n', '<leader>vc', '<cmd>Telescope fd cwd=~/.config/nvim follow=true<CR>', { silent = true, desc = 'Config files' })

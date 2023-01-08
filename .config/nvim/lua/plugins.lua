@@ -265,14 +265,6 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'lukas-reineke/indent-blankline.nvim',
-    event = 'BufRead',
-    config = function()
-      require('plugins.indentline')
-    end,
-  }
-
-  use {
     'lervag/vimtex',
     ft = 'tex'
   }
