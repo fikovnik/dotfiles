@@ -10,7 +10,6 @@ vim.cmd [[unmap Y]]
 map('n', '<localleader>e', vim.diagnostic.open_float, { desc = 'Errors' })
 map('n', '<localleader>E', vim.diagnostic.setqflist, { desc = 'All errors' })
 map('n', '<localleader>o', '<cmd>AerialToggle<CR>', { desc = 'Outline' })
-map('n', '<TAB>', '<cmd>AerialToggle<CR>', { desc = 'Outline' })
 
 -- Commmand mode
 map('c', '<C-BS>', '<C-W>')
@@ -108,6 +107,7 @@ map('n', '<leader>wt', '<cmd>tab split<CR>', { silent = true, desc = "Open in a 
 
 -- delete text without changing the register
 -- map({ 'n', 'x' }, 'x', '"_x')
+map('x', '<Tab>', '<Plug>(snippy-cut-text)', { silent = true, remap = true })
 
 -- fix * (Keep the cursor position, don't move to next match)
 map('n', '*', '*N', { silent = true })

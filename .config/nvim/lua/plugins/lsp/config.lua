@@ -17,11 +17,13 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, fl
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, float_style)
 
 M.on_attach = function(client, buf)
-  local navic = require('nvim-navic')
-  navic.attach(client, buf)
+  local navic_ok, navic = pcall(require, 'nvim-navic')
+  if navic_ok then
+    navic.attach(client, buf)
 
-  if navic.is_available() then
-    vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+    if navic.is_available() then
+      vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+    end
   end
 
   utils.fmt_on_save(client, buf)
