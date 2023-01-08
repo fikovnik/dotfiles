@@ -67,3 +67,5 @@
   hunk-header-file-style = red
   hunk-header-line-number-style = "#067a00"
   hunk-header-style = file line-number syntax
+[pull]
+	rebase = false
