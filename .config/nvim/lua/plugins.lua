@@ -302,7 +302,9 @@ return require('packer').startup(function(use)
 
   use { 'mbbill/undotree' }
 
-  use { 'nvim-treesitter/playground' }
+  use { 'nvim-treesitter/playground',
+    cmd = 'TSPlayground',
+  }
 
   use { 'elihunter173/dirbuf.nvim' }
 
