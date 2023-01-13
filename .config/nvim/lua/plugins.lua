@@ -103,7 +103,6 @@ return require('packer').startup(function(use)
   }
 
   use { 'nvim-telescope/telescope.nvim',
-    event = 'CursorHold',
     config = function()
       require('plugins.telescope')
     end,
