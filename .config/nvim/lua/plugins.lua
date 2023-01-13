@@ -118,10 +118,7 @@ return require('packer').startup(function(use)
   use { 'AckslD/nvim-neoclip.lua',
     after = 'telescope.nvim',
     config = function()
-      require('neoclip').setup {
-        preview = true,
-      }
-      require('telescope').load_extension('neoclip')
+      require('plugins.neoclip')
     end,
   }
 
