@@ -1,26 +1,33 @@
-local present, wk = pcall(require, 'which-key')
-
-if not present then
-  return
-end
-
-wk.setup {
-  key_labels = {
+return {
+	  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+	    	  key_labels = {
     ['<space>'] = 'SPC',
     ['<CR>'] = 'RET',
     ['<tab>'] = 'TAB',
   },
-}
-
-wk.register {
-  ['<leader>'] = {
-    b = { name = 'buffers' },
-    d = { name = 'debug' },
-    e = { name = 'edit' },
-    f = { name = 'files' },
-    g = { name = 'git' },
-    o = { name = 'open' },
-    t = { name = 'toggle' },
-    w = { name = 'window' },
+    },
+    config = function(_, opts)
+      local wk = require("which-key")
+      wk.setup(opts)
+      wk.register({
+        mode = { "n", "v" },
+        ["]"] = { name = "+next" },
+        ["["] = { name = "+prev" },
+        ["<leader>b"] = { name = "+buffer" },
+        ["<leader>d"] = { name = "+debug" },
+        ["<leader>e"] = { name = "+edit" },
+        ["<leader>f"] = { name = "+file" },
+        ["<leader>g"] = { name = "+git" },
+        ["<leader>gh"] = { name = "+hunks" },
+        ["<leader>o"] = { name = "+open" },
+        ["<leader>s"] = { name = "+search" },
+        ["<leader>t"] = { name = "+toggle" },
+        ["<leader>w"] = { name = "+windows" },
+      })
+    end,
   },
+
 }
