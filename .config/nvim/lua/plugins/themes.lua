@@ -13,7 +13,7 @@ return {
 
   {
     "rmehri01/onenord.nvim",
-    lazy = true,
+    event = "VeryLazy",
     config = function()
       local colors = require("onenord.colors").load()
       require("onenord").setup({

@@ -2,13 +2,32 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+local Util = require("util")
 local map = vim.keymap.set
 
 local function cmd(c)
   return "<cmd>" .. c .. "<CR>"
 end
 
-map("n", "<localleader>e", vim.diagnostic.open_float, { desc = "Errors" })
+-- Commmand mode
+map("c", "<C-BS>", "<C-W>")
+map("c", "<C-a>", "<Home>")
+map("c", "<C-e>", "<End>")
+map("c", "<C-k>", "<C-\\>estrpart(getcmdline(),0,getcmdpos()-1)<CR>")
+
+-- Insert mode
+map("i", "<C-e>", "<C-o>$")
+map("i", "<C-a>", "<C-o>^")
+map("i", "<C-BS>", "<C-W>")
+map("i", "<M-f>", "<C-o>w")
+map("i", "<M-b>", "<C-o>b")
+map("i", "<M-d>", "<C-o>dw")
+map("i", "<M-q>", "<C-o>gqap")
+
+-- Edit
+map({ "n", "v" }, "<leader>es", ":sort<CR>", { desc = "Sort lines" })
+map({ "n", "v" }, "<leader>e<space>", ":StripWhitespace<CR>", { desc = "Strip whitespace" })
+map("n", "<leader>ea", ":keepjumps normal! ggVG<cr>", { desc = "Select all" })
 
 map("n", "Y", "Vy")
 
@@ -106,23 +125,116 @@ map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<CR><ESC>", { desc = "Save file" })
 map("v", "<", "<gv")
 map("v", ">", ">gv")
 
--- file
+-- File
 map("n", "<leader>fn", cmd("enew"), { desc = "New File" })
 
---open
+--Open
 map("n", "<leader>ol", cmd("lopen"), { desc = "Location List" })
 map("n", "<leader>oq", cmd("copen"), { desc = "Quickfix List" })
 
--- toggle options
--- map("n", "<leader>uf", require("lazyvim.plugins.lsp.format").toggle, { desc = "Toggle format on Save" })
--- map("n", "<leader>ts", function() Util.toggle("spell") end, { desc = "Toggle Spelling" })
--- map("n", "<leader>tw", function() Util.toggle("wrap") end, { desc = "Toggle Word Wrap" })
--- map("n", "<leader>td", Util.toggle_diagnostics, { desc = "Toggle Diagnostics" })
--- local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
--- map("n", "<leader>tc", function() Util.toggle("conceallevel", false, {0, conceallevel}) end, { desc = "Toggle Conceal" })
+-- Toggle
+map("n", "<leader>tt", cmd("Telescope colorscheme enable_preview=true"), { silent = true, desc = "Themes" })
+map("n", "<leader>tw", cmd("set wrap!"), { silent = true, desc = "Wrap" })
+map("n", "<leader>tW", cmd("set list!"), { silent = true, desc = "Whitespaces" })
+map("n", "<leader>ts", cmd("set spell!"), { silent = true, desc = "Spell" })
+-- TODO: conceal
+-- TODO: diagnostics
 
--- windows
+-- Windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window" })
 map("n", "<leader>wd", "<C-W>c", { desc = "Delete window" })
 map("n", "<leader>w-", "<C-W>s", { desc = "Split window below" })
 map("n", "<leader>w|", "<C-W>v", { desc = "Split window right" })
+map("n", "<leader>w=", "<C-w>=", { desc = "Balance" })
+map("n", "<leader>wH", "<C-w>H", { desc = "Move to left" })
+map("n", "<leader>wJ", "<C-w>J", { desc = "Move to bottom" })
+map("n", "<leader>wK", "<C-w>K", { desc = "Move to top" })
+map("n", "<leader>wL", "<C-w>L", { desc = "Move to right" })
+map("n", "<leader>wt", "<cmd>tab split<CR>", { desc = "Open in a new tab" })
+-- TODO: maximize
+
+M = {}
+
+function M.attach_lsp_keybindings(client, buf)
+  ---@diagnostic disable-next-line: redefined-local
+  local function map(mode, lhs, rhs, desc, opts)
+    local local_opts = { buffer = buf, silent = true, desc = desc }
+    if opts then
+      local_opts = vim.tbl_extend("force", opts, local_opts)
+    end
+    vim.keymap.set(mode, lhs, rhs, local_opts)
+  end
+
+  map("n", "K", vim.lsp.buf.hover, "Hover", { remap = false })
+  map({ "n", "v" }, "<M-CR>", vim.lsp.buf.code_action, "Actions")
+
+  map("n", "<localleader>D", function()
+    vim.lsp.buf.declaration({ reuse_win = true })
+  end, "Declaration")
+
+  map("n", "<localleader>d", function()
+    vim.lsp.buf.definition({ reuse_win = true })
+  end, "Definition")
+
+  map("n", "<localleader>t", function()
+    vim.lsp.buf.type_definition({ reuse_win = true })
+  end, "Type")
+
+  map("n", "<localleader>i", vim.lsp.buf.implementation, "Implementation")
+  map("n", "<localleader>r", vim.lsp.buf.references, "References")
+  map("n", "<localleader>R", vim.lsp.buf.rename, "Rename")
+
+  map("n", "<localleader>f", function()
+    vim.lsp.buf.format({ async = true })
+  end, "Format")
+
+  map(
+    "n",
+    "<localleader><localleader>",
+    Util.telescope("lsp_document_symbols", {
+      symbols = {
+        "Class",
+        "Function",
+        "Method",
+        "Constructor",
+        "Interface",
+        "Module",
+        "Struct",
+        "Trait",
+        "Field",
+        "Property",
+      },
+    }),
+    "Symbols"
+  )
+
+  map("n", "<localleader>l", cmd("Telescope lsp_workspace_symbols"), "All symbols")
+  map("n", "<localleader>/", cmd("Telescope lsp_dynamic_workspace_symbols"), "Search symbols")
+  map({ "n", "i" }, "<M-p>", vim.lsp.buf.signature_help, "Signature")
+  map("n", "<localleader>ci", vim.lsp.buf.incoming_calls, "Incoming calls")
+  map("n", "<localleader>co", vim.lsp.buf.outgoing_calls, "Outgoing calls")
+
+  map("v", "<localleader>f", vim.lsp.buf.range_formatting, "Format")
+
+  map("n", "<localleader>wA", vim.lsp.buf.add_workspace_folder, "Add folder")
+  map("n", "<localleader>wR", vim.lsp.buf.remove_workspace_folder, "Remove folder")
+  map("n", "<localleader>wL", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, "List folders")
+
+  map("n", "]d", Util.diagnostic_goto(true), "Next Diagnostic")
+  map("n", "[d", Util.diagnostic_goto(false), "Prev Diagnostic")
+  map("n", "]e", Util.diagnostic_goto(true, "ERROR"), "Next Error")
+  map("n", "[e", Util.diagnostic_goto(false, "ERROR"), "Prev Error")
+  map("n", "]w", Util.diagnostic_goto(true, "WARN"), "Next Warning")
+  map("n", "[w", Util.diagnostic_goto(false, "WARN"), "Prev Warning")
+  map("n", "<localleader>e", vim.diagnostic.open_float, { desc = "Errors (line)" })
+
+  local wk = require("which-key")
+  wk.register({
+    ["<localleader>c"] = { name = "calls" },
+    ["<localleader>w"] = { name = "workspace" },
+  })
+end
+
+return M

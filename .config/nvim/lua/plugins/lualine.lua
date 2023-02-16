@@ -41,9 +41,10 @@ return {
           --   end,
           -- },
         },
-        lualine_x = { "filetype", require("util").lsp_server_icon, "encoding" },
-        lualine_y = { "progress" },
+        lualine_x = { "filetype", require("util").lsp_server_icon },
+        lualine_y = {},
         lualine_z = {
+          "progress",
           {
             "location",
             color = { gui = "bold" },

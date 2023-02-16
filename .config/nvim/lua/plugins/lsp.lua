@@ -68,6 +68,8 @@ return {
     config = function(plugin, opts)
       -- setup autoformat
       require("util").on_attach(format_on_save)
+      -- setup keybindings
+      require("util").on_attach(require("config.keymaps").attach_lsp_keybindings)
       -- diagnostics
       vim.diagnostic.config(opts.diagnostics)
 
