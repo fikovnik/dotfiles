@@ -1,3 +1,5 @@
+local Util = require("util")
+
 local function format_on_save(client, buf)
   if client.supports_method("textDocument/formatting") then
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -11,6 +13,69 @@ local function format_on_save(client, buf)
       end,
     })
   end
+end
+
+local function set_keymap(client, buf)
+  ---@diagnostic disable-next-line: redefined-local
+  local function map(mode, lhs, rhs, desc, opts)
+    local local_opts = { buffer = buf, silent = true, desc = desc }
+    if opts then
+      local_opts = vim.tbl_extend("force", opts, local_opts)
+    end
+    vim.keymap.set(mode, lhs, rhs, local_opts)
+  end
+
+  map("n", "K", vim.lsp.buf.hover, "Hover", { remap = false })
+  map({ "n", "v" }, "<M-CR>", vim.lsp.buf.code_action, "Actions")
+
+  map("n", "<localleader>D", function()
+    vim.lsp.buf.declaration({ reuse_win = true })
+  end, "Declaration")
+
+  map("n", "<localleader>d", function()
+    vim.lsp.buf.definition({ reuse_win = true })
+  end, "Definition")
+
+  map("n", "<localleader>t", function()
+    vim.lsp.buf.type_definition({ reuse_win = true })
+  end, "Type")
+
+  map("n", "<localleader>i", vim.lsp.buf.implementation, "Implementation")
+  map("n", "<localleader>r", vim.lsp.buf.references, "References")
+  map("n", "<localleader>R", vim.lsp.buf.rename, "Rename")
+
+  map("n", "<localleader>f", function()
+    vim.lsp.buf.format({ async = true })
+  end, "Format")
+
+  map("n", "<localleader><localleader>", Util.cmd("Telescope lsp_document_symbols"), "Symbols")
+  map("n", "<localleader>l", Util.cmd("Telescope lsp_workspace_symbols"), "All symbols")
+  map("n", "<localleader>/", Util.cmd("Telescope lsp_dynamic_workspace_symbols"), "Search symbols")
+  map({ "n", "i" }, "<M-p>", vim.lsp.buf.signature_help, "Signature")
+  map("n", "<localleader>ci", vim.lsp.buf.incoming_calls, "Incoming calls")
+  map("n", "<localleader>co", vim.lsp.buf.outgoing_calls, "Outgoing calls")
+
+  map("v", "<localleader>f", vim.lsp.buf.range_formatting, "Format")
+
+  map("n", "<localleader>wA", vim.lsp.buf.add_workspace_folder, "Add folder")
+  map("n", "<localleader>wR", vim.lsp.buf.remove_workspace_folder, "Remove folder")
+  map("n", "<localleader>wL", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, "List folders")
+
+  map("n", "]d", Util.diagnostic_goto(true), "Next Diagnostic")
+  map("n", "[d", Util.diagnostic_goto(false), "Prev Diagnostic")
+  map("n", "]e", Util.diagnostic_goto(true, "ERROR"), "Next Error")
+  map("n", "[e", Util.diagnostic_goto(false, "ERROR"), "Prev Error")
+  map("n", "]w", Util.diagnostic_goto(true, "WARN"), "Next Warning")
+  map("n", "[w", Util.diagnostic_goto(false, "WARN"), "Prev Warning")
+  map("n", "<localleader>e", vim.diagnostic.open_float, { desc = "Errors (line)" })
+
+  local wk = require("which-key")
+  wk.register({
+    ["<localleader>c"] = { name = "calls" },
+    ["<localleader>w"] = { name = "workspace" },
+  })
 end
 
 return {
@@ -69,7 +134,7 @@ return {
       -- setup autoformat
       require("util").on_attach(format_on_save)
       -- setup keybindings
-      require("util").on_attach(require("config.keymaps").attach_lsp_keybindings)
+      require("util").on_attach(set_keymap)
       -- diagnostics
       vim.diagnostic.config(opts.diagnostics)
 

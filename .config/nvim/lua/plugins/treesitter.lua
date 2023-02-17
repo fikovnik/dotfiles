@@ -2,6 +2,9 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-context",
+    },
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     keys = {
@@ -16,17 +19,12 @@ return {
         "bash",
         "help",
         "html",
-        "javascript",
         "json",
         "lua",
         "markdown",
         "markdown_inline",
-        "python",
         "query",
         "regex",
-        "rust",
-        "tsx",
-        "typescript",
         "vim",
         "yaml",
       },

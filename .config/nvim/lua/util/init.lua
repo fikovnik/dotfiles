@@ -91,7 +91,7 @@ function M.get_root()
   if not root then
     path = path and vim.fs.dirname(path) or vim.loop.cwd()
     ---@type string?
-    root = vim.fs.find(M.root_patterns, { path = path, upward = true })[1]
+    root = vim.fs.find(require("util").root_patterns, { path = path, upward = true })[1]
     root = root and vim.fs.dirname(root) or vim.loop.cwd()
   end
   ---@cast root string
@@ -105,7 +105,6 @@ function M.telescope(builtin, opts)
   local params = { builtin = builtin, opts = opts }
 
   return function()
-    print(vim.inspect(M))
     builtin = params.builtin
     opts = params.opts
     opts = vim.tbl_deep_extend("force", { cwd = require("util").get_root() }, opts or {})
@@ -127,6 +126,10 @@ function M.diagnostic_goto(next, severity)
   return function()
     go({ severity = severity })
   end
+end
+
+function M.cmd(c)
+  return "<cmd>" .. c .. "<CR>"
 end
 
 return M
