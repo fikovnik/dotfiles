@@ -20,7 +20,7 @@ local function set_keymap(_, buffer)
 end
 
 return {
-  -- add rust to treesitter
+  -- add to treesitter
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)

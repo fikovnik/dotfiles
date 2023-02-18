@@ -97,6 +97,7 @@ return {
         bind_to_cwd = false,
         follow_current_file = true,
         use_libuv_file_watcher = true,
+        group_empty_dirs = true,
         window = {
           mappings = {
             ["o"] = "system_open",

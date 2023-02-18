@@ -33,13 +33,8 @@ return {
   {
     "windwp/nvim-spectre",
     keys = {
-      {
-        "<leader>sr",
-        function()
-          require("spectre").open()
-        end,
-        desc = "Replace in files",
-      },
+      -- stylua: ignore
+      { "<leader>sr", function() require("spectre").open() end, desc = "Replace in files", },
     },
   },
   {
@@ -47,10 +42,10 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
+      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics" },
       { "<leader>oD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>", desc = "Location List" },
-      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List" },
+      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>",               desc = "Location List" },
+      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>",              desc = "Quickfix List" },
     },
   },
   {
@@ -64,7 +59,10 @@ return {
       { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
     },
   },
-  { "tpope/vim-repeat", event = "VeryLazy" },
+  {
+    "tpope/vim-repeat",
+    event = "VeryLazy",
+  },
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -106,7 +104,20 @@ return {
   {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
-    keys = { { "<leader>eu", Util.cmd("UndotreeToggle|UndotreeFocus"), desc = "Undo" } },
+    keys = {
+      { "<leader>eu", Util.cmd("UndotreeToggle|UndotreeFocus"), desc = "Undo" },
+    },
   },
-  { "kylechui/nvim-surround", event = "VeryLazy", config = true },
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = true,
+  },
+  {
+    "mg979/vim-visual-multi",
+  },
+  {
+    "rlane/pounce.nvim",
+    cmd = { "Pounce", "PounceRepeat" },
+  },
 }

@@ -15,6 +15,7 @@ local function format_on_save(client, buf)
   end
 end
 
+---@diagnostic disable-next-line: unused-local
 local function set_keymap(client, buf)
   ---@diagnostic disable-next-line: redefined-local
   local function map(mode, lhs, rhs, desc, opts)
@@ -83,8 +84,8 @@ return {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+      { "folke/neoconf.nvim", cmd = "Neoconf",                                config = true },
+      { "folke/neodev.nvim",  opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
@@ -206,8 +207,7 @@ return {
         "shfmt",
       },
     },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
-    config = function(plugin, opts)
+    config = function(_, opts)
       require("mason").setup(opts)
       local mr = require("mason-registry")
       for _, tool in ipairs(opts.ensure_installed) do

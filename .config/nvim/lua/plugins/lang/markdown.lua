@@ -1,5 +1,5 @@
 return {
-  -- add rust to treesitter
+  -- add to treesitter
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
@@ -9,7 +9,7 @@ return {
     end,
   },
 
-  -- setup mason lsp / dap extensions
+  -- setup mason lsp
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
