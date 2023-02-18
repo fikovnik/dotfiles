@@ -1,6 +1,7 @@
 return {
   {
     "gbprod/nord.nvim",
+    lazy = true,
     opts = {
       styles = {
         diagnostics = { "undercurl" },
@@ -13,7 +14,6 @@ return {
 
   {
     "rmehri01/onenord.nvim",
-    event = "VeryLazy",
     config = function()
       local colors = require("onenord.colors").load()
       require("onenord").setup({

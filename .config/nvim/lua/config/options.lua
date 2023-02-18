@@ -7,12 +7,13 @@ local g = vim.g
 
 opt.autowrite = true -- Enable auto write
 opt.clipboard = "" -- Do not sync with system clipboard
-opt.cmdheight = 0 -- No command line by default
+opt.cmdheight = 1 -- No command line by default
 opt.completeopt = "menu,menuone,noselect"
 opt.conceallevel = 3 -- Hide * markup for bold and italic
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
 opt.cursorline = true -- Enable highlighting of the current line
 opt.expandtab = true -- Use spaces instead of tabs
+opt.foldlevel = 99
 opt.formatoptions = "jcroqlnt" -- tcqj
 opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg = "rg --vimgrep"
@@ -63,7 +64,7 @@ g.markdown_recommended_style = 0
 if os.getenv("SSH_CONNECTION") then
   vim.g.clipboard = {
     name = "osc52",
-    copy = { ["+"] = require("util").osc52_copy,["*"] = require("util").osc52_copy },
-    paste = { ["+"] = require("util").osc52_paste,["*"] = require("util").osc52_paste },
+    copy = { ["+"] = require("util").osc52_copy, ["*"] = require("util").osc52_copy },
+    paste = { ["+"] = require("util").osc52_paste, ["*"] = require("util").osc52_paste },
   }
 end

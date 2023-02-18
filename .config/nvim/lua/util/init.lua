@@ -132,4 +132,17 @@ function M.cmd(c)
   return "<cmd>" .. c .. "<CR>"
 end
 
+function M.is_whitespace(line)
+  return vim.fn.match(line, [[^\s*$]]) ~= -1
+end
+
+function M.all(tbl, check)
+  for _, entry in ipairs(tbl) do
+    if not check(entry) then
+      return false
+    end
+  end
+  return true
+end
+
 return M

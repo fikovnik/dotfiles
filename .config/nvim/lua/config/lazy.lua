@@ -18,6 +18,10 @@ require("lazy").setup({
   },
   install = { colorscheme = { "onenord" } },
   checker = { enabled = false },
+  change_detection = {
+    enabled = false,
+    notify = false,
+  },
   performance = {
     rtp = {
       disabled_plugins = {

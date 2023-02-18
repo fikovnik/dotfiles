@@ -3,6 +3,13 @@ local Util = require("util")
 return {
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = "make",
+      config = function()
+        require("telescope").load_extension("fzf")
+      end,
+    },
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
     keys = {
@@ -33,24 +40,11 @@ return {
       { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
       { "<leader>sw", Util.telescope("grep_string"), desc = "Word (root dir)" },
       { "<leader>sW", Util.telescope("grep_string", { cwd = false }), desc = "Word (cwd)" },
-      { "<leader>uC", Util.telescope("colorscheme", { enable_preview = true }), desc = "Colorscheme with preview" },
+      -- toggle
       {
-        "<leader>ss",
-        Util.telescope("lsp_document_symbols", {
-          symbols = {
-            "Class",
-            "Function",
-            "Method",
-            "Constructor",
-            "Interface",
-            "Module",
-            "Struct",
-            "Trait",
-            "Field",
-            "Property",
-          },
-        }),
-        desc = "Goto Symbol",
+        "<leader>tC",
+        Util.telescope("colorscheme", { enable_preview = true }),
+        desc = "Colorscheme with preview",
       },
     },
     opts = {
@@ -59,6 +53,8 @@ return {
         selection_caret = " ",
         mappings = {
           i = {
+            ["<C-h>"] = "which_key",
+            ["<C-g>"] = "close",
             ["<c-t>"] = function(...)
               return require("trouble.providers.telescope").open_with_trouble(...)
             end,
@@ -68,23 +64,25 @@ return {
             ["<a-h>"] = function()
               Util.telescope("find_files", { hidden = true })()
             end,
-            ["<C-Down>"] = function(...)
-              return require("telescope.actions").cycle_history_next(...)
-            end,
-            ["<C-Up>"] = function(...)
-              return require("telescope.actions").cycle_history_prev(...)
-            end,
-            ["<C-f>"] = function(...)
-              return require("telescope.actions").preview_scrolling_down(...)
-            end,
-            ["<C-b>"] = function(...)
-              return require("telescope.actions").preview_scrolling_up(...)
-            end,
+            ["<C-Down>"] = "cycle_history_next",
+            ["<C-Up>"] = "cycle_history_prev",
+            ["<C-f>"] = "preview_scrolling_down",
+            ["<C-b>"] = "preview_scrolling_up",
           },
           n = {
-            ["q"] = function(...)
-              return require("telescope.actions").close(...)
-            end,
+            ["q"] = "close",
+          },
+        },
+      },
+      pickers = {
+        buffers = {
+          mappings = {
+            i = {
+              ["<C-d>"] = "delete_buffer",
+            },
+            n = {
+              ["<C-d>"] = "delete_buffer",
+            },
           },
         },
       },
