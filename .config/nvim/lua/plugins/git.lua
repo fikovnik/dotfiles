@@ -4,6 +4,7 @@ return {
     keys = { { "<leader>gg", "<cmd>Neogit<CR>", { desc = "Status" } } },
     cmd = "Neogit",
     opts = {
+      disable_hint = true,
       signs = {
         -- { CLOSED, OPENED }
         section = { "", "" },
