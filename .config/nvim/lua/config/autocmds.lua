@@ -81,3 +81,11 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*",
   callback = require("util").mkdir_for_current_file,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("dap_autocmp"),
+  pattern = "dap-repl",
+  callback = function()
+    require("dap.ext.autocompl").attach()
+  end,
+})

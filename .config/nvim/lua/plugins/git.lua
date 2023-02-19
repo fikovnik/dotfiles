@@ -59,4 +59,6 @@ return {
     },
     config = true,
   },
+  -- TODO: hydra
+  -- https://github.com/anuvyklack/hydra.nvim/wiki/Git
 }

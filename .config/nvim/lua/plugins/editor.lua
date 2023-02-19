@@ -42,10 +42,10 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics" },
+      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
       { "<leader>oD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>",               desc = "Location List" },
-      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>",              desc = "Quickfix List" },
+      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>", desc = "Location List" },
+      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List" },
     },
   },
   {
@@ -105,7 +105,7 @@ return {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
     keys = {
-      { "<leader>eu", Util.cmd("UndotreeToggle|UndotreeFocus"), desc = "Undo" },
+      { "<leader>eu", Util.cmd("silent! %foldopen! | UndotreeToggle | UndotreeFocus"), desc = "Undo" },
     },
   },
   {

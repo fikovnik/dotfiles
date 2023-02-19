@@ -10,6 +10,7 @@ local function set_keymap(_, buffer)
   )
   vim.keymap.set("n", "<localleader>?", Util.cmd("RustOpenExternalDocs"), { buffer = buffer, desc = "Docs" })
   vim.keymap.set("n", "<M-CR>", Util.cmd("RustCodeAction"), { buffer = buffer, desc = "Code action (Rust)" })
+  -- vim.keymap.set("n", "<leader>ct", "<CMD>RustDebuggables<CR>", { buffer = buffer, desc = "Run Test" })
 
   vim.keymap.set("n", "K", function()
     local winid = require("ufo").peekFoldedLinesUnderCursor()
@@ -59,18 +60,18 @@ return {
             end
           end)
 
-          -- local mason_registry = require("mason-registry")
-          -- -- rust tools configuration for debugging support
-          -- local codelldb = mason_registry.get_package("codelldb")
-          -- local extension_path = codelldb:get_install_path() .. "/extension/"
-          -- local codelldb_path = extension_path .. "adapter/codelldb"
-          -- local liblldb_path = vim.fn.has("mac") == 1 and extension_path .. "lldb/lib/liblldb.dylib"
-          --     or extension_path .. "lldb/lib/liblldb.so"
+          -- rust tools configuration for debugging support
+          local mason_registry = require("mason-registry")
+          local codelldb = mason_registry.get_package("codelldb")
+          local extension_path = codelldb:get_install_path() .. "/extension/"
+          local codelldb_path = extension_path .. "adapter/codelldb"
+          local liblldb_path = vim.fn.has("mac") == 1 and extension_path .. "lldb/lib/liblldb.dylib"
+            or extension_path .. "lldb/lib/liblldb.so"
 
           local rust_tools_opts = vim.tbl_deep_extend("force", opts, {
-            -- dap = {
-            --   adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
-            -- },
+            dap = {
+              adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+            },
             tools = {
               inlay_hints = {
                 show_parameter_hints = false,
@@ -85,14 +86,14 @@ return {
                     loadOutDirsFromCheck = true,
                     runBuildScripts = true,
                   },
-                  --           workspace = {
-                  --             symbol = {
-                  --               search = {
-                  --                 -- scope = 'workspace_and_dependencies',
-                  --                 scope = "workspace",
-                  --               },
-                  --             },
-                  --           },
+                  -- workspace = {
+                  --   symbol = {
+                  --     search = {
+                  --       -- scope = 'workspace_and_dependencies',
+                  --       scope = "workspace",
+                  --     },
+                  --   },
+                  -- },
                   checkOnSave = {
                     allFeatures = true,
                     command = "clippy",

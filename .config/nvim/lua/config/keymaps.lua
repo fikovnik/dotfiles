@@ -114,6 +114,8 @@ map("n", "<leader>tW", Util.cmd("set list!"), { silent = true, desc = "Whitespac
 map("n", "<leader>ts", Util.cmd("set spell!"), { silent = true, desc = "Spell" })
 -- TODO: conceal
 -- TODO: diagnostics
+-- TODO: hydra
+-- https://github.com/anuvyklack/hydra.nvim/wiki/Vim-Options
 
 -- Windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window" })
