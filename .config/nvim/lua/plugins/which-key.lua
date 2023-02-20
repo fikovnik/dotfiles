@@ -1,13 +1,12 @@
 return {
-	  {
+  {
     "folke/which-key.nvim",
-    event = "VeryLazy",
     opts = {
-	    	  key_labels = {
-    ['<space>'] = 'SPC',
-    ['<CR>'] = 'RET',
-    ['<tab>'] = 'TAB',
-  },
+      key_labels = {
+        ["<space>"] = "SPC",
+        ["<CR>"] = "RET",
+        ["<tab>"] = "TAB",
+      },
     },
     config = function(_, opts)
       local wk = require("which-key")
@@ -24,10 +23,10 @@ return {
         ["<leader>gh"] = { name = "+hunks" },
         ["<leader>o"] = { name = "+open" },
         ["<leader>s"] = { name = "+search" },
-        ["<leader>t"] = { name = "+toggle" },
+        ["<leader>t"] = { name = "+test" },
+        ["<leader>v"] = { name = "+vim" },
         ["<leader>w"] = { name = "+windows" },
       })
     end,
   },
-
 }

@@ -55,9 +55,7 @@ local function set_keymap(client, buf)
   map({ "n", "i" }, "<M-p>", vim.lsp.buf.signature_help, "Signature")
   map("n", "<localleader>ci", vim.lsp.buf.incoming_calls, "Incoming calls")
   map("n", "<localleader>co", vim.lsp.buf.outgoing_calls, "Outgoing calls")
-
   map("v", "<localleader>f", vim.lsp.buf.range_formatting, "Format")
-
   map("n", "<localleader>wA", vim.lsp.buf.add_workspace_folder, "Add folder")
   map("n", "<localleader>wR", vim.lsp.buf.remove_workspace_folder, "Remove folder")
   map("n", "<localleader>wL", function()
@@ -71,11 +69,14 @@ local function set_keymap(client, buf)
   map("n", "]w", Util.diagnostic_goto(true, "WARN"), "Next Warning")
   map("n", "[w", Util.diagnostic_goto(false, "WARN"), "Prev Warning")
   map("n", "<localleader>e", vim.diagnostic.open_float, { desc = "Errors (line)" })
+  map("n", "<localleader>ll", vim.lsp.codelens.run, { desc = "Lens" })
+  map("n", "<localleader>lr", vim.lsp.codelens.refresh, { desc = "Lens" })
 
   local wk = require("which-key")
   wk.register({
-    ["<localleader>c"] = { name = "calls" },
-    ["<localleader>w"] = { name = "workspace" },
+    ["<localleader>c"] = { name = "+calls" },
+    ["<localleader>l"] = { name = "+lens" },
+    ["<localleader>w"] = { name = "+workspace" },
   })
 end
 
@@ -84,8 +85,8 @@ return {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf",                                config = true },
-      { "folke/neodev.nvim",  opts = { experimental = { pathStrict = true } } },
+      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+      { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",

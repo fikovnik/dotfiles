@@ -108,10 +108,10 @@ map("n", "<leader>ol", Util.cmd("lopen"), { desc = "Location List" })
 map("n", "<leader>oq", Util.cmd("copen"), { desc = "Quickfix List" })
 
 -- Toggle
-map("n", "<leader>tt", Util.cmd("Telescope colorscheme enable_preview=true"), { silent = true, desc = "Themes" })
-map("n", "<leader>tw", Util.cmd("set wrap!"), { silent = true, desc = "Wrap" })
-map("n", "<leader>tW", Util.cmd("set list!"), { silent = true, desc = "Whitespaces" })
-map("n", "<leader>ts", Util.cmd("set spell!"), { silent = true, desc = "Spell" })
+map("n", "<leader>vC", Util.cmd("Telescope colorscheme enable_preview=true"), { silent = true, desc = "Themes" })
+map("n", "<leader>vtw", Util.cmd("set wrap!"), { silent = true, desc = "Wrap" })
+map("n", "<leader>vtW", Util.cmd("set list!"), { silent = true, desc = "Whitespaces" })
+map("n", "<leader>vts", Util.cmd("set spell!"), { silent = true, desc = "Spell" })
 -- TODO: conceal
 -- TODO: diagnostics
 -- TODO: hydra
