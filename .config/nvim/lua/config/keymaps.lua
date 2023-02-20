@@ -107,6 +107,9 @@ map("n", "<leader>fn", Util.cmd("enew"), { desc = "New File" })
 map("n", "<leader>ol", Util.cmd("lopen"), { desc = "Location List" })
 map("n", "<leader>oq", Util.cmd("copen"), { desc = "Quickfix List" })
 
+-- Vim
+map("n", "<leader>vq", Util.cmd("qa"), { desc = "Quit all" })
+
 -- Toggle
 map("n", "<leader>vC", Util.cmd("Telescope colorscheme enable_preview=true"), { silent = true, desc = "Themes" })
 map("n", "<leader>vtw", Util.cmd("set wrap!"), { silent = true, desc = "Wrap" })
@@ -116,6 +119,11 @@ map("n", "<leader>vts", Util.cmd("set spell!"), { silent = true, desc = "Spell" 
 -- TODO: diagnostics
 -- TODO: hydra
 -- https://github.com/anuvyklack/hydra.nvim/wiki/Vim-Options
+
+-- lazygit
+map("n", "<leader>gG", function()
+  Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
+end, { desc = "Lazygit (root dir)" })
 
 -- Windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window" })

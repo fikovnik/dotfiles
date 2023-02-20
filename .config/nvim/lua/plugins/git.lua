@@ -1,7 +1,11 @@
+local Util = require("util")
+
 return {
   {
     "TimUntersberger/neogit",
-    keys = { { "<leader>gg", "<cmd>Neogit<CR>", { desc = "Status" } } },
+    keys = {
+      { "<leader>gg", Util.cmd("Neogit"), { desc = "Status" } },
+    },
     cmd = "Neogit",
     opts = {
       disable_hint = true,

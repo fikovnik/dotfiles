@@ -31,6 +31,19 @@ return {
     end,
   },
   {
+    "echasnovski/mini.align",
+    event = "VeryLazy",
+    opts = {
+      mappings = {
+        start = "<leader>a",
+        start_with_preview = "<leader>A",
+      },
+    },
+    config = function(_, opts)
+      require("mini.align").setup(opts)
+    end,
+  },
+  {
     "windwp/nvim-spectre",
     keys = {
       -- stylua: ignore
