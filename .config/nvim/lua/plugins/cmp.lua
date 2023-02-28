@@ -8,13 +8,11 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "onsails/lspkind.nvim",
-      -- "saadparwaiz1/cmp_luasnip",
       "dcampos/cmp-snippy",
       "kdheepak/cmp-latex-symbols",
     },
     opts = function()
       local cmp = require("cmp")
-      --local luasnip = require("luasnip")
       local snippy = require("snippy")
 
       return {
@@ -31,7 +29,7 @@ return {
         mapping = cmp.mapping.preset.insert({
           ["<C-p>"] = cmp.mapping.select_prev_item(),
           ["<C-n>"] = cmp.mapping.select_next_item(),
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-b>"] = cmp.mapping.scroll_docs( -4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-g>"] = cmp.mapping.abort(),
@@ -49,7 +47,7 @@ return {
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif snippy.can_jump(-1) then
+            elseif snippy.can_jump( -1) then
               snippy.previous()
             else
               fallback()
