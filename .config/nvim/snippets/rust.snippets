@@ -22,7 +22,13 @@ snippet tryfrom
         }
 
 snippet into
-        impl Into<$1:INTO>$0
+        impl Into<${1:TYPE}>$0
 
 snippet asref
-        impl AsRef<$1:INTO>$0
+        impl AsRef<${1:TYPE}>$0
+
+snippet modtest
+        #[cfg(test)]
+        mod ${1:tests} {
+            $0
+        }
