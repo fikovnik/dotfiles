@@ -55,10 +55,10 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
+      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics" },
       { "<leader>oD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>", desc = "Location List" },
-      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List" },
+      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>",               desc = "Location List" },
+      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>",              desc = "Quickfix List" },
     },
   },
   {
@@ -106,7 +106,7 @@ return {
   },
   {
     "ntpeters/vim-better-whitespace",
-    event = "BufRead",
+    event = "VeryLazy",
     config = function()
       vim.g.better_whitespace_enabled = 0
       vim.g.strip_only_modified_lines = 1
