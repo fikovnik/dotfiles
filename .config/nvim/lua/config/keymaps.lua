@@ -35,13 +35,6 @@ map("n", "<M-w><M-w>", '"+yy', { silent = true })
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
--- window movement
--- TODO: Move Lines (use a plugin)
--- map("n", "<M-Down>", "<cmd>m .+1<CR>==", { desc = "Move down" })
--- map("n", "<M-Up>", "<cmd>m .-2<CR>==", { desc = "Move up" })
--- map("v", "<M-Down>", ":m '>+1<CR>gv=gv", { desc = "Move down" })
-
--- map("v", "<M-Up>", ":m '<-2<CR>gv=gv", { desc = "Move up" })
 map("n", "[b", Util.cmd("bprevious"), { desc = "Prev buffer" })
 map("n", "]b", Util.cmd("bnext"), { desc = "Next buffer" })
 map("n", "[f", Util.cmd("previous"), { desc = "Previous file" })
@@ -54,6 +47,8 @@ map("n", "[o", Util.cmd("put!=repeat([''],v:count)<bar>']+1"), { desc = "Open be
 map("n", "]o", Util.cmd("put =repeat([''],v:count)<bar>'[-1"), { desc = "Open above", silent = true })
 map("n", "[t", Util.cmd("tabprevious"), { desc = "Previous tab" })
 map("n", "]t", Util.cmd("tabnext"), { desc = "Next tab" })
+map("n", "<M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
+map("n", "<M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
 
 -- move around
 map({ "n", "v" }, "s", Util.cmd("Pounce"))

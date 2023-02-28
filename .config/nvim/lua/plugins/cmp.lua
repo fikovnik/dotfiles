@@ -8,12 +8,14 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "onsails/lspkind.nvim",
-      "saadparwaiz1/cmp_luasnip",
+      -- "saadparwaiz1/cmp_luasnip",
+      "dcampos/cmp-snippy",
       "kdheepak/cmp-latex-symbols",
     },
     opts = function()
       local cmp = require("cmp")
-      local luasnip = require("luasnip")
+      --local luasnip = require("luasnip")
+      local snippy = require("snippy")
 
       return {
         preselect = cmp.PreselectMode.None,
@@ -22,25 +24,24 @@ return {
         },
         snippet = {
           expand = function(args)
-            luasnip.lsp_expand(args.body)
+            -- luasnip.lsp_expand(args.body)
+            snippy.expand_snippet(args.body)
           end,
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-p>"] = cmp.mapping.select_prev_item(),
           ["<C-n>"] = cmp.mapping.select_next_item(),
-          ["<C-b>"] = cmp.mapping.scroll_docs( -4),
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-g>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
           -- supertab
           ["<Tab>"] = cmp.mapping(function(fallback)
-            if luasnip.expandable() then
-              luasnip.expand()
+            if snippy.can_expand_or_advance() then
+              snippy.expand_or_advance()
             elseif cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.jumpable(1) then
-              luasnip.jump(1)
             else
               fallback()
             end
@@ -48,8 +49,8 @@ return {
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif luasnip.jumpable( -1) then
-              luasnip.jump( -1)
+            elseif snippy.can_jump(-1) then
+              snippy.previous()
             else
               fallback()
             end
@@ -57,7 +58,7 @@ return {
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "luasnip" },
+          { name = "snippy" },
           { name = "buffer" },
           { name = "path" },
           {
