@@ -99,18 +99,19 @@ return {
               settings = {
                 ["rust-analyzer"] = {
                   cargo = {
-                    allFeatures = true,
+                    -- allFeatures = true,
                     loadOutDirsFromCheck = true,
                     runBuildScripts = true,
                   },
-                  -- workspace = {
-                  --   symbol = {
-                  --     search = {
-                  --       -- scope = 'workspace_and_dependencies',
-                  --       scope = "workspace",
-                  --     },
-                  --   },
-                  -- },
+                  workspace = {
+                    symbol = {
+                      search = {
+                        -- scope = 'workspace_and_dependencies',
+                        scope = "workspace",
+                        limit = 512,
+                      },
+                    },
+                  },
                   checkOnSave = {
                     allFeatures = true,
                     command = "clippy",
@@ -118,11 +119,6 @@ return {
                   },
                   procMacro = {
                     enable = true,
-                    ignored = {
-                      ["async-trait"] = { "async_trait" },
-                      ["napi-derive"] = { "napi" },
-                      ["async-recursion"] = { "async_recursion" },
-                    },
                   },
                 },
               },
