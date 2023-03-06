@@ -53,12 +53,15 @@ return {
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
-    opts = { use_diagnostic_signs = true },
+    opts = {
+      use_diagnostic_signs = true,
+      icons = false,
+    },
     keys = {
-      { "<leader>od", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics" },
-      { "<leader>oD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>",               desc = "Location List" },
-      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>",              desc = "Quickfix List" },
+      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"), desc = "Document Diagnostics" },
+      { "<leader>oD", Util.cmd("TroubleToggle workspace_diagnostics"), desc = "Workspace Diagnostics" },
+      { "<leader>ol", Util.cmd("TroubleToggle loclist"), desc = "Location List" },
+      { "<leader>oq", Util.cmd("TroubleToggle quickfix"), desc = "Quickfix List" },
     },
   },
   {
@@ -68,8 +71,8 @@ return {
     config = true,
     -- stylua: ignore
     keys = {
-      { "<leader>ot", "<cmd>TodoTrouble<cr>",   desc = "Todo" },
-      { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
+      { "<leader>ot", Util.cmd("TodoTrouble"),   desc = "Todo" },
+      { "<leader>st", Util.cmd("TodoTelescope"), desc = "Todo" },
     },
   },
   {

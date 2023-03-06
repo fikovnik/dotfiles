@@ -25,7 +25,7 @@ map({ "n", "v" }, "<leader>es", ":sort<CR>", { desc = "Sort lines" })
 map({ "n", "v" }, "<leader>e<space>", ":StripWhitespace<CR>", { desc = "Strip whitespace" })
 map("n", "<leader>ea", ":keepjumps normal! ggVG<cr>", { desc = "Select all" })
 
-map("n", "Y", "Vy")
+vim.cmd([[unmap Y]])
 
 -- copy and paste
 map({ "n", "x" }, "<M-w>", '"+y', { silent = true })
@@ -94,6 +94,16 @@ map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<CR><ESC>", { desc = "Save file" })
 -- better indenting
 map("v", "<", "<gv")
 map("v", ">", ">gv")
+
+-- fix n and N keeping cursor in center
+map("n", "n", "nzz", { silent = true })
+map("n", "N", "Nzz", { silent = true })
+
+-- search visually highlighted text
+map("v", "<M-/>", [[y/\V<C-R>=escape(@",'/\')<CR><CR>]])
+
+-- delete selection in Select mode (helpful when editing snippet placeholders)
+map("s", [[<BS>]], [[<BS>i]])
 
 -- File
 map("n", "<leader>fn", Util.cmd("enew"), { desc = "New File" })
