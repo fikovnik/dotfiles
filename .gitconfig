@@ -32,9 +32,6 @@
   keepTemporaries = false
   trustExitCode = false
 
-[mergetool "vimdiff"]
-  cmd = nvim '+Gvdiffsplit!' "$MERGED"
-
 [difftool "p4merge"]
   cmd = p4merge "$LOCAL" "$REMOTE"
   path =

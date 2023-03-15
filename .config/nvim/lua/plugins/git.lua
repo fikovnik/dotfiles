@@ -16,7 +16,7 @@ return {
         hunk = { "", "" },
       },
       integrations = {
-        diffview = false,
+        diffview = true,
       },
     },
   },
@@ -61,7 +61,13 @@ return {
       "DiffviewOpen",
       "DiffviewFileHistory",
     },
-    config = true,
+    opts = {
+      view = {
+        merge_tool = {
+          layout = "diff3_mixed",
+        },
+      },
+    },
   },
   -- TODO: hydra
   -- https://github.com/anuvyklack/hydra.nvim/wiki/Git
