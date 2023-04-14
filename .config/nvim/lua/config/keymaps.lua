@@ -51,7 +51,7 @@ map("n", "<M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
 map("n", "<M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
 
 -- move around
-map({ "n", "v" }, "s", Util.cmd("Pounce"))
+map({ "n", "x" }, "s", Util.cmd("Pounce"))
 map("o", "z", Util.cmd("Pounce"))
 map("n", "S", Util.cmd("PounceRepeat"))
 
