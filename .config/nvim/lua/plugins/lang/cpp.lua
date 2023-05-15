@@ -1,3 +1,14 @@
+local Util = require("util")
+
+local function set_keymap(_, buffer)
+  vim.keymap.set(
+    "n",
+    "<localleader>h",
+    Util.cmd("ClangdSwitchSourceHeader"),
+    { buffer = buffer, desc = "Switch to/from header" }
+  )
+end
+
 return {
   -- add to treesitter
   {
@@ -9,12 +20,22 @@ return {
     end,
   },
 
-  -- correctly setup lspconfig for clangd
+  -- setup the LSP server
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         clangd = {},
+      },
+      setup = {
+        clangd = function(_, opts)
+          require("util").on_attach(function(client, buffer)
+            if client.name == "clangd" then
+              set_keymap(client, buffer)
+            end
+          end)
+          return false
+        end,
       },
     },
   },
