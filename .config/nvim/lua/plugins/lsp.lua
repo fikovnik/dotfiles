@@ -215,4 +215,10 @@ return {
       end
     end,
   },
+  {
+    "simrat39/symbols-outline.nvim",
+    cmd = "SymbolsOutline",
+    keys = { { "<localleader>o", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
+    opts = {},
+  },
 }
