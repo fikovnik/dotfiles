@@ -29,7 +29,7 @@ return {
         mapping = cmp.mapping.preset.insert({
           ["<C-p>"] = cmp.mapping.select_prev_item(),
           ["<C-n>"] = cmp.mapping.select_next_item(),
-          ["<C-b>"] = cmp.mapping.scroll_docs( -4),
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-g>"] = cmp.mapping.abort(),
@@ -47,7 +47,7 @@ return {
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif snippy.can_jump( -1) then
+            elseif snippy.can_jump(-1) then
               snippy.previous()
             else
               fallback()
@@ -59,6 +59,7 @@ return {
           { name = "snippy" },
           { name = "buffer" },
           { name = "path" },
+          { name = "copilot" },
           {
             name = "latex_symbols",
             option = {
