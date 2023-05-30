@@ -62,6 +62,7 @@ return {
       "DiffviewFileHistory",
     },
     opts = {
+      use_icons = false,
       view = {
         merge_tool = {
           layout = "diff3_mixed",
