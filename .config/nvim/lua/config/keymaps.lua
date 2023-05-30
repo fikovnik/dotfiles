@@ -47,8 +47,8 @@ map("n", "[o", Util.cmd("put!=repeat([''],v:count)<bar>']+1"), { desc = "Open be
 map("n", "]o", Util.cmd("put =repeat([''],v:count)<bar>'[-1"), { desc = "Open above", silent = true })
 map("n", "[t", Util.cmd("tabprevious"), { desc = "Previous tab" })
 map("n", "]t", Util.cmd("tabnext"), { desc = "Next tab" })
-map("n", "<M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
-map("n", "<M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
+map({ "n", "t" }, "<C-\\><C-n><M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
+map({ "n", "t" }, "<C-\\><C-n><M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
 
 -- move around
 map({ "n", "x" }, "s", Util.cmd("Pounce"))
@@ -70,7 +70,7 @@ map("n", "z=", Util.cmd("Telescope spell_suggest"), { silent = true })
 
 -- exit term insert mode
 map("t", "jk", "<C-\\><C-n>", { silent = true })
-map("t", "<ESC><ESC>", "<C-\\><C-n>", { desc = "Enter Normal Mode" })
+map("t", "<esc>", "<C-\\><C-n>", { desc = "Enter Normal Mode" })
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<CR><ESC>", { desc = "Escape and clear hlsearch" })
@@ -142,6 +142,12 @@ map("n", "<leader>wK", "<C-w>K", { desc = "Move to top" })
 map("n", "<leader>wL", "<C-w>L", { desc = "Move to right" })
 map("n", "<leader>wt", "<cmd>tab split<CR>", { desc = "Open in a new tab" })
 -- TODO: maximize
+
+for i = 1, 9 do
+  local s = tostring(i)
+  map("n", "<C-" .. s .. ">", s .. "<C-w>w", { desc = "Move to window " .. s })
+  map("t", "<C-" .. s .. ">", "<C-\\><C-n>" .. s .. "<C-w>w", { desc = "Move to window " .. s })
+end
 
 M = {}
 
