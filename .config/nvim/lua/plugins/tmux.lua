@@ -7,6 +7,7 @@ return {
         function()
           require("tmux").resize_left()
         end,
+        mode = { "n", "t" },
         desc = "Resize left",
       },
       {
@@ -14,6 +15,7 @@ return {
         function()
           require("tmux").resize_bottom()
         end,
+        mode = { "n", "t" },
         desc = "Resize down",
       },
       {
@@ -21,6 +23,7 @@ return {
         function()
           require("tmux").resize_top()
         end,
+        mode = { "n", "t" },
         desc = "Resize top",
       },
       {
@@ -28,6 +31,7 @@ return {
         function()
           require("tmux").resize_right()
         end,
+        mode = { "n", "t" },
         desc = "Resize down",
       },
       {
@@ -35,6 +39,7 @@ return {
         function()
           require("tmux").move_left()
         end,
+        mode = { "n", "t" },
         desc = "Move left",
       },
       {
@@ -42,6 +47,7 @@ return {
         function()
           require("tmux").move_bottom()
         end,
+        mode = { "n", "t" },
         desc = "Move down",
       },
       {
@@ -49,6 +55,7 @@ return {
         function()
           require("tmux").move_top()
         end,
+        mode = { "n", "t" },
         desc = "Move up",
       },
       {
@@ -56,6 +63,7 @@ return {
         function()
           require("tmux").move_right()
         end,
+        mode = { "n", "t" },
         desc = "Move rigth",
       },
     },
