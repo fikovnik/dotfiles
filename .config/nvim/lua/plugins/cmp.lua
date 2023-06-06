@@ -59,7 +59,6 @@ return {
           { name = "snippy" },
           { name = "buffer" },
           { name = "path" },
-          { name = "copilot" },
           {
             name = "latex_symbols",
             option = {
