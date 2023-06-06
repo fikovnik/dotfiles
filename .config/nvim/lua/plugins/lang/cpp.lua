@@ -25,7 +25,12 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        clangd = {},
+        clangd = {
+          cmd = {
+            "clangd",
+            "--offset-encoding=utf-16",
+          },
+        },
       },
       setup = {
         clangd = function(_, opts)
