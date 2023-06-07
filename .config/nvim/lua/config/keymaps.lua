@@ -47,8 +47,10 @@ map("n", "[o", Util.cmd("put!=repeat([''],v:count)<bar>']+1"), { desc = "Open be
 map("n", "]o", Util.cmd("put =repeat([''],v:count)<bar>'[-1"), { desc = "Open above", silent = true })
 map("n", "[t", Util.cmd("tabprevious"), { desc = "Previous tab" })
 map("n", "]t", Util.cmd("tabnext"), { desc = "Next tab" })
-map({ "n", "t" }, "<C-\\><C-n><M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
-map({ "n", "t" }, "<C-\\><C-n><M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
+map("n", "<M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
+map("n", "<M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
+map("t", "<C-\\><C-n><M-[>", Util.cmd("tabprevious"), { desc = "Previous tab" })
+map("t", "<C-\\><C-n><M-]>", Util.cmd("tabnext"), { desc = "Previous tab" })
 
 -- move around
 map({ "n", "x" }, "s", Util.cmd("Pounce"))
