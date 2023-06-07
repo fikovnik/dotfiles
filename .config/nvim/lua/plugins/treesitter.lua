@@ -4,6 +4,7 @@ return {
     version = false, -- last release is way too old and doesn't work on Windows
     dependencies = {
       "nvim-treesitter/nvim-treesitter-context",
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
@@ -37,6 +38,18 @@ return {
         },
       },
       textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ["af"] = { query = "@function.outer", desc = "Around function" },
+            ["if"] = { query = "@function.inner", desc = "In function" },
+            ["ab"] = { query = "@block.outer", desc = "Around block" },
+            ["ib"] = { query = "@block.inner", desc = "In block" },
+            ["ap"] = { query = "@parameter.outer", desc = "Around parameter" },
+            ["ip"] = { query = "@parameter.inner", desc = "In parameter" },
+          },
+        },
         swap = {
           enable = true,
           swap_next = {
