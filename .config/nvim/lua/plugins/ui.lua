@@ -9,10 +9,10 @@ return {
         return vim.ui.select(...)
       end
       -- ---@diagnostic disable-next-line: duplicate-set-field
-      -- vim.ui.input = function(...)
-      --   require("lazy").load({ plugins = { "dressing.nvim" } })
-      --   return vim.ui.input(...)
-      -- end
+      vim.ui.input = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.input(...)
+      end
     end,
   },
   {
@@ -37,10 +37,10 @@ return {
       show_current_context = false,
     },
   },
-  {
-    "lukas-reineke/headlines.nvim",
-    ft = { "markdown", "rmd", "org" },
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    opts = {},
-  },
+  -- {
+  --   "lukas-reineke/headlines.nvim",
+  --   ft = { "markdown", "rmd", "org" },
+  --   dependencies = "nvim-treesitter/nvim-treesitter",
+  --   opts = {},
+  -- },
 }
