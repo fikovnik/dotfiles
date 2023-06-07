@@ -1,6 +1,7 @@
 return {
   {
     "dcampos/nvim-snippy",
+    event = "VeryLazy",
     dependencies = {
       "honza/vim-snippets",
     },
