@@ -82,11 +82,11 @@ return {
   {
     "jpalardy/vim-slime",
     keys = {
-      { mode = "x", "<C-c><C-c>", "<Plug>SlimeRegionSend", desc = "Send region to tmux" },
-      { mode = "n", "<C-c><C-c>", "vib" .. Util.cmd("SlimeSend"), desc = "Send block to tmux" },
+      { mode = "x", "<C-c><C-c>", "<Plug>SlimeRegionSend",          desc = "Send region to tmux" },
+      { mode = "n", "<C-c><C-c>", "vib<C-c><C-c>",                  desc = "Send block to tmux" },
       { mode = "n", "<C-c><C-l>", Util.cmd("SlimeSendCurrentLine"), desc = "Send line to tmux" },
-      { mode = "n", "<leader>xx", "<Plug>SlimeMotionSend", desc = "Send to tmux" },
-      { mode = "n", "<leader>xc", Util.cmd("SlimeConfig"), desc = "Config" },
+      { mode = "n", "<leader>xx", "<Plug>SlimeMotionSend",          desc = "Send to tmux" },
+      { mode = "n", "<leader>xc", Util.cmd("SlimeConfig"),          desc = "Config" },
     },
     init = function()
       local wk = require("which-key")
