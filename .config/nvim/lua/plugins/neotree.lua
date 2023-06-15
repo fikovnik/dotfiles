@@ -16,7 +16,7 @@ return {
         function()
           require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
         end,
-        desc = "Explorer NeoTree (cwd)",
+        desc = "Explorer (cwd)",
       },
       {
         "<leader>be",
@@ -28,9 +28,9 @@ return {
       {
         "<leader>ge",
         function()
-          require("neo-tree.command").execute({ toggle = true, source = "git" })
+          require("neo-tree.command").execute({ toggle = true, source = "git_status" })
         end,
-        desc = "Explorer NeoTree (cwd)",
+        desc = "Explorer",
       },
     },
     deactivate = function()
