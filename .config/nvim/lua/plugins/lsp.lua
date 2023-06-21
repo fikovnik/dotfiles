@@ -178,20 +178,20 @@ return {
   },
 
   -- formatters
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-    event = "BufReadPre",
-    dependencies = { "mason.nvim" },
-    opts = function()
-      local nls = require("null-ls")
-      return {
-        sources = {
-          -- nls.builtins.formatting.prettierd,
-          nls.builtins.formatting.stylua,
-        },
-      }
-    end,
-  },
+  -- {
+  --   "jose-elias-alvarez/null-ls.nvim",
+  --   event = "BufReadPre",
+  --   dependencies = { "mason.nvim" },
+  --   opts = function()
+  --     local nls = require("null-ls")
+  --     return {
+  --       sources = {
+  --         -- nls.builtins.formatting.prettierd,
+  --         nls.builtins.formatting.stylua,
+  --       },
+  --     }
+  --   end,
+  -- },
 
   -- cmdline tools and lsp servers
   {
@@ -204,16 +204,16 @@ return {
         "shfmt",
       },
     },
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      for _, tool in ipairs(opts.ensure_installed) do
-        local p = mr.get_package(tool)
-        if not p:is_installed() then
-          p:install()
-        end
-      end
-    end,
+    -- config = function(_, opts)
+    --   require("mason").setup(opts)
+    --   local mr = require("mason-registry")
+    --   for _, tool in ipairs(opts.ensure_installed) do
+    --     local p = mr.get_package(tool)
+    --     if not p:is_installed() then
+    --       p:install()
+    --     end
+    --   end
+    -- end,
   },
   {
     "simrat39/symbols-outline.nvim",
