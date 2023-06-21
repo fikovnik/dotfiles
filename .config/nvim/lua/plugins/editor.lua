@@ -58,21 +58,10 @@ return {
       icons = false,
     },
     keys = {
-      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"), desc = "Document Diagnostics" },
+      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"),  desc = "Document Diagnostics" },
       { "<leader>oD", Util.cmd("TroubleToggle workspace_diagnostics"), desc = "Workspace Diagnostics" },
-      { "<leader>ol", Util.cmd("TroubleToggle loclist"), desc = "Location List" },
-      { "<leader>oq", Util.cmd("TroubleToggle quickfix"), desc = "Quickfix List" },
-    },
-  },
-  {
-    "folke/todo-comments.nvim",
-    cmd = { "TodoTrouble", "TodoTelescope" },
-    event = { "BufReadPost", "BufNewFile" },
-    config = true,
-    -- stylua: ignore
-    keys = {
-      { "<leader>ot", Util.cmd("TodoTrouble"),   desc = "Todo" },
-      { "<leader>st", Util.cmd("TodoTelescope"), desc = "Todo" },
+      { "<leader>ol", Util.cmd("TroubleToggle loclist"),               desc = "Location List" },
+      { "<leader>oq", Util.cmd("TroubleToggle quickfix"),              desc = "Quickfix List" },
     },
   },
   {
