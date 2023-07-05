@@ -56,6 +56,7 @@ return {
     opts = {
       use_diagnostic_signs = true,
       icons = false,
+      auto_preview = false,
     },
     keys = {
       { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"),  desc = "Document Diagnostics" },

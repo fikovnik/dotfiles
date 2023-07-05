@@ -221,4 +221,18 @@ return {
     keys = { { "<localleader>o", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
     opts = {},
   },
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      -- "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+    opts = {
+      show_dirname = false,
+      show_basename = false,
+      kinds = false,
+    },
+  },
 }
