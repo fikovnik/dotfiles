@@ -67,9 +67,6 @@ map("s", [[<BS>]], [[<BS>i]])
 -- other window
 map("n", "<C-w><C-w>", "<C-w>w", { silent = true })
 
--- spelling suggestions
-map("n", "z=", Util.cmd("Telescope spell_suggest"), { silent = true })
-
 -- exit term insert mode
 map("t", "jk", "<C-\\><C-n>", { silent = true })
 map("t", "<esc>", "<C-\\><C-n>", { desc = "Enter Normal Mode" })
@@ -118,7 +115,6 @@ map("n", "<leader>oq", Util.cmd("copen"), { desc = "Quickfix List" })
 map("n", "<leader>vq", Util.cmd("qa"), { desc = "Quit all" })
 
 -- Toggle
-map("n", "<leader>vC", Util.cmd("Telescope colorscheme enable_preview=true"), { silent = true, desc = "Themes" })
 map("n", "<leader>vtw", Util.cmd("set wrap!"), { silent = true, desc = "Wrap" })
 map("n", "<leader>vtW", Util.cmd("set list!"), { silent = true, desc = "Whitespaces" })
 map("n", "<leader>vts", Util.cmd("set spell!"), { silent = true, desc = "Spell" })
