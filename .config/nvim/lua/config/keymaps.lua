@@ -117,6 +117,7 @@ map("n", "<leader>vq", Util.cmd("qa"), { desc = "Quit all" })
 map("n", "<leader>vtw", Util.cmd("set wrap!"), { silent = true, desc = "Wrap" })
 map("n", "<leader>vtW", Util.cmd("set list!"), { silent = true, desc = "Whitespaces" })
 map("n", "<leader>vts", Util.cmd("set spell!"), { silent = true, desc = "Spell" })
+map("n", "<leader>vtf", require("util.format").toggle, { silent = true, desc = "Toggle format on Save" })
 -- TODO: conceal
 -- TODO: diagnostics
 -- TODO: hydra

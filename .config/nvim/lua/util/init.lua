@@ -158,4 +158,13 @@ function M.fg(name)
   return fg and { fg = string.format("#%06x", fg) }
 end
 
+function M.opts(name)
+  local plugin = require("lazy.core.config").plugins[name]
+  if not plugin then
+    return {}
+  end
+  local Plugin = require("lazy.core.plugin")
+  return Plugin.values(plugin, "opts", false)
+end
+
 return M

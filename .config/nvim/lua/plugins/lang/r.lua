@@ -1,7 +1,5 @@
 local Util = require("util")
 
-local function set_keymap(_, buffer) end
-
 return {
   -- add to treesitter
   {
@@ -19,16 +17,6 @@ return {
     opts = {
       servers = {
         r_language_server = {},
-      },
-      setup = {
-        r_language_server = function(_, opts)
-          require("util").on_attach(function(client, buffer)
-            if client.name == "r_language_server" then
-              set_keymap(client, buffer)
-            end
-          end)
-          return false
-        end,
       },
     },
   },

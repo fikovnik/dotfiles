@@ -1,3 +1,12 @@
+local function debug_continue()
+  local dap = require("dap")
+  if not dap.session() then
+    require('dap.ext.vscode').load_launchjs(nil, { codelldb = { 'c', 'cpp' }, cppdbg = { 'c', 'cpp' } })
+  end
+
+  dap.continue()
+end
+
 return {
   {
     "mfussenegger/nvim-dap",
@@ -8,26 +17,57 @@ return {
       },
       -- fancy UI for the debugger
       {
+        "nvim-telescope/telescope-dap.nvim",
+        keys = {
+          {
+            "<leader>dB",
+            function() require('telescope').extensions.dap.list_breakpoints({}) end,
+            desc =
+            "Breakpoints"
+          },
+          { "<leader>dF", function() require('telescope').extensions.dap.frames({}) end, desc = "Frames" },
+        },
+        config = function(_, opts)
+          require('telescope').load_extension('dap')
+        end
+      },
+      {
         "rcarriga/nvim-dap-ui",
         -- stylua: ignore
         keys = {
           { "<leader>du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
-          { "<M-k>",      function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
+          { "<C-k>",      function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
+          {
+            "<leader>dV",
+            function()
+              require("dapui").float_element("scopes", { enter = true })
+            end,
+            desc = "Variables"
+          },
         },
-        opts = {},
+        opts = {
+          layouts = { {
+            elements = {
+              { id = "repl",    size = 0.5 },
+              { id = "console", size = 0.5 }
+            },
+            position = "bottom",
+            size = 10
+          }, },
+        },
         config = function(_, opts)
-          -- local dap = require("dap")
-          -- local dapui = require("dapui")
-          -- dapui.setup(opts)
-          -- dap.listeners.after.event_initialized["dapui_config"] = function()
-          --   dapui.open({})
-          -- end
-          -- dap.listeners.before.event_terminated["dapui_config"] = function()
-          --   dapui.close({})
-          -- end
-          -- dap.listeners.before.event_exited["dapui_config"] = function()
-          --   dapui.close({})
-          -- end
+          local dap = require("dap")
+          local dapui = require("dapui")
+          dapui.setup(opts)
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open({})
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close({})
+          end
+          dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close({})
+          end
         end,
       },
 
@@ -38,7 +78,6 @@ return {
         opts = {
           defaults = {
             ["<leader>d"] = { name = "+debug" },
-            ["<leader>da"] = { name = "+adapters" },
           },
         },
       },
@@ -49,19 +88,8 @@ return {
         dependencies = "mason.nvim",
         cmd = { "DapInstall", "DapUninstall" },
         opts = {
-          -- Makes a best effort to setup the various debuggers with
-          -- reasonable debug configurations
           automatic_installation = true,
-
-          -- You can provide additional configuration to the handlers,
-          -- see mason-nvim-dap README for more information
           handlers = {},
-
-          -- You'll need to check that you have the required things installed
-          -- online, please don't ask me how to install them :)
-          ensure_installed = {
-            -- Update this to ensure that you have the debuggers for the langs you want
-          },
         },
       },
     },
@@ -69,7 +97,31 @@ return {
     -- stylua: ignore
     keys = {
       {
-        "<leader>dB",
+        "<F5>",
+        debug_continue,
+        desc = "Debug (continue)",
+        mode = { "n", "t", "i" },
+      },
+      {
+        "<F6>",
+        function() require("dap").step_over() end,
+        desc = "Next",
+        mode = { "n", "t", "i" },
+      },
+      {
+        "<F7>",
+        function() require("dap").step_into() end,
+        desc = "Step into",
+        mode = { "n", "t", "i" },
+      },
+      {
+        "<F8>",
+        function() require("dap").step_out() end,
+        desc = "Step out",
+        mode = { "n", "t", "i" },
+      },
+      {
+        "<leader>dC",
         function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
         desc =
         "Breakpoint Condition"
@@ -81,28 +133,30 @@ return {
         "Toggle Breakpoint"
       },
       {
-        "<leader>dc",
-        function() require("dap").continue() end,
-        desc =
-        "Continue"
+        "<leader>dO",
+        function()
+          local launch_json_path = vim.fn.getcwd() .. '/.vscode/launch.json'
+          vim.cmd('e ' .. launch_json_path)
+        end,
+        desc = "Edit launch.json"
       },
       {
-        "<leader>dC",
+        "<leader>dd",
+        debug_continue,
+        desc =
+        "Debug (continue)"
+      },
+      {
+        "<leader>dc",
         function() require("dap").run_to_cursor() end,
         desc =
         "Run to Cursor"
       },
       {
-        "<leader>dg",
-        function() require("dap").goto_() end,
+        "<leader>df",
+        function() require("dap").focus_frame() end,
         desc =
-        "Go to line (no execute)"
-      },
-      {
-        "<leader>di",
-        function() require("dap").step_into() end,
-        desc =
-        "Step Into"
+        "Frame"
       },
       { "<leader>dj", function() require("dap").down() end, desc = "Down" },
       { "<leader>dk", function() require("dap").up() end,   desc = "Up" },
@@ -113,34 +167,16 @@ return {
         "Run Last"
       },
       {
-        "<leader>dO",
-        function() require("dap").step_out() end,
-        desc =
-        "Step Out"
-      },
-      {
-        "<leader>dn",
-        function() require("dap").step_over() end,
-        desc =
-        "Next"
-      },
-      {
-        "<leader>dp",
-        function() require("dap").pause() end,
-        desc =
-        "Pause"
-      },
-      {
-        "<leader>dr",
+        "<leader>dR",
         function() require("dap").repl.toggle() end,
         desc =
         "Toggle REPL"
       },
       {
-        "<leader>ds",
-        function() require("dap").session() end,
+        "<leader>dr",
+        function() require("dap").restart() end,
         desc =
-        "Session"
+        "Restart"
       },
       {
         "<leader>dt",
@@ -148,25 +184,11 @@ return {
         desc =
         "Terminate"
       },
-      {
-        "<leader>dh",
-        function() require("dap.ui.widgets").hover() end,
-        desc =
-        "Hover"
-      },
-      {
-        "<leader>dF",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.centered_float(widgets.frames)
-        end,
-        desc = "Frames",
-      },
     },
 
     config = function()
       require('dap.ext.vscode').json_decode = require('json5').parse
-      --vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+      vim.api.nvim_set_hl(0, "DapStoppedLine", { reverse = true, ctermbg = "darkblue", bg = "darkblue" })
       vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError", linehl = "", numhl = "" })
       vim.fn.sign_define(
         "DapBreakpointCondition",
@@ -175,5 +197,3 @@ return {
     end,
   }
 }
---       -- TODO: hydra
---       -- https://github.com/anuvyklack/hydra.nvim/issues/3#issuecomment-1162988750
