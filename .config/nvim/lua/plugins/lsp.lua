@@ -1,22 +1,17 @@
 local Util = require("util")
 
-local function format_on_save(client, buf)
-  if client.supports_method("textDocument/formatting") then
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = vim.api.nvim_create_augroup("LspFormat." .. buf, {}),
-      buffer = buf,
-      callback = function()
-        vim.lsp.buf.format({
-          timeout_ms = nil,
-          buffer = buf,
-        })
-      end,
-    })
-  end
-end
-
 ---@diagnostic disable-next-line: unused-local
 local function set_keymap(client, buf)
+  local Keys = require("lazy.core.handler.keys")
+  local opts = Util.opts("nvim-lspconfig")
+  local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
+  for _, keys in ipairs(maps) do
+    local o = Keys.opts(keys)
+    o.silent = true
+    o.buffer = buf
+    vim.keymap.set(keys.mode or "n", keys[1], keys[2], o)
+  end
+
   ---@diagnostic disable-next-line: redefined-local
   local function map(mode, lhs, rhs, desc, opts)
     local local_opts = { buffer = buf, silent = true, desc = desc }
@@ -26,6 +21,10 @@ local function set_keymap(client, buf)
     vim.keymap.set(mode, lhs, rhs, local_opts)
   end
 
+  local function format()
+    require("util.format").format({ force = true })
+  end
+
   map("n", "K", vim.lsp.buf.hover, "Hover", { remap = false })
   map({ "n", "v" }, "<M-CR>", vim.lsp.buf.code_action, "Actions")
 
@@ -33,31 +32,22 @@ local function set_keymap(client, buf)
     vim.lsp.buf.declaration({ reuse_win = true })
   end, "Declaration")
 
-  map("n", "<localleader>d", Util.cmd("Telescope lsp_definitions"), "Definition")
-
-  map("n", "<localleader>t", Util.cmd("Telescope lsp_type_definitions"), "Type")
-
-  map("n", "<localleader>i", Util.cmd("Telescope lsp_implementations"), "Implementation")
-  map("n", "<localleader>r", Util.cmd("Telescope lsp_references"), "References")
+  map("n", "<localleader>d", Util.telescope("lsp_definitions"), "Definition")
+  map("n", "<localleader>t", Util.telescope("lsp_type_definitions"), "Type")
+  map("n", "<localleader>i", Util.telescope("lsp_implementations"), "Implementation")
+  map("n", "<localleader>r", Util.telescope("lsp_references"), "References")
   map("n", "<localleader>R", vim.lsp.buf.rename, "Rename")
-
-  map("n", "<localleader>f", function()
-    vim.lsp.buf.format({ async = true })
-  end, "Format")
-
   map({ "n", "i" }, "<M-p>", vim.lsp.buf.signature_help, "Signature")
-  map("n", "<localleader><localleader>", Util.cmd("Telescope lsp_document_symbols"), "Symbols")
-  map("n", "<localleader>l", Util.cmd("Telescope lsp_workspace_symbols"), "All symbols")
-  map("n", "<localleader>/", Util.cmd("Telescope lsp_dynamic_workspace_symbols"), "Search symbols")
-  map("n", "<localleader>ci", Util.cmd("Telescope lsp_incoming_calls"), "Incoming calls")
-  map("n", "<localleader>co", Util.cmd("Telescope lsp_outgoing_calls"), "Outgoing calls")
-  map("v", "<localleader>f", vim.lsp.buf.format, "Format")
+  map("n", "<localleader><localleader>", Util.telescope("lsp_document_symbols"), "Symbols")
+  map("n", "<localleader>l", Util.telescope("lsp_workspace_symbols"), "All symbols")
+  map("n", "<localleader>/", Util.telescope("lsp_dynamic_workspace_symbols"), "Search symbols")
+  map("n", "<localleader>ci", Util.telescope("lsp_incoming_calls"), "Incoming calls")
+  map("n", "<localleader>co", Util.telescope("lsp_outgoing_calls"), "Outgoing calls")
+  map("n", "<localleader>f", format, "Format")
+  map("v", "<localleader>f", format, "Format")
   map("n", "<localleader>wA", vim.lsp.buf.add_workspace_folder, "Add folder")
   map("n", "<localleader>wR", vim.lsp.buf.remove_workspace_folder, "Remove folder")
-  map("n", "<localleader>wL", function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, "List folders")
-
+  map("n", "<localleader>wL", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, "List folders")
   map("n", "]d", Util.diagnostic_goto(true), "Next Diagnostic")
   map("n", "[d", Util.diagnostic_goto(false), "Prev Diagnostic")
   map("n", "]e", Util.diagnostic_goto(true, "ERROR"), "Next Error")
@@ -114,23 +104,11 @@ return {
           },
         },
       },
-      -- you can do any additional lsp server setup here
-      -- return true if you don't want this server to be setup with lspconfig
-      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
-      setup = {
-        -- example to setup with typescript.nvim
-        -- tsserver = function(_, opts)
-        --   require("typescript").setup({ server = opts })
-        --   return true
-        -- end,
-        -- Specify * to use this function as a fallback for any server
-        -- ["*"] = function(server, opts) end,
-      },
+      autoformat = true,
     },
-    ---@param opts PluginLspOpts
-    config = function(plugin, opts)
+    config = function(_, opts)
       -- setup autoformat
-      require("util").on_attach(format_on_save)
+      require("util.format").setup(opts)
       -- setup keybindings
       require("util").on_attach(set_keymap)
       -- diagnostics
@@ -159,25 +137,20 @@ return {
       local mlsp = require("mason-lspconfig")
       local available = mlsp.get_available_servers()
 
-      local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(servers) do
         if server_opts then
           server_opts = server_opts == true and {} or server_opts
           -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
           if server_opts.mason == false or not vim.tbl_contains(available, server) then
             setup(server)
-          else
-            ensure_installed[#ensure_installed + 1] = server
           end
         end
       end
 
-      require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
       require("mason-lspconfig").setup_handlers({ setup })
     end,
   },
 
-  -- formatters
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = "BufReadPre",
@@ -186,8 +159,8 @@ return {
       local nls = require("null-ls")
       return {
         sources = {
-          -- nls.builtins.formatting.prettierd,
           nls.builtins.formatting.stylua,
+          nls.builtins.formatting.shfmt,
         },
       }
     end,
@@ -218,7 +191,20 @@ return {
   {
     "simrat39/symbols-outline.nvim",
     cmd = "SymbolsOutline",
-    keys = { { "<localleader>o", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
+    keys = { { "<localleader>o", Util.cmd("SymbolsOutline"), desc = "Symbols Outline" } },
     opts = {},
+  },
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+    },
+    opts = {
+      show_dirname = false,
+      show_basename = false,
+      kinds = false,
+    },
   },
 }

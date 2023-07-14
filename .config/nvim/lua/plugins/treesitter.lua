@@ -3,7 +3,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-context",
+      -- "nvim-treesitter/nvim-treesitter-context",
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
     build = ":TSUpdate",
@@ -14,15 +14,12 @@ return {
     },
     opts = {
       highlight = { enable = true },
-      indent = { enable = true },
+      indent = { enable = false },
       ensure_installed = {
         "bash",
         "vimdoc",
         "html",
-        "json",
         "lua",
-        "markdown",
-        "markdown_inline",
         "query",
         "regex",
         "vim",

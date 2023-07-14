@@ -67,12 +67,8 @@ map("s", [[<BS>]], [[<BS>i]])
 -- other window
 map("n", "<C-w><C-w>", "<C-w>w", { silent = true })
 
--- spelling suggestions
-map("n", "z=", Util.cmd("Telescope spell_suggest"), { silent = true })
-
 -- exit term insert mode
 map("t", "jk", "<C-\\><C-n>", { silent = true })
-map("t", "<esc>", "<C-\\><C-n>", { desc = "Enter Normal Mode" })
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<CR><ESC>", { desc = "Escape and clear hlsearch" })
@@ -85,10 +81,10 @@ map("n", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result
 map("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 
--- Add undo break-points
-map("i", ",", ",<C-g>u")
-map("i", ".", ".<C-g>u")
-map("i", ";", ";<C-g>u")
+-- -- Add undo break-points
+-- map("i", ",", ",<C-g>u")
+-- map("i", ".", ".<C-g>u")
+-- map("i", ";", ";<C-g>u")
 
 -- save file
 map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<CR><ESC>", { desc = "Save file" })
@@ -118,19 +114,14 @@ map("n", "<leader>oq", Util.cmd("copen"), { desc = "Quickfix List" })
 map("n", "<leader>vq", Util.cmd("qa"), { desc = "Quit all" })
 
 -- Toggle
-map("n", "<leader>vC", Util.cmd("Telescope colorscheme enable_preview=true"), { silent = true, desc = "Themes" })
 map("n", "<leader>vtw", Util.cmd("set wrap!"), { silent = true, desc = "Wrap" })
 map("n", "<leader>vtW", Util.cmd("set list!"), { silent = true, desc = "Whitespaces" })
 map("n", "<leader>vts", Util.cmd("set spell!"), { silent = true, desc = "Spell" })
+map("n", "<leader>vtf", require("util.format").toggle, { silent = true, desc = "Toggle format on Save" })
 -- TODO: conceal
 -- TODO: diagnostics
 -- TODO: hydra
 -- https://github.com/anuvyklack/hydra.nvim/wiki/Vim-Options
-
--- lazygit
-map("n", "<leader>gG", function()
-  Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
-end, { desc = "Lazygit (root dir)" })
 
 -- Windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window" })

@@ -35,8 +35,8 @@ return {
     event = "VeryLazy",
     opts = {
       mappings = {
-        start = "<leader>a",
-        start_with_preview = "<leader>A",
+        start = "<leader>ea",
+        start_with_preview = "<leader>eA",
       },
     },
     config = function(_, opts)
@@ -56,23 +56,13 @@ return {
     opts = {
       use_diagnostic_signs = true,
       icons = false,
+      auto_preview = false,
     },
     keys = {
-      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"), desc = "Document Diagnostics" },
+      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"),  desc = "Document Diagnostics" },
       { "<leader>oD", Util.cmd("TroubleToggle workspace_diagnostics"), desc = "Workspace Diagnostics" },
-      { "<leader>ol", Util.cmd("TroubleToggle loclist"), desc = "Location List" },
-      { "<leader>oq", Util.cmd("TroubleToggle quickfix"), desc = "Quickfix List" },
-    },
-  },
-  {
-    "folke/todo-comments.nvim",
-    cmd = { "TodoTrouble", "TodoTelescope" },
-    event = { "BufReadPost", "BufNewFile" },
-    config = true,
-    -- stylua: ignore
-    keys = {
-      { "<leader>ot", Util.cmd("TodoTrouble"),   desc = "Todo" },
-      { "<leader>st", Util.cmd("TodoTelescope"), desc = "Todo" },
+      { "<leader>ol", Util.cmd("TroubleToggle loclist"),               desc = "Location List" },
+      { "<leader>oq", Util.cmd("TroubleToggle quickfix"),              desc = "Quickfix List" },
     },
   },
   {
@@ -134,7 +124,42 @@ return {
     event = "VeryLazy",
   },
   {
-    "rlane/pounce.nvim",
-    cmd = { "Pounce", "PounceRepeat" },
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "s",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
+        "S",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash Treesitter",
+      },
+      {
+        "r",
+        mode = "o",
+        function()
+          require("flash").remote()
+        end,
+        desc = "Remote Flash",
+      },
+      {
+        "<c-s>",
+        mode = { "c" },
+        function()
+          require("flash").toggle()
+        end,
+        desc = "Toggle Flash Search",
+      },
+    },
   },
 }

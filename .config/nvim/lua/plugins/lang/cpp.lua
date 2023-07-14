@@ -1,16 +1,6 @@
 local Util = require("util")
 
-local function set_keymap(_, buffer)
-  vim.keymap.set(
-    "n",
-    "<localleader>h",
-    Util.cmd("ClangdSwitchSourceHeader"),
-    { buffer = buffer, desc = "Switch to/from header" }
-  )
-end
-
 return {
-  -- add to treesitter
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
@@ -20,27 +10,43 @@ return {
     end,
   },
 
-  -- setup the LSP server
+  -- Ensure Rust debugger is installed
+  {
+    "williamboman/mason.nvim",
+    optional = true,
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "clangd", "codelldb", "cpptools" })
+      end
+    end,
+  },
+
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         clangd = {
+          keys = {
+            { "<localleader>h", Util.cmd("ClangdSwitchSourceHeader"), desc = "Switch Source/Header" },
+          },
+          capabilities = {
+            offsetEncoding = { "utf-16" },
+          },
           cmd = {
             "clangd",
-            "--offset-encoding=utf-16",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=iwyu",
+            "--completion-style=detailed",
+            "--function-arg-placeholders",
+            "--fallback-style=llvm",
+          },
+          init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
           },
         },
-      },
-      setup = {
-        clangd = function(_, opts)
-          require("util").on_attach(function(client, buffer)
-            if client.name == "clangd" then
-              set_keymap(client, buffer)
-            end
-          end)
-          return false
-        end,
       },
     },
   },

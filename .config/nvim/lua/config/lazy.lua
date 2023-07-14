@@ -8,7 +8,7 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
-  concurrency = 1,
+  concurrency = 3,
   spec = {
     { import = "plugins" },
     { import = "plugins.lang" },

@@ -1,18 +1,5 @@
 return {
   {
-    "gbprod/nord.nvim",
-    lazy = true,
-    opts = {
-      styles = {
-        diagnostics = { "undercurl" },
-      },
-    },
-    config = function()
-      vim.cmd.colorscheme("nord")
-    end,
-  },
-
-  {
     "rmehri01/onenord.nvim",
     config = function()
       local colors = require("onenord.colors").load()
