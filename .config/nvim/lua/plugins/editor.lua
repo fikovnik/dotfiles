@@ -35,8 +35,8 @@ return {
     event = "VeryLazy",
     opts = {
       mappings = {
-        start = "<leader>a",
-        start_with_preview = "<leader>A",
+        start = "<leader>ea",
+        start_with_preview = "<leader>eA",
       },
     },
     config = function(_, opts)
