@@ -122,11 +122,6 @@ map("n", "<leader>vts", Util.cmd("set spell!"), { silent = true, desc = "Spell" 
 -- TODO: hydra
 -- https://github.com/anuvyklack/hydra.nvim/wiki/Vim-Options
 
--- lazygit
-map("n", "<leader>gG", function()
-  Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
-end, { desc = "Lazygit (root dir)" })
-
 -- Windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window" })
 map("n", "<leader>wd", "<C-W>c", { desc = "Delete window" })

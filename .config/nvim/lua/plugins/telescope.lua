@@ -25,9 +25,6 @@ return {
       { "<leader>ff",      Util.telescope("fd", { find_command={'fd','--unrestricted'}}), desc = "Find Files (root dir)" },
       { "<leader>fF",      Util.telescope("files", { cwd = false }),            desc = "Find All Files (cwd)" },
       { "<leader>fr",      Util.telescope("oldfiles"),                          desc = "Recent" },
-      -- git
-      { "<leader>gc",      Util.telescope("git_commits"),                       desc = "Commits" },
-      { "<leader>gs",      Util.telescope("git_status"),                        desc = "Status" },
       -- search
       { "<leader>sb",      Util.telescope("current_buffer_fuzzy_find"),         desc = "Buffer" },
       { "<leader>sc",      Util.telescope("command_history"),                   desc = "Command History" },
