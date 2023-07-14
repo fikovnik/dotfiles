@@ -81,10 +81,10 @@ map("n", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result
 map("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 
--- Add undo break-points
-map("i", ",", ",<C-g>u")
-map("i", ".", ".<C-g>u")
-map("i", ";", ";<C-g>u")
+-- -- Add undo break-points
+-- map("i", ",", ",<C-g>u")
+-- map("i", ".", ".<C-g>u")
+-- map("i", ";", ";<C-g>u")
 
 -- save file
 map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<CR><ESC>", { desc = "Save file" })
