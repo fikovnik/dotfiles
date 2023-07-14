@@ -69,7 +69,6 @@ map("n", "<C-w><C-w>", "<C-w>w", { silent = true })
 
 -- exit term insert mode
 map("t", "jk", "<C-\\><C-n>", { silent = true })
-map("t", "<esc>", "<C-\\><C-n>", { desc = "Enter Normal Mode" })
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<CR><ESC>", { desc = "Escape and clear hlsearch" })
