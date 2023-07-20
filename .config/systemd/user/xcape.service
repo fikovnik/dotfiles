@@ -1,0 +1,13 @@
+[Unit]
+Description=Combine Ctrl+Escape
+Documentation=man:xcape(1) https://github.com/alols/xcape
+After=graphical.target
+
+[Service]
+Type=forking
+Environment=DISPLAY=:0
+ExecStart=/home/krikava/.local/bin/xcape -e "Control_L=Escape"
+Restart=always
+
+[Install]
+WantedBy=default.target
