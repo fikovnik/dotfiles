@@ -12,6 +12,7 @@ return {
           TelescopeSelection = { bg = colors.highlight_dark, fg = "NONE" },
           WinBar = { bg = colors.highlight_dark },
           WinBarNC = { bg = colors.highlight_dark },
+          FlashLabel = { fg = colors.pink, style = "bold,underline" },
         },
       })
     end,

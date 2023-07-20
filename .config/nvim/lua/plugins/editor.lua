@@ -59,10 +59,10 @@ return {
       auto_preview = false,
     },
     keys = {
-      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"),  desc = "Document Diagnostics" },
+      { "<leader>od", Util.cmd("TroubleToggle document_diagnostics"), desc = "Document Diagnostics" },
       { "<leader>oD", Util.cmd("TroubleToggle workspace_diagnostics"), desc = "Workspace Diagnostics" },
-      { "<leader>ol", Util.cmd("TroubleToggle loclist"),               desc = "Location List" },
-      { "<leader>oq", Util.cmd("TroubleToggle quickfix"),              desc = "Quickfix List" },
+      { "<leader>ol", Util.cmd("TroubleToggle loclist"), desc = "Location List" },
+      { "<leader>oq", Util.cmd("TroubleToggle quickfix"), desc = "Quickfix List" },
     },
   },
   {
@@ -126,7 +126,16 @@ return {
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      label = {
+        current = false,
+      },
+      modes = {
+        search = {
+          enabled = false,
+        },
+      },
+    },
     keys = {
       {
         "s",
