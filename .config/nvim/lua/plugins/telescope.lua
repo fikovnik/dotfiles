@@ -29,6 +29,7 @@ return {
       { "<leader>sb", Util.telescope("current_buffer_fuzzy_find"), desc = "Buffer" },
       { "<leader>sc", Util.telescope("command_history"), desc = "Command History" },
       { "<leader>sC", Util.telescope("commands"), desc = "Commands" },
+      { "<M-x>", Util.telescope("commands"), desc = "Commands" },
       { "<leader>sd", Util.telescope("diagnostics"), desc = "Diagnostics" },
       { "<leader>sg", Util.telescope("live_grep"), desc = "Grep (root dir)" },
       { "<leader>sG", Util.telescope("live_grep", { cwd = false }), desc = "Grep (cwd)" },
