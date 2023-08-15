@@ -1,6 +1,44 @@
 local Util = require("util")
 
 return {
+  -- Extend auto completion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      {
+        "Saecki/crates.nvim",
+        event = { "BufRead Cargo.toml" },
+        config = function(_, opts)
+          require("crates").setup(opts)
+          local function cmd(lhs, rhs)
+            vim.api.nvim_create_user_command(lhs, "lua require('crates')." .. rhs, {})
+          end
+          cmd("CratesUpdate", "update()")
+          cmd("CratesReload", "reload()")
+          cmd("CratesHide", "hide()")
+          cmd("CratesToggle", "toggle()")
+          cmd("CratesUpdateCrate", "update_crate()")
+          cmd("CratesUpdateCrates", "update_crates()")
+          cmd("CratesUpdateAllCrates", "update_all_crates()")
+          cmd("CratesUpgradeCrate", "upgrade_crate()")
+          cmd("CratesUpgradeCrates", "upgrade_crates()")
+          cmd("CratesUpgradeAllCrates", "upgrade_all_crates()")
+          cmd("CratesShowPopup", "show_popup()")
+          cmd("CratesShowVersionsPopup", "show_versions_popup()")
+          cmd("CratesShowFeaturesPopup", "show_features_popup()")
+          cmd("CratesFocusPopup", "focus_popup()")
+          cmd("CratesHidePopup", "hide_popup()")
+        end,
+      },
+    },
+    opts = function(_, opts)
+      local cmp = require("cmp")
+      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
+        { name = "crates" },
+      }))
+    end,
+  },
+
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
@@ -75,9 +113,14 @@ return {
           settings = {
             ["rust-analyzer"] = {
               cargo = {
-                allFeatures = true,
+                features = "all",
                 loadOutDirsFromCheck = true,
                 runBuildScripts = true,
+              },
+              highlightRelated = {
+                references = {
+                  enable = false,
+                },
               },
               -- Add clippy lints for Rust.
               checkOnSave = {
