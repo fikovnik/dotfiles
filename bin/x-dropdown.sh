@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-~/Projects/dropdown/target/debug/dropdown /usr/local/bin/st "$@"
+~/Projects/dropdown/target/release/dropdown /usr/local/bin/st "$@"
