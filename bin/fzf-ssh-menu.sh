@@ -20,7 +20,15 @@ function hosts_fzf() {
 	hosts | uniq | grep -v 'localhost' | fzf -q "$1" --prompt="ssh> " --select-1
 }
 
-res=$(hosts_fzf)
-if [ -n "$res" ]; then
-	ssh $res -t zsh -ic 'tmux new-session -A -s main'
+function ssh_menu() {
+	res=$(hosts_fzf)
+	if [ -n "$res" ]; then
+		ssh -t "$res" zsh -ic '"tmux new-session -A -s main"'
+	fi
+}
+
+if [ -t 1 ]; then
+	ssh_menu
+else
+	~/bin/x-terminal.sh "$0"
 fi
