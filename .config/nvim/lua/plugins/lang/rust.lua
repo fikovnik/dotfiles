@@ -88,6 +88,9 @@ return {
                   augroup END
                 ]])
           end,
+          inlay_hints = {
+            show_parameter_hints = false,
+          },
         },
       }
     end,
