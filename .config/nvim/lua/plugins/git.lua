@@ -6,7 +6,7 @@ end, { desc = "Lazygit (root dir)" })
 
 return {
   {
-    "TimUntersberger/neogit",
+    "NeogitOrg/neogit",
     keys = {
       { "<leader>gg", Util.cmd("Neogit"), { desc = "Status" } },
     },
@@ -48,7 +48,7 @@ return {
   {
     "sindrets/diffview.nvim",
     keys = {
-      { "<leader>gd", Util.cmd("DiffviewOpen"),        desc = "Diff" },
+      { "<leader>gd", Util.cmd("DiffviewOpen"), desc = "Diff" },
       { "<leader>gh", Util.cmd("DiffviewFileHistory"), desc = "History" },
     },
     cmd = {
