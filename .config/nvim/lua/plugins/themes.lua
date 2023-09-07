@@ -13,6 +13,7 @@ return {
           WinBar = { bg = colors.highlight_dark },
           WinBarNC = { bg = colors.highlight_dark },
           FlashLabel = { fg = colors.pink, style = "bold,underline" },
+          DiffText = { bg = "#fd5da8", fg = "#000000" },
         },
       })
     end,
