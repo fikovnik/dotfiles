@@ -38,12 +38,6 @@ return {
         map("n", "zM", ufo.closeAllFolds, { desc = "Close all folds" })
         map("n", "zr", ufo.openFoldsExceptKinds, { desc = "Open fold" })
         map("n", "zm", ufo.closeFoldsWith, { desc = "Close fold" })
-        map("n", "K", function()
-          local winid = require("ufo").peekFoldedLinesUnderCursor()
-          if not winid then
-            vim.lsp.buf.hover()
-          end
-        end, { remap = true, desc = "Hover" })
       end,
     },
   },

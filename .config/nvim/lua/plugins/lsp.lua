@@ -2,16 +2,6 @@ local Util = require("util")
 
 ---@diagnostic disable-next-line: unused-local
 local function set_keymap(client, buf)
-  local Keys = require("lazy.core.handler.keys")
-  local opts = Util.opts("nvim-lspconfig")
-  local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
-  for _, keys in ipairs(maps) do
-    local o = Keys.opts(keys)
-    o.silent = true
-    o.buffer = buf
-    vim.keymap.set(keys.mode or "n", keys[1], keys[2], o)
-  end
-
   ---@diagnostic disable-next-line: redefined-local
   local function map(mode, lhs, rhs, desc, opts)
     local local_opts = { buffer = buf, silent = true, desc = desc }
@@ -47,7 +37,9 @@ local function set_keymap(client, buf)
   map("v", "<localleader>f", format, "Format")
   map("n", "<localleader>wA", vim.lsp.buf.add_workspace_folder, "Add folder")
   map("n", "<localleader>wR", vim.lsp.buf.remove_workspace_folder, "Remove folder")
-  map("n", "<localleader>wL", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, "List folders")
+  map("n", "<localleader>wL", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, "List folders")
   map("n", "]d", Util.diagnostic_goto(true), "Next Diagnostic")
   map("n", "[d", Util.diagnostic_goto(false), "Prev Diagnostic")
   map("n", "]e", Util.diagnostic_goto(true, "ERROR"), "Next Error")
@@ -65,6 +57,17 @@ local function set_keymap(client, buf)
     ["<localleader>l"] = { name = "+lens" },
     ["<localleader>w"] = { name = "+workspace" },
   })
+
+  local Keys = require("lazy.core.handler.keys")
+  local opts = Util.opts("nvim-lspconfig")
+  local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
+
+  for _, keys in ipairs(maps) do
+    local o = Keys.opts(keys)
+    o.silent = true
+    o.buffer = buf
+    vim.keymap.set(keys.mode or "n", keys[1], keys[2], o)
+  end
 end
 
 return {
