@@ -1,4 +1,14 @@
-if vim.fn.executable("nodejs") == 1 then
+local function get_nodejs_version()
+  local version = vim.fn.systemlist("node -v")
+  if #version == 0 then
+    return 0
+  else
+    return tonumber(version[1]:match("(%d+)"))
+  end
+end
+
+if get_nodejs_version() >= 16 then
+  print(get_nodejs_version())
   return {
     {
       "zbirenbaum/copilot.lua",

@@ -106,7 +106,6 @@ return {
         rust_analyzer = {
           keys = {
             { "K", Util.cmd("RustHoverActions"), desc = "Hover Actions (Rust)" },
-            { "<M-CR>", Util.cmd("RustCodeAction"), desc = "Code Action (Rust)" },
             { "<localleader>X", Util.cmd("RustDebuggables"), desc = "Debug (Rust)" },
             { "<localleader>x", Util.cmd("RustRunnables"), desc = "Run (Rust)" },
             { "<localleader>?", Util.cmd("RustOpenExternalDocs"), desc = "Docs (Rust)" },
