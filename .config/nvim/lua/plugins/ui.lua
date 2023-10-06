@@ -1,3 +1,5 @@
+local Util = require("util")
+
 return {
   {
     "stevearc/dressing.nvim",
@@ -18,24 +20,27 @@ return {
   },
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
+    cmd = { "IBLToggle" },
     keys = {
       {
         "<leader>ti",
-        function()
-          require("indent_blankline.commands").toggle()
-        end,
+        Util.cmd("IBLToggle"),
         desc = "Indent Guide",
       },
     },
-    init = function()
-      vim.g.indent_blankline_enabled = false
-    end,
     opts = {
-      char = "│",
-      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
-      show_trailing_blankline_indent = false,
-      show_current_context = false,
+      enabled = false,
+      indent = {
+        char = "│",
+      },
+      whitespace = {
+        remove_blankline_trail = true,
+      },
+      exclude = {
+        filetypes = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
+      },
     },
   },
   -- {
