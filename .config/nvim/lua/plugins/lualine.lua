@@ -25,9 +25,8 @@ return {
           lualine_b = {
             {
               "diagnostics",
+              sources = { "nvim_workspace_diagnostic" },
               sections = { "error", "warn" },
-              -- colored = false,
-              -- always_visible = true,
               symbols = { error = " ", warn = " " },
             },
             { "diff", colored = false, symbols = { added = "+", modified = "•", removed = "-" } },

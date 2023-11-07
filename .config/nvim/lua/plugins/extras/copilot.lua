@@ -8,7 +8,6 @@ local function get_nodejs_version()
 end
 
 if get_nodejs_version() >= 16 then
-  print(get_nodejs_version())
   return {
     {
       "zbirenbaum/copilot.lua",
@@ -32,7 +31,6 @@ if get_nodejs_version() >= 16 then
           ["Warning"] = Util.fg("DiagnosticError"),
           ["InProgress"] = Util.fg("DiagnosticWarn"),
         }
-        print(vim.inspect(opts))
         table.insert(opts.sections.lualine_x, 2, {
           function()
             local icon = ""

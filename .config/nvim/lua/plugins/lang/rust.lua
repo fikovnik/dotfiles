@@ -91,6 +91,9 @@ return {
           inlay_hints = {
             show_parameter_hints = false,
           },
+          hover_actions = {
+            auto_focus = true,
+          },
         },
       }
     end,
