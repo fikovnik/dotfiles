@@ -66,10 +66,6 @@ return {
     },
   },
   {
-    "tpope/vim-repeat",
-    event = "VeryLazy",
-  },
-  {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "AckslD/nvim-neoclip.lua",
