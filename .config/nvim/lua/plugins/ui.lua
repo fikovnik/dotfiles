@@ -43,10 +43,4 @@ return {
       },
     },
   },
-  -- {
-  --   "lukas-reineke/headlines.nvim",
-  --   ft = { "markdown", "rmd", "org" },
-  --   dependencies = "nvim-treesitter/nvim-treesitter",
-  --   opts = {},
-  -- },
 }
