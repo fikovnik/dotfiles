@@ -1,3 +1,5 @@
+local Util = require("util")
+
 return {
   -- add to treesitter
   {
@@ -6,6 +8,16 @@ return {
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, { "markdown", "markdown_inline" })
       end
+    end,
+  },
+
+  {
+    "iamcco/markdown-preview.nvim",
+    keys = { { "<localleader>P", Util.cmd("MarkdownPreviewToggle"), desc = "Preview toggle" } },
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
     end,
   },
 
