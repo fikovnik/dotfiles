@@ -54,22 +54,20 @@ return {
           i = {
             ["<C-h>"] = "which_key",
             ["<C-g>"] = "close",
-            ["<c-t>"] = function(...)
+            ["<C-t>"] = function(...)
               return require("trouble.providers.telescope").open_with_trouble(...)
-            end,
-            ["<a-i>"] = function()
-              Util.telescope("find_files", { no_ignore = true })()
-            end,
-            ["<a-h>"] = function()
-              Util.telescope("find_files", { hidden = true })()
             end,
             ["<C-Down>"] = "cycle_history_next",
             ["<C-Up>"] = "cycle_history_prev",
             ["<C-f>"] = "preview_scrolling_down",
             ["<C-b>"] = "preview_scrolling_up",
+            ["<C-h>"] = "results_scrolling_left",
+            ["<C-l>"] = "results_scrolling_right",
           },
           n = {
             ["q"] = "close",
+            ["h"] = "results_scrolling_left",
+            ["l"] = "results_scrolling_right",
           },
         },
       },
