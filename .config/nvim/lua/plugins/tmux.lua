@@ -83,7 +83,7 @@ return {
     "jpalardy/vim-slime",
     keys = {
       { mode = "x", "<C-c><C-c>", "<Plug>SlimeRegionSend", desc = "Send region to tmux" },
-      { mode = "n", "<C-c><C-c>", "<Plug>SlimeMotionSendib", desc = "Send block to tmux" },
+      { mode = "n", "<C-c><C-c>", "vib<C-c><C-c>", remap = true, desc = "Send block to tmux" },
       { mode = "n", "<C-c><C-l>", Util.cmd("SlimeSendCurrentLine"), desc = "Send line to tmux" },
     },
     init = function()

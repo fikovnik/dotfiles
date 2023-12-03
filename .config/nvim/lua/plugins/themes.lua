@@ -14,6 +14,7 @@ return {
           WinBarNC = { bg = colors.highlight_dark },
           FlashLabel = { fg = colors.pink, style = "bold,underline" },
           DiffText = { bg = "#fd5da8", fg = "#000000" },
+          CodeBlock = { bg = "#1a1b26" },
         },
       })
     end,

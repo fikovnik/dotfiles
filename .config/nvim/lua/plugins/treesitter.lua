@@ -56,6 +56,18 @@ return {
             ["<M-<>"] = "@parameter.inner",
           },
         },
+        move = {
+          enable = true,
+          set_jumps = true, -- whether to set jumps in the jumplist
+          goto_next_start = {
+            ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
+            ["]b"] = { query = "@block.inner", desc = "Next block" },
+          },
+          goto_previous_start = {
+            ["[z"] = { query = "@fold", query_group = "folds", desc = "Previous fold" },
+            ["[b"] = { query = "@block.inner", desc = "Previous block" },
+          },
+        },
       },
     },
     ---@type TSConfig
