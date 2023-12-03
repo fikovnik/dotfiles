@@ -24,6 +24,7 @@ map("i", "<M-q>", "<C-o>gqap")
 map({ "n", "v" }, "<leader>es", ":sort<CR>", { desc = "Sort lines" })
 map({ "n", "v" }, "<leader>e<space>", ":StripWhitespace<CR>", { desc = "Strip whitespace" })
 map("n", "<leader>ea", ":keepjumps normal! ggVG<cr>", { desc = "Select all" })
+map("n", "<M-q>", "gwap", { desc = "Format paragraph" })
 
 vim.cmd([[unmap Y]])
 
