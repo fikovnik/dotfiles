@@ -141,4 +141,18 @@ return {
       }
     end,
   },
+
+  {
+    "folke/flash.nvim",
+    opts = {
+      label = {
+        current = false,
+      },
+      modes = {
+        search = {
+          enabled = false,
+        },
+      },
+    },
+  },
 }

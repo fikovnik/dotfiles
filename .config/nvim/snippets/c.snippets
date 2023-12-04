@@ -1,0 +1,22 @@
+snippet #ifdefonce
+				#ifndef ${1:`toupper(SnippetsFilename('$1_H', 'UNTITLED_H'))`}
+				#define $1
+
+				${0}
+
+				#endif // $1
+
+snippet rdbg
+				Rprintf("*** %s: $1\n", __PRETTY_FUNCTION__);
+
+snippet dbg
+				printf("*** %s: $1\n", __PRETTY_FUNCTION__);
+
+snippet main
+				int main(int argc, char **argv) {
+						${0}
+				}
+
+snippet stdio
+				#include<stdio.h>
+				${0}
