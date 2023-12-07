@@ -1,9 +1,9 @@
 #!/bin/sh
 
 if [ -z "$SSH_TTY" ]; then
-  BG=default
+	BG=default
 else
-  BG=red
+	BG=yellow
 fi
 
 echo "#[fg=white, bg=$BG]#H:#S#[fg=default,bg=default]"
