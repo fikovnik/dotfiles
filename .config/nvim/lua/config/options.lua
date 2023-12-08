@@ -2,6 +2,7 @@ vim.g.maplocalleader = "\\"
 vim.o.mouse = ""
 vim.o.relativenumber = false
 vim.o.clipboard = ""
+vim.o.pumblend = 0
 
 if os.getenv("SSH_CONNECTION") then
   local function osc52_copy(lines, _)
