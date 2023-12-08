@@ -1,5 +1,13 @@
 return {
   {
+    import = "lazyvim.plugins.extras.coding.copilot",
+    config = function(_, _)
+      vim.cmd("Copilot disable")
+    end,
+    lazy = false,
+  },
+
+  {
     "dcampos/nvim-snippy",
     dependencies = {
       "honza/vim-snippets",
@@ -37,6 +45,7 @@ return {
       }
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
+        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false }),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
