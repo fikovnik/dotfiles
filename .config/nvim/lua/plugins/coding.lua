@@ -1,13 +1,5 @@
 return {
   {
-    import = "lazyvim.plugins.extras.coding.copilot",
-    config = function(_, _)
-      vim.cmd("Copilot disable")
-    end,
-    lazy = false,
-  },
-
-  {
     "dcampos/nvim-snippy",
     dependencies = {
       "honza/vim-snippets",
