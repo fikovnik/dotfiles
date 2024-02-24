@@ -53,8 +53,11 @@ return {
         end,
       }
 
+      opts.preselect = cmp.PreselectMode.None
+      opts.completion = { completeopt = "menu,menuone,noselect" }
+
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false }),
+        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
