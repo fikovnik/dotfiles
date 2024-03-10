@@ -84,4 +84,49 @@ return {
       }))
     end,
   },
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   opts = function(_, opts)
+  --     table.insert(opts.textobjects, {
+  --       swap = {
+  --         enable = true,
+  --         swap_next = {
+  --           ["<M->>"] = "@parameter.inner",
+  --         },
+  --         swap_previous = {
+  --           ["<M-<>"] = "@parameter.inner",
+  --         },
+  --       },
+  --     })
+  --   end,
+  -- },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+          keymaps = {
+            -- You can use the capture groups defined in textobjects.scm
+            ["aa"] = "@parameter.outer",
+            ["ia"] = "@parameter.inner",
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
+          },
+        },
+        swap = {
+          enable = true,
+          swap_next = {
+            ["<M->>"] = "@parameter.inner",
+          },
+          swap_previous = {
+            ["<M-<>"] = "@parameter.inner",
+          },
+        },
+      },
+    },
+  },
 }
