@@ -8,3 +8,9 @@ define ninja
     python gdb.execute("file " + gdb.current_progspace().filename)
     directory
 end
+
+define pp
+    call (void)operator<<(std::cout, $arg0)
+    call (void)std::cout.flush()
+    printf "\n"
+end
