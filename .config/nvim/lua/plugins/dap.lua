@@ -30,8 +30,6 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<leader>di", false },
-      { "<leader>do", false },
       { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
       { "<F5>", debug_continue, desc = "Debug (continue)", mode = { "n", "t", "i" }, },
       { "<F6>", function() require("dap").step_over() end, desc = "Next", mode = { "n", "t", "i" }, },
@@ -39,8 +37,6 @@ return {
       { "<F8>", function() require("dap").step_out() end, desc = "Step out", mode = { "n", "t", "i" }, },
       { "<leader>dO", open_launch_json, desc = "Edit launch.json" },
       { "<leader>dd", debug_continue, desc = "Debug (continue)" },
-      { "<leader>dc", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
-      { "<leader>df", function() require("dap").focus_frame() end, desc = "Frame" },
     },
   },
 
@@ -51,29 +47,5 @@ return {
           { "<C-k>",      function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
           { "<leader>dV", function() require("dapui").float_element("scopes", { enter = true }) end, desc = "Variables" },
         },
-    -- opts = {
-    --   layouts = { {
-    --     elements = {
-    --       { id = "repl",    size = 0.5 },
-    --       { id = "console", size = 0.5 }
-    --     },
-    --     position = "bottom",
-    --     size = 10
-    --   }, },
-    -- },
-    -- config = function(_, opts)
-    --   local dap = require("dap")
-    --   local dapui = require("dapui")
-    --   dapui.setup(opts)
-    --   dap.listeners.after.event_initialized["dapui_config"] = function()
-    --     dapui.open({})
-    --   end
-    --   dap.listeners.before.event_terminated["dapui_config"] = function()
-    --     dapui.close({})
-    --   end
-    --   dap.listeners.before.event_exited["dapui_config"] = function()
-    --     dapui.close({})
-    --   end
-    -- end,
   },
 }
