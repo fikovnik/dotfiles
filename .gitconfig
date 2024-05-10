@@ -22,7 +22,10 @@
   stash-staged = !"git stash push --include-untracked -- $(git diff --staged --diff-filter=d --name-only)"
 
 [merge]
-  tool = vimdiff
+  tool = diffview
+
+[mergetool "diffview"]
+  cmd = nvim -n -c "DiffviewOpen" "$MERGE"
 
 [mergetool]
   keepBackup = false

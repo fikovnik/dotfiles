@@ -5,7 +5,7 @@
 	"editor": "",
 	"editorflags": "",
 	"makepkgbin": "makepkg",
-	"makepkgconf": "",
+	"makepkgconf": "$HOME/.config/yay/makepkg.conf",
 	"pacmanbin": "pacman",
 	"pacmanconf": "/etc/pacman.conf",
 	"tarbin": "bsdtar",
