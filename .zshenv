@@ -1,1 +1,1 @@
-/home/krikava/.zprezto/runcoms/zshenv
+.zprezto/runcoms/zshenv
