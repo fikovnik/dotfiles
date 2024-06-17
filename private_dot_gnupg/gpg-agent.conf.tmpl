@@ -1,0 +1,8 @@
+enable-ssh-support
+default-cache-ttl 3600
+default-cache-ttl-ssh 3600
+
+{{ if eq .chezmoi.os "darwin" -}}
+pinentry-program /opt/homebrew/bin/pinentry-mac
+{{ else if eq .chezmoi.os "linux" -}}
+{{ end -}}

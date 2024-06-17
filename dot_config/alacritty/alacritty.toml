@@ -1,0 +1,23 @@
+import = [
+  # "~/.config/alacritty/catppuccin-latte.toml",
+  # "~/.config/alacritty/catppuccin-frappe.toml"
+  # "~/.config/alacritty/catppuccin-macchiato.toml"
+  "~/.config/alacritty/catppuccin-mocha.toml",
+]
+
+[window]
+option_as_alt = "OnlyLeft"
+dynamic_padding = true
+padding = { x = 3, y = 3 }
+
+[scrolling]
+#history = 0
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+size = 16
+
+[keyboard]
+bindings = [
+  { key = "N", mods = "Command", action = "CreateNewWindow" }
+]

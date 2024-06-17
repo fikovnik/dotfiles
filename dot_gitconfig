@@ -1,0 +1,75 @@
+[user]
+  name = Filip Krikava
+  email = krikava@gmail.com
+
+[core]
+	autocrlf = input
+  ignorecase = false
+
+[color]
+  ui = true
+  diff = true
+
+[alias]
+  l = log --graph --all --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ah)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+  vim = !"nvim '+Neogit'"
+  lg = !lazygit
+  stash-untracked = "!f() {  \
+    git stash;               \
+    git stash -u;            \
+    git stash pop stash@{1}; \
+  }; f"
+  stash-staged = !"git stash push --include-untracked -- $(git diff --staged --diff-filter=d --name-only)"
+
+[merge]
+  tool = diffview
+
+[mergetool "diffview"]
+  cmd = nvim -n -c "DiffviewOpen" "$MERGE"
+
+[mergetool]
+  keepBackup = false
+
+[mergetool "p4merge"]
+  cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+  keepTemporaries = false
+  trustExitCode = false
+
+[difftool "p4merge"]
+  cmd = p4merge "$LOCAL" "$REMOTE"
+  path =
+
+[push]
+  default = simple
+
+[credential]
+  helper = cache --timeout=36000
+
+[pager]
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
+
+[interactive]
+  diffFilter = delta --color-only --features=interactive
+
+[delta]
+  features = decorations
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+[delta "decorations"]
+  commit-decoration-style = blue ol
+  commit-style = raw
+  file-style = omit
+  hunk-header-decoration-style = blue box
+  hunk-header-file-style = red
+  hunk-header-line-number-style = "#067a00"
+  hunk-header-style = file line-number syntax
+[pull]
+	rebase = false
+
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/

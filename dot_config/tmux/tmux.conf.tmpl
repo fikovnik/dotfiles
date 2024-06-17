@@ -1,0 +1,200 @@
+##
+## Options
+##
+
+# default shell
+set-option -g default-shell /bin/zsh
+# prefix
+set-option -g prefix `
+# start window numbering from 1
+set -g base-index 1
+# start pane numbering from 1
+set-window-option -g pane-base-index 1
+# turn on setting terminal titles
+set -g set-titles on
+# automatically set window title
+setw -g automatic-rename on
+# set window title string
+set -g set-titles-string '#S@#H: #T'
+# status bar
+set -g status on
+# capture mouse
+set -g mouse on
+# extended keys
+set -s extended-keys on
+set -as terminal-features '*256col*:extkeys'
+# TODO: better fix
+bind-key -T root C-S-c send-keys '[67;6u'
+# support OSC 52
+set-option -s set-clipboard on
+# add true-color support
+set -ga terminal-overrides ",*256col*:Tc"
+set -ga terminal-overrides ",*24bit*:Tc"
+set -ga terminal-overrides ",*256col*:RGB"
+set -ga terminal-overrides ",alacritty:RGB"
+# add undercurl support
+set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+# fix esc delay for vim (cf. https://github.com/neovim/neovim/wiki/FAQ#esc-in-tmux-or-gnu-screen-is-delayed)
+set -sg escape-time 10
+
+# use the 24bit terminal
+# this must be present in the system
+# cf. https://gist.github.com/fikovnik/b075e864c41789fcc3bb1f03e777f1c7
+# compiled with tic -sx -o ~/.terminfo screen-24bit.terminfo
+# set -g default-terminal "tmux-24bits"
+# set -g default-terminal "screen-256color"
+# use tmux instead of screen
+set -g default-terminal "tmux-256color"
+
+
+
+set -ga update-environment SSH_AUTH_SOCK
+set -ga update-environment SSH_CLIENT
+set -ga update-environment SSH_CONNECTION 
+set -ga update-environment SSH_TTY
+
+##
+## Key bindings
+##
+
+# scrolling
+bind-key    -T prefix       PPage             copy-mode -eu
+bind-key    -T root         S-PPage           if-shell -F "#{alternate_on}" "send-keys S-PPage" "copy-mode -eu"
+bind-key    -T root         S-Up              if-shell -F "#{alternate_on}" "send-keys S-Up" "copy-mode -e; send-keys -X scroll-up"
+bind-key    -T copy-mode    S-Down            send-keys -X scroll-down
+bind-key    -T copy-mode    S-Up              send-keys -X scroll-up
+bind-key    -T copy-mode    S-NPage           send-keys -X page-down
+bind-key    -T copy-mode    S-PPage           send-keys -X page-up
+bind-key    -T prefix       G                 run-shell "tmux list-sessions | grep -v attached | cut -f 1 -d: | xargs -r -L 1 tmux kill-session -t"
+
+# splits
+bind-key "|"  split-window -h  -c "#{pane_current_path}"
+bind-key "%"  split-window -h  -c "#{pane_current_path}"
+bind-key "\\" split-window -fh -c "#{pane_current_path}"
+bind-key "-"  split-window -v  -c "#{pane_current_path}"
+bind-key '"'  split-window -v  -c "#{pane_current_path}"
+bind-key "_"  split-window -fv -c "#{pane_current_path}"
+
+# move splits
+bind-key H splitw -fhb \; swapp -t ! \; killp -t !
+bind-key L splitw -fh  \; swapp -t ! \; killp -t !
+bind-key J splitw -fv  \; swapp -t ! \; killp -t !
+bind-key K splitw -fvb \; swapp -t ! \; killp -t !
+
+# navigation
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+
+bind-key -n 'M-h' if-shell "$is_vim" 'send-keys M-h' { if -F '#{pane_at_left}' '' 'select-pane -L' }
+bind-key -n 'M-j' if-shell "$is_vim" 'send-keys M-j' { if -F '#{pane_at_bottom}' '' 'select-pane -D' }
+bind-key -n 'M-k' if-shell "$is_vim" 'send-keys M-k' { if -F '#{pane_at_top}' '' 'select-pane -U' }
+bind-key -n 'M-l' if-shell "$is_vim" 'send-keys M-l' { if -F '#{pane_at_right}' '' 'select-pane -R' }
+
+bind-key -T copy-mode 'M-h' if -F '#{pane_at_left}' '' 'select-pane -L'
+bind-key -T copy-mode 'M-j' if -F '#{pane_at_bottom}' '' 'select-pane -D'
+bind-key -T copy-mode 'M-k' if -F '#{pane_at_top}' '' 'select-pane -U'
+bind-key -T copy-mode 'M-l' if -F '#{pane_at_right}' '' 'select-pane -R'
+
+# resize
+bind-key -n 'M-H' if-shell "$is_vim" 'send-keys M-H' 'resize-pane -L 1'
+bind-key -n 'M-J' if-shell "$is_vim" 'send-keys M-J' 'resize-pane -D 1'
+bind-key -n 'M-K' if-shell "$is_vim" 'send-keys M-K' 'resize-pane -U 1'
+bind-key -n 'M-L' if-shell "$is_vim" 'send-keys M-L' 'resize-pane -R 1'
+
+bind-key -T copy-mode M-H resize-pane -L 1
+bind-key -T copy-mode M-J resize-pane -D 1
+bind-key -T copy-mode M-K resize-pane -U 1
+bind-key -T copy-mode M-L resize-pane -R 1
+
+# swithing windows
+bind-key -n M-1 select-window -t 1
+bind-key -n M-2 select-window -t 2
+bind-key -n M-3 select-window -t 3
+bind-key -n M-4 select-window -t 4
+bind-key -n M-5 select-window -t 5
+bind-key -n M-6 select-window -t 6
+bind-key -n M-7 select-window -t 7
+bind-key -n M-8 select-window -t 8
+bind-key -n M-9 select-window -t 9
+
+# swithing windows in 
+bind-key -T copy-mode M-1 select-window -t 1
+bind-key -T copy-mode M-2 select-window -t 2
+bind-key -T copy-mode M-3 select-window -t 3
+bind-key -T copy-mode M-4 select-window -t 4
+bind-key -T copy-mode M-5 select-window -t 5
+bind-key -T copy-mode M-6 select-window -t 6
+bind-key -T copy-mode M-7 select-window -t 7
+bind-key -T copy-mode M-8 select-window -t 8
+bind-key -T copy-mode M-9 select-window -t 9
+
+
+##
+## Status
+##
+
+# where the status will be
+set-option -g status-position bottom
+# status update interval
+set -g status-interval 1
+# left side of status bar
+set -g status-left-length 40
+set -g status-left " "
+# right side of status bar
+set -g status-right-length 60
+set -g status-right "#{prefix_highlight} #(cut -f 1,2,3 -d' ' /proc/loadavg) 「#($HOME/.config/tmux/session-name.sh)」"
+# window separator
+set -g window-status-separator " | "
+# window status alignment
+set -g status-justify left
+# window status
+set -g window-status-format "#I:#W#F"
+set -g window-status-current-format " #I:#W#F "
+
+##
+## Colors
+##
+
+# basic status bar colors
+set -g status-style bg=black,fg=white
+# current window status
+set -g window-status-current-style bg=blue,fg=black
+# window with activity status
+set -g window-status-activity-style bg=red,fg=white
+# pane border
+set -g pane-border-style bg=default,fg=default
+# active pane border
+set -g pane-active-border-style bg=red,fg=red
+# pane number indicator
+set -g display-panes-colour white
+set -g display-panes-active-colour blue
+# message
+set -g message-style bg=white,fg=black
+# command message
+set -g message-command-style bg=white,fg=black
+# mode
+set -g mode-style bg=red,fg=white
+
+
+##
+## Plugins' settings
+##
+
+set -g @extrakto_fzf_tool "/usr/bin/fzf"
+
+set -g @prefix_highlight_fg 'white'
+set -g @prefix_highlight_bg 'red'
+set -g @prefix_highlight_output_prefix ''
+set -g @prefix_highlight_output_suffix ''
+
+##
+## Plugins 
+##
+
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'nhdaly/tmux-better-mouse-mode'
+set -g @plugin 'laktak/extrakto'
+
+run '~/.tmux/plugins/tpm/tpm'
