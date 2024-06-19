@@ -60,32 +60,11 @@ zstyle ':zim' 'disable-version-check' 'true'
 # Module configuration
 # --------------------
 
-#
-# git
-#
-
 # Set a custom prefix for the generated aliases. The default prefix is 'G'.
 zstyle ':zim:git' aliases-prefix 'g'
 
-#
-# input
-#
-
 # Append `../` to your input for each `.` you type after an initial `..`
 zstyle ':zim:input' double-dot-expand yes
-
-#
-# termtitle
-#
-
-# Set a custom terminal title format using prompt expansion escape sequences.
-# See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
-# If none is provided, the default '%n@%m: %~' is used.
-#zstyle ':zim:termtitle' format '%1~'
-
-#
-# zsh-autosuggestions
-#
 
 # Disable automatic widget re-binding on each precmd. This can be set when
 # zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
@@ -94,10 +73,6 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # Customize the style that the suggestions are shown with.
 # See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-
-#
-# zsh-syntax-highlighting
-#
 
 # Set what highlighters will be used.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
@@ -147,19 +122,40 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-source ~/.p10k.zsh
+# ------------------------------
+# my configuration
+# ------------------------------
 
-HOMEBREW=/opt/homebrew
+_source_if_exists() {
+  [[ -f "$1" ]] && source "$1"
+}
 
-if [ -d $HOMEBREW ]; then
-	export PATH="$HOMEBREW/bin:$PATH"
-	export PATH="$HOMEBREW/sbin:$PATH"
-	eval "$($HOMEBREW/bin/brew shellenv)"
+_source_if_exists ~/.p10k.zsh
+
+if (( $+commands[lazygit] )); then
+	alias lg='git lg'
 fi
 
-#if (( $+commands[zoxide] )); then
-#    eval "$(zoxide init zsh --cmd j)"
-#fi
+if (( $+commands[nvim] )); then
+	alias vim='nvim'
+	alias vi='nvim'
+	alias mergetool='vim -c DiffviewOpen'
+
+	export EDITOR=nvim
+	export VISUAL=nvim
+else
+	export EDITOR=vi
+	export VISUAL=vi
+fi
+
+if [[ -z "$LANG" ]]; then
+  export LANG='en_US.UTF-8'
+fi
+
+alias e=$VISUAL
+alias j=z
+# alias j=cdr
+alias mc="mc --nosubshell"
 
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 add-zsh-hook chpwd chpwd_recent_dirs
@@ -168,11 +164,42 @@ zstyle ':chpwd:*' recent-dirs-max 500
 zstyle ':completion:*' recent-dirs-insert always
 zstyle ':completion:*:*:cdr:*:*' menu selection
 
-alias j=cdr
-
 _fzf_complete_pass() {
   local store="$HOME/.password-store"
   _fzf_complete --multi --reverse --prompt="pass> " -- "$@" < <(
     fd -e gpg -t file -c never . "$store" | sed "s|$store/\(.*\)\.gpg$|\\1|"
   )
 }
+
+# TODO: can this run everytime tmux is connected?
+refresh-env() {
+  local socket_path="$(tmux show-environment | sed -n 's/^SSH_AUTH_SOCK=//p')"
+
+  if ! [[ "$socket_path" ]]; then
+    echo 'no socket path' >&2
+    return 1
+  else
+    export SSH_AUTH_SOCK="$socket_path"
+  fi
+}
+
+# haskell
+_source_if_exists "/home/krikava/.ghcup/env"
+
+# rust
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$PATH:$HOME/.cargo/bin"
+_source_if_exists "$HOME/.cargo/env"
+
+fasd-fzf-cd-vi() {
+   item="$(fasd -Rl "$1" | fzf -1 -0 --no-sort +m)"
+  if [[ -d ${item} ]]; then
+    cd "${item}" || return 1
+  elif [[ -f ${item} ]]; then
+    (vi "${item}" < /dev/tty) || return 1
+  else
+    return 1
+  fi
+   zle accept-line
+}
+zle -N fasd-fzf-cd-vi
+bindkey '^[[47;5~' fasd-fzf-cd-vi

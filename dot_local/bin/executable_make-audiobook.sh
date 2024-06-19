@@ -1,12 +1,39 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
+set -euo pipefail
 
 CATEGORY="audioteka"
+FFMPEG="ffmpeg -hide_banner -loglevel error"
+
+function info() {
+	echo "[INFO] $*"
+}
 
 function get_mp3_tag() {
 	local file="$1"
 	local tag="$2"
 
 	ffprobe -v error -show_entries format_tags="$tag" -of default=noprint_wrappers=1:nokey=1 "$file"
+}
+
+function largest_file() {
+	local largest_file=""
+	local largest_size=0
+
+	for file in "$@"; do
+		# Check if file exists and is a regular file
+		if [[ -f "$file" ]]; then
+			# Get the size of the current file
+			current_size=$(gstat -c%s "$file")
+
+			# Check if current size is larger than the largest so far
+			if [[ $current_size -gt $largest_size ]]; then
+				largest_size=$current_size
+				largest_file="$file"
+			fi
+		fi
+	done
+
+	echo "$largest_file"
 }
 
 function create_metadata() {
@@ -71,8 +98,14 @@ fi
 FOLDER_PATH=""
 if [[ -f "$1" && $(file -b --mime-type "$1") == application/zip ]]; then
 	FOLDER_PATH=$(basename "$1" .zip)
-	mkdir -p "$FOLDER_PATH"
-	unzip -q "$1" -d "$FOLDER_PATH"
+
+	if [[ ! -d "$FOLDER_PATH" ]]; then
+		info "Unzipping $1 into $FOLDER_PATH..."
+		mkdir -p "$FOLDER_PATH"
+		unzip -q "$1" -d "$FOLDER_PATH"
+	else
+		info "Skipping unzipping, $FOLDER_PATH already exists..."
+	fi
 elif [ -d "$1" ]; then
 	FOLDER_PATH="$1"
 else
@@ -89,7 +122,7 @@ if [ ! -d "$FOLDER_PATH" ]; then
 fi
 
 # Check if the cover image exists in the directory
-COVER_FILE="$FOLDER_PATH/$BOOK_NAME-duze.jpg"
+COVER_FILE=$(largest_file "$FOLDER_PATH"/*.jpg)
 if [ ! -f "$COVER_FILE" ]; then
 	echo "Error: Cover image '$COVER_FILE' not found in the directory"
 	exit 1
@@ -102,17 +135,37 @@ COMBINED_FILE="$BOOK_NAME.mp3"
 CONVERTED_FILE="$BOOK_NAME.converted.m4b"
 OUTPUT_FILE="$BOOK_NAME.m4b"
 
+info "Cover file: $COVER_FILE"
+info "List file: $LIST_FILE"
+info "Meta file: $META_FILE"
+info "Combined file: $COMBINED_FILE"
+info "Converted file: $CONVERTED_FILE"
+info "Output file: $OUTPUT_FILE"
+
+info "Creating M4B metadata for $BOOK_NAME..."
 create_metadata "$FOLDER_PATH" "$META_FILE" "$LIST_FILE"
 
-# Combine MP3 files into one MP3 file
-[ -f "$COMBINED_FILE" ] || ffmpeg -f concat -safe 0 -i "$LIST_FILE" -c copy "$COMBINED_FILE"
-# Convert into mp4b
-[ -f "$OUTPUT_FILE" ] || ffmpeg -i "$COMBINED_FILE" "$CONVERTED_FILE"
-# Add metadata to the m4b file
-[ -f "$OUTPUT_FILE" ] || ffmpeg -i "$CONVERTED_FILE" \
-	-i "$META_FILE" \
-	-i "$COVER_FILE" \
-	-map 0:a -map_metadata 1 -map 2:v -disposition:v:0 attached_pic -c copy -movflags +faststart \
-	"$OUTPUT_FILE"
+if [ -f "$COMBINED_FILE" ]; then
+	info "Skipping combining files, $COMBINED_FILE already exists..."
+else
+	info "Combining MP3 files into $COMBINED_FILE..."
+	$FFMPEG -f concat -safe 0 -i "$LIST_FILE" -c copy "$COMBINED_FILE"
+fi
 
-echo "M4B file created successfully: $OUTPUT_FILE"
+if [ -f "$CONVERTED_FILE" ]; then
+	info "Skipping M4B conversion, $CONVERTED_FILE already exists..."
+else
+	info "Converting $COMBINED_FILE into $CONVERTED_FILE..."
+	$FFMPEG -i "$COMBINED_FILE" "$CONVERTED_FILE"
+fi
+
+if [ -f "$OUTPUT_FILE" ]; then
+	info "Skipping metadata injection, $OUTPUT_FILE already exists..."
+else
+	info "Adding metadata..."
+	$FFMPEG -i "$CONVERTED_FILE" \
+		-i "$META_FILE" \
+		-i "$COVER_FILE" \
+		-map 0:a -map_metadata 1 -map 2:v -disposition:v:0 attached_pic -c copy -movflags +faststart \
+		"$OUTPUT_FILE"
+fi
