@@ -187,7 +187,6 @@ refresh-env() {
 _source_if_exists "/home/krikava/.ghcup/env"
 
 # rust
-[[ -d "$HOME/.cargo/bin" ]] && export PATH="$PATH:$HOME/.cargo/bin"
 _source_if_exists "$HOME/.cargo/env"
 
 # homebrew
