@@ -18,4 +18,39 @@ return {
     "j-hui/fidget.nvim",
     config = true,
   },
+
+  -- prevent incompatibility issies with rust integartion
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      setup = {
+        rust_analyzer = function()
+          return true
+        end,
+      },
+    },
+  },
+
+  {
+    "mrcjkb/rustaceanvim",
+    opts = {
+      default_settings = {
+        ["rust-analyzer"] = {
+          inlayHints = {
+            parameterHints = {
+              enable = false,
+            },
+            typeHints = {
+              enable = false,
+            },
+          },
+          highlightRelated = {
+            references = {
+              enable = false,
+            },
+          },
+        },
+      },
+    },
+  },
 }
