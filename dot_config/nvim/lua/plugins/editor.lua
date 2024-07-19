@@ -97,17 +97,6 @@ return {
   },
 
   {
-    "ntpeters/vim-better-whitespace",
-    event = "VeryLazy",
-    config = function()
-      vim.g.better_whitespace_enabled = 0
-      vim.g.strip_only_modified_lines = 1
-      vim.g.strip_whitespace_on_save = 1
-      vim.g.strip_whitespace_confirm = 0
-    end,
-  },
-
-  {
     "folke/trouble.nvim",
     opts = {
       use_diagnostic_signs = true,
