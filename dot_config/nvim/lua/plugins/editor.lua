@@ -70,6 +70,9 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
+      icons = {
+        mappings = false,
+      },
       spec = {
         ["<leader>d"] = { name = "+debug" },
       },
