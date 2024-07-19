@@ -189,9 +189,6 @@ _source_if_exists "/home/krikava/.ghcup/env"
 # rust
 _source_if_exists "$HOME/.cargo/env"
 
-# homebrew
-[[ -n "$HOMEBREW_PREFIX" ]] && export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
-
 fasd-fzf-cd-vi() {
    item="$(fasd -Rl "$1" | fzf -1 -0 --no-sort +m)"
   if [[ -d ${item} ]]; then

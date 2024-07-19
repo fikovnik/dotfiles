@@ -22,7 +22,6 @@ zmodule utility
 # This should be up so other modules can access tools installed by homebrew
 zmodule homebrew
 zmodule archive
-zmodule joke/zim-chezmoi
 zmodule romkatv/powerlevel10k
 zmodule fzf
 zmodule fasd
