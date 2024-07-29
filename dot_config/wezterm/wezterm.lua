@@ -13,6 +13,11 @@ config.keys = {
 		mods = "ALT",
 		action = wezterm.action.DisableDefaultAssignment,
 	},
+	{
+		key = "T",
+		mods = "CTRL",
+		action = wezterm.action.DisableDefaultAssignment,
+	},
 }
 
 return config
