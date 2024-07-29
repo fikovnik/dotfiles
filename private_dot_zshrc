@@ -3,6 +3,12 @@
 # User configuration sourced by interactive shells
 #
 
+# Homebrew
+if [[ ${OSTYPE} == darwin* ]] && [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+fi
+
 # -----------------
 # Zsh configuration
 # -----------------
@@ -132,30 +138,10 @@ _source_if_exists() {
 
 _source_if_exists ~/.p10k.zsh
 
-if (( $+commands[lazygit] )); then
-	alias lg='git lg'
-fi
-
-if (( $+commands[nvim] )); then
-	alias vim='nvim'
-	alias vi='nvim'
-	alias mergetool='vim -c DiffviewOpen'
-
-	export EDITOR=nvim
-	export VISUAL=nvim
-else
-	export EDITOR=vi
-	export VISUAL=vi
-fi
-
-if [[ -z "$LANG" ]]; then
-  export LANG='en_US.UTF-8'
-fi
-
-alias e=$VISUAL
+alias e="$VISUAL"
 alias j=z
-# alias j=cdr
 alias mc="mc --nosubshell"
+alias o=open
 
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 add-zsh-hook chpwd chpwd_recent_dirs
@@ -165,9 +151,12 @@ zstyle ':completion:*' recent-dirs-insert always
 zstyle ':completion:*:*:cdr:*:*' menu selection
 
 _fzf_complete_pass() {
-  local store="$HOME/.password-store"
-  _fzf_complete --multi --reverse --prompt="pass> " -- "$@" < <(
-    fd -e gpg -t file -c never . "$store" | sed "s|$store/\(.*\)\.gpg$|\\1|"
+  _fzf_complete +m -- "$@" < <(
+    local prefix
+    prefix="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+    command find -L "$prefix" \
+      -name "*.gpg" -type f | \
+      sed -e "s#${prefix}/\{0,1\}##" -e 's#\.gpg##' -e 's#\\#\\\\#' | sort
   )
 }
 
@@ -202,3 +191,32 @@ fasd-fzf-cd-vi() {
 }
 zle -N fasd-fzf-cd-vi
 bindkey '^[[47;5~' fasd-fzf-cd-vi # bind to C-/
+
+if (( $+commands[lazygit] )); then
+	alias lg='git lg'
+fi
+
+if (( $+commands[xdg-open] )); then
+	alias open='xdg-open'
+fi
+
+if (( $+commands[fzf] )); then
+  bindkey '^I' fzf-completion
+fi
+
+if (( $+commands[nvim] )); then
+	alias vim='nvim'
+	alias vi='nvim'
+	alias mergetool='vim -c DiffviewOpen'
+
+	export EDITOR=nvim
+	export VISUAL=nvim
+else
+	export EDITOR=vi
+	export VISUAL=vi
+fi
+
+if [[ -z "$LANG" ]]; then
+  export LANG='en_US.UTF-8'
+fi
+
