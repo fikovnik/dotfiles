@@ -24,6 +24,7 @@ zmodule archive
 zmodule romkatv/powerlevel10k
 zmodule fzf
 zmodule fasd
+zmodule asdf
 
 #
 # Completion
