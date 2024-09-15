@@ -1,0 +1,108 @@
+" You can find a list of commands here: https://jb.gg/h38q75
+" Find more examples here: https://jb.gg/share-ideavimrc
+" Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+
+let mapleader = " "
+set history=1000
+set noerrorbells
+set scrolloff=5
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+" fix selection
+set selectmode=key
+set keymodel=startsel,stopselect,continuevisual
+
+" to reload whichkey do :action IdeaVim.ReloadVimRc.reload
+set which-key
+let g:WhichKey_ShowVimActions = "true"
+let g:WhichKeyDesc_windows = "<leader>w  Windows"
+let g:WhichKeyDesc_buffers = "<leader>c  Buffers"
+let g:WhichKeyDesc_code = "<leader>c  Code"
+let g:WhichKeyDesc_debug = "<leader>d  Debug"
+let g:WhichKeyDesc_search = "<leader>s  Search"
+
+sethandler <C-W> a:vim
+sethandler <C-S> a:vim
+sethandler <C-A> a:vim
+sethandler <A-h> a:vim
+sethandler <A-l> a:vim
+
+vmap <Del> d
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+
+Plug 'machakann/vim-highlightedyank'
+Plug 'tpope/vim-commentary'
+
+map Q gq
+" map \r <Action>(ReformatCode)
+
+nmap <C-W>o <Action>(HideAllWindows)
+nmap <C-s> <Action>(SaveDocument)
+
+nmap K <Action>(QuickTypeDefinition)
+
+nmap <leader><leader> <Action>(GotoFile)
+
+nmap <leader>bb <Action>(Switcher)
+
+nmap <leader>dd <Action>(Debug)
+nmap <leader>db <Action>(ToggleLineBreakpoint)
+
+nmap <leader>cr <Action>(RenameElement)
+nmap <leader>cd <Action>(ShowErrorDescription)
+
+nmap gd <Action>(GotoDeclaration)
+nmap gr <Action>(FindUsages)
+nmap gi <Action>(GotoImplementation)
+
+nmap <leader>rr <Action>(Run)
+
+nmap <leader>ss <Action>(FileStructurePopup)
+nmap <leader>sS <Action>(GotoSymbol)
+
+nmap <leader>w<bar> <Action>(SplitVertically)
+nmap <leader>w- <Action>(SplitHorizontally)
+
+nmap <A-h> <Action>(NextSplitter)
+nmap <A-l> <Action>(PreviousSplitter)
+
+" nnoremap <leader>ps :action SearchEverywhere<CR>
+" nnoremap <leader>pg :action SearchEverywhere<CR>
+" nnoremap <leader>pf :action GotoFile<CR>
+" nnoremap <leader>pg :action GotoClass<CR>
+" nnoremap <leader>ra :action GotoAction<CR>
+" nnoremap <leader>ss :action FindInPath<CR>
+" nnoremap <leader>fr :action ReplaceInPath<CR>
+" vmap <leader>fg :action FindInPath<CR>
+" vmap <leader>fr :action ReplaceInPath<CR>
+" nnoremap <leader>h <Action>(HighlightUsagesInFile)
+" nnoremap <leader>n <Action>(ReSharperNavigateTo)
+" nnoremap <leader>p <Action>(ParameterInfo)
+" nnoremap <leader>q <Action>(ToggleRenderedDocPresentation)
+" nnoremap <leader>r <Action>(Refactorings.QuickListPopupAction)
+" nnoremap <leader>r <Action>(Refactorings.QuickListPopupAction)
+" nnoremap <leader>s <Action>(ShowUsages)
+" nnoremap <leader>t <Action>(TypeHierarchy)
+" nnoremap <leader>u <Action>(FindUsages)
+" nnoremap <leader>v <Action>(Vcs.QuickListPopupAction)
+" nnoremap <Leader>w <action>(ActiveToolwindowGroup)
+" nnoremap <leader>x <Action>(HideAllWindows)
+
+nnoremap ]e :action GotoNextError<cr>
+nnoremap [e :action GotoPreviousError<cr>
+nnoremap ]h :action VcsShowNextChangeMarker<cr>
+nnoremap [h :action VcsShowPrevChangeMarker<cr>
+nnoremap [q :action PreviousOccurence<cr>
+nnoremap ]q :action NextOccurence<cr>
+nnoremap [m :action MethodUp<cr>
+nnoremap ]m :action MethodDown<cr>
+
+" disable the timeout option
+set notimeout
+
+" increase the timeoutlen (default: 1000), don't add space around the equal sign
+set timeoutlen=5000
