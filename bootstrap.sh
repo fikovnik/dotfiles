@@ -19,23 +19,23 @@ install_on_mac() {
   fi
 }
 
-OS="$(uname -s)"
-case "${OS}" in
-Linux*)
-  install_on_linux
-  ;;
-Darwin*)
-  install_on_mac
-  ;;
-*)
-  echo "Unsupported operating system: ${OS}"
-  exit 1
-  ;;
-esac
+# OS="$(uname -s)"
+# case "${OS}" in
+# Linux*)
+#   install_on_linux
+#   ;;
+# Darwin*)
+#   install_on_mac
+#   ;;
+# *)
+#   echo "Unsupported operating system: ${OS}"
+#   exit 1
+#   ;;
+# esac
 
 if ! command chezmoi 2>&1; then
   sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
-  export PATH=$PATH:/.local/bin
+  export PATH=$PATH:"$HOME/.local/bin"
 fi
 
 chezmoi init https://github.com/fikovnik/dotfiles
