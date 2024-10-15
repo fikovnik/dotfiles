@@ -8,8 +8,8 @@ install_on_linux() {
     echo 'Nix is already installed'
   else
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
-    . "$nix_profile"
   fi
+  . "$nix_profile"
   nix-env -if "$BASE_DIR/packages.nix"
 }
 
