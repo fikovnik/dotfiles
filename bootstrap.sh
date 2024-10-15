@@ -12,5 +12,5 @@ if [[ ! -t 0 ]]; then
   CHEZMOI="$CHEZMOI --no-tty"
 fi
 
-"$CHEZMOI" init https://github.com/fikovnik/dotfiles
-"$CHEZMOI" apply
+$CHEZMOI init https://github.com/fikovnik/dotfiles
+$CHEZMOI apply
