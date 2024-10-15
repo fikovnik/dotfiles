@@ -7,5 +7,10 @@ if ! command -v chezmoi &>/dev/null; then
   export PATH=$PATH:"$HOME/.local/bin"
 fi
 
-chezmoi init https://github.com/fikovnik/dotfiles
-chezmoi apply
+CHEZMOI=chezmoi
+if [[ ! -t 0 ]]; then
+  CHEZMOI="$CHEZMOI --no-tty"
+fi
+
+"$CHEZMOI" init https://github.com/fikovnik/dotfiles
+"$CHEZMOI" apply
