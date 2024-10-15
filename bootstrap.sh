@@ -9,7 +9,7 @@ fi
 
 CHEZMOI=chezmoi
 if [[ ! -t 0 ]]; then
-  CHEZMOI="$CHEZMOI --no-tty"
+  CHEZMOI="$CHEZMOI --force --no-tty"
 fi
 
 $CHEZMOI init https://github.com/fikovnik/dotfiles
