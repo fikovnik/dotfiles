@@ -35,8 +35,3 @@ Darwin*)
   exit 1
   ;;
 esac
-
-if which zsh; then
-  echo "Change shell to ZSH"
-  chsh -s "$(which zsh)"
-fi
