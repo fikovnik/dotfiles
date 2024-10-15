@@ -1,11 +1,15 @@
 #!/bin/bash
 
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 install_on_linux() {
   if which nix; then
     echo 'Nix is already installed'
   else
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
   fi
+  nix-env -if "$BASE_DIR/packages.nix"
 }
 
 install_on_mac() {
