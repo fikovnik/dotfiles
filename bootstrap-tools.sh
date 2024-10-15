@@ -3,11 +3,12 @@
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 install_on_linux() {
-  if which nix; then
+  local nix_profile="$HOME/.nix-profile/etc/profile.d/nix.sh"
+  if [[ -f "$nix_profile" ]]; then
     echo 'Nix is already installed'
   else
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
-    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+    . "$nix_profile"
   fi
   nix-env -if "$BASE_DIR/packages.nix"
 }
@@ -34,3 +35,8 @@ Darwin*)
   exit 1
   ;;
 esac
+
+if which zsh; then
+  echo "Change shell to ZSH"
+  chsh -s "$(which zsh)"
+fi
