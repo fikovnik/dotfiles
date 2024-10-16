@@ -10,7 +10,6 @@ install_on_linux() {
   else
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     . "$nix_profile"
-    nix-channel --remove nixpkgs
     nix-channel --add https://nixos.org/channels/nixos-24.05 nixpkgs
     nix-channel --update
   fi
