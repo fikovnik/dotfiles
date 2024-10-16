@@ -45,9 +45,11 @@ set -sg escape-time 10
 # set -g default-terminal "tmux-24bits"
 # set -g default-terminal "screen-256color"
 # use tmux instead of screen
-set -g default-terminal "tmux-256color"
+#set -g default-terminal "tmux-256color"
 
-
+# the following is for devpod
+# https://github.com/loft-sh/devpod/issues/932
+set -ag terminal-overrides ',*:cud1=\E[1B'
 
 set -ga update-environment SSH_AUTH_SOCK
 set -ga update-environment SSH_CLIENT
