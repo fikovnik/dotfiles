@@ -1,14 +1,17 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> {},
+  unstable ? import <unstable> { } }:
 
 {
   inherit (pkgs)
-  bfs
-  cloc
-  fzf
-  delta
-  lazygit
-  neovim
-  nodejs
-  ripgrep
-  tmux;
+    bfs
+    cloc
+    clang-tools
+    fzf
+    delta
+    lazygit
+    nodejs
+    ripgrep
+    tmux;
+
+  neovim = unstable.neovim;
 }
