@@ -15,24 +15,27 @@ set ideajoin
 " fix selection
 set selectmode=key
 set keymodel=startsel,stopselect,continuevisual
+set idearefactormode=keep
 
 " to reload whichkey do :action IdeaVim.ReloadVimRc.reload
 set which-key
 let g:WhichKey_ShowVimActions = "true"
-let g:WhichKeyDesc_windows = "<leader>w  Windows"
 let g:WhichKeyDesc_buffers = "<leader>c  Buffers"
 let g:WhichKeyDesc_code = "<leader>c  Code"
 let g:WhichKeyDesc_debug = "<leader>d  Debug"
+let g:WhichKeyDesc_run = "<leader>r  Debug"
 let g:WhichKeyDesc_search = "<leader>s  Search"
+let g:WhichKeyDesc_windows = "<leader>w  Windows"
 
 sethandler <C-W> a:vim
 sethandler <C-S> a:vim
 sethandler <C-A> a:vim
 sethandler <A-h> a:vim
 sethandler <A-l> a:vim
+sethandler <space> a:vim
 
 vmap <Del> d
-vmpa <BS> d
+vmap <BS> d
 
 " --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
 
@@ -56,15 +59,22 @@ nmap <leader>db <Action>(ToggleLineBreakpoint)
 
 nmap <leader>cr <Action>(RenameElement)
 nmap <leader>cd <Action>(ShowErrorDescription)
+nmap <leader>ci <Action>(OverrideMethods)
+nmap <leader>cR <Action>(Refactorings.QuickListPopupAction)
+nmap <leader>cG <Action>(Generate)
+vmap <leader>cR <Action>(Refactorings.QuickListPopupAction)
+vmap <leader>cG <Action>(Generate)
 
 nmap gd <Action>(GotoDeclaration)
 nmap gr <Action>(FindUsages)
 nmap gi <Action>(GotoImplementation)
 
 nmap <leader>rr <Action>(Run)
+nmap <leader>rt <Action>()
 
 nmap <leader>ss <Action>(FileStructurePopup)
 nmap <leader>sS <Action>(GotoSymbol)
+nmap <leader>sC <Action>(GotoAction)
 
 nmap <leader>w<bar> <Action>(SplitVertically)
 nmap <leader>w- <Action>(SplitHorizontally)
@@ -76,7 +86,6 @@ nmap <A-l> <Action>(PreviousSplitter)
 " nnoremap <leader>pg :action SearchEverywhere<CR>
 " nnoremap <leader>pf :action GotoFile<CR>
 " nnoremap <leader>pg :action GotoClass<CR>
-" nnoremap <leader>ra :action GotoAction<CR>
 " nnoremap <leader>ss :action FindInPath<CR>
 " nnoremap <leader>fr :action ReplaceInPath<CR>
 " vmap <leader>fg :action FindInPath<CR>
