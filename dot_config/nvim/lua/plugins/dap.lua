@@ -44,7 +44,6 @@ return {
     "rcarriga/nvim-dap-ui",
         -- stylua: ignore
         keys = {
-          { "<C-k>",      function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
           { "<leader>dV", function() require("dapui").float_element("scopes", { enter = true }) end, desc = "Variables" },
         },
   },
