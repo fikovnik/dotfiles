@@ -199,4 +199,5 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'nhdaly/tmux-better-mouse-mode'
 set -g @plugin 'laktak/extrakto'
 
-run '~/.tmux/plugins/tpm/tpm'
+set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.cache/tpm"
+run "$HOME/.cache/tpm/tpm/tpm"
