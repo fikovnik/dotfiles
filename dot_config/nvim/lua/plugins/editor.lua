@@ -3,7 +3,6 @@ return {
     "NeogitOrg/neogit",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
       "sindrets/diffview.nvim",
     },
     keys = {
@@ -43,21 +42,6 @@ return {
         },
       },
     },
-  },
-
-  {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      -- disable git mappings
-      { "<leader>gc", false },
-      { "<leader>gs", false },
-    },
-    opts = function(_, opts)
-      opts.defaults.mappings.i["<C-h>"] = "results_scrolling_left"
-      opts.defaults.mappings.i["<C-l>"] = "results_scrolling_right"
-      opts.defaults.mappings.n["h"] = "results_scrolling_left"
-      opts.defaults.mappings.n["l"] = "results_scrolling_right"
-    end,
   },
 
   {

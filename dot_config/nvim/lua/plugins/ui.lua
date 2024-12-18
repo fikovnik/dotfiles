@@ -6,4 +6,10 @@ return {
       table.remove(opts.sections.lualine_z)
     end,
   },
+  {
+    "snacks.nvim",
+    opts = {
+      dashboard = { enabled = false },
+    },
+  },
 }

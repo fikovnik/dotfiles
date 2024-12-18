@@ -15,19 +15,6 @@ end
 return {
   {
     "mfussenegger/nvim-dap",
-    dependencies = {
-      {
-        "nvim-telescope/telescope-dap.nvim",
-        -- stylua: ignore
-        keys = {
-          { "<leader>dB", function() require("telescope").extensions.dap.list_breakpoints({}) end, desc = "Breakpoints", },
-          { "<leader>dF", function() require("telescope").extensions.dap.frames({}) end, desc = "Frames", },
-        },
-        config = function(_, _)
-          require("telescope").load_extension("dap")
-        end,
-      },
-    },
     -- stylua: ignore
     keys = {
       { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
