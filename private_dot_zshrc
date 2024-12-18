@@ -173,7 +173,7 @@ refresh-env() {
 }
 
 # haskell
-_source_if_exists "/home/krikava/.ghcup/env"
+_source_if_exists "$HOME/.ghcup/env"
 
 # rust
 _source_if_exists "$HOME/.cargo/env"
