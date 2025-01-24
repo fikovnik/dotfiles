@@ -5,6 +5,10 @@ set auto-load safe-path /
 
 define ninja
     shell ninja
+    reload
+end
+
+define reload
     python gdb.execute("file " + gdb.current_progspace().filename)
     directory
 end
