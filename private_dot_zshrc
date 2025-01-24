@@ -3,6 +3,13 @@
 # User configuration sourced by interactive shells
 #
 
+_source_if_exists() {
+  [[ -f "$1" ]] && source "$1"
+}
+
+# Nix
+_source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
+
 # Homebrew
 if [[ ${OSTYPE} == darwin* ]] && [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -132,10 +139,6 @@ unset key
 # my configuration
 # ------------------------------
 
-_source_if_exists() {
-  [[ -f "$1" ]] && source "$1"
-}
-
 _source_if_exists ~/.p10k.zsh
 
 alias e="$VISUAL"
@@ -220,3 +223,6 @@ if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
 
+if [[ -d $HOME/.local/bin ]]; then
+  export PATH=$PATH:$HOME/.local/bin
+fi
