@@ -116,4 +116,25 @@ return {
     version = false,
     config = true,
   },
+
+  {
+    "ibhagwan/fzf-lua",
+    optional = true,
+    opts = function(_, opts)
+      local actions = require("fzf-lua.actions")
+      opts.files = {
+        actions = {
+          ["ctrl-h"] = actions.toggle_hidden,
+          ["ctrl-i"] = { actions.toggle_ignore },
+        },
+      }
+      opts.grep = {
+        actions = {
+          ["ctrl-h"] = actions.toggle_hidden,
+          ["ctrl-i"] = { actions.toggle_ignore },
+        },
+      }
+      return opts
+    end,
+  },
 }
