@@ -14,4 +14,14 @@ return {
       indent = { enabled = false },
     },
   },
+  {
+    "catppuccin/nvim",
+    opts = {
+      custom_highlights = function(colors)
+        return {
+          DiagnosticDeprecated = { undercurl = true, strikethrough = false },
+        }
+      end,
+    },
+  },
 }
