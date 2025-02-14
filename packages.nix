@@ -9,9 +9,8 @@
     fzf
     delta
     lazygit
+    neovim
     nodejs
     ripgrep
     tmux;
-
-  neovim = unstable.neovim;
 }
