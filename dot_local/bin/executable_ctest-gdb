@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# A script to pick a CTest test via fzf and run it under gdb.
+#
+
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+This script shows all CTest tests, lets you pick one with fzf,
+then runs gdb on that test's command.
+
+Options:
+  -h, --help    Show this help message and exit.
+EOF
+}
+
+# Parse command-line options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: $1" >&2
+    usage
+    exit 1
+    ;;
+  esac
+done
+
+# Check for required commands
+if ! command -v fzf &>/dev/null; then
+  echo "Error: fzf not found in PATH." >&2
+  exit 1
+fi
+
+if ! command -v ctest &>/dev/null; then
+  echo "Error: ctest not found in PATH." >&2
+  exit 1
+fi
+
+# Collect test names
+# Example lines from `ctest -N` might look like:
+#   Test #1: testFoo
+#   Test #2: testBar
+TESTS=$(ctest -N | awk '/Test\s+#[0-9]+:/ {print $NF}')
+
+# Let the user pick a test via fzf
+SELECTED_TEST=$(echo "$TESTS" | fzf --prompt "Select a CTest to debug: ")
+
+# If user canceled or nothing was selected
+if [[ -z "$SELECTED_TEST" ]]; then
+  echo "No test selected. Exiting."
+  exit 0
+fi
+
+# Extract the command from the verbose CTest output
+CMD=$(
+  ctest -R "$SELECTED_TEST" -V -N 2>/dev/null |
+    sed -n 's/.*command: //p' |
+    sed 's/"//g'
+)
+
+if [[ -z "$CMD" ]]; then
+  echo "Error: Could not detect the command for test '$SELECTED_TEST'." >&2
+  exit 1
+fi
+
+echo "Debugging test: $SELECTED_TEST"
+echo "Command: $CMD"
+
+# Invoke gdb on the extracted command
+# If you have complicated paths/spaces, you may need more robust splitting logic.
+exec gdb --args $CMD
