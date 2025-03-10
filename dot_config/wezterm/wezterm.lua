@@ -29,6 +29,16 @@ config.keys = {
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.DisableDefaultAssignment,
 	},
+	{
+		key = "Delete",
+		mods = "NONE",
+		action = wezterm.action.SendString("\x1b[3~"),
+	},
+	{
+		key = "Escape",
+		mods = "NONE",
+		action = wezterm.action.SendString("\x1b[27u"),
+	},
 }
 
 return config
