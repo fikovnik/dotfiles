@@ -6,6 +6,7 @@ config.font = wezterm.font("JetBrains Mono", { weight = "Regular" })
 config.font_size = 16.0
 config.enable_tab_bar = false
 config.enable_scroll_bar = false
+config.enable_kitty_keyboard = true
 config.color_scheme = "Catppuccin Mocha"
 config.keys = {
 	{
@@ -16,6 +17,16 @@ config.keys = {
 	{
 		key = "T",
 		mods = "CTRL",
+		action = wezterm.action.DisableDefaultAssignment,
+	},
+	{
+		key = "mapped:_",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.DisableDefaultAssignment,
+	},
+	{
+		key = "mapped:+",
+		mods = "CTRL|SHIFT",
 		action = wezterm.action.DisableDefaultAssignment,
 	},
 }
