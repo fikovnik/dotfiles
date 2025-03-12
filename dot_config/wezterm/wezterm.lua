@@ -7,7 +7,6 @@ config.font_size = 16.0
 config.enable_tab_bar = false
 config.enable_scroll_bar = false
 config.enable_kitty_keyboard = true
-config.color_scheme = "Catppuccin Mocha"
 config.keys = {
 	{
 		key = "Enter",
@@ -40,5 +39,24 @@ config.keys = {
 		action = wezterm.action.SendString("\x1b[27u"),
 	},
 }
+
+-- change theme based on system settings
+
+local function get_appearance()
+	if wezterm.gui then
+		return wezterm.gui.get_appearance()
+	end
+	return "Dark"
+end
+
+local function scheme_for_appearance(appearance)
+	if appearance:find("Dark") then
+		return "Catppuccin Mocha"
+	else
+		return "Catppuccin Latte"
+	end
+end
+
+config.color_scheme = scheme_for_appearance(get_appearance())
 
 return config
