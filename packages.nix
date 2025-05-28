@@ -1,8 +1,7 @@
-{ pkgs ? import <nixpkgs> {},
-  unstable ? import <unstable> { } }:
+{ unstable ? import <unstable> {} }:
 
 {
-  inherit (pkgs)
+  inherit (unstable)
     bfs
     cloc
     clang-tools
