@@ -52,18 +52,6 @@ return {
   },
 
   {
-    "folke/which-key.nvim",
-    opts = {
-      icons = {
-        mappings = false,
-      },
-      spec = {
-        ["<leader>d"] = { name = "+debug" },
-      },
-    },
-  },
-
-  {
     "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function(_, opts)
