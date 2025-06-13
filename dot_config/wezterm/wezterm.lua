@@ -33,6 +33,11 @@ config.keys = {
 		mods = "NONE",
 		action = wezterm.action.SendString("\x1b[3~"),
 	},
+	{
+		key = "Escape",
+		mods = "CTRL",
+		action = wezterm.action.ResetTerminal,
+	},
 }
 
 -- change theme based on system settings
