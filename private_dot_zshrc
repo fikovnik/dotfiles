@@ -133,6 +133,12 @@ for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search
 for key ('k') bindkey -M vicmd ${key} history-substring-search-up
 for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
+
+bindkey '\e[1;3D' backward-word
+bindkey '\e[1;3C' forward-word
+bindkey -r '\e[1;5D'   # unbind Ctrl+Left
+bindkey -r '\e[1;5C'   # unbind Ctrl+Right
+
 # }}} End configuration added by Zim install
 
 # ------------------------------
@@ -180,20 +186,6 @@ _source_if_exists "$HOME/.ghcup/env"
 
 # rust
 _source_if_exists "$HOME/.cargo/env"
-
-fasd-fzf-cd-vi() {
-   item="$(fasd -Rl "$1" | fzf -1 -0 --no-sort +m)"
-  if [[ -d ${item} ]]; then
-    cd "${item}" || return 1
-  elif [[ -f ${item} ]]; then
-    ("$VISUAL" "${item}" < /dev/tty) || return 1
-  else
-    return 1
-  fi
-   zle accept-line
-}
-zle -N fasd-fzf-cd-vi
-bindkey '^[[47;5~' fasd-fzf-cd-vi # bind to C-/
 
 if (( $+commands[lazygit] )); then
 	alias lg='git lg'
