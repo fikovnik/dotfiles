@@ -38,5 +38,5 @@ function ssh_menu() {
 if [ -t 1 ]; then
 	ssh_menu
 else
-	wezterm start "$0"
+	open -a Ghostty "$0"
 fi
