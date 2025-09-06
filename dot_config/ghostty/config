@@ -1,7 +1,8 @@
-theme = catppuccin-mocha
+confirm-close-surface = false
 font-size = 16
-window-inherit-working-directory = true
 macos-option-as-alt = true
+theme = catppuccin-mocha
+window-inherit-working-directory = true
 window-padding-x = 5
 window-padding-y = 5
 
