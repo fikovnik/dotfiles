@@ -5,4 +5,4 @@
 # @raycast.title New tmux session
 # @raycast.mode silent
 
-open -a Ghostty "$(which tmux)" "$@"
+open -a Ghostty "/Users/krikava/.local/bin/tmux-main.sh"
