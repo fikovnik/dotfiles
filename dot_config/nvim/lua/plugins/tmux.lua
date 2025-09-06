@@ -1,3 +1,38 @@
+local function slime_send_file()
+  local ft = vim.bo.filetype
+  local file = vim.fn.expand("%:p")
+  if file == "" then
+    vim.notify("Current buffer has no filename.", vim.log.levels.ERROR)
+    return
+  end
+
+  local function slime_send(s)
+    -- slime#send accepts a list of lines; ensure final newline so REPL executes
+    if not s:match("\n$") then
+      s = s .. "\n"
+    end
+    vim.fn["slime#send"]({ s })
+  end
+
+  local cmd
+  if ft == "r" then
+    cmd = "source('" .. file .. "')"
+  elseif ft == "python" then
+    cmd = 'exec(open("' .. file .. '").read())'
+  elseif ft == "racket" or ft == "scheme" or ft == "lisp" then
+    cmd = '(enter! "' .. vim.fs.basename(file) .. '")'
+  elseif ft == "scala" then
+    cmd = ':load "' .. file .. '"'
+  elseif ft == "elixir" then
+    cmd = 'c("' .. file .. '")'
+  else
+    vim.notify("No slime runner for filetype: " .. ft, vim.log.levels.WARN)
+    return
+  end
+
+  slime_send(cmd)
+end
+
 return {
   {
     "aserowy/tmux.nvim",
@@ -81,14 +116,14 @@ return {
     "jpalardy/vim-slime",
     keys = {
       { mode = "x", "<C-c><C-c>", "<Plug>SlimeRegionSend", desc = "Send region to tmux" },
-      { mode = "n", "<C-c><C-c>", "vib<C-c><C-c>", remap = true, desc = "Send block to tmux" },
+      { mode = "n", "<C-c><C-c>", "<Plug>SlimeParagraphSend", desc = "Send block to tmux" },
+      { mode = "n", "<C-c><C-s>", slime_send_file, desc = "Source file to tmux" },
       { mode = "n", "<C-c><C-l>", "<cmd>SlimeSendCurrentLine<cr>", desc = "Send line to tmux" },
     },
     init = function()
       vim.g.slime_no_mappings = 1
-      vim.g.slime_dont_ask_default = 1
     end,
-    config = function(_, opts)
+    config = function(_, _)
       vim.g.slime_target = "tmux"
       vim.g.slime_default_config = {
         socket_name = "default",

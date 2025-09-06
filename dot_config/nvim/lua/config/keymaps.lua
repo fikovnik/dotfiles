@@ -1,15 +1,8 @@
 vim.cmd([[unmap Y]])
 
--- Disable
-vim.keymap.del("n", "<leader>gG") -- disable lazygit binding
-vim.keymap.del("n", "<leader>bb") -- disable other buffer binding
-
 -- Local map
 vim.keymap.set("n", "<localleader>\\", "<leader>ss", { remap = true, desc = "Goto Symbol" })
 vim.keymap.set("n", "<localleader>|", "<leader>sS", { remap = true, desc = "Goto Symbol (Workspace)" })
-
--- Buffers
-vim.keymap.set("n", "<leader>bb", "<leader>,", { remap = true, desc = "Switch Buffer" })
 
 -- Edit
 vim.keymap.set({ "n", "v" }, "<leader>es", ":sort<CR>", { desc = "Sort lines" })
