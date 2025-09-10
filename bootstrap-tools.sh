@@ -1,41 +1,87 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+have() { command -v "$1" >/dev/null 2>&1; }
+log() { printf "\n\033[1m==> %s\033[0m\n" "$*"; }
 
-install_on_linux() {
-  local nix_profile="$HOME/.nix-profile/etc/profile.d/nix.sh"
-  if [[ -f "$nix_profile" ]]; then
-    echo 'Nix is already installed'
-    . "$nix_profile"
-  else
-    sh <(curl -L https://nixos.org/nix/install) --no-daemon
-    . "$nix_profile"
-    nix-channel --add https://nixos.org/channels/nixos-24.11 nixpkgs
-    nix-channel --add https://nixos.org/channels/nixpkgs-unstable unstable
-    nix-channel --update
+install_linux_base() {
+  if ! have sudo; then
+    echo "sudo is required on Linux" >&2
+    exit 1
   fi
-  nix-env -if "$BASE_DIR/packages.nix"
+  log "Updating apt index (non-interactive)"
+  DEBIAN_FRONTEND=noninteractive sudo apt-get -yq update
+
+  local pkgs=(
+    bfs
+    ripgrep
+    git-delta
+    fzf
+    tmux
+    nodejs
+  )
+  log "Installing APT packages: ${pkgs[*]}"
+  DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install "${pkgs[@]}"
 }
 
-install_on_mac() {
-  xcode-select --install || echo "XCode already installed"
-  if which brew; then
-    echo 'Homebrew is already installed'
-  else
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+install_macos_base() {
+  if ! have brew; then
+    log "Installing Homebrew (non-interactive)"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+
+  local pkgs=(
+    bfs
+    ripgrep
+    git-delta
+    fzf
+    tmux
+    node
+  )
+  log "Updating Homebrew"
+  brew update --quiet
+
+  log "Installing/Upgrading Homebrew packages: ${pkgs[*]}"
+  brew install --quiet "${pkgs[@]}" || true
+  brew upgrade --quiet "${pkgs[@]}" || true
 }
 
-OS="$(uname -s)"
-case "${OS}" in
+install_with_mise() {
+  export PATH="$HOME/.local/bin:$PATH"
+
+  if ! have mise; then
+    log "Installing mise"
+    curl -fsSL https://mise.run | sh
+  fi
+
+  eval "$(mise activate bash)"
+
+  local tools=(
+    neovim@latest
+    lazygit@latest
+    tokei@latest
+    fd@latest
+  )
+
+  log "Installing with mise: ${tools[*]}"
+  for t in "${tools[@]}"; do
+    RUST_BACKTRACE=1 MISE_VERBOSE=1 mise use -g "$t"
+  done
+}
+
+case "$(uname -s)" in
 Linux*)
-  install_on_linux
+  install_linux_base
   ;;
 Darwin*)
-  install_on_mac
+  install_macos_base
   ;;
 *)
-  echo "Unsupported operating system: ${OS}"
+  echo "Unsupported OS: $(uname -s)" >&2
   exit 1
   ;;
 esac
+
+install_with_mise
