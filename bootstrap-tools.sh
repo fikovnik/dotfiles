@@ -14,11 +14,10 @@ install_linux_base() {
 
   local pkgs=(
     bfs
-    ripgrep
     git-delta
-    fzf
-    tmux
     nodejs
+    ripgrep
+    tmux
   )
   log "Installing APT packages: ${pkgs[*]}"
   DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install "${pkgs[@]}"
@@ -34,11 +33,10 @@ install_macos_base() {
 
   local pkgs=(
     bfs
-    ripgrep
     git-delta
-    fzf
-    tmux
     node
+    ripgrep
+    tmux
   )
   log "Updating Homebrew"
   brew update --quiet
@@ -59,10 +57,11 @@ install_with_mise() {
   eval "$(mise activate bash)"
 
   local tools=(
-    neovim@latest
-    lazygit@latest
-    tokei@latest
     fd@latest
+    fzf@latest
+    lazygit@latest
+    neovim@latest
+    tokei@latest
   )
 
   log "Installing with mise: ${tools[*]}"
