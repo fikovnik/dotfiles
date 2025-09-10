@@ -17,4 +17,6 @@ fi
 $CHEZMOI init https://github.com/fikovnik/dotfiles
 $CHEZMOI apply
 
-[[ -n "$DEVPOD" ]] && "$BASE_DIR"/bootstrap-tools.sh
+if [[ -n "$DEVPOD" ]] || [[ "$1" == "--tools" ]]; then
+  "$BASE_DIR"/bootstrap-tools.sh
+fi
