@@ -67,7 +67,7 @@ install_with_mise() {
 
   log "Installing with mise: ${tools[*]}"
   for t in "${tools[@]}"; do
-    RUST_BACKTRACE=1 MISE_VERBOSE=1 mise use -g "$t"
+    mise use -g "$t"
   done
 }
 
