@@ -10,6 +10,7 @@ window-padding-y = 5
 keybind = super+shift+equal=increase_font_size:1
 keybind = super+equal=reset_font_size
 keybind = global:super+alt+ctrl+grave_accent=toggle_quick_terminal
+keybind = ctrl+escape=reset
 
 keybind = shift+up=unbind
 keybind = shift+down=unbind
@@ -53,3 +54,4 @@ keybind = super+physical:five=unbind
 keybind = super+physical:seven=unbind
 keybind = super+physical:two=unbind
 keybind = super+physical:six=unbind
+keybind = super+zero=unbind
