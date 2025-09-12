@@ -15,7 +15,6 @@ install_linux_base() {
   local pkgs=(
     bfs
     git-delta
-    nodejs
     ripgrep
     tmux
   )
@@ -34,7 +33,6 @@ install_macos_base() {
   local pkgs=(
     bfs
     git-delta
-    node
     ripgrep
     tmux
   )
@@ -61,6 +59,7 @@ install_with_mise() {
     fzf@latest
     lazygit@latest
     neovim@latest
+    node@latest
     tokei@latest
   )
 
