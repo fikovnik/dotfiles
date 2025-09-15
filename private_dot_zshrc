@@ -65,6 +65,7 @@ WORDCHARS=${WORDCHARS//[\/]}
 
 zstyle ':zim:zmodule' use 'degit'
 zstyle ':zim' 'disable-version-check' 'true'
+zstyle ':zim:ssh' ids 'id_rsa' 'id_fit'
 
 # --------------------
 # Module configuration
