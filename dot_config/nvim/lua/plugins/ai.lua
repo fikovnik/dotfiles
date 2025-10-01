@@ -1,62 +1,62 @@
 return {
   -- copilot-chat integration with blink
   -- temp fix for: https://github.com/LazyVim/LazyVim/pull/5754
-  {
-    "saghen/blink.cmp",
-    optional = true,
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
-    opts = {
-      sources = {
-        providers = {
-          path = {
-            -- Path sources triggered by "/" interfere with CopilotChat commands
-            enabled = function()
-              return vim.bo.filetype ~= "copilot-chat"
-            end,
-          },
-        },
-      },
-    },
-  },
+  -- {
+  --   "saghen/blink.cmp",
+  --   optional = true,
+  --   ---@module 'blink.cmp'
+  --   ---@type blink.cmp.Config
+  --   opts = {
+  --     sources = {
+  --       providers = {
+  --         path = {
+  --           -- Path sources triggered by "/" interfere with CopilotChat commands
+  --           enabled = function()
+  --             return vim.bo.filetype ~= "copilot-chat"
+  --           end,
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
 
-  {
-    "NickvanDyke/opencode.nvim",
-    dependencies = {
-      { "folke/snacks.nvim", opts = { input = { enabled = true } } },
-    },
-    config = function()
-      -- `opencode.nvim` passes options via a global variable instead of `setup()` for faster startup
-      ---@type opencode.Opts
-      vim.g.opencode_opts = {
-        -- Your configuration, if any — see `lua/opencode/config.lua`
-      }
-
-      vim.opt.autoread = true
-
-      vim.keymap.set("n", "<leader>ot", function()
-        require("opencode").toggle()
-      end, { desc = "Toggle opencode" })
-      vim.keymap.set("n", "<leader>oA", function()
-        require("opencode").ask()
-      end, { desc = "Ask opencode" })
-      vim.keymap.set("n", "<leader>oa", function()
-        require("opencode").ask("@cursor: ")
-      end, { desc = "Ask opencode about this" })
-      vim.keymap.set("v", "<leader>oa", function()
-        require("opencode").ask("@selection: ")
-      end, { desc = "Ask opencode about selection" })
-      vim.keymap.set("n", "<leader>on", function()
-        require("opencode").command("session_new")
-      end, { desc = "New opencode session" })
-      vim.keymap.set("n", "<leader>oy", function()
-        require("opencode").command("messages_copy")
-      end, { desc = "Copy last opencode response" })
-      vim.keymap.set({ "n", "v" }, "<leader>os", function()
-        require("opencode").select()
-      end, { desc = "Select opencode prompt" })
-    end,
-  },
+  -- {
+  --   "NickvanDyke/opencode.nvim",
+  --   dependencies = {
+  --     { "folke/snacks.nvim", opts = { input = { enabled = true } } },
+  --   },
+  --   config = function()
+  --     -- `opencode.nvim` passes options via a global variable instead of `setup()` for faster startup
+  --     ---@type opencode.Opts
+  --     vim.g.opencode_opts = {
+  --       -- Your configuration, if any — see `lua/opencode/config.lua`
+  --     }
+  --
+  --     vim.opt.autoread = true
+  --
+  --     vim.keymap.set("n", "<leader>ot", function()
+  --       require("opencode").toggle()
+  --     end, { desc = "Toggle opencode" })
+  --     vim.keymap.set("n", "<leader>oA", function()
+  --       require("opencode").ask()
+  --     end, { desc = "Ask opencode" })
+  --     vim.keymap.set("n", "<leader>oa", function()
+  --       require("opencode").ask("@cursor: ")
+  --     end, { desc = "Ask opencode about this" })
+  --     vim.keymap.set("v", "<leader>oa", function()
+  --       require("opencode").ask("@selection: ")
+  --     end, { desc = "Ask opencode about selection" })
+  --     vim.keymap.set("n", "<leader>on", function()
+  --       require("opencode").command("session_new")
+  --     end, { desc = "New opencode session" })
+  --     vim.keymap.set("n", "<leader>oy", function()
+  --       require("opencode").command("messages_copy")
+  --     end, { desc = "Copy last opencode response" })
+  --     vim.keymap.set({ "n", "v" }, "<leader>os", function()
+  --       require("opencode").select()
+  --     end, { desc = "Select opencode prompt" })
+  --   end,
+  -- },
 
   -- {
   --   "olimorris/codecompanion.nvim",
