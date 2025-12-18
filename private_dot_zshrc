@@ -155,6 +155,8 @@ alias j=z
 alias mc="mc --nosubshell"
 alias o=open
 
+unalias gh
+
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 add-zsh-hook chpwd chpwd_recent_dirs
 zstyle ':chpwd:*' recent-dirs-default yes
@@ -189,7 +191,9 @@ if [[ -z "$LANG" ]]; then
 fi
 
 # haskell
-_source_if_exists "$HOME/.ghcup/env"
+if [[ -d "$HOME/.ghcup" ]]; then
+  export PATH="$PATH:$HOME/.ghcup/bin"
+fi
 
 # rust
 _source_if_exists "$HOME/.cargo/env"

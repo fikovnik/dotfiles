@@ -1,15 +1,8 @@
 return {
-  { "RRethy/vim-illuminate", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
-  { "lukas-reineke/indent-blankline.nvim", enabled = false },
-  { "nvim-mini/mini.indentscope", enabled = false },
   { "folke/noice.nvim", enabled = false },
-  { "nvimdev/dashboard-nvim", enabled = false },
-  { "dstein64/vim-startuptime", enabled = false },
   { "folke/persistence.nvim", enabled = false },
-  { "L3MON4D3/LuaSnip", enabled = false },
-  { "saadparwaiz1/cmp_luasnip", enabled = false },
   { "nvim-mini/mini.pairs", enabled = false },
-  { "nvim-mini/mini.icons", enabled = false },
-  { "nvim-tree/nvim-web-devicons", enabled = false },
+  { "nvim-mini/mini.ai", enabled = false },
+  -- { "nvim-mini/mini.icons", enabled = false },
 }

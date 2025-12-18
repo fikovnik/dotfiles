@@ -9,6 +9,7 @@ return {
   {
     "snacks.nvim",
     opts = {
+      statuscolumn = { enabled = true },
       dashboard = { enabled = false },
       scroll = { enabled = false },
       indent = { enabled = false },

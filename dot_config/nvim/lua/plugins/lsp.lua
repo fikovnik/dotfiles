@@ -5,7 +5,7 @@ return {
       servers = {
         ["*"] = {
           keys = {
-            { "<M-CR>", vim.lsp.buf.code_action, mode = { "n", "i" }, desc = "Say Hello" },
+            { "<M-CR>", vim.lsp.buf.code_action, mode = { "n", "i" }, desc = "Code actions" },
           },
         },
       },
