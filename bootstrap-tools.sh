@@ -13,10 +13,11 @@ install_linux_base() {
   DEBIAN_FRONTEND=noninteractive sudo apt-get -yq update
 
   local pkgs=(
-    bfs
+    fd-find
     git-delta
     ripgrep
     tmux
+    zsh
   )
   log "Installing APT packages: ${pkgs[*]}"
   DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install "${pkgs[@]}"
@@ -31,7 +32,7 @@ install_macos_base() {
   eval "$(/opt/homebrew/bin/brew shellenv)"
 
   local pkgs=(
-    bfs
+    fd
     git-delta
     ripgrep
     tmux
@@ -55,12 +56,10 @@ install_with_mise() {
   eval "$(mise activate bash)"
 
   local tools=(
-    fd@latest
     fzf@latest
     lazygit@latest
     neovim@latest
     node@latest
-    tokei@latest
   )
 
   log "Installing with mise: ${tools[*]}"
