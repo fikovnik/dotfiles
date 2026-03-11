@@ -13,12 +13,12 @@ return {
       return vim.fn.executable("cargo") == 1
     end,
   },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     servers = {
-  --       racket_langserver = {},
-  --     },
-  --   },
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        racket_langserver = {},
+      },
+    },
+  },
 }
