@@ -36,6 +36,37 @@ function largest_file() {
 	echo "$largest_file"
 }
 
+function generate_playlist() {
+	local dir="$1"
+	local playlist="$dir/playlist.pls"
+	local i=0
+
+	info "Generating playlist from MP3 files..."
+
+	echo "[playlist]" >"$playlist"
+
+	for file in $(ls "$dir"/*.mp3 | sort); do
+		i=$((i + 1))
+		local basename
+		basename=$(basename "$file")
+		local title
+		title=$(get_mp3_tag "$file" title)
+		if [[ -z "$title" ]]; then
+			title="$basename"
+		fi
+		local duration_s
+		duration_s=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$file")
+		local duration_ms
+		duration_ms=$(printf '%.0f' "$(echo "$duration_s * 1000" | bc)")
+
+		echo "File${i}=${basename}" >>"$playlist"
+		echo "Title${i}=${title}" >>"$playlist"
+		echo "Length${i}=${duration_ms}" >>"$playlist"
+	done
+
+	echo "NumberOfEntries=${i}" >>"$playlist"
+}
+
 function create_metadata() {
 	local dir="$1"
 	local meta_file="$2"
@@ -141,6 +172,10 @@ info "Meta file: $META_FILE"
 info "Combined file: $COMBINED_FILE"
 info "Converted file: $CONVERTED_FILE"
 info "Output file: $OUTPUT_FILE"
+
+if [ ! -f "$FOLDER_PATH/playlist.pls" ]; then
+	generate_playlist "$FOLDER_PATH"
+fi
 
 info "Creating M4B metadata for $BOOK_NAME..."
 create_metadata "$FOLDER_PATH" "$META_FILE" "$LIST_FILE"
