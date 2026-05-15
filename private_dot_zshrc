@@ -221,3 +221,6 @@ else
 	export EDITOR=vi
 	export VISUAL=vi
 fi
+
+export XDG_CONFIG_HOME="$HOME/.config"
+
