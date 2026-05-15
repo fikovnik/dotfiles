@@ -2,7 +2,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "catppuccin-mocha",
     },
   },
 
@@ -75,5 +75,10 @@ return {
         },
       },
     },
+  },
+
+  {
+    "esmuellert/codediff.nvim",
+    cmd = "CodeDiff",
   },
 }
