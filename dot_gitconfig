@@ -21,23 +21,19 @@
   }; f"
   stash-staged = !"git stash push --include-untracked -- $(git diff --staged --diff-filter=d --name-only)"
 
+  # difftastic
+  dlog = -c diff.external=difft log --ext-diff
+  dshow = -c diff.external=difft show --ext-diff
+  ddiff = -c diff.external=difft diff
+
 [merge]
-  tool = diffview
+	tool = codediff
 
 [mergetool "diffview"]
   cmd = nvim -n -c "DiffviewOpen" "$MERGE"
 
 [mergetool]
   keepBackup = false
-
-[mergetool "p4merge"]
-  cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
-  keepTemporaries = false
-  trustExitCode = false
-
-[difftool "p4merge"]
-  cmd = p4merge "$LOCAL" "$REMOTE"
-  path =
 
 [push]
   default = simple
@@ -73,3 +69,12 @@
 
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
+
+[mergetool "codediff"]
+	cmd = nvim \"$MERGED\" -c \"CodeDiff merge \\\"$MERGED\\\"\"
+
+[diff]
+	tool = codediff
+
+[difftool "codediff"]
+	cmd = nvim \"$LOCAL\" \"$REMOTE\" +\"CodeDiff file $LOCAL $REMOTE\"
