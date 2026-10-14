@@ -1,7 +1,7 @@
 clipboard-paste-protection = false
 confirm-close-surface = false
 font-size = 16
-macos-option-as-alt = true
+macos-option-as-alt = left
 theme = dark:Catppuccin Mocha,light:Catppuccin Latte
 window-inherit-working-directory = true
 window-padding-x = 5
