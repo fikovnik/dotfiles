@@ -1,2 +1,5 @@
 gui:
   mouseEvents: false
+
+git:
+  disableForcePushing: true
