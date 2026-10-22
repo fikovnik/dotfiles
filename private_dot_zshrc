@@ -150,6 +150,7 @@ bindkey -r '\e[1;5C'   # unbind Ctrl+Right
 
 _source_if_exists ~/.p10k.zsh
 
+alias d='dirs -v'
 alias e="$VISUAL"
 alias j=z
 alias mc="mc --nosubshell"

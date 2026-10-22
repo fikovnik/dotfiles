@@ -1,5 +1,7 @@
 gui:
   mouseEvents: false
-
 git:
   disableForcePushing: true
+  diffRenderers:
+    - command: difft --color=always
+      type: extDiff
